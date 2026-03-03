@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Logo - SoliQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <script>tailwind.config = { theme: { extend: { colors: { primary: { 500: '#6366f1', 600: '#4f46e5' }, secondary: { 500: '#14b8a6' } }, fontFamily: { heading: ['Outfit', 'sans-serif'] } } } }</script>
+</head>
+
+<body class="bg-slate-50 p-10 flex flex-col gap-8 items-start">
+
+    <!-- Logo Standard (Header) -->
+    <a href="#" class="inline-flex items-center gap-2.5 group" aria-label="SoliQuiz - Accueil">
+        <div
+            class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+            <span class="text-white font-heading font-bold text-lg leading-none">SQ</span>
+        </div>
+        <span
+            class="font-heading font-bold text-xl text-slate-900 group-hover:text-primary-600 transition-colors">SoliQuiz</span>
+    </a>
+
+    <!-- Logo Grand (Page Login) -->
+    <a href="#" class="inline-flex flex-col items-center gap-2 group" aria-label="SoliQuiz - Accueil">
+        <div
+            class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+            <span class="text-white font-heading font-bold text-3xl leading-none">SQ</span>
+        </div>
+        <span class="font-heading font-bold text-2xl text-slate-900">SoliQuiz</span>
+        <span class="text-sm text-slate-500">Plateforme d'auto-évaluation</span>
+    </a>
+
+</body>
+
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz — Tableau de bord Formateur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script>tailwind.config = { theme: { extend: { colors: { primary: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5' }, secondary: { 50: '#f0fdfa', 500: '#14b8a6' } }, fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] } } } }</script>
+</head>
+
+<body class="bg-slate-50 font-sans min-h-screen flex flex-col">
+
+    <!-- Navbar Formateur (sombre) -->
+    <header class="sticky top-0 z-50 bg-slate-900 border-b border-slate-700 shadow-md">
+        <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="#" class="inline-flex items-center gap-2">
+                <div
+                    class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+                    <span class="text-white font-heading font-bold text-sm">SQ</span></div>
+                <span class="font-heading font-bold text-lg text-white">SoliQuiz <span
+                        class="text-slate-400 font-normal text-sm ml-1">Formateur</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-1">
+                <a href="#" aria-current="page"
+                    class="px-4 py-2 text-sm font-semibold text-white bg-white/10 rounded-lg">Tableau de bord</a>
+                <a href="formateur-bibliotheque.html"
+                    class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Bibliothèque
+                    QCM</a>
+                <a href="formateur-suivi.html"
+                    class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors">Suivis
+                    Classes</a>
+                <button type="button"
+                    class="ml-4 px-3 py-2 text-xs text-slate-400 hover:text-red-400 hover:bg-red-900/20 rounded-lg transition-colors">Déconnexion</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-1 max-w-6xl mx-auto px-4 py-10 w-full">
+        <section class="mb-10">
+            <h1 class="font-heading font-bold text-3xl text-slate-900 mb-2">Tableau de bord : Vue des sessions en cours
+            </h1>
+            <p class="text-slate-500">Bonjour Youssef — Voici la synthèse de votre journée.</p>
+        </section>
+
+        <!-- KPI Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Sessions actives</p>
+                    <p class="font-heading font-bold text-3xl text-slate-900">3</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-secondary-50 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500">QCM passés aujourd'hui</p>
+                    <p class="font-heading font-bold text-3xl text-slate-900">45</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Taux moyen réussite</p>
+                    <p class="font-heading font-bold text-3xl text-slate-900">78<span
+                            class="text-lg font-semibold text-slate-500">%</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sessions du jour -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-5">
+                <h2 class="font-heading font-semibold text-xl text-slate-800">Vos sessions du jour</h2>
+
+                <!-- Alerte warning -->
+                <div role="alert"
+                    class="flex items-start gap-3 px-4 py-3.5 bg-amber-50 border border-amber-200 rounded-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 shrink-0 mt-0.5"
+                        viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <div>
+                        <p class="text-sm font-semibold text-amber-800">Objectif en difficulté</p>
+                        <p class="text-sm text-amber-700 mt-0.5">« Syntaxe CSS » — Seulement <strong>25%</strong> de
+                            réussite. Une révision est recommandée.</p>
+                    </div>
+                </div>
+
+                <!-- Session card 1 -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-heading font-semibold text-lg text-slate-900">Session Dev Web – Semaine 3</h3>
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700"><span
+                                class="w-1.5 h-1.5 rounded-full bg-green-500"></span>En cours</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-4">23 étudiants · Taux de réussite global : <strong
+                            class="text-slate-700">85%</strong></p>
+                    <div class="w-full bg-slate-100 rounded-full h-2 mb-4" role="progressbar" aria-valuenow="85"
+                        aria-valuemin="0" aria-valuemax="100">
+                        <div class="bg-primary-500 h-2 rounded-full" style="width:85%"></div>
+                    </div>
+                    <a href="formateur-suivi.html"
+                        class="text-sm font-semibold text-primary-600 hover:text-primary-700 hover:underline transition-colors">Voir
+                        l'analyse détaillée →</a>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-heading font-semibold text-lg text-slate-900">Session Algorithmique – Semaine 5
+                        </h3>
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-100 text-primary-700"><span
+                                class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>Planifiée</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-4">20 étudiants · 14h00 – 16h00</p>
+                    <a href="formateur-suivi.html"
+                        class="text-sm font-semibold text-primary-600 hover:underline transition-colors">Voir →</a>
+                </div>
+            </div>
+
+            <!-- Accès rapide -->
+            <aside class="space-y-4">
+                <h2 class="font-heading font-semibold text-xl text-slate-800">Accès rapide</h2>
+                <a href="formateur-bibliotheque.html"
+                    class="block w-full text-center px-5 py-3 bg-white border border-slate-300 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 hover:shadow-sm transition-all duration-200">📚
+                    Gérer la bibliothèque QCM</a>
+                <a href="formateur-suivi.html"
+                    class="block w-full text-center px-5 py-3 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200">📊
+                    Voir les analyses de la classe</a>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white mt-auto">
+        <div class="max-w-6xl mx-auto px-4 py-5 flex items-center justify-between">
+            <p class="text-xs text-slate-400">© 2026 SoliQuiz · Espace Formateur</p>
+            <a href="#" class="text-xs text-slate-400 hover:text-slate-600 transition-colors">Aide</a>
+        </div>
+    </footer>
+
+</body>
+
+</html>

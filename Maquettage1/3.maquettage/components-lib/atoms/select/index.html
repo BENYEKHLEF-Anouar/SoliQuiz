@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Select - SoliQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <script>tailwind.config = { theme: { extend: { colors: { primary: { 500: '#6366f1' } }, fontFamily: { sans: ['Inter', 'sans-serif'] } } } }</script>
+</head>
+
+<body class="bg-slate-50 font-sans p-10 space-y-6 max-w-xs">
+
+    <div class="flex flex-col gap-1.5">
+        <label for="select-session" class="text-sm font-semibold text-slate-700">Session associée</label>
+        <div class="relative">
+            <select id="select-session" name="session" class="w-full appearance-none px-4 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm bg-white
+                     focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+                     hover:border-slate-400 transition-all duration-200 cursor-pointer">
+                <option value="">-- Sélectionner une session --</option>
+                <option value="s1">Session Dev Web – Semaine 3</option>
+                <option value="s2">Session Algorithmique – Semaine 5</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg class="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+        <label for="select-objectif" class="text-sm font-semibold text-slate-700">Micro-objectif</label>
+        <div class="relative">
+            <select id="select-objectif" name="objectif" class="w-full appearance-none px-4 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm bg-white
+                     focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+                     hover:border-slate-400 transition-all duration-200 cursor-pointer">
+                <option value="">-- Sélectionner un objectif --</option>
+                <option value="o1">Comprendre les boucles</option>
+                <option value="o2">Maîtriser les tableaux JS</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg class="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

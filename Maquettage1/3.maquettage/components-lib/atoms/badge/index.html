@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Badge - SoliQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>tailwind.config = { theme: { extend: { colors: { primary: { 100: '#e0e7ff', 700: '#4338ca' } }, fontFamily: { sans: ['Inter', 'sans-serif'] } } } }</script>
+</head>
+
+<body class="bg-slate-50 font-sans p-10 flex flex-wrap gap-4 items-start">
+
+    <!-- Module -->
+    <span
+        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-100 text-primary-700">
+        Dev Web
+    </span>
+
+    <!-- Succès -->
+    <span
+        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+        Réussi
+    </span>
+
+    <!-- Erreur -->
+    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+        Échoué
+    </span>
+
+    <!-- Warning (pour formateur) -->
+    <span
+        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
+        ⚠️ En difficulté
+    </span>
+
+    <!-- API Connectée -->
+    <span
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-100 text-teal-700 border border-teal-200">
+        <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+        API Connectée
+    </span>
+
+    <!-- Statut neutre -->
+    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+        Brouillon
+    </span>
+
+</body>
+
+</html>

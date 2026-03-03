@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Radio & Checkbox - SoliQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>tailwind.config = { theme: { extend: { colors: { primary: { 500: '#6366f1', 600: '#4f46e5', 50: '#eef2ff' } }, fontFamily: { sans: ['Inter', 'sans-serif'] } } } }</script>
+</head>
+
+<body class="bg-slate-50 font-sans p-10 space-y-8 max-w-lg">
+
+    <!-- Groupe Radio (choix unique) avec distinction visuelle claire -->
+    <fieldset>
+        <legend
+            class="text-sm font-semibold text-primary-700 bg-primary-50 border border-primary-100 rounded-lg px-3 py-1 inline-flex items-center gap-2 mb-4">
+            <span class="w-2 h-2 rounded-full bg-primary-500"></span>
+            Sélectionnez UNE seule réponse
+        </legend>
+
+        <div class="space-y-3">
+            <label
+                class="flex items-start gap-3 cursor-pointer p-4 rounded-xl border border-slate-200 bg-white hover:border-primary-400 hover:bg-primary-50 transition-all duration-150 group">
+                <input type="radio" name="q1" value="a"
+                    class="mt-0.5 h-5 w-5 text-primary-600 border-slate-300 focus:ring-primary-500 cursor-pointer" />
+                <span class="text-sm text-slate-700 group-hover:text-slate-900 font-normal">Choix A — Une Réponse
+                    (Correct)</span>
+            </label>
+            <label
+                class="flex items-start gap-3 cursor-pointer p-4 rounded-xl border border-slate-200 bg-white hover:border-primary-400 hover:bg-primary-50 transition-all duration-150 group">
+                <input type="radio" name="q1" value="b"
+                    class="mt-0.5 h-5 w-5 text-primary-600 border-slate-300 focus:ring-primary-500 cursor-pointer" />
+                <span class="text-sm text-slate-700 font-normal">Choix B — Une autre réponse</span>
+            </label>
+        </div>
+    </fieldset>
+
+    <!-- Groupe Checkbox (choix multiples) -->
+    <fieldset>
+        <legend
+            class="text-sm font-semibold text-teal-700 bg-teal-50 border border-teal-100 rounded-lg px-3 py-1 inline-flex items-center gap-2 mb-4">
+            <span class="w-2 h-2 rounded-sm bg-teal-500"></span>
+            Sélectionnez TOUTES les bonnes réponses
+        </legend>
+
+        <div class="space-y-3">
+            <label
+                class="flex items-start gap-3 cursor-pointer p-4 rounded-xl border border-slate-200 bg-white hover:border-teal-400 hover:bg-teal-50 transition-all duration-150 group">
+                <input type="checkbox" name="q2" value="a"
+                    class="mt-0.5 h-5 w-5 rounded text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer" />
+                <span class="text-sm text-slate-700 group-hover:text-slate-900 font-normal">Choix A — Option multiple
+                    1</span>
+            </label>
+            <label
+                class="flex items-start gap-3 cursor-pointer p-4 rounded-xl border border-slate-200 bg-white hover:border-teal-400 hover:bg-teal-50 transition-all duration-150 group">
+                <input type="checkbox" name="q2" value="b"
+                    class="mt-0.5 h-5 w-5 rounded text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer" />
+                <span class="text-sm text-slate-700 font-normal">Choix B — Option multiple 2</span>
+            </label>
+        </div>
+    </fieldset>
+
+</body>
+
+</html>

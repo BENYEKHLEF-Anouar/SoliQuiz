@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Button - SoliQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' }, secondary: { 500: '#14b8a6', 600: '#0d9488' } }, fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="bg-slate-50 font-sans p-10 flex flex-wrap gap-6 items-center">
+
+    <!-- Primary -->
+    <button type="button"
+        class="inline-flex items-center justify-center px-5 py-2.5 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2">
+        Bouton Primaire
+    </button>
+
+    <!-- Secondary -->
+    <button type="button"
+        class="inline-flex items-center justify-center px-5 py-2.5 bg-white border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2">
+        Bouton Secondaire
+    </button>
+
+    <!-- Danger -->
+    <button type="button"
+        class="inline-flex items-center justify-center px-5 py-2.5 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2">
+        Bouton Danger
+    </button>
+
+    <!-- Ghost (Texte) -->
+    <button type="button"
+        class="inline-flex items-center justify-center px-5 py-2.5 text-primary-600 hover:bg-primary-50 text-sm font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-offset-1">
+        Bouton Ghost
+    </button>
+
+    <!-- Primary Large -->
+    <button type="button"
+        class="inline-flex items-center justify-center px-8 py-3.5 bg-primary-600 hover:bg-primary-700 text-white text-base font-semibold rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2">
+        Démarrer le QCM
+    </button>
+
+    <!-- Small action -->
+    <button type="button"
+        class="inline-flex items-center justify-center px-3 py-1.5 bg-primary-100 hover:bg-primary-200 text-primary-700 text-xs font-semibold rounded-lg transition-all duration-200">
+        Éditer
+    </button>
+
+    <!-- Small danger -->
+    <button type="button"
+        class="inline-flex items-center justify-center px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-lg transition-all duration-200">
+        Supprimer
+    </button>
+
+</body>
+
+</html>
