@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Login Form</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 flex justify-center items-center h-screen">
+
+    <!-- Molecule : Login Form -->
+    <div class="mt-7 bg-white border border-slate-200 rounded-2xl shadow-sm w-full max-w-md p-4 sm:p-7">
+        <div class="text-center mb-8">
+            <h1 class="block text-2xl font-bold font-heading text-slate-900">Bienvenue</h1>
+            <p class="mt-2 text-sm text-slate-500">Connectez-vous pour accéder à votre espace.</p>
+        </div>
+
+        <form>
+            <div class="grid gap-y-4">
+                <!-- Atom: Input Email -->
+                <div>
+                    <label for="email" class="block text-sm mb-2 text-slate-800 font-medium">Adresse Email</label>
+                    <div class="relative">
+                        <input type="email" id="email"
+                            class="py-3 px-4 block w-full border-slate-200 rounded-xl text-sm border shadow-sm focus:border-primary-500 focus:ring-primary-500 outline-none"
+                            required aria-describedby="email-error">
+                    </div>
+                </div>
+
+                <!-- Atom: Input Password -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="password" class="block text-sm text-slate-800 font-medium">Mot de passe</label>
+                        <!-- Atom: Link -->
+                        <a class="text-xs text-primary-500 hover:underline font-medium" href="#">Mot de passe oublié
+                            ?</a>
+                    </div>
+                    <div class="relative">
+                        <input type="password" id="password"
+                            class="py-3 px-4 block w-full border-slate-200 rounded-xl text-sm border shadow-sm focus:border-primary-500 focus:ring-primary-500 outline-none"
+                            required aria-describedby="password-error">
+                    </div>
+                </div>
+
+                <!-- Atom: Button -->
+                <button type="submit"
+                    class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-xl border border-transparent bg-primary-500 text-white hover:bg-primary-600 mt-4 transition-colors">
+                    Se connecter
+                </button>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

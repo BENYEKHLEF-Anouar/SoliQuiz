@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Molecule: Preline Navigation tabs</title>
+    <!-- Preline Core -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+</head>
+
+<body class="bg-slate-100 h-[200px] flex items-end">
+    <!-- Preline segment controller adaptation to Bottom Nav Pattern -->
+    <nav
+        class="w-full bg-white border-t border-slate-200 shadow-[0_-1px_15px_rgba(0,0,0,0.05)] dark:bg-neutral-900 dark:border-neutral-800">
+        <ul class="flex justify-around items-center h-[70px] px-2 pb-[env(safe-area-inset-bottom,20px)]">
+            <li class="w-full h-full">
+                <!-- Preline soft active styling -->
+                <a href="#"
+                    class="flex flex-col items-center justify-center w-full h-full text-primary-600 gap-1 rounded-xl bg-slate-50 focus:outline-none dark:bg-neutral-800 dark:text-primary-500">
+                    <svg class="shrink-0 size-6 mb-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="3" y="3" width="7" height="9" />
+                        <rect x="14" y="3" width="7" height="5" />
+                        <rect x="14" y="12" width="7" height="9" />
+                        <rect x="3" y="16" width="7" height="5" />
+                    </svg>
+                    <span class="text-[10px] font-bold">Accueil</span>
+                </a>
+            </li>
+            <li class="w-full h-full">
+                <a href="#"
+                    class="flex flex-col items-center justify-center w-full h-full text-slate-500 gap-1 rounded-xl hover:bg-slate-50 focus:outline-none dark:text-neutral-400 dark:hover:bg-neutral-800">
+                    <svg class="shrink-0 size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <span class="text-[10px] font-medium">Profil</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</body>
+
+</html>
+
+
+
+
+
+
+
+

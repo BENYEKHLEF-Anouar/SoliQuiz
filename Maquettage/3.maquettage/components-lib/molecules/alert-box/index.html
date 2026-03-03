@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Alert Box</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 50: 'var(--color-primary-50)' }, semantic: { errorLight: 'var(--color-error-100)', error: 'var(--color-error-500)', errorDark: 'var(--color-error-700)' } } } } };</script>
+</head>
+
+<body class="bg-gray-50 p-10">
+
+    <!-- Molecule : Alert Box (Error variant) -->
+    <div class="bg-semantic-errorLight border border-semantic-error/30 text-sm text-semantic-errorDark rounded-xl p-4 flex items-center justify-between"
+        role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
+        <div class="flex items-center gap-x-3">
+            <!-- Atom : Icon -->
+            <svg class="shrink-0 size-5 text-semantic-error" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" x2="12" y1="8" y2="12" />
+                <line x1="12" x2="12.01" y1="16" y2="16" />
+            </svg>
+            <span id="hs-soft-color-danger-label" class="font-medium">
+                Alerte : 25% d'échec constaté aujourd'hui sur les "Concepts Orientés Objet".
+            </span>
+        </div>
+        <!-- Atom : Button Outline Alert -->
+        <button type="button"
+            class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-semantic-error text-semantic-error hover:bg-white transition-colors bg-wrap">
+            Créer remédiation
+        </button>
+    </div>
+
+</body>
+
+</html>

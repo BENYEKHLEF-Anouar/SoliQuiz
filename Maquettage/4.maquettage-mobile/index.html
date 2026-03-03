@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="fr"
+    class="bg-slate-900 border-x border-slate-200 shadow-2xl h-[100dvh] mx-auto w-full max-w-[430px] overflow-hidden">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SoliQuiz: Mobile UI Kit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] }, colors: { primary: { 50: 'hsl(190, 80%, 95%)', 100: 'hsl(190, 80%, 90%)', 200: 'hsl(190, 80%, 80%)', 300: 'hsl(190, 80%, 70%)', 400: 'hsl(190, 80%, 60%)', 500: 'hsl(190, 80%, 45%)', 600: 'hsl(190, 80%, 35%)', 700: 'hsl(190, 80%, 25%)', 800: 'hsl(190, 80%, 15%)', 900: 'hsl(190, 80%, 5%)' }, semantic: { success: 'hsl(140, 65%, 45%)', error: 'hsl(0, 75%, 55%)', warning: 'hsl(35, 95%, 55%)', info: 'hsl(220, 80%, 55%)' } } } } };</script>
+</head>
+
+<body class="bg-slate-100 flex flex-col h-full font-sans overflow-hidden">
+
+    <header class="bg-white px-5 pt-10 pb-4 shadow-[0_4px_10px_-4px_rgba(0,0,0,0.1)] z-20 shrink-0">
+        <h1 class="text-2xl font-heading font-bold text-slate-900 leading-tight">Mobile UI Library</h1>
+        <p class="text-xs font-semibold text-primary-500 uppercase tracking-widest mt-1">SoliQuiz APP</p>
+    </header>
+
+    <main class="flex-1 overflow-y-auto px-5 py-6">
+
+        <div class="mb-6">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Atoms
+            </h2>
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50 space-y-3">
+                <a href="components-lib/atoms/logo/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Logo App</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/atoms/avatar/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Avatar</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/atoms/button/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Button (Touch optimized)</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/atoms/input/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Input Form</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/atoms/radio-check/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Radio & Checkbox</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/atoms/badge/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Badge & Indicators</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/atoms/progress-bar/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Progress Bar</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/atoms/icon/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Icon Button</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Molecules
+            </h2>
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50 space-y-3">
+                <a href="components-lib/molecules/header-app/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Header App</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/molecules/header-timer/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Header Timer Focus</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/molecules/bottom-nav/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Bottom Navigation Bar</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/molecules/card-qcm/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Card QCM (Touch Layout)</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/molecules/list-item/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">List Item (Historique)</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+                <a href="components-lib/molecules/score-circle/index.html"
+                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Score Circle Graph</span>
+                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> App Screens
+            </h2>
+            <div class="grid gap-3">
+                <a href="mockups/01-mobile-login.html"
+                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
+                    <div
+                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
+                        1</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">01. Authentification</h3>
+                        <p class="text-[11px] text-slate-500 font-medium">Ecran initial</p>
+                    </div>
+                </a>
+
+                <a href="mockups/02-mobile-dashboard.html"
+                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
+                    <div
+                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
+                        2</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">02. Apprenant Dashboard</h3>
+                        <p class="text-[11px] text-slate-500 font-medium">Menu, Stats, Bottom Nav</p>
+                    </div>
+                </a>
+
+                <a href="mockups/03-mobile-qcm-passation.html"
+                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
+                    <div
+                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
+                        3</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">03. Passation QCM</h3>
+                        <p class="text-[11px] text-slate-500 font-medium">Vue immersive, Timer, Input Check</p>
+                    </div>
+                </a>
+
+                <a href="mockups/04-mobile-qcm-result.html"
+                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
+                    <div
+                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
+                        4</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">04. Résultat Évaluation</h3>
+                        <p class="text-[11px] text-slate-500 font-medium">Score Apprenant et Correction</p>
+                    </div>
+                </a>
+
+
+                <a href="mockups/05-mobile-history.html"
+                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
+                    <div
+                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
+                        5</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">05. Historique Apprenant</h3>
+                        <p class="text-[11px] text-slate-500 font-medium">Anciennes passes et notes</p>
+                    </div>
+                </a>
+
+                <a href="mockups/06-mobile-formateur-qcms.html"
+                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
+                    <div
+                        class="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center shrink-0">
+                        6</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">06. Mes QCM (Formateur)</h3>
+                        <p class="text-[11px] text-slate-500 font-medium">Listing et gestion de bibliothèque</p>
+                    </div>
+                </a>
+
+                <a href="mockups/07-mobile-formateur-class-notes.html"
+                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
+                    <div
+                        class="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center shrink-0">
+                        7</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">07. Notes Classe (Formateur)</h3>
+                        <p class="text-[11px] text-slate-500 font-medium">Suivi pédagogique centralisé</p>
+                    </div>
+                </a>
+
+                <a href="mockups/08-mobile-profile.html"
+                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
+                    <div
+                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
+                        8</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">08. Profil Utilisateur</h3>
+                        <p class="text-[11px] text-slate-500 font-medium">Gestion du compte et déconnexion</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </main>
+</body>
+
+</html>

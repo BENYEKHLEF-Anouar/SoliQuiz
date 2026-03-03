@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz - Authentification</title>
+    <link rel="stylesheet" href="../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: 'var(--color-primary-50)', 100: 'var(--color-primary-100)', 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };
+    </script>
+</head>
+
+<body class="bg-slate-50 flex items-center h-full">
+
+    <main class="w-full max-w-md mx-auto p-6">
+        <div class="mt-7 bg-white border border-slate-200 rounded-2xl shadow-sm">
+            <div class="p-4 sm:p-7">
+                <div class="text-center mb-8">
+                    <!-- Logo Atom -->
+                    <div class="flex justify-center mb-6">
+                        <div class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center shadow-md">
+                            <svg class="text-white w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <path d="m9 15 2 2 4-4" />
+                            </svg>
+                        </div>
+                    </div>
+                    <h1 class="block text-2xl font-bold font-heading text-slate-900 tracking-tight">Espace d'évaluation
+                    </h1>
+                    <p class="mt-2 text-sm text-slate-500 font-medium">Connectez-vous avec vos identifiants Solicode.
+                    </p>
+                </div>
+
+                <form>
+                    <div class="grid gap-y-4">
+                        <!-- Input Email -->
+                        <div>
+                            <label for="email" class="block text-sm mb-2 text-slate-800 font-medium">Adresse Email
+                                Initiale</label>
+                            <div class="relative">
+                                <input type="email" id="email"
+                                    class="py-3 px-4 block w-full border-slate-200 rounded-xl text-sm border shadow-sm focus:border-primary-500 focus:ring-primary-500 outline-none transition-colors"
+                                    required>
+                            </div>
+                        </div>
+
+                        <!-- Input Password -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="password" class="block text-sm text-slate-800 font-medium">Mot de
+                                    passe</label>
+                                <a class="text-xs text-primary-500 hover:text-primary-600 font-semibold hover:underline"
+                                    href="#">Mot de passe oublié ?</a>
+                            </div>
+                            <div class="relative">
+                                <input type="password" id="password"
+                                    class="py-3 px-4 block w-full border-slate-200 rounded-xl text-sm border shadow-sm focus:border-primary-500 focus:ring-primary-500 outline-none transition-colors"
+                                    required>
+                            </div>
+                        </div>
+
+                        <!-- Remember me -->
+                        <div class="flex items-center mt-2">
+                            <div class="flex">
+                                <input type="checkbox" id="remember"
+                                    class="shrink-0 mt-0.5 border-slate-200 rounded text-primary-500 focus:ring-primary-500 outline-none cursor-pointer">
+                            </div>
+                            <div class="ms-3">
+                                <label for="remember" class="text-sm font-medium text-slate-700 cursor-pointer">Se
+                                    souvenir de moi</label>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <button type="submit"
+                            class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-xl border border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:outline-none focus:bg-primary-600 transition-colors mt-2 shadow-sm">
+                            Se connecter
+                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-slate-50 border-t border-slate-200 p-4 text-center rounded-b-2xl">
+                <p class="text-xs text-slate-500">
+                    Problème d'accès ? <a href="#" class="text-primary-500 font-medium hover:underline">Contactez
+                        l'administration.</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>

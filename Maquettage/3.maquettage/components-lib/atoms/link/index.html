@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Link</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: { 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };
+    </script>
+</head>
+
+<body class="bg-gray-50 p-10 font-sans space-y-6 flex flex-col items-start">
+
+    <h2 class="text-xs text-slate-400 font-mono uppercase">Lien Principal (Navbar/Text)</h2>
+    <!-- Atom : Link Primary -->
+    <a href="#"
+        class="font-medium inline-flex items-center gap-x-1.5 text-primary-500 decoration-2 hover:underline focus:outline-none focus:underline hover:text-primary-600 font-sans transition-colors">
+        Mot de passe oublié ?
+    </a>
+
+    <h2 class="text-xs text-slate-400 font-mono uppercase mt-6">Lien Muted (Footer/Indications)</h2>
+    <!-- Atom : Link Muted -->
+    <a href="#"
+        class="inline-flex text-sm text-slate-500 hover:text-slate-800 focus:outline-none focus:text-slate-800 transition-colors">
+        Problème technique ? Contactez l'administration.
+    </a>
+
+</body>
+
+</html>

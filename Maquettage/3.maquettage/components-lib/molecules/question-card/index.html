@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Question Editor Card (Formateur)</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 100: 'var(--color-primary-100)' }, semantic: { success: 'var(--color-success-500)' } } } } };</script>
+</head>
+
+<body class="bg-gray-50 flex justify-center items-start pt-[5%] p-4">
+
+    <!-- Molecule : Question Editor Card -->
+    <article
+        class="bg-white border shadow-sm border-slate-200 rounded-2xl w-full max-w-3xl flex flex-col focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2 transition-shadow duration-300">
+        <!-- Card Header -->
+        <header
+            class="border-b border-slate-200 py-4 px-6 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
+            <div class="flex items-center gap-3">
+                <span
+                    class="inline-flex size-[28px] bg-slate-800 text-white rounded-full items-center justify-center text-xs font-bold shadow-sm">1</span>
+                <span class="text-sm font-semibold text-slate-800 uppercase tracking-wide">Configuration de la
+                    Question</span>
+            </div>
+            <!-- Bouton Options (X) -->
+            <button class="text-slate-400 hover:text-slate-600 transition-colors">
+                <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m18 15-6-6-6 6" />
+                </svg>
+            </button>
+        </header>
+
+        <!-- Card Body -->
+        <div class="p-6 space-y-6">
+
+            <!-- Consigne -->
+            <div>
+                <label for="cons-1" class="block text-sm font-medium mb-2 text-slate-800">Énoncé de la question</label>
+                <textarea id="cons-1"
+                    class="w-full py-3 px-4 block border-slate-200 rounded-xl text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-colors bg-white font-medium"
+                    rows="2">Quelle méthode HTTP est utilisée pour créer une nouvelle ressource dans une API REST ?</textarea>
+            </div>
+
+            <!-- Builder Réponses (Choix Multiple / Unique) -->
+            <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-semibold text-slate-500 uppercase">Options de réponses (Identifier la
+                        correcte)</span>
+                    <select
+                        class="py-1 px-2 border-slate-200 rounded-md text-xs border shadow-sm focus:ring-primary-500 bg-white cursor-pointer">
+                        <option selected>Choix Unique (Bouton Radio)</option>
+                        <option>Choix Multiple (Cases à cocher)</option>
+                    </select>
+                </div>
+
+                <!-- Option Group -->
+                <div
+                    class="flex items-center gap-4 bg-white p-2 rounded-lg border border-semantic-success shadow-sm ring-1 ring-semantic-success/20">
+                    <!-- Atom : Check = Good Answer -->
+                    <div class="flex items-center justify-center p-2 rounded-md bg-semantic-success/10 cursor-pointer hover:bg-semantic-success/20 transition-colors"
+                        title="Cocher comme bonne réponse">
+                        <input type="radio" name="correct-ans" checked
+                            class="border-semantic-success text-semantic-success focus:ring-semantic-success size-4 cursor-pointer">
+                    </div>
+                    <!-- Atom : Input Answer -->
+                    <input type="text" value="POST"
+                        class="py-2 px-3 block w-full border-transaparent rounded-lg text-sm font-medium text-slate-800 focus:border-primary-500 outline-none w-full">
+                </div>
+
+                <div
+                    class="flex items-center gap-4 bg-white p-2 rounded-lg border border-slate-200 shadow-sm focus-within:ring-1 focus-within:border-primary-500">
+                    <div class="flex items-center justify-center p-2 rounded-md hover:bg-slate-100 cursor-pointer transition-colors"
+                        title="Cocher comme bonne réponse">
+                        <input type="radio" name="correct-ans"
+                            class="border-slate-300 text-primary-500 focus:ring-primary-500 size-4 cursor-pointer">
+                    </div>
+                    <input type="text" value="GET"
+                        class="py-2 px-3 block w-full border-transaparent rounded-lg text-sm text-slate-800 outline-none w-full">
+                </div>
+
+                <button type="button"
+                    class="py-2 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg text-slate-500 hover:text-primary-500 hover:bg-primary-50 transition-colors">
+                    <svg class="size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M5 12h14" />
+                        <path d="M12 5v14" />
+                    </svg>
+                    Ajouter une option
+                </button>
+            </div>
+
+            <!-- Feedback -->
+            <div>
+                <label for="feed-1" class="block text-sm font-medium mb-2 text-slate-800 flex items-center gap-2">
+                    Feedback Pédagogique <span
+                        class="bg-primary-100 text-primary-800 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Optionnel</span>
+                </label>
+                <textarea id="feed-1"
+                    class="w-full py-2.5 px-3 block border-slate-200 rounded-xl text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-colors"
+                    rows="2" placeholder="Explication affichée à l'étudiant à la fin..."></textarea>
+            </div>
+
+        </div>
+    </article>
+
+</body>
+
+</html>

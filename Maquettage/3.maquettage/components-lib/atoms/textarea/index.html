@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Textarea</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: { 500: 'var(--color-primary-500)' } } } } };
+    </script>
+</head>
+
+<body class="bg-gray-50 p-10 font-sans space-y-8 max-w-sm w-full">
+
+    <div>
+        <h2 class="text-xs text-slate-400 font-mono uppercase mb-3">Textarea Base</h2>
+        <!-- Atom : Textarea -->
+        <label for="textarea-base" class="block text-sm font-medium mb-2 text-slate-800">Feedback (Optionnel)</label>
+        <textarea id="textarea-base"
+            class="py-3 px-4 block w-full border-slate-200 rounded-xl text-sm border shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-colors"
+            rows="3" placeholder="Expliquez pourquoi c'est la bonne réponse..."></textarea>
+    </div>
+
+</body>
+
+</html>

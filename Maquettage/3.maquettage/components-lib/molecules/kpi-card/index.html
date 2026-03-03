@@ -3,59 +3,50 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Molécule: KPI Card - SoliQuiz</title>
+    <title>Molécule: KPI Card</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap"
-        rel="stylesheet">
-    <script>tailwind.config = { theme: { extend: { colors: { primary: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5' }, secondary: { 50: '#f0fdfa', 500: '#14b8a6' } }, fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] } } } }</script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { semantic: { success: 'var(--color-success-500)', successLight: 'var(--color-success-100)' } } } } };</script>
 </head>
 
-<body class="bg-slate-100 font-sans p-10 flex flex-wrap gap-5">
+<body class="bg-gray-50 flex justify-center items-center h-screen p-4">
 
-    <!-- KPI Card — Sessions -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center gap-4 min-w-[200px]">
-        <div class="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-500" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-        </div>
-        <div>
-            <p class="text-sm font-medium text-slate-500">Sessions actives</p>
-            <p class="font-heading font-bold text-3xl text-slate-900">3</p>
-        </div>
-    </div>
+    <!-- Molecule : KPI Card (Admin Dashboard) -->
+    <div class="flex flex-col bg-white border border-slate-200 shadow-sm rounded-xl w-full max-w-xs">
+        <div class="p-5 md:p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">Tests Actifs
+                        Aujourd'hui</h3>
+                    <!-- Atom: Stat -->
+                    <div class="text-3xl font-bold font-heading text-slate-900">124</div>
+                </div>
 
-    <!-- KPI Card — QCM passés -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center gap-4 min-w-[200px]">
-        <div class="w-12 h-12 rounded-xl bg-secondary-50 flex items-center justify-center shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary-500" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-            </svg>
-        </div>
-        <div>
-            <p class="text-sm font-medium text-slate-500">QCM passés aujourd'hui</p>
-            <p class="font-heading font-bold text-3xl text-slate-900">45</p>
-        </div>
-    </div>
+                <div
+                    class="flex items-center justify-center p-3 rounded-xl bg-semantic-successLight text-semantic-success">
+                    <svg class="shrink-0 size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        <path d="M12 9v1m0 4v1" />
+                    </svg>
+                </div>
+            </div>
 
-    <!-- KPI Card — Taux réussite -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center gap-4 min-w-[200px]">
-        <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-        </div>
-        <div>
-            <p class="text-sm font-medium text-slate-500">Taux de réussite global</p>
-            <p class="font-heading font-bold text-3xl text-slate-900">78<span
-                    class="text-lg font-semibold text-slate-500">%</span></p>
+            <div class="mt-4 flex items-center gap-x-2">
+                <!-- Atom: Badge -->
+                <span
+                    class="inline-flex items-center gap-x-1 py-0.5 px-2 rounded-md bg-semantic-successLight text-semantic-success text-xs font-medium">
+                    <svg class="inline-block size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="m5 12 7-7 7 7" />
+                        <path d="M12 19V5" />
+                    </svg>
+                    12.5%
+                </span>
+                <span class="text-xs text-slate-500 font-medium">depuis le dernier mois</span>
+            </div>
         </div>
     </div>
 

@@ -1,71 +1,70 @@
-/* style.css - Variables CSS (Design Tokens) pour SoliQuiz */
+/* Charte Graphique - SoliQuiz */
+/* Ton: Professionnel, Pédagogique, Apaisant */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap');
 
 :root {
   /* =========================================
-     1. TYPOGRAPHIE
-  ========================================= */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Outfit', system-ui, -apple-system, sans-serif;
+     Palette Primaire (Ocean Teal - Apaisant & Focus)
+     ========================================= */
+  --color-primary-50:  hsl(190, 85%, 96%);
+  --color-primary-100: hsl(190, 85%, 90%);
+  --color-primary-200: hsl(190, 85%, 80%);
+  --color-primary-300: hsl(190, 80%, 70%);
+  --color-primary-400: hsl(190, 75%, 60%);
+  --color-primary-500: hsl(190, 80%, 45%); /* Base Principale */
+  --color-primary-600: hsl(190, 85%, 35%); /* Hover */
+  --color-primary-700: hsl(190, 85%, 28%);
+  --color-primary-800: hsl(190, 80%, 22%);
+  --color-primary-900: hsl(190, 75%, 15%);
 
   /* =========================================
-     2. PALETTE DE COULEURS (HSL)
-  ========================================= */
-
-  /* Primary (Indigo) - Base: hsl(238, 81%, 67%) correspond à #6366f1 */
-  --color-primary-50:  hsl(226, 100%, 97%);
-  --color-primary-100: hsl(226, 100%, 94%);
-  --color-primary-200: hsl(228, 96%, 89%);
-  --color-primary-300: hsl(229, 93%, 82%);
-  --color-primary-400: hsl(234, 89%, 74%);
-  --color-primary-500: hsl(238, 81%, 67%); /* BASE */
-  --color-primary-600: hsl(243, 75%, 59%);
-  --color-primary-700: hsl(244, 55%, 51%);
-  --color-primary-800: hsl(244, 54%, 41%);
-  --color-primary-900: hsl(243, 46%, 35%);
-
-  /* Secondary (Teal) - Base: hsl(173, 80%, 40%) correspond à #14b8a6 */
-  --color-secondary-50:  hsl(166, 76%, 97%);
-  --color-secondary-100: hsl(167, 85%, 89%);
-  --color-secondary-500: hsl(173, 80%, 40%); /* BASE */
-  --color-secondary-600: hsl(174, 83%, 32%);
-  --color-secondary-900: hsl(175, 42%, 16%);
-
-  /* Neutrals (Slate) */
-  --color-slate-50:  hsl(210, 40%, 98%);
-  --color-slate-100: hsl(210, 38%, 95%);
-  --color-slate-200: hsl(214, 32%, 91%);
-  --color-slate-300: hsl(213, 27%, 84%);
-  --color-slate-400: hsl(215, 20%, 65%);
-  --color-slate-500: hsl(215, 16%, 47%); /* Texes secondaires */
-  --color-slate-600: hsl(215, 19%, 35%);
-  --color-slate-700: hsl(215, 25%, 27%);
-  --color-slate-800: hsl(215, 28%, 17%); /* Textes principaux */
-  --color-slate-900: hsl(222, 47%, 11%); /* Titres forts */
-
-  /* Sémantique */
-  --color-success: hsl(142, 71%, 45%); /* Vert */
-  --color-error:   hsl(0, 84%, 60%);   /* Rouge */
-  --color-warning: hsl(38, 92%, 50%);  /* Orange */
-  --color-info:    hsl(221, 83%, 53%); /* Bleu */
+     Palette Neutre (Slate - Doux et Lisible)
+     ========================================= */
+  --color-neutral-50:  hsl(210, 20%, 98%);
+  --color-neutral-100: hsl(210, 16%, 93%);
+  --color-neutral-200: hsl(210, 14%, 85%);
+  --color-neutral-300: hsl(210, 12%, 75%);
+  --color-neutral-400: hsl(210, 11%, 65%);
+  --color-neutral-500: hsl(210, 10%, 45%); /* Texte secondaire */
+  --color-neutral-600: hsl(210, 12%, 35%);
+  --color-neutral-700: hsl(210, 14%, 25%);
+  --color-neutral-800: hsl(210, 15%, 18%); /* Texte basique */
+  --color-neutral-900: hsl(210, 20%, 10%);
 
   /* =========================================
-     3. BORDURES & RADIUS
-  ========================================= */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+     Palette Sémantique (Accessibilité UI)
+     ========================================= */
+  --color-success-100: hsl(140, 60%, 90%);
+  --color-success-500: hsl(140, 65%, 45%); /* Vert vif mais doux */
+  --color-success-700: hsl(140, 70%, 25%);
+
+  --color-warning-100: hsl(35, 90%, 90%);
+  --color-warning-500: hsl(35, 95%, 55%); /* Orange alerte */
+  --color-warning-700: hsl(35, 95%, 30%);
+
+  --color-error-100: hsl(0, 80%, 95%);
+  --color-error-500: hsl(0, 75%, 55%); /* Rouge sans agressivité */
+  --color-error-700: hsl(0, 80%, 35%);
+
+  --color-info-100: hsl(220, 80%, 95%);
+  --color-info-500: hsl(220, 80%, 55%); /* Bleu info standard */
+  --color-info-700: hsl(220, 85%, 35%);
+
+  /* =========================================
+     Typographie
+     ========================================= */
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: var(--color-slate-50);
-  color: var(--color-slate-800);
+  font-family: var(--font-body);
+  color: var(--color-neutral-800);
+  background-color: var(--color-neutral-50);
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  color: var(--color-slate-900);
+  color: var(--color-neutral-900);
 }

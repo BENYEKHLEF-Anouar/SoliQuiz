@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html lang="fr"
+    class="bg-slate-900 border-x border-slate-200 shadow-2xl h-[100dvh] mx-auto w-full max-w-[430px] overflow-hidden">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Mockup: Formateur QCMs</title>
+    <!-- Preline Core -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] }, colors: { primary: { 50: 'hsl(190, 80%, 95%)', 100: 'hsl(190, 80%, 90%)', 200: 'hsl(190, 80%, 80%)', 300: 'hsl(190, 80%, 70%)', 400: 'hsl(190, 80%, 60%)', 500: 'hsl(190, 80%, 45%)', 600: 'hsl(190, 80%, 35%)', 700: 'hsl(190, 80%, 25%)', 800: 'hsl(190, 80%, 15%)', 900: 'hsl(190, 80%, 5%)' }, semantic: { success: 'hsl(140, 65%, 45%)', error: 'hsl(0, 75%, 55%)', warning: 'hsl(35, 95%, 55%)', info: 'hsl(220, 80%, 55%)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 flex flex-col h-full font-sans overflow-hidden relative">
+
+    <!-- Preline Navbar Dark -->
+    <header class="bg-slate-900 border-b border-white/10 z-50 shrink-0 sticky top-0 pt-[env(safe-area-inset-top,20px)]">
+        <nav class="px-5 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <!-- <a href="../index.html"
+                    class="flex items-center justify-center size-9 bg-white/10 rounded-xl text-white hover:bg-white/20 transition-all border border-white/5 active:scale-90"
+                    title="Retour à la Galerie Mobile">
+                    <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                </a> -->
+                <div>
+                    <h1 class="text-lg font-bold text-white font-heading leading-none">Soli<span
+                            class="text-primary-400">Quiz</span></h1>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.15em] mt-1">Espace Formateur</p>
+                </div>
+            </div>
+
+            <!-- Profile Dropdown Simulation -->
+            <div class="hs-dropdown relative inline-flex">
+                <button id="hs-dropdown-avatar"
+                    class="hs-dropdown-toggle size-[38px] rounded-full ring-2 ring-primary-500/20 border-2 border-slate-900 overflow-hidden active:scale-95 transition-transform">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        alt="Avatar">
+                </button>
+                <div class="hs-dropdown-menu transition-[opacity,margin] hs-dropdown-open:opacity-100 opacity-0 hidden min-w-48 bg-white shadow-xl rounded-2xl p-2 mt-2 border border-slate-100 dark:bg-neutral-900 dark:border-neutral-800"
+                    role="menu">
+                    <a class="flex items-center gap-x-3 py-2 px-3 rounded-xl text-sm text-slate-700 hover:bg-slate-50 font-medium"
+                        href="08-mobile-profile.html">Mon Profil</a>
+                    <div class="my-1 border-t border-slate-100 dark:border-neutral-800"></div>
+                    <a class="flex items-center gap-x-3 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 font-bold"
+                        href="01-mobile-login.html">Déconnexion</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-1 overflow-y-auto w-full px-4 py-6 pb-24 hide-scrollbar">
+
+        <div class="flex flex-col gap-4 mb-5">
+            <!-- PRELINE SEARCH INPUT -->
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
+                    <svg class="shrink-0 size-4 text-slate-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                    </svg>
+                </div>
+                <input type="text"
+                    class="py-3 px-4 ps-11 block w-full border-slate-200 rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                    placeholder="Rechercher un QCM...">
+            </div>
+            <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Mes Créations (12)</h2>
+        </div>
+
+        <div class="space-y-4">
+            <!-- PRELINE CARD PATTERN -->
+            <div
+                class="flex flex-col bg-white border border-slate-200 shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700">
+                <div class="p-4 md:p-5">
+                    <div class="flex justify-between items-start mb-2">
+                        <!-- Preline Badge Soft Success -->
+                        <span
+                            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-800/30 dark:text-primary-500 leading-none">Actif</span>
+
+                        <!-- PRELINE DROPDOWN -->
+                        <div class="hs-dropdown relative inline-flex">
+                            <button id="hs-dropdown-card" type="button"
+                                class="hs-dropdown-toggle py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-slate-500 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                                aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="1" />
+                                    <circle cx="19" cy="12" r="1" />
+                                    <circle cx="5" cy="12" r="1" />
+                                </svg>
+                            </button>
+                            <!-- Preline Dropdown Menu -->
+                            <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-40 bg-white shadow-md rounded-lg p-2 mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 z-[60]"
+                                role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-card">
+                                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-slate-800 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                                    href="#">Modifier</a>
+                                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-slate-800 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                                    href="#">Dupliquer</a>
+                                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-semantic-error hover:bg-semantic-error focus:outline-none focus:bg-slate-100"
+                                    href="#">Archiver</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">Bases de React JS</h3>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-neutral-500">Questions: 20 • Assigné à : DW_102</p>
+                    <div class="mt-4 flex gap-2">
+                        <!-- Preline Solid Button -->
+                        <button type="button"
+                            class="w-full py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-slate-800 text-white hover:bg-slate-900 focus:outline-none focus:bg-slate-900 disabled:opacity-50 disabled:pointer-events-none dark:bg-white dark:text-neutral-800">
+                            Résultats (14)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRELINE CARD PATTERN (Secondary/Draft state) -->
+            <div
+                class="flex flex-col bg-white border border-slate-200 shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 opacity-80 decoration-inherit">
+                <div class="p-4 md:p-5">
+                    <div class="flex justify-between items-start mb-2">
+                        <span
+                            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-white/10 dark:text-white leading-none">Brouillon</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">Architecture MVC</h3>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-neutral-500">Questions: 5 • Non assigné</p>
+                    <div class="mt-4 flex gap-2">
+                        <!-- Preline Outline Button -->
+                        <button type="button"
+                            class="w-full py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50 focus:outline-none focus:bg-slate-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700">
+                            Continuer l'édition
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- PRELINE MODAL TOGGLE: FAB Button (Bottom Right Mobile) -->
+    <button type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-basic-modal"
+        data-hs-overlay="#hs-basic-modal"
+        class="fixed bottom-24 right-5 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary-700 active:bg-primary-800 transition z-40">
+        <svg class="shrink-0 size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+    </button>
+
+    <!-- PRELINE MODAL FULL PATTERN -->
+    <div id="hs-basic-modal"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="hs-basic-modal-label">
+        <div
+            class="hs-overlay-open:mt-auto hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-10 opacity-0 transition-all ease-out flex items-end sm:items-center min-h-full">
+            <div
+                class="flex flex-col bg-white border shadow-sm rounded-t-xl sm:rounded-xl pointer-events-auto w-full max-w-[430px] mx-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
+                <div class="flex justify-between items-center py-3 px-4 border-b dark:border-neutral-700">
+                    <h3 id="hs-basic-modal-label" class="font-bold text-slate-800 dark:text-white">
+                        Nouveau QCM
+                    </h3>
+                    <button type="button"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-slate-100 text-slate-800 hover:bg-slate-200 focus:outline-none focus:bg-slate-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        aria-label="Close" data-hs-overlay="#hs-basic-modal">
+                        <span class="sr-only">Fermer</span>
+                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <!-- Preline Input -->
+                    <div>
+                        <label for="input-label" class="block text-sm font-medium mb-2 dark:text-white">Titre du
+                            QCM</label>
+                        <input type="text" id="input-label"
+                            class="py-3 px-4 block w-full border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                            placeholder="Ex: Masterclass Javascript">
+                    </div>
+                </div>
+                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-neutral-700">
+                    <button type="button"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50 focus:outline-none focus:bg-slate-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                        data-hs-overlay="#hs-basic-modal">
+                        Annuler
+                    </button>
+                    <!-- Preline Primary Button -->
+                    <button type="button"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 focus:outline-none focus:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none">
+                        Créer le brouillon
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Navigation Mobile Formateur -->
+    <nav class="absolute bottom-0 w-full bg-slate-900 border-t border-slate-800 z-50 rounded-b-[2.5rem]">
+        <div class="flex justify-around items-center h-[70px] px-2 pb-safe">
+            <a href="06-mobile-formateur-qcms.html"
+                class="flex flex-col items-center justify-center w-full h-full text-primary-500 gap-1 rounded-xl active:bg-slate-800 transition-colors">
+                <svg class="size-6 mb-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5">
+                    <rect x="3" y="3" width="7" height="9" />
+                    <rect x="14" y="3" width="7" height="5" />
+                    <rect x="14" y="12" width="7" height="9" />
+                    <rect x="3" y="16" width="7" height="5" />
+                </svg>
+                <span class="text-[10px] font-bold">QCMs</span>
+            </a>
+            <a href="07-mobile-formateur-class-notes.html"
+                class="flex flex-col items-center justify-center w-full h-full text-slate-400 gap-1 rounded-xl active:bg-slate-800 transition-colors">
+                <svg class="size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <span class="text-[10px] font-medium">Classe</span>
+            </a>
+        </div>
+    </nav>
+    <style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        .pt-safe-top {
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</body>
+
+</html>

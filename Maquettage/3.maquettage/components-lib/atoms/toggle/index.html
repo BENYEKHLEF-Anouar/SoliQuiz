@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Toggle (Switch)</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: { 500: 'var(--color-primary-500)' } } } } };
+    </script>
+</head>
+
+<body class="bg-gray-50 p-10 font-sans space-y-8 max-w-sm w-full">
+
+    <div>
+        <h2 class="text-xs text-slate-400 font-mono uppercase mb-3">Toggle (Switch)</h2>
+        <!-- Atom : Toggle -->
+        <input type="checkbox" id="hs-basic-usage"
+            class="relative w-[3.25rem] h-7 p-px bg-slate-200 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-primary-500 checked:border-primary-500 focus:checked:border-primary-500
+        before:inline-block before:size-6 before:bg-white checked:before:bg-primary-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200">
+    </div>
+
+</body>
+
+</html>

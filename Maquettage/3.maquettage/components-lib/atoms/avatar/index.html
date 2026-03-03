@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Avatar</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: { 500: 'var(--color-primary-500)' } } } } };
+    </script>
+</head>
+
+<body class="bg-gray-50 p-10 font-sans space-y-6 flex items-start gap-8">
+
+    <div>
+        <h2 class="text-xs text-slate-400 font-mono uppercase mb-3">Avatar Image</h2>
+        <!-- Atom : Avatar Image -->
+        <img class="inline-block size-[38px] rounded-full ring-2 ring-white shadow-sm"
+            src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+            alt="Avatar Apprenant">
+    </div>
+
+    <div>
+        <h2 class="text-xs text-slate-400 font-mono uppercase mb-3">Avatar Initials (Fallback)</h2>
+        <!-- Atom : Avatar Initials -->
+        <span
+            class="inline-flex items-center justify-center size-[38px] rounded-full bg-primary-100 ring-2 ring-white shadow-sm">
+            <span class="text-sm font-medium text-primary-800 leading-none">FA</span>
+        </span>
+    </div>
+
+</body>
+
+</html>

@@ -4,50 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atom: Badge - SoliQuiz</title>
+    <title>Atom: Badge</title>
+    <!-- CSS Custom -->
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <!-- Tailwind Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <script>tailwind.config = { theme: { extend: { colors: { primary: { 100: '#e0e7ff', 700: '#4338ca' } }, fontFamily: { sans: ['Inter', 'sans-serif'] } } } }</script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: {
+                            100: 'var(--color-primary-100)',
+                            800: 'var(--color-primary-800)',
+                        },
+                        semantic: {
+                            success: 'var(--color-success-500)',
+                            successLight: 'var(--color-success-100)',
+                            error: 'var(--color-error-500)',
+                            errorLight: 'var(--color-error-100)',
+                            warning: 'var(--color-warning-500)',
+                            warningLight: 'var(--color-warning-100)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body class="bg-slate-50 font-sans p-10 flex flex-wrap gap-4 items-start">
+<body class="bg-white p-10 font-sans space-y-6 flex flex-col items-start">
 
-    <!-- Module -->
-    <span
-        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-100 text-primary-700">
-        Dev Web
-    </span>
+    <h2 class="text-xs text-slate-400 font-mono uppercase">Badges Soft (Preline UI)</h2>
+    <div class="flex gap-4">
+        <!-- Atom : Badge Primary -->
+        <span
+            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-semibold bg-primary-100 text-primary-800">
+            Badge Primary
+        </span>
 
-    <!-- Succès -->
-    <span
-        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
-        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-        Réussi
-    </span>
+        <!-- Atom : Badge Success -->
+        <span
+            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-semibold bg-semantic-successLight text-semantic-success">
+            100% Réussi
+        </span>
 
-    <!-- Erreur -->
-    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
-        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-        Échoué
-    </span>
+        <!-- Atom : Badge Warning -->
+        <span
+            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-semibold bg-semantic-warningLight text-semantic-warning">
+            En attente
+        </span>
 
-    <!-- Warning (pour formateur) -->
-    <span
-        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
-        ⚠️ En difficulté
-    </span>
+        <!-- Atom : Badge Error -->
+        <span
+            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-semibold bg-semantic-errorLight text-semantic-error">
+            Échec (20%)
+        </span>
+    </div>
 
-    <!-- API Connectée -->
-    <span
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-100 text-teal-700 border border-teal-200">
-        <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
-        API Connectée
-    </span>
-
-    <!-- Statut neutre -->
-    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
-        Brouillon
-    </span>
+    <h2 class="text-xs text-slate-400 font-mono uppercase mt-6">Badges avec Icônes</h2>
+    <div class="flex gap-4">
+        <!-- Atom : Badge Icon Timer -->
+        <span
+            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">
+            <svg class="shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+            </svg>
+            20 min restantes
+        </span>
+    </div>
 
 </body>
 

@@ -1,17 +1,32 @@
 # Sitemap : SoliQuiz
 
-## Arborescence Principale (par Rôle)
+## Arborescence Principale (Structure Siloing par Rôle)
 
-- [Authentification] (Login global / Choix du rôle)
-- [Espace Étudiant]
-    - [Tableau de bord Étudiant] (Vue d'ensemble, QCM à passer, Derniers résultats)
-    - [Salle d'Évaluation] (Passation de QCM : Timer, Auto-sauvegarde)
-    - [Mes Résultats & Corrections] (Feedback détaillé par QCM et par micro-objectif)
-- [Espace Formateur]
-    - [Tableau de bord Formateur] (Vue des sessions en cours et alertes)
-    - [Bibliothèque de QCM] (Liste des QCM, Création, Édition des questions/choix)
-    - [Suivi & Analyses Classe] (Statistiques de réussite de la session par étudiant et par objectif)
-- [Espace Administrateur]
-    - [Vue Globale] (Tableau de bord analytique des cohortes)
-    - [Gestion des Utilisateurs] (Affectation des rôles Formateurs/Étudiants)
-    - [Synchronisation SoliLMS] (Configuration et déclenchement de l'export API)
+- **[Authentification / Connexion]** (Page d'accueil publique)
+    - Redirection conditionnelle selon le rôle de l'utilisateur.
+
+- **[Espace Apprenant (Étudiant)]**
+    - **[Tableau de Bord / Accueil]** : Vue d'ensemble (Score global, QCM en attente).
+    - **[Évaluations]** :
+        - [Liste des QCM à passer]
+        - [Passation du QCM] (Interface de test avec Timer & Auto-sauvegarde)
+        - [Feedback Post-Test] (Correction détaillée avec justifications)
+    - **[Progression personnelle]** : Historique et scores par micro-objectifs pédagogiques.
+
+- **[Espace Formateur]**
+    - **[Tableau de Bord / Accueil]** : Supervision de la classe (Statistiques rapides).
+    - **[Gestion Pédagogique (QCM)]** :
+        - [Bibliothèque de QCM] (Liste et statuts)
+        - [Création / Édition QCM] (Éditeur de questions et choix)
+    - **[Suivi d'apprentissage]** : Tableau des scores de la classe ventilés par objectifs pédagogiques.
+
+- **[Espace Administrateur]**
+    - **[Tableau de Bord / Supervision]** : Taux de réussite globaux par cohorte / module.
+    - **[Administration système]** :
+        - [Gestion des Utilisateurs] (Attribution des rôles)
+        - [Configuration API SoliLMS] (Endpoints et logs de synchronisation)
+
+## Règles Appliquées
+- **Architecture de contenu** : Séparation stricte des accès post-login par profils d'utilisateurs.
+- **Règle des 3 clics respectée** : Les fonctionnalités vitales (Passer un test, Créer un QCM, Configurer) sont à 1 ou 2 clics du tableau de bord.
+- **Cohérence des fonctionnalités** : Réponse directe aux exigences du cahier des charges (Timer, Feedback, SoliLMS, Progression par objectifs).

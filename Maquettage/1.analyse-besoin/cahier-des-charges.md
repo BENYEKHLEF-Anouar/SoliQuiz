@@ -1,25 +1,23 @@
 # Cahier des Charges : SoliQuiz
 
 ## 1. Contexte & Enjeux
-- **Pourquoi ce projet ?** : Éliminer la lourdeur logistique (Google Forms) et la double saisie des notes, tout en offrant une évaluation granulaire par micro-objectif connectée au système central (SoliLMS).
-- **Cible** : 
-  - Étudiants (pour qui l'expérience doit être mobile-first, stress-free avec auto-sauvegarde).
-  - Formateurs (pour qui la création de QCM et le suivi doivent être rapides et centralisés).
-  - Administrateurs (pour la supervision globale et la gestion des accès).
-- **Tons & Style** : Professionnel, clair, pédagogique et rassurant (pour les étudiants).
+- **Pourquoi ce projet ?** : Digitaliser l'évaluation quotidienne à Solicode, centraliser les outils (remplacer Google Forms/Excel), éliminer la double saisie manuelle et offrir un suivi détaillé des compétences.
+- **Cible** : Étudiants (apprenants), Formateurs, et Administrateur de Solicode limitant l'opacité et permettant un suivi granulaire de la progression.
+- **Tons & Style** : Professionnel, clair, pédagogique et apaisant (expérience sans stress pour les évaluations).
 
 ## 2. Besoins Fonctionnels
-- **Besoin Métier** : Automatiser l'évaluation quotidienne (création, passation, calcul de score analytique) pour libérer du temps aux formateurs et offrir un feedback constructif et détaillé aux étudiants, tout en permettant à l'administration de suivre les performances.
+- **Besoin Métier** : Automatiser la création, la passation et la correction de QCM en les rattachant à des micro-objectifs précis, et injecter les résultats automatiquement dans un outil externe (SoliLMS).
 - **Fonctionnalités Clés** : 
-    - Création de QCM (Questions à choix unique/multiple, paramétrage).
-    - Passation de tests (Timer, auto-sauvegarde des réponses).
-    - Calcul automatique de scores globaux et par objectif pédagogique.
-    - Affichage de corrections détaillées (feedback).
-    - Tableaux de bord de suivi (étudiant, formateur, et vue globale pour l'admin).
-    - Synchronisation et interopérabilité avec SoliLMS.
-- **Contenus Indispensables** : Énoncés de questions/choix, corrections détaillées, score global et ventilé par objectif, historiques de résultats, statistiques de cohorte.
+    - Authentification sécurisée par rôles.
+    - Création de QCM (choix unique/multiple) par les formateurs.
+    - Passation du test avec timer intégré, sauvegarde automatique en temps réel et correction immédiate justifiée.
+    - Segmentation des scores par micro-objectifs pédagogiques.
+    - Tableau de bord avec suivi de la progression.
+    - Synchronisation des résultats finale avec SoliLMS.
+- **Contenus Indispensables** : Énoncés des QCM, choix de réponses, feedbacks pédagogiques, historiques de tests, statistiques individuelles et globales.
 
 ## 3. Contraintes
-- **Deadline** : Découpage Agile en 2 Sprints majeurs (Sprint 1 : MVP, Sprint 2 : Fonctionnalités Avancées).
-- **Technique** : Site Statique (Imposé, approche Vanilla JS et Tailwind CSS).
+- **Deadline** : Non précisée (Itératif : Sprints 1 et 2)
+- **Technique** : Interfaces statiques Mobile-First obligatoires (HTML5, CSS, JS vanilla), design system clair.
+- **Accessibilité** : Tolérance aux coupures réseau (Mode dégradé/Local storage).
 - **Langue** : Français

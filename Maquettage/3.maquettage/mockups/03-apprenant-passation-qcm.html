@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-gray-50 h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz - Passation QCM</title>
+    <link rel="stylesheet" href="../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: 'var(--color-primary-50)', 100: 'var(--color-primary-100)', 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' }, semantic: { warning: 'var(--color-warning-500)', warningLight: 'var(--color-warning-100)' } } } } };
+    </script>
+</head>
+
+<body class="text-slate-800 flex flex-col h-full overflow-hidden">
+
+    <!-- Header Timer (Sticky) -->
+    <header class="w-full bg-white border-b border-slate-200 shadow-sm shrink-0 z-50">
+        <div class="max-w-3xl mx-auto px-4 py-4 md:py-5 flex justify-between items-center w-full">
+            <div class="flex items-center gap-4">
+                <h1 class="text-lg md:text-xl font-bold font-heading text-slate-900 tracking-tight">Fondamentaux du PHP
+                </h1>
+                <span
+                    class="hidden md:inline-flex bg-slate-100 text-slate-600 py-1.5 px-3 rounded-full text-xs font-semibold">
+                    Question 4 / 20
+                </span>
+            </div>
+
+            <!-- Timer Warning -->
+            <div
+                class="flex items-center gap-2 bg-semantic-warningLight border border-semantic-warning/30 py-1.5 px-3 rounded-xl">
+                <svg class="shrink-0 size-4 text-semantic-warning animate-pulse" xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span class="text-sm font-bold text-semantic-warning font-mono">03:45</span>
+            </div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="h-1 bg-slate-100 w-full" role="progressbar" aria-valuenow="20" aria-valuemin="0"
+            aria-valuemax="100">
+            <div class="flex flex-col justify-center rounded-r-full overflow-hidden bg-primary-500 h-1 transition-all duration-500"
+                style="width: 20%"></div>
+        </div>
+    </header>
+
+    <!-- Main Content (Scrollable) -->
+    <main class="flex-1 overflow-y-auto w-full max-w-3xl mx-auto px-4 py-8 md:py-12">
+
+        <!-- Question Unit -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 shrink-0">
+            <div
+                class="md:hidden inline-flex mb-4 bg-slate-100 text-slate-600 py-1.5 px-3 rounded-full text-[10px] uppercase font-bold tracking-wider">
+                Question 4 / 20</div>
+
+            <h2 class="text-xl md:text-2xl font-semibold text-slate-900 leading-relaxed mb-8">
+                Parmi les propositions suivantes, laquelle crée un commentaire sur plusieurs lignes en PHP ?
+            </h2>
+
+            <!-- Options Check (Radio) -->
+            <div class="grid gap-3">
+                <label for="ans-1"
+                    class="flex p-4 w-full bg-white border border-slate-200 rounded-xl text-base focus-within:ring-2 focus-within:ring-primary-500 focus-within:border-primary-500 hover:bg-primary-50 cursor-pointer transition-colors shadow-sm">
+                    <input type="radio" name="php-comm" id="ans-1"
+                        class="shrink-0 mt-1 size-4 border-slate-300 rounded-full text-primary-500 focus:ring-primary-500">
+                    <span class="font-medium text-slate-800 ms-4"><code>// Ceci est un commentaire //</code></span>
+                </label>
+
+                <label for="ans-2"
+                    class="flex p-4 w-full bg-white border border-primary-500 ring-1 ring-primary-500 rounded-xl text-base bg-primary-50 cursor-pointer transition-colors shadow-sm">
+                    <input type="radio" name="php-comm" id="ans-2"
+                        class="shrink-0 mt-1 size-4 border-primary-500 rounded-full text-primary-500 focus:ring-primary-500"
+                        checked>
+                    <span class="font-medium text-primary-900 ms-4"><code>/* Ceci est un commentaire */</code></span>
+                </label>
+
+                <label for="ans-3"
+                    class="flex p-4 w-full bg-white border border-slate-200 rounded-xl text-base focus-within:ring-2 focus-within:ring-primary-500 focus-within:border-primary-500 hover:bg-primary-50 cursor-pointer transition-colors shadow-sm">
+                    <input type="radio" name="php-comm" id="ans-3"
+                        class="shrink-0 mt-1 size-4 border-slate-300 rounded-full text-primary-500 focus:ring-primary-500">
+                    <span
+                        class="font-medium text-slate-800 ms-4"><code>&lt;!-- Ceci est un commentaire --&gt;</code></span>
+                </label>
+
+                <label for="ans-4"
+                    class="flex p-4 w-full bg-white border border-slate-200 rounded-xl text-base focus-within:ring-2 focus-within:ring-primary-500 focus-within:border-primary-500 hover:bg-primary-50 cursor-pointer transition-colors shadow-sm">
+                    <input type="radio" name="php-comm" id="ans-4"
+                        class="shrink-0 mt-1 size-4 border-slate-300 rounded-full text-primary-500 focus:ring-primary-500">
+                    <span class="font-medium text-slate-800 ms-4"><code># Ceci est un commentaire #</code></span>
+                </label>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer Navigation (Sticky Fixed) -->
+    <footer class="w-full bg-white border-t border-slate-200 p-4 shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <div class="max-w-3xl mx-auto flex items-center justify-between">
+            <span class="text-xs text-slate-500 hidden sm:inline-block">Sauvegardé auto. (10:45)</span>
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                <button type="button"
+                    class="py-2.5 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
+                    Précédent
+                </button>
+                <button type="button"
+                    class="py-2.5 px-6 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-xl border border-transparent bg-primary-500 text-white shadow-sm hover:bg-primary-600 hover:-translate-y-0.5 transition-all w-full sm:w-auto">
+                    Suivant
+                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

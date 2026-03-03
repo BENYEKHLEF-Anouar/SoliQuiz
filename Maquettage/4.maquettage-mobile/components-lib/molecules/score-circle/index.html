@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Molecule: Mobile Score Circle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] }, colors: { primary: { 50: 'hsl(190, 80%, 95%)', 100: 'hsl(190, 80%, 90%)', 200: 'hsl(190, 80%, 80%)', 300: 'hsl(190, 80%, 70%)', 400: 'hsl(190, 80%, 60%)', 500: 'hsl(190, 80%, 45%)', 600: 'hsl(190, 80%, 35%)', 700: 'hsl(190, 80%, 25%)', 800: 'hsl(190, 80%, 15%)', 900: 'hsl(190, 80%, 5%)' }, semantic: { success: 'hsl(140, 65%, 45%)', error: 'hsl(0, 75%, 55%)', warning: 'hsl(35, 95%, 55%)', info: 'hsl(220, 80%, 55%)' } } } } };</script>
+</head>
+
+<body class="p-8 bg-white flex justify-center">
+    <div
+        class="w-32 h-32 rounded-full border-[6px] border-semantic-successLight flex items-center justify-center bg-white shadow-inner relative">
+        <svg class="absolute inset-0 w-full h-full text-semantic-success -rotate-90" viewBox="0 0 36 36">
+            <path class="stroke-current" stroke-dasharray="85, 100" stroke-width="3" fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+        </svg>
+        <div class="flex flex-col items-center">
+            <span class="text-4xl font-heading font-bold text-slate-900 leading-none">17</span>
+            <span class="text-sm font-bold text-slate-400">/ 20</span>
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+

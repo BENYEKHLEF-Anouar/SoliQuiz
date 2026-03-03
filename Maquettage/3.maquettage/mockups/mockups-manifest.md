@@ -1,14 +1,12 @@
-# Mockups Manifest — SoliQuiz
+# Manifeste des Mockups
 
-> Registre de toutes les pages assemblées dans `3.maquettage/mockups/`.
+## Liste Actuelle
 
-| # | Page | Fichier | Wireframe de référence | Statut |
-|---|------|---------|------------------------|--------|
-| 1 | Authentification | `mockups/authentification.html` | `wireframes/authentification.md` | ✅ Finalisé |
-| 2 | Tableau de bord Étudiant | `mockups/etudiant-dashboard.html` | `wireframes/etudiant-dashboard.md` | ✅ Finalisé |
-| 3 | Salle d'Évaluation | `mockups/etudiant-evaluation.html` | `wireframes/etudiant-evaluation.md` | ✅ Finalisé |
-| 4 | Résultats & Corrections | `mockups/etudiant-resultats.html` | `wireframes/etudiant-resultats.md` | ✅ Finalisé |
-| 5 | Tableau de bord Formateur | `mockups/formateur-dashboard.html` | `wireframes/formateur-dashboard.md` | ✅ Finalisé |
-| 6 | Bibliothèque de QCM | `mockups/formateur-bibliotheque.html` | `wireframes/formateur-bibliotheque.md` | ✅ Finalisé |
-| 7 | Suivi & Analyses Classe | `mockups/formateur-suivi.html` | `wireframes/formateur-suivi.md` | ✅ Finalisé |
-| 8 | Administration Globale | `mockups/admin-global.html` | `wireframes/admin-global.md` | ✅ Finalisé |
+| Nom Page | Fichier HTML | Wireframe Source | Statut |
+|---|---|---|---|
+| Auth / Login | `mockups/01-auth-login.html` | `01-auth-login.md` | En attente |
+| Apprenant - Dashboard | `mockups/02-apprenant-dashboard.html` | `02-apprenant-dashboard.md` | En attente |
+| Apprenant - Passation QCM | `mockups/03-apprenant-passation-qcm.html` | `03-apprenant-passation-qcm.md` | En attente |
+| Formateur - Dashboard | `mockups/04-formateur-dashboard.html` | `04-formateur-dashboard.md` | En attente |
+| Formateur - Création QCM | `mockups/05-formateur-creation-qcm.html` | `05-formateur-creation-qcm.md` | En attente |
+| Admin - Dashboard | `mockups/06-admin-dashboard.html` | `06-admin-dashboard.md` | En attente |

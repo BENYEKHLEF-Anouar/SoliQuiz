@@ -1,181 +1,219 @@
 # Stratégie de Contenu : SoliQuiz
 
-**Date de création** : 2026-03-01
-**Cible** : Étudiants, Formateurs et Administrateurs
-**Ton Global** : Professionnel, clair, pédagogique et rassurant
+**Date de création** : 03/03/2026
+**Cible** : Étudiants (apprenants), Formateurs, et Administrateur de Solicode
+**Ton Global** : Professionnel, clair, pédagogique et apaisant (atténuer le stress de l'évaluation)
 
 ---
 
-## Page : Authentification
+## Page : Authentification / Connexion
 
 ### SEO & Structure
 
-**Mot-clé Principal** : Connexion plateforme QCM
+**Mot-clé Principal** : Connexion SoliQuiz
 **Intention de Recherche** : Navigationnelle
 
 **Structure des Titres** :
-- **H1** : Bienvenue sur SoliQuiz, votre plateforme d'auto-évaluation
-- **H2** : Connectez-vous à votre espace personnel
-- **H2** : Un problème de connexion ?
+- **H1** : Connectez-vous à votre espace SoliQuiz
+- **H2** : Identifiez-vous pour continuer
+- **H3** : En cas de problème de connexion
 
 **Mots-Clés Secondaires** :
-- espace étudiant
-- accès formateur
-- portail évaluation
+- Accès apprenant
+- Espace formateur
+- Solicode évaluation
 
 ### Copywriting
 
 **Accroche Principale** :
-Accédez à vos QCM et suivez votre progression en temps réel avec SoliQuiz.
+Accédez à votre espace d'évaluation personnalisé pour suivre votre progression ou gérer vos classes.
 
 **Messages Clés** :
-- Connectez-vous simplement avec vos identifiants SoliLMS.
-- Retrouvez instantanément vos évaluations du jour.
-- Accès sécurisé pour étudiants et formateurs.
+- Accès sécurisé à votre espace personnel.
+- Redirection automatique selon votre profil (Apprenant, Formateur, Admin).
+- Vos données sont synchronisées en temps réel.
 
 **Appel à l'Action (CTA)** :
 Se connecter à mon espace
 
 ---
 
-## Page : Tableau de bord Étudiant
+## Page : Espace Apprenant (Tableau de Bord)
 
 ### SEO & Structure
 
-**Mot-clé Principal** : Suivi progression étudiant
-**Intention de Recherche** : Informationnelle
+**Mot-clé Principal** : Suivi évaluation étudiant
+**Intention de Recherche** : Informationnelle / Navigationnelle
 
 **Structure des Titres** :
-- **H1** : Tableau de bord : Suivez vos acquis quotidiens
-- **H2** : Vos évaluations à passer aujourd'hui
-- **H2** : Vos derniers résultats par objectif
+- **H1** : Bonjour [Prénom], voici où vous en êtes
+- **H2** : Vos évaluations en attente
+- **H2** : Votre progression par compétence
+- **H2** : Historique de vos tests récents
 
 **Mots-Clés Secondaires** :
-- QCM en attente
-- score micro-objectif
-- révision ciblée
+- QCM à passer
+- Score par objectif
+- Résultats SoliQuiz
 
 ### Copywriting
 
 **Accroche Principale** :
-Visualisez en un clin d'œil vos QCM à réaliser et vos derniers scores pour cibler vos révisions.
+Suivez votre évolution en un coup d'œil. Découvrez vos forces et les compétences à consolider aujourd'hui.
 
 **Messages Clés** :
-- Ne manquez aucune évaluation quotidienne.
-- Comprenez immédiatement vos points forts et vos lacunes.
-- Visualisez votre progression par micro-objectif.
+- Visualisez immédiatement vos prochains QCM à passer.
+- Comprenez votre score grâce à une ventilation par micro-objectif.
+- Retrouvez l'historique de vos corrections expliquées.
 
 **Appel à l'Action (CTA)** :
-Démarrer le QCM
+Commencer le test
 
 ---
 
-## Page : Salle d'Évaluation (Test)
+## Page : Passation du QCM (Apprenant)
 
 ### SEO & Structure
 
-**Mot-clé Principal** : Passation QCM en ligne
-**Intention de Recherche** : Transactionnelle
+**Mot-clé Principal** : Passer QCM SoliQuiz
+**Intention de Recherche** : Transactionnelle (Action)
 
 **Structure des Titres** :
-- **H1** : Évaluation en cours : [Titre du QCM]
-- **H2** : Questions à choix unique
-- **H2** : Questions à choix multiples
+- **H1** : Évaluation : [Titre du QCM]
+- **H2** : Question [XX] sur [Total]
+- **H3** : Consignes spécifiques (si applicables)
 
 **Mots-Clés Secondaires** :
-- auto-sauvegarde QCM
-- timer évaluation
-- valider réponses
+- Test en cours
+- Sauvegarde automatique
+- Temps restant
 
 ### Copywriting
 
 **Accroche Principale** :
-Prenez votre temps. Vos réponses sont sauvegardées automatiquement à chaque clic.
+Répondez à votre rythme. Vos réponses sont sauvegardées automatiquement à chaque clic.
 
 **Messages Clés** :
-- Gardez un œil sur le temps restant grâce au chronomètre.
-- Aucune perte de données en cas de coupure réseau.
-- Naviguez librement entre les questions avant de soumettre.
+- Pas de stress : l'enregistrement est constant, même en cas de coupure de connexion.
+- Le chronomètre vous aide à gérer votre temps (si activé).
+- Le feedback de correction sera disponible dès la soumission.
 
 **Appel à l'Action (CTA)** :
 Valider mes réponses
 
 ---
 
-## Page : Mes Résultats & Corrections
+## Page : Espace Formateur (Tableau de Bord)
 
 ### SEO & Structure
 
-**Mot-clé Principal** : Correction détaillée QCM
-**Intention de Recherche** : Informationnelle
+**Mot-clé Principal** : Gestion classe formateur
+**Intention de Recherche** : Informationnelle / Navigationnelle
 
 **Structure des Titres** :
-- **H1** : Vos résultats et corrections détaillées
-- **H2** : Score global et répartition par objectif
-- **H2** : Explications des bonnes réponses
+- **H1** : Supervision de vos cohortes
+- **H2** : Évaluations récentes
+- **H2** : Taux de réussite par objectif
+- **H2** : Raccourcis pédagogiques
 
 **Mots-Clés Secondaires** :
-- justifier réponse
-- feedback pédagogique
-- comprendre erreur
+- Créer un QCM
+- Résultats classe
+- Analyse par compétence
 
 ### Copywriting
 
 **Accroche Principale** :
-Découvrez précisément pourquoi chaque réponse est juste ou fausse pour progresser efficacement.
+Pilotez la progression de vos classes. Identifiez rapidement les lacunes collectives pour ajuster vos prochaines sessions.
 
 **Messages Clés** :
-- Obtenez un feedback immédiat dès la fin du test.
-- Analysez votre score par sous-objectif.
-- Lisez les explications claires des formateurs.
+- Obtenez une vue globale immédiate sur le niveau d'acquisition des compétences.
+- Créez un nouveau test structuré en moins de 3 minutes.
+- Ne saisissez plus jamais de notes manuellement : l'export vers SoliLMS est automatique.
 
 **Appel à l'Action (CTA)** :
-Retourner au tableau de bord
+Créer une nouvelle évaluation
 
 ---
 
-## Page : Bibliothèque de QCM (Formateur)
+## Page : Création / Édition QCM (Formateur)
 
 ### SEO & Structure
 
-**Mot-clé Principal** : Création QCM formateur
-**Intention de Recherche** : Transactionnelle
+**Mot-clé Principal** : Créer QCM pédagogique
+**Intention de Recherche** : Transactionnelle (Action)
 
 **Structure des Titres** :
-- **H1** : Bibliothèque et Création de QCM
-- **H2** : Gérer vos questionnaires existants
-- **H2** : Créer un nouveau QCM lié à un objectif
+- **H1** : Concevoir une nouvelle évaluation
+- **H2** : Informations générales du test
+- **H2** : Éditeur de questions
+- **H3** : Paramètres de la question (Choix, Feedback, Objectif)
 
 **Mots-Clés Secondaires** :
-- éditer question
-- lier session
-- banque de questions
+- Lier à une session
+- Feedback correctif
+- Ajouter choix
 
 ### Copywriting
 
 **Accroche Principale** :
-Créez, modifiez et assignez vos QCM en quelques clics pour simplifier vos évaluations.
+Construisez une évaluation ciblée. Liez chaque question à un micro-objectif pour un suivi pédagogique millimétré.
 
 **Messages Clés** :
-- Associez facilement un QCM à un micro-objectif de session.
-- Définissez rapidement les types de questions et les bonnes réponses.
-- Gagnez du temps grâce à une interface intuitive.
+- Définissez des questions à choix unique ou multiple avec facilité.
+- Associez une explication pédagogique à la bonne réponse pour le feedback étudiant.
+- Organisez le QCM pour une synchronisation fluide avec le référentiel de compétences.
 
 **Appel à l'Action (CTA)** :
-Créer un nouveau QCM
+Enregistrer le QCM
+
+---
+
+## Page : Espace Administrateur (Supervision Globale)
+
+### SEO & Structure
+
+**Mot-clé Principal** : Supervision centre formation
+**Intention de Recherche** : Informationnelle / Navigationnelle
+
+**Structure des Titres** :
+- **H1** : Centre de contrôle Solicode
+- **H2** : Performances globales par cohorte
+- **H2** : État des synchronisations API
+- **H2** : Gestion des accès utilisateurs
+
+**Mots-Clés Secondaires** :
+- Dashboard administrateur
+- SoliLMS sync
+- Taux de réussite global
+
+### Copywriting
+
+**Accroche Principale** :
+Supervisez l'activité d'évaluation de tout le centre. Assurez-vous de la bonne transmission des données vers SoliLMS.
+
+**Messages Clés** :
+- Surveillez la santé pédagogique des cohortes via des indicateurs macro.
+- Contrôlez les journaux de synchronisation automatique avec l'API SoliLMS.
+- Gérez les habilitations des formateurs et des apprenants en quelques clics.
+
+**Appel à l'Action (CTA)** :
+Voir les logs API
 
 ---
 
 ## Notes & Cohérence Globale
 
 **Ton Appliqué** :
-Un vocabulaire clair et simple est utilisé pour ne pas stresser l'étudiant (utilisation de mots comme "temps réel", "sauvegarde automatique"). Côté formateur, l'accent est mis sur l'efficacité et le gain de temps ("quelques clics", "simplifier"). 
+- **Pour l'apprenant** : Rassurant, encourageant ("pas de stress", "suivez votre évolution"). L'idée est de dédramatiser le moment de l'évaluation grâce à des phrases courtes et rassurantes sur la technique (auto-sauvegarde).
+- **Pour le formateur** : Efficace, professoral, orienté gain de temps ("en un coup d'œil", "pilotez", "gagnez du temps").
+- **Pour l'administrateur** : Analytique, macro, axé fiabilité ("supervisez", "contrôlez", "santé").
 
 **Champ Sémantique Récurrent** :
-- QCM, évaluation, test
-- Micro-objectif, session, progression
-- Feedback, correction, score
-- Auto-sauvegarde, temps réel
+- "Micro-objectifs", "Compétences", "Cohorte", "Progression", "Synchronisation", "Auto-sauvegarde", "Feedback pédagogique".
 
 **Parcours Utilisateur** :
-L'étudiant se connecte (Authentification) -> voit ses QCM en attente (Tableau de bord) -> clique pour passer le test (Salle d'évaluation) -> soumet ses réponses et accède immédiatement aux explications (Mes Résultats).
+- La navigation post-login aiguille immédiatement sur le dashboard du rôle concerné.
+- Depuis le dashboard Étudiant : le CTA principal pousse vers l'action de passation (Évaluation la plus urgente).
+- Depuis le dashboard Formateur : on met en évidence le CTA de "Création", suivi du détail d'analyse des résultats passés.
+- Les actions lourdes (passage de test, création de QCM) bénéficient de vues dédiées sans distraction (full-screen/focus mode).

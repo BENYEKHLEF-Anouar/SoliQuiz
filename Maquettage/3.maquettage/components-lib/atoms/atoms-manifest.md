@@ -1,20 +1,23 @@
-# Atoms Manifest — SoliQuiz
+# Manifeste des Atoms
 
-> Registre des composants atomiques créés dans `components-lib/atoms/`.
-> Mettre à jour ce fichier après chaque création ou modification d'atom.
+## Liste Actuelle
 
-| # | Nom | Dossier | Variants | Utilisé dans |
-|---|-----|---------|----------|--------------|
-| 1 | **button** | `atoms/button/` | primary, secondary, danger, ghost, large, small | Toutes les pages |
-| 2 | **title** | `atoms/title/` | h1, h2, h3, h4 | Toutes les pages |
-| 3 | **text** | `atoms/text/` | lead, normal, small, muted, mono | Toutes les pages |
-| 4 | **input** | `atoms/input/` | email, password, text | authentification, formateur-bibliotheque |
-| 5 | **badge** | `atoms/badge/` | module, success, error, warning, api-status, neutre | Toutes les pages |
-| 6 | **nav-link** | `atoms/nav-link/` | standard, actif, retour, footer | Toutes les pages |
-| 7 | **progress-bar** | `atoms/progress-bar/` | standard, danger, épaisse (QCM) | etudiant-dashboard, etudiant-evaluation |
-| 8 | **radio-checkbox** | `atoms/radio-checkbox/` | radio (choix unique), checkbox (choix multiple) | etudiant-evaluation |
-| 9 | **timer** | `atoms/timer/` | normal, warning (<5min), critique (<1min) | etudiant-evaluation |
-| 10 | **logo** | `atoms/logo/` | header, large (login) | Toutes les pages |
-| 11 | **select** | `atoms/select/` | session, objectif | formateur-bibliotheque |
-| 12 | **icon-button** | `atoms/icon-button/` | edit, delete, expand, close | formateur-bibliotheque, formateur-suivi |
-| 13 | **blockquote** | `atoms/blockquote/` | explication-formateur | etudiant-resultats |
+| Nom Atom | Emplacement | Variants / Dépendances CSS | Pages d'utilisation |
+|---|---|---|---|
+| `logo` | `components-lib/atoms/logo/` | default, admin, apprenant | auth, navbar |
+| `title` | `components-lib/atoms/title/` | h1, h2, h3 | Toutes |
+| `text` | `components-lib/atoms/text/` | base, sm, muted | Toutes |
+| `link` | `components-lib/atoms/link/` | base, active, muted | auth, navbar, footer |
+| `button` | `components-lib/atoms/button/` | primary, outline, icon | Toutes |
+| `input` | `components-lib/atoms/input/` | text, email, pwd, search | auth, creation, admin |
+| `input-check` | `components-lib/atoms/input-check/` | radio, checkbox | passation, creation |
+| `label` | `components-lib/atoms/label/` | default | passation, creation |
+| `avatar` | `components-lib/atoms/avatar/` | base | navbar |
+| `badge` | `components-lib/atoms/badge/` | default, success, danger | dashboard |
+| `progress-bar` | `components-lib/atoms/progress-bar/` | default | dashboard |
+| `icon` | `components-lib/atoms/icon/` | alert, check, info | dashboard |
+| `select` | `components-lib/atoms/select/` | default | creation, admin |
+| `stat` | `components-lib/atoms/stat/` | big | dashboard formateur |
+| `toggle` | `components-lib/atoms/toggle/` | switch | creation |
+| `textarea` | `components-lib/atoms/textarea/` | base | creation |
+| `image` | `components-lib/atoms/image/` | responsive | admin |

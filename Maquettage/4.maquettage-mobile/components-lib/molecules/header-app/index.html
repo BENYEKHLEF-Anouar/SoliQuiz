@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Molecule: Mobile Header App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] }, colors: { primary: { 50: 'hsl(190, 80%, 95%)', 100: 'hsl(190, 80%, 90%)', 200: 'hsl(190, 80%, 80%)', 300: 'hsl(190, 80%, 70%)', 400: 'hsl(190, 80%, 60%)', 500: 'hsl(190, 80%, 45%)', 600: 'hsl(190, 80%, 35%)', 700: 'hsl(190, 80%, 25%)', 800: 'hsl(190, 80%, 15%)', 900: 'hsl(190, 80%, 5%)' }, semantic: { success: 'hsl(140, 65%, 45%)', error: 'hsl(0, 75%, 55%)', warning: 'hsl(35, 95%, 55%)', info: 'hsl(220, 80%, 55%)' } } } } };</script>
+    <style>
+        .pt-safe-top {
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50">
+    <header class="bg-white px-5 pt-safe-top pb-4 border-b border-slate-200 shadow-sm">
+        <div class="h-[44px] hidden ios:block"></div>
+        <div class="flex justify-between items-center mt-2">
+            <div class="flex items-center gap-3">
+                <button type="button"
+                    class="w-10 h-10 rounded-full border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <img class="w-full h-full object-cover"
+                        src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+                        alt="Avatar">
+                </button>
+                <div class="flex flex-col">
+                    <span
+                        class="text-lg font-heading font-bold text-slate-900 tracking-tight leading-none">Mehdi.B</span>
+                    <span class="text-[11px] font-semibold text-primary-500 uppercase tracking-wider">DW_102</span>
+                </div>
+            </div>
+            <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 text-slate-800 relative">
+                <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                </svg>
+                <span
+                    class="absolute top-2 right-2.5 size-2 bg-semantic-warning rounded-full border border-white"></span>
+            </button>
+        </div>
+    </header>
+</body>
+
+</html>
+
+
+
+
+
+
+
+

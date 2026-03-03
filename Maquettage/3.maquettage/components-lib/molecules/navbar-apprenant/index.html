@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Navbar Apprenant</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50">
+
+    <!-- Molecule : Navbar Apprenant -->
+    <header class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-slate-200">
+        <nav class="relative max-w-7xl w-full flex flex-wrap md:grid md:grid-cols-12 basis-full items-center px-4 md:px-6 mx-auto py-3"
+            aria-label="Global">
+
+            <!-- Logo -->
+            <div class="md:col-span-3">
+                <a class="flex items-center gap-2 group outline-none" href="#" aria-label="SoliQuiz Accueil">
+                    <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-sm">
+                        <svg class="text-white w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-heading font-bold text-slate-900 tracking-tight">Soli<span
+                            class="text-primary-500">Quiz</span></span>
+                </a>
+            </div>
+
+            <!-- Navbar Center (Menu) -->
+            <div class="hidden md:flex md:col-span-6 justify-center items-center gap-x-8">
+                <a href="#" class="font-medium text-primary-500 focus:outline-none flex items-center gap-x-2"
+                    aria-current="page">
+                    Dashboard
+                </a>
+                <a href="#"
+                    class="font-medium text-slate-500 hover:text-slate-800 transition-colors focus:outline-none flex items-center gap-x-2">
+                    Bibliothèque
+                </a>
+                <a href="#"
+                    class="font-medium text-slate-500 hover:text-slate-800 transition-colors focus:outline-none flex items-center gap-x-2">
+                    Progression
+                </a>
+            </div>
+
+            <!-- User Avatar / Drodown -->
+            <div class="flex items-center gap-x-3 md:gap-x-4 ms-auto md:col-span-3 justify-end relative">
+                <!-- Simulated Dropdown User -->
+                <button type="button"
+                    class="flex items-center justify-center gap-x-2 w-[38px] h-[38px] rounded-full border border-slate-200 bg-white text-slate-500 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 transition-colors disabled:opacity-50 disabled:pointer-events-none">
+                    <img class="inline-block size-[32px] rounded-full"
+                        src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+                        alt="Avatar">
+                </button>
+                <span class="hidden md:inline-block font-heading font-medium text-sm text-slate-800">Mehdi.B</span>
+            </div>
+        </nav>
+    </header>
+
+</body>
+
+</html>
