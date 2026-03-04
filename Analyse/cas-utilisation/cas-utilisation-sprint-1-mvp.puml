@@ -23,7 +23,7 @@ package "SoliQuiz - Sprint 1 (MVP)" {
         usecase "Créer la structure\nd'un QCM" as UC1_1
         usecase "Ajouter Questions\net Choix de réponses" as UC1_2
     }
-    package "Espace Étudiant — Passage QCM (Web)" {
+    package "Espace Étudiant — Passage QCM" {
         usecase "Passer le QCM\n(étudiant)" as UC1_3
         usecase "Calculer le score\nautomatiquement (global)" as UC1_4
     }
