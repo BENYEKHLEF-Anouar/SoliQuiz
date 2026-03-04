@@ -1,0 +1,114 @@
+classDiagram
+    direction TB
+
+    class User {
+        +Long id
+        +String name
+        +String email
+        +String password
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Role {
+        +Long id
+        +String name
+        +String guard_name
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Permission {
+        +Long id
+        +String name
+        +String guard_name
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class UniteApprentissage {
+        +Long id
+        +String name
+        +String description
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Session {
+        +Long id
+        +String name
+        +DateTime date
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Objectif {
+        +Long id
+        +String name
+        +String description
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class QCM {
+        +Long id
+        +String title
+        +Integer duration_minutes
+        +Boolean is_published
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Question {
+        +Long id
+        +String text
+        +String type
+        +Float points
+        +String feedback
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Option {
+        +Long id
+        +String text
+        +Boolean is_correct
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Attempt {
+        +Long id
+        +Float score
+        +DateTime start_time
+        +DateTime end_time
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Answer {
+        +Long id
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    %% Relations corrigées
+    Role "1" -- "0..*" User : has
+    Role "*" -- "*" Permission : has
+
+    User "1" -- "*" Role : manages (Admin)
+    User "1" -- "0..*" QCM : creates (Formateur)
+    User "1" -- "0..*" Attempt : makes (Etudiant)
+
+    UniteApprentissage "1" -- "0..*" Session : contains
+    Session "1" -- "0..*" Objectif : has
+    Objectif "1" -- "1" QCM : evaluates
+
+    QCM "1" -- "1..*" Question : contains
+    Question "1" -- "2..*" Option : proposes
+
+    QCM "1" -- "0..*" Attempt : receives
+    Attempt "1" -- "1..*" Answer : includes
+    
+    %% Question "1" -- "0..*" Answer : answered_in
+    Option "1" -- "0..*" Answer : selected_in
