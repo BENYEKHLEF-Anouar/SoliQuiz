@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Toggle Group</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 p-10 max-w-sm mx-auto">
+
+    <!-- Molecule : Toggle Group -->
+    <!-- Atoms : label, toggle -->
+    <!-- Contexte : Options binaires (On/Off) -->
+
+    <div
+        class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:border-primary-100 transition-colors">
+        <div class="flex flex-col gap-0.5">
+            <!-- Atom: Label -->
+            <label class="text-sm font-semibold text-slate-800">Mélanger les questions</label>
+            <span class="text-xs text-slate-400">Ordre aléatoire pour chaque étudiant</span>
+        </div>
+
+        <!-- Atom: Toggle Switch -->
+        <button type="button"
+            class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-slate-200"
+            role="switch" aria-checked="false">
+            <span aria-hidden="true"
+                class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+        </button>
+    </div>
+
+    <div
+        class="mt-4 flex items-center justify-between p-4 bg-primary-50 border border-primary-100 rounded-2xl shadow-sm">
+        <div class="flex flex-col gap-0.5">
+            <label class="text-sm font-semibold text-primary-900">Afficher la correction immédiatement</label>
+            <span class="text-xs text-primary-600/70">L'étudiant voit ses erreurs après validation</span>
+        </div>
+
+        <button type="button"
+            class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-primary-500"
+            role="switch" aria-checked="true">
+            <span aria-hidden="true"
+                class="translate-x-5 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+        </button>
+    </div>
+
+</body>
+
+</html>

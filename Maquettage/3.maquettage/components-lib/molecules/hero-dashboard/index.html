@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Hero Dashboard</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: '#f0fdfe', 100: '#ccf9fd', 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10">
+
+    <!-- Molecule : Hero Dashboard -->
+    <!-- Atoms : title (h1), badge/stat -->
+    <!-- Variants : apprenant (badge score), formateur (stats-banner + select cohorte) -->
+
+    <!-- Variant Apprenant -->
+    <section
+        class="w-full bg-gradient-to-br from-primary-50 to-white border border-primary-100 rounded-2xl px-6 py-8 mb-8">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <!-- Atom: Title h1 -->
+                <h1 class="text-2xl font-heading font-bold text-slate-900">
+                    Bonjour <span class="text-primary-500">Mehdi</span>, voici où vous en êtes 👋
+                </h1>
+                <p class="text-sm text-slate-500 mt-1">Continuez sur votre lancée ! Vous avez 1 test en attente.</p>
+            </div>
+            <!-- Atom: Badge KPI -->
+            <div class="flex flex-col items-center bg-white border border-primary-100 rounded-2xl px-6 py-3 shadow-sm">
+                <span class="text-xs font-medium text-slate-400 uppercase tracking-wide">Score Global</span>
+                <span class="text-3xl font-heading font-bold text-primary-500 leading-none mt-1">78%</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Variant Formateur (commenté) -->
+    <!--
+    <section class="w-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl px-6 py-8">
+        <h1 class="text-2xl font-heading font-bold text-white">Supervision de vos cohortes</h1>
+        <select class="mt-3 ...">Développeurs Web 101</select>
+        ... stats-banner ...
+    </section>
+    -->
+
+</body>
+
+</html>

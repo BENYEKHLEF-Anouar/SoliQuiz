@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-slate-50">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz - Ma Bibliothèque QCM</title>
+    <link rel="stylesheet" href="../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: 'var(--color-primary-50)', 100: 'var(--color-primary-100)', 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };
+    </script>
+</head>
+
+<body class="text-slate-800">
+
+    <!-- Header / Navbar Apprenant -->
+    <header
+        class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-slate-200 sticky top-0">
+        <nav class="relative max-w-7xl w-full flex flex-wrap md:grid md:grid-cols-12 basis-full items-center px-4 md:px-6 mx-auto py-3"
+            aria-label="Global">
+
+            <!-- Logo -->
+            <div class="md:col-span-3">
+                <a class="flex items-center gap-2 group outline-none" href="02-apprenant-dashboard.html"
+                    aria-label="SoliQuiz Accueil">
+                    <div
+                        class="size-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/10 transition-transform group-hover:scale-110">
+                        <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-xl font-heading font-bold text-slate-900 tracking-tight">Soli<span
+                                class="text-primary-500">Quiz</span></span>
+                        <span
+                            class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-0.5">Apprenant</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Navbar Center (Menu - Hidden on Mobile) -->
+            <div class="hidden md:flex md:col-span-6 justify-center items-center gap-x-8">
+                <a href="02-apprenant-dashboard.html"
+                    class="font-bold text-slate-400 hover:text-slate-800 transition-colors focus:outline-none flex items-center gap-x-2 font-heading uppercase tracking-wide text-sm">Dashboard</a>
+                <a href="08-apprenant-bibliotheque.html"
+                    class="font-bold text-primary-600 focus:outline-none flex items-center gap-x-2 font-heading uppercase tracking-wide text-sm"
+                    aria-current="page">Bibliothèque</a>
+                <a href="07-apprenant-resultats.html"
+                    class="font-bold text-slate-400 hover:text-slate-800 transition-colors focus:outline-none flex items-center gap-x-2 font-heading uppercase tracking-wide text-sm">Progression</a>
+            </div>
+
+            <!-- User Avatar / Dropdown -->
+            <div class="flex items-center gap-x-3 md:gap-x-4 ms-auto md:col-span-3 justify-end relative">
+                <div class="hs-dropdown relative inline-flex">
+                    <button id="hs-dropdown-avatar" type="button"
+                        class="hs-dropdown-toggle inline-flex items-center gap-x-2 text-sm font-semibold rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50 focus:outline-none focus:bg-slate-50 disabled:opacity-50 disabled:pointer-events-none p-1 pr-3 transition-all active:scale-95">
+                        <img class="inline-block size-8 rounded-full shadow-sm"
+                            src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+                            alt="Avatar">
+                        <span
+                            class="hidden md:inline-block text-slate-800 font-heading font-bold text-sm">Mehdi.B</span>
+                        <svg class="hs-dropdown-open:rotate-180 size-4 transition" xmlns="http://www.w3.org/2000/svg"
+                            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </button>
+
+                    <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-48 bg-white shadow-xl rounded-2xl p-2 mt-2 border border-slate-100 z-50"
+                        role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-avatar">
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-800 hover:bg-slate-50 focus:outline-none focus:bg-slate-100 font-medium"
+                            href="#">Mon Profil</a>
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-800 hover:bg-slate-50 focus:outline-none focus:bg-slate-100 font-medium"
+                            href="#">Paramètres</a>
+                        <div class="my-1 border-t border-slate-100"></div>
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-red-600 hover:bg-red-50 focus:outline-none font-bold"
+                            href="01-auth-login.html">
+                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                            Déconnexion
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div>
+                <h1 class="text-4xl font-heading font-bold text-slate-900 tracking-tight leading-tight">Mes Évaluations
+                </h1>
+                <p class="text-slate-500 mt-2 font-medium">Retrouvez l'historique complet de vos passages et vos
+                    brouillons.</p>
+            </div>
+            <div class="flex gap-2">
+                <div class="relative group">
+                    <select
+                        class="py-2.5 px-4 pr-10 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all cursor-pointer">
+                        <option>Toutes les thématiques</option>
+                        <option>Backend PHP</option>
+                        <option>Frontend UI</option>
+                        <option>Bases de données</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Filters & Sidebar Stats -->
+            <aside class="col-span-1 lg:col-span-3 space-y-8">
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Filtrer par statut</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" checked
+                                class="rounded border-slate-300 text-primary-500 focus:ring-primary-500">
+                            <span
+                                class="text-sm font-bold text-slate-700 group-hover:text-primary-600 transition-colors">Terminés
+                                (12)</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="rounded border-slate-300 text-primary-500 focus:ring-primary-500">
+                            <span
+                                class="text-sm font-bold text-slate-700 group-hover:text-primary-600 transition-colors">En
+                                cours (2)</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group opacity-50">
+                            <input type="checkbox" disabled
+                                class="rounded border-slate-300 text-primary-500 focus:ring-primary-500">
+                            <span class="text-sm font-bold text-slate-700 italic">Échoués (0)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bg-primary-900 p-6 rounded-2xl shadow-xl shadow-primary-900/10 text-white">
+                    <h3 class="text-xs font-bold text-primary-400 uppercase tracking-widest mb-4">Statistiques Globales
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <span class="text-4xl font-black font-heading tracking-tighter">8.4<span
+                                    class="text-primary-400">/10</span></span>
+                            <p class="text-xs text-primary-300/80 font-bold uppercase mt-1">Moyenne de la cohorte</p>
+                        </div>
+                        <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                            <span class="text-xs font-bold text-primary-200">Total QCM</span>
+                            <span class="text-xl font-bold font-heading">15</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main History List -->
+            <section class="col-span-1 lg:col-span-9">
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 md:p-10 shadow-sm">
+                    <div class="space-y-8">
+
+                        <!-- List Item 1 -->
+                        <div
+                            class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 border-l-4 border-emerald-500 bg-emerald-50/10 mb-4 shadow-sm shadow-emerald-500/5">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="size-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+                                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <div class="flex flex-col">
+                                    <h3 class="text-lg font-bold text-slate-900 leading-tight">Fondamentaux du PHP 8.x
+                                    </h3>
+                                    <span class="text-xs text-slate-400 font-medium">Validé le 03 Mars 2026 à
+                                        14:45</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-6 justify-between md:justify-end">
+                                <span
+                                    class="px-4 py-1.5 bg-emerald-500 text-white rounded-full text-xs font-black shadow-lg shadow-emerald-500/20">18/20</span>
+                                <a href="07-apprenant-resultats.html"
+                                    class="flex items-center gap-1.5 text-slate-400 font-bold text-sm hover:text-primary-500 transition-colors uppercase tracking-widest">
+                                    Détails <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- List Item 2 -->
+                        <div
+                            class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 border-l-4 border-emerald-500 bg-emerald-50/10 mb-4">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="size-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+                                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <div class="flex flex-col">
+                                    <h3 class="text-lg font-bold text-slate-900 leading-tight">UML & Conception
+                                        d'Architectures</h3>
+                                    <span class="text-xs text-slate-400 font-medium">Validé le 25 Fév 2026 à
+                                        10:15</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-6 justify-between md:justify-end">
+                                <span
+                                    class="px-4 py-1.5 bg-emerald-500 text-white rounded-full text-xs font-black">15/20</span>
+                                <a href="07-apprenant-resultats.html"
+                                    class="flex items-center gap-1.5 text-slate-400 font-bold text-sm hover:text-primary-500 transition-colors uppercase tracking-widest">
+                                    Détails <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- List Item 3 (En cours / Brouillon) -->
+                        <div
+                            class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 border-l-4 border-amber-500 bg-amber-50/10 mb-4">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="size-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+                                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div class="flex flex-col text-amber-900/70">
+                                    <h3 class="text-lg font-bold text-slate-900 leading-tight">Javascript Vanilla - DOM
+                                        API</h3>
+                                    <span class="text-xs text-amber-600 font-medium italic">Reprise possible
+                                        (Brouillon)</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-6 justify-between md:justify-end">
+                                <span
+                                    class="px-4 py-1.5 bg-white border border-amber-200 text-amber-600 rounded-full text-[10px] font-black uppercase tracking-widest">En
+                                    attente</span>
+                                <button
+                                    class="px-5 py-2 bg-amber-500 text-white font-bold rounded-xl text-xs hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20">Reprendre</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="mt-12 flex items-center justify-center gap-2">
+                        <button
+                            class="size-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 cursor-not-allowed">
+                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button
+                            class="size-10 rounded-xl bg-primary-500 text-white font-bold flex items-center justify-center shadow-lg shadow-primary-500/30">1</button>
+                        <button
+                            class="size-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center font-bold text-slate-600 hover:border-primary-500 hover:text-primary-500 transition-all">2</button>
+                        <button
+                            class="size-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:border-primary-500 hover:text-primary-500 transition-all">
+                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+</body>
+
+</html>

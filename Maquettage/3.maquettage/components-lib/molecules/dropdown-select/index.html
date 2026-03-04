@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Dropdown Select</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 max-w-sm mx-auto">
+
+    <!-- Molecule : Dropdown Select -->
+    <!-- Atom : select -->
+    <!-- Contexte : formateur-dashboard (sélection cohorte) -->
+
+    <div class="flex flex-col gap-1.5">
+        <label for="select-cohorte" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+            Cohorte active
+        </label>
+        <div class="relative">
+            <select id="select-cohorte"
+                class="w-full py-2.5 px-4 pr-10 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 bg-white shadow-sm appearance-none cursor-pointer focus:border-primary-500 focus:ring-primary-500 outline-none transition-colors">
+                <option value="dw101" selected>Développeurs Web 101</option>
+                <option value="dw102">Développeurs Web 102</option>
+                <option value="mob01">Mobile Dev 01</option>
+                <option value="mob02">Mobile Dev 02</option>
+            </select>
+            <!-- Chevron -->
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

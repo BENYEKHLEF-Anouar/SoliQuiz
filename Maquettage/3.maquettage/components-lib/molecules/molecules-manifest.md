@@ -15,6 +15,8 @@
 | `section` | `components-lib/molecules/section/` | title, wrapper content | dashboards |
 | `card-qcm` | `components-lib/molecules/card-qcm/` | title, text, badge, button | apprenant-dashboard |
 | `progress-item` | `components-lib/molecules/progress-item/` | text, progress-bar | dashboards |
+| `progress-list` | `components-lib/molecules/progress-list/` | progress-item | dashboards |
+| `progress-item-cohort`| `components-lib/molecules/progress-item-cohort/` | text, progress-bar, icon | dashboards |
 | `list-history` | `components-lib/molecules/list-history/` | list-item | apprenant-dashboard |
 | `list-item` | `components-lib/molecules/list-item/` | text, badge, link | apprenant-dashboard |
 | `header-timer` | `components-lib/molecules/header-timer/` | title, badge, text | passation |
@@ -26,10 +28,18 @@
 | `dropdown-select` | `components-lib/molecules/dropdown-select/` | select | formateur-dashboard |
 | `stats-banner` | `components-lib/molecules/stats-banner/` | stat | formateur-dashboard |
 | `header-editor` | `components-lib/molecules/header-editor/` | breadcrumbs, editable-title, btn | creation |
+| `breadcrumbs` | `components-lib/molecules/breadcrumbs/` | link | editor, nav |
+| `editable-title` | `components-lib/molecules/editable-title/` | input (h1) | editor |
 | `sidebar-settings` | `components-lib/molecules/sidebar-settings/`| title, select-group, toggle-group | creation |
+| `select-group` | `components-lib/molecules/select-group/` | label, select | editor, settings |
+| `toggle-group` | `components-lib/molecules/toggle-group/` | label, toggle | editor, settings |
 | `editor-main` | `components-lib/molecules/editor-main/` | question-card | creation |
 | `question-card` | `components-lib/molecules/question-card/` | textarea, input, select, input-check| creation |
+| `type-selector` | `components-lib/molecules/type-selector/` | button | editor |
+| `options-list` | `components-lib/molecules/options-list/` | option-item | editor |
+| `option-item` | `components-lib/molecules/option-item/` | input, check, button | editor |
 | `footer-editor` | `components-lib/molecules/footer-editor/` | button | creation |
+| `hero-admin` | `components-lib/molecules/hero-admin/` | title, text, image | admin-dashboard |
 | `kpi-cards-grid` | `components-lib/molecules/kpi-cards-grid/` | kpi-card | admin-dashboard |
 | `kpi-card` | `components-lib/molecules/kpi-card/` | title, text, badge, icon | admin-dashboard |
 | `data-table` | `components-lib/molecules/data-table/` | table-row, text, badge | admin-dashboard |

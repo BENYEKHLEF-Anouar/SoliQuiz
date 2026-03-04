@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: User Dropdown</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 flex justify-end">
+
+    <!-- Molecule : User Dropdown (Preline UI) -->
+    <div class="hs-dropdown relative inline-flex">
+        <button id="hs-dropdown-avatar" type="button"
+            class="hs-dropdown-toggle inline-flex items-center gap-x-2 text-sm font-semibold rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50 focus:outline-none focus:bg-slate-50 disabled:opacity-50 disabled:pointer-events-none p-1 pr-3 transition-all active:scale-95">
+            <img class="inline-block size-8 rounded-full shadow-sm"
+                src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+                alt="Avatar">
+            <span class="text-slate-800 font-heading font-bold text-sm">Mehdi.B</span>
+            <svg class="hs-dropdown-open:rotate-180 size-4 transition" xmlns="http://www.w3.org/2000/svg" width="24"
+                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6" />
+            </svg>
+        </button>
+
+        <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-48 bg-white shadow-xl rounded-2xl p-2 mt-2 border border-slate-100 z-50 transition-[opacity,margin] hs-dropdown-open:opacity-100 opacity-0 mt-2"
+            role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-avatar">
+            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-800 hover:bg-slate-50 focus:outline-none focus:bg-slate-100 font-medium"
+                href="#">
+                Mon Profil
+            </a>
+            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-800 hover:bg-slate-50 focus:outline-none focus:bg-slate-100 font-medium"
+                href="#">
+                Paramètres
+            </a>
+            <div class="my-1 border-t border-slate-100"></div>
+            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 focus:outline-none font-bold"
+                href="#">
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Déconnexion
+            </a>
+        </div>
+    </div>
+
+    <!-- Preline Script for demonstration -->
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+
+</body>
+
+</html>

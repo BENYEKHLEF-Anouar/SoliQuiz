@@ -173,58 +173,236 @@
             </div>
 
             <!-- Molecules -->
-            <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-primary-500"></span> Molécules (7)
+            <div x-data="{ activeCat: 'all' }">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-primary-500"></span> Molécules (35)
                 </p>
-                <div class="space-y-1">
-                    <button
-                        onclick="loadComponent('components-lib/molecules/login-form/index.html', '🧩 Molécule: Login Form', this)"
-                        class="nav-btn">login-form</button>
-                    <button
-                        onclick="loadComponent('components-lib/molecules/navbar-apprenant/index.html', '🧩 Molécule: Navbar Apprenant', this)"
-                        class="nav-btn">navbar-apprenant</button>
-                    <button
-                        onclick="loadComponent('components-lib/molecules/header-timer/index.html', '🧩 Molécule: Header Focus Timer', this)"
-                        class="nav-btn">header-timer</button>
-                    <button
-                        onclick="loadComponent('components-lib/molecules/card-qcm/index.html', '🧩 Molécule: Card QCM', this)"
-                        class="nav-btn">card-qcm</button>
-                    <button
-                        onclick="loadComponent('components-lib/molecules/kpi-card/index.html', '🧩 Molécule: KPI Card', this)"
-                        class="nav-btn">kpi-card</button>
-                    <button
-                        onclick="loadComponent('components-lib/molecules/alert-box/index.html', '🧩 Molécule: Alert Box', this)"
-                        class="nav-btn">alert-box</button>
-                    <button
-                        onclick="loadComponent('components-lib/molecules/question-card/index.html', '🧩 Molécule: Editeur Question QCM', this)"
-                        class="nav-btn">question-card</button>
+
+                <div class="space-y-6">
+                    <!-- Category: Navigation -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
+                            Navigation & Structure</span>
+                        <div class="grid grid-cols-1 gap-1">
+                            <button
+                                onclick="loadComponent('components-lib/molecules/navbar-apprenant/index.html', '🧩 Navbar Apprenant', this)"
+                                class="nav-btn">navbar-apprenant</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/navbar-formateur/index.html', '🧩 Navbar Formateur', this)"
+                                class="nav-btn">navbar-formateur</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/navbar-admin/index.html', '🧩 Navbar Admin', this)"
+                                class="nav-btn">navbar-admin</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/nav-menu/index.html', '🧩 Nav Menu', this)"
+                                class="nav-btn">nav-menu</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/user-dropdown/index.html', '🧩 User Dropdown', this)"
+                                class="nav-btn">user-dropdown</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/breadcrumbs/index.html', '🧩 Breadcrumbs', this)"
+                                class="nav-btn">breadcrumbs</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/footer-simple/index.html', '🧩 Footer Simple', this)"
+                                class="nav-btn">footer-simple</button>
+                        </div>
+                    </div>
+
+                    <!-- Category: Dashboard -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
+                            Dashboards & Stats</span>
+                        <div class="grid grid-cols-1 gap-1">
+                            <button
+                                onclick="loadComponent('components-lib/molecules/hero-dashboard/index.html', '🧩 Hero Dashboard', this)"
+                                class="nav-btn">hero-dashboard</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/hero-admin/index.html', '🧩 Hero Admin', this)"
+                                class="nav-btn">hero-admin</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/stats-banner/index.html', '🧩 Stats Banner', this)"
+                                class="nav-btn">stats-banner</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/kpi-cards-grid/index.html', '🧩 KPI Cards Grid', this)"
+                                class="nav-btn">kpi-cards-grid</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/kpi-card/index.html', '🧩 KPI Card', this)"
+                                class="nav-btn">kpi-card</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/chart-placeholder/index.html', '🧩 Chart Placeholder', this)"
+                                class="nav-btn">chart-placeholder</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/section/index.html', '🧩 Section Wrapper', this)"
+                                class="nav-btn">section</button>
+                        </div>
+                    </div>
+
+                    <!-- Category: Data & Lists -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
+                            Données & Listes</span>
+                        <div class="grid grid-cols-1 gap-1">
+                            <button
+                                onclick="loadComponent('components-lib/molecules/data-table/index.html', '🧩 Data Table', this)"
+                                class="nav-btn">data-table</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/table-row/index.html', '🧩 Table Row', this)"
+                                class="nav-btn">table-row</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/search-form/index.html', '🧩 Search Form', this)"
+                                class="nav-btn">search-form</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/list-history/index.html', '🧩 List History', this)"
+                                class="nav-btn">list-history</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/list-item/index.html', '🧩 List Item', this)"
+                                class="nav-btn">list-item</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/progress-list/index.html', '🧩 Progress List', this)"
+                                class="nav-btn">progress-list</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/progress-item/index.html', '🧩 Progress Item', this)"
+                                class="nav-btn">progress-item</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/progress-item-cohort/index.html', '🧩 Progress Item Cohort', this)"
+                                class="nav-btn">progress-item-cohort</button>
+                        </div>
+                    </div>
+
+                    <!-- Category: Formateur Editor -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
+                            Éditeur de QCM</span>
+                        <div class="grid grid-cols-1 gap-1">
+                            <button
+                                onclick="loadComponent('components-lib/molecules/header-editor/index.html', '🧩 Header Editor', this)"
+                                class="nav-btn">header-editor</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/sidebar-settings/index.html', '🧩 Sidebar Settings', this)"
+                                class="nav-btn">sidebar-settings</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/editor-main/index.html', '🧩 Editor Main', this)"
+                                class="nav-btn">editor-main</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/question-card/index.html', '🧩 Question Card Editor', this)"
+                                class="nav-btn">question-card</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/editable-title/index.html', '🧩 Editable Title', this)"
+                                class="nav-btn">editable-title</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/type-selector/index.html', '🧩 Type Selector', this)"
+                                class="nav-btn">type-selector</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/options-list/index.html', '🧩 Options List', this)"
+                                class="nav-btn">options-list</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/option-item/index.html', '🧩 Option Item', this)"
+                                class="nav-btn">option-item</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/footer-editor/index.html', '🧩 Footer Editor', this)"
+                                class="nav-btn">footer-editor</button>
+                        </div>
+                    </div>
+
+                    <!-- Category: Apprenant Passation -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
+                            Passation & Quiz</span>
+                        <div class="grid grid-cols-1 gap-1">
+                            <button
+                                onclick="loadComponent('components-lib/molecules/header-timer/index.html', '🧩 Header Timer', this)"
+                                class="nav-btn">header-timer</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/question-container/index.html', '🧩 Question Container', this)"
+                                class="nav-btn">question-container</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/choice-list/index.html', '🧩 Choice List', this)"
+                                class="nav-btn">choice-list</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/choice-item/index.html', '🧩 Choice Item', this)"
+                                class="nav-btn">choice-item</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/footer-navigation/index.html', '🧩 Footer Navigation', this)"
+                                class="nav-btn">footer-navigation</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/card-qcm/index.html', '🧩 Card QCM', this)"
+                                class="nav-btn">card-qcm</button>
+                        </div>
+                    </div>
+
+                    <!-- Category: Auth & Misc -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">Auth
+                            & Divers</span>
+                        <div class="grid grid-cols-1 gap-1">
+                            <button
+                                onclick="loadComponent('components-lib/molecules/login-form/index.html', '🧩 Login Form', this)"
+                                class="nav-btn">login-form</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/alert-box/index.html', '🧩 Alert Box', this)"
+                                class="nav-btn">alert-box</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/dropdown-select/index.html', '🧩 Dropdown Select', this)"
+                                class="nav-btn">dropdown-select</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/select-group/index.html', '🧩 Select Group', this)"
+                                class="nav-btn">select-group</button>
+                            <button
+                                onclick="loadComponent('components-lib/molecules/toggle-group/index.html', '🧩 Toggle Group', this)"
+                                class="nav-btn">toggle-group</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Mockups -->
-            <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-secondary-500"></span> Mockups (6)
+            <div class="space-y-4">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-secondary-500"></span> Mockups (11)
                 </p>
-                <div class="space-y-1">
-                    <button onclick="loadComponent('mockups/01-auth-login.html', '🖥️ Mockup: Authentification', this)"
+                <div class="grid grid-cols-1 gap-1">
+                    <!-- Auth -->
+                    <button onclick="loadComponent('mockups/01-auth-login.html', '🖥️ 01. Authentification', this)"
                         class="nav-btn font-medium">01-auth-login</button>
+
+                    <div class="h-1"></div>
+                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest pl-2">Apprenant</span>
                     <button
-                        onclick="loadComponent('mockups/02-apprenant-dashboard.html', '🖥️ Mockup: Apprenant - Tableau de bord', this)"
-                        class="nav-btn font-medium">02-apprenant-dashboard</button>
+                        onclick="loadComponent('mockups/02-apprenant-dashboard.html', '🖥️ 02. Apprenant Dashboard', this)"
+                        class="nav-btn font-medium text-xs">02-apprenant-dashboard</button>
                     <button
-                        onclick="loadComponent('mockups/03-apprenant-passation-qcm.html', '🖥️ Mockup: Apprenant - Passation QCM', this)"
-                        class="nav-btn font-medium">03-apprenant-passation-qcm</button>
+                        onclick="loadComponent('mockups/03-apprenant-passation-qcm.html', '🖥️ 03. Passation QCM', this)"
+                        class="nav-btn font-medium text-xs">03-passation-qcm</button>
+                    <button onclick="loadComponent('mockups/07-apprenant-resultats.html', '🖥️ 07. Résultats', this)"
+                        class="nav-btn font-medium text-xs">07-apprenant-resultats</button>
                     <button
-                        onclick="loadComponent('mockups/04-formateur-dashboard.html', '🖥️ Mockup: Formateur - Tableau de bord', this)"
-                        class="nav-btn font-medium">04-formateur-dashboard</button>
+                        onclick="loadComponent('mockups/08-apprenant-bibliotheque.html', '🖥️ 08. Bibliothèque', this)"
+                        class="nav-btn font-medium text-xs">08-apprenant-bibliotheque</button>
+
+                    <div class="h-1"></div>
+                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest pl-2">Formateur</span>
                     <button
-                        onclick="loadComponent('mockups/05-formateur-creation-qcm.html', '🖥️ Mockup: Formateur - Éditeur QCM', this)"
-                        class="nav-btn font-medium">05-formateur-creation-qcm</button>
+                        onclick="loadComponent('mockups/04-formateur-dashboard.html', '🖥️ 04. Formateur Dashboard', this)"
+                        class="nav-btn font-medium text-xs">04-formateur-dashboard</button>
                     <button
-                        onclick="loadComponent('mockups/06-admin-dashboard.html', '🖥️ Mockup: Admin - Supervision globale', this)"
-                        class="nav-btn font-medium">06-admin-dashboard</button>
+                        onclick="loadComponent('mockups/05-formateur-creation-qcm.html', '🖥️ 05. Éditeur QCM', this)"
+                        class="nav-btn font-medium text-xs">05-editeur-qcm</button>
+                    <button
+                        onclick="loadComponent('mockups/09-formateur-bibliotheque.html', '🖥️ 09. Bibliothèque', this)"
+                        class="nav-btn font-medium text-xs">09-formateur-bibliotheque</button>
+                    <button
+                        onclick="loadComponent('mockups/10-formateur-resultats-cohorte.html', '🖥️ 10. Résultats Cohorte', this)"
+                        class="nav-btn font-medium text-xs">10-resultats-cohorte</button>
+
+                    <div class="h-1"></div>
+                    <span
+                        class="text-[10px] font-black text-slate-300 uppercase tracking-widest pl-2">Administration</span>
+                    <button
+                        onclick="loadComponent('mockups/06-admin-dashboard.html', '🖥️ 06. Supervision Admin', this)"
+                        class="nav-btn font-medium text-xs">06-admin-dashboard</button>
+                    <button
+                        onclick="loadComponent('mockups/11-admin-gestion-utilisateurs.html', '🖥️ 11. Gestion Utilisateurs', this)"
+                        class="nav-btn font-medium text-xs">11-admin-users</button>
                 </div>
             </div>
 
@@ -288,13 +466,13 @@
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Atoms</span>
                     </div>
                     <div
-                        class="flex flex-col border border-primary-200 bg-primary-50 sm rounded-xl px-4 py-2 shadow-sm min-w-[100px]">
-                        <span class="text-2xl font-bold text-primary-600 font-heading">7</span>
+                        class="flex flex-col border border-primary-200 bg-primary-50 rounded-xl px-4 py-2 shadow-sm min-w-[100px]">
+                        <span class="text-2xl font-bold text-primary-600 font-heading">35</span>
                         <span class="text-[10px] font-bold text-primary-400 uppercase tracking-widest">Molécules</span>
                     </div>
                     <div
                         class="flex flex-col border border-secondary-200 bg-secondary-50/50 rounded-xl px-4 py-2 shadow-sm min-w-[100px]">
-                        <span class="text-2xl font-bold text-secondary-600 font-heading">6</span>
+                        <span class="text-2xl font-bold text-secondary-600 font-heading">11</span>
                         <span class="text-[10px] font-bold text-secondary-400 uppercase tracking-widest">Mockups</span>
                     </div>
                 </div>

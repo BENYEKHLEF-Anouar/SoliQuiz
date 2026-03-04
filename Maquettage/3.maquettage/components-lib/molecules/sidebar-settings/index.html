@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Sidebar Settings</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-6 max-w-xs mx-auto">
+
+    <!-- Molecule : Sidebar Settings -->
+    <!-- Atoms : title-section, select-group, toggle-group -->
+    <!-- Contexte : Panneau latéral de l'éditeur QCM -->
+
+    <aside class="w-full bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-6">
+        <div>
+            <h2 class="text-sm font-semibold text-slate-800 uppercase tracking-wider mb-4">Paramètres du QCM</h2>
+
+            <div class="space-y-5">
+                <!-- Molecule: Select Group (Cohorte) -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-medium text-slate-500">Cohorte ciblée</label>
+                    <select
+                        class="py-2 px-3 block w-full border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-primary-500 outline-none border transition-colors shadow-sm">
+                        <option>DW_101</option>
+                        <option>DW_102</option>
+                        <option>MOB_01</option>
+                    </select>
+                </div>
+
+                <!-- Molecule: Toggle Group (Timer) -->
+                <div class="flex items-center justify-between">
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-slate-700">Chronomètre</span>
+                        <span class="text-xs text-slate-400">Limiter le temps</span>
+                    </div>
+                    <!-- Atom: Toggle Switch -->
+                    <button type="button"
+                        class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-primary-500"
+                        role="switch" aria-checked="true">
+                        <span class="sr-only">Activer le timer</span>
+                        <span aria-hidden="true"
+                            class="translate-x-5 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                    </button>
+                </div>
+
+                <!-- Input group (Time input) -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-medium text-slate-500">Durée (minutes)</label>
+                    <input type="number" value="20"
+                        class="py-2 px-3 block w-full border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-primary-500 outline-none border transition-colors shadow-sm">
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-6 border-t border-slate-100">
+            <button
+                class="w-full py-2.5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-xl border border-transparent bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors">
+                Supprimer le brouillon
+            </button>
+        </div>
+    </aside>
+
+</body>
+
+</html>

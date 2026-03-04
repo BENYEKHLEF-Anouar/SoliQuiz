@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Nav Menu</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 flex justify-center">
+
+    <!-- Molecule : Nav Menu -->
+    <!-- Atoms : link -->
+    <!-- Variants : apprenant | formateur | admin (ajuster les liens selon le rôle) -->
+
+    <!-- Exemple : Apprenant -->
+    <nav class="flex items-center gap-1" aria-label="Navigation principale">
+        <a href="#" id="nav-link-tests"
+            class="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-100 hover:text-primary-500 transition-colors">
+            Tests à faire
+        </a>
+        <a href="#" id="nav-link-historique"
+            class="px-3 py-2 text-sm font-medium text-primary-500 bg-primary-50 rounded-lg" aria-current="page">
+            Historique
+        </a>
+        <a href="#" id="nav-link-progression"
+            class="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-100 hover:text-primary-500 transition-colors">
+            Progression
+        </a>
+    </nav>
+
+</body>
+
+</html>

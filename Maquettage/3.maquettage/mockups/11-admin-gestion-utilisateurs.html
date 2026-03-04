@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-slate-50">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz Admin - Gestion des Utilisateurs</title>
+    <link rel="stylesheet" href="../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: 'var(--color-primary-50)', 100: 'var(--color-primary-100)', 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };
+    </script>
+</head>
+
+<body class="text-slate-800">
+
+    <!-- Header / Navbar Admin -->
+    <header
+        class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-slate-900 border-b border-slate-800 sticky top-0">
+        <nav class="relative max-w-7xl w-full flex flex-wrap md:grid md:grid-cols-12 basis-full items-center px-4 md:px-6 mx-auto py-3"
+            aria-label="Navigation Admin">
+
+            <!-- Logo -->
+            <div class="md:col-span-3">
+                <a class="flex items-center gap-2 group outline-none" href="06-admin-dashboard.html"
+                    aria-label="SoliQuiz Accueil">
+                    <div
+                        class="size-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-110">
+                        <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-xl font-heading font-bold text-white tracking-tight">Soli<span
+                                class="text-primary-500">Quiz</span></span>
+                        <span
+                            class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-0.5">Admin</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Navbar Center (Menu - Hidden on Mobile) -->
+            <div class="hidden md:flex md:col-span-6 justify-center items-center gap-x-8">
+                <a href="06-admin-dashboard.html"
+                    class="font-bold text-slate-400 hover:text-white transition-colors focus:outline-none flex items-center gap-x-2 font-heading uppercase tracking-wide text-sm">Opérations</a>
+                <a href="11-admin-gestion-utilisateurs.html"
+                    class="font-bold text-white focus:outline-none flex items-center gap-x-2 font-heading uppercase tracking-wide text-sm"
+                    aria-current="page">Utilisateurs</a>
+                <a href="#"
+                    class="font-bold text-slate-400 hover:text-white transition-colors focus:outline-none flex items-center gap-x-2 font-heading uppercase tracking-wide text-sm">SoliLMS
+                    API</a>
+            </div>
+
+            <!-- User Dropdown -->
+            <div class="flex items-center gap-x-3 md:gap-x-4 ms-auto md:col-span-3 justify-end relative text-white">
+                <div class="hs-dropdown relative inline-flex">
+                    <button id="hs-dropdown-avatar" type="button"
+                        class="hs-dropdown-toggle inline-flex items-center gap-x-2 text-sm font-semibold rounded-full border border-slate-700 bg-slate-800 text-white shadow-sm hover:bg-slate-700 focus:outline-none focus:bg-slate-700 disabled:opacity-50 disabled:pointer-events-none p-1 pr-3 transition-all active:scale-95">
+                        <div
+                            class="size-8 rounded-full bg-primary-500 flex items-center justify-center font-bold text-xs">
+                            AD</div>
+                        <span class="hidden md:inline-block font-heading font-bold text-sm">Super.Admin</span>
+                        <svg class="hs-dropdown-open:rotate-180 size-4 transition" xmlns="http://www.w3.org/2000/svg"
+                            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </button>
+
+                    <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-48 bg-slate-900 shadow-xl rounded-2xl p-2 mt-2 border border-slate-800 z-50"
+                        role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-avatar">
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-300 hover:bg-slate-800 focus:outline-none focus:bg-slate-800 font-medium"
+                            href="#">Système</a>
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-300 hover:bg-slate-800 focus:outline-none focus:bg-slate-800 font-medium"
+                            href="#">Logs</a>
+                        <div class="my-1 border-t border-slate-800"></div>
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-red-400 hover:bg-red-400/10 focus:outline-none font-bold"
+                            href="01-auth-login.html">
+                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                            Déconnexion
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-12">
+
+        <!-- Welcome Header Hero -->
+        <div class="mb-12 relative overflow-hidden bg-white border border-slate-200 p-10 rounded-[2.5rem] shadow-sm">
+            <div class="absolute -top-10 -right-10 size-64 bg-slate-50 rounded-full blur-3xl"></div>
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+                <div>
+                    <h1
+                        class="text-4xl font-heading font-black text-slate-900 tracking-tight leading-tight uppercase italic mb-2">
+                        Utilisateurs & Permissions</h1>
+                    <p class="text-slate-500 font-medium text-lg">Centralisez la gestion des accès formateurs et
+                        étudiants du centre Solicode.</p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="bg-slate-50 p-4 px-6 rounded-2xl border border-slate-100 flex flex-col">
+                        <span class="text-[10px] font-black tracking-widest text-slate-400 uppercase">Utilisateurs
+                            actifs</span>
+                        <span class="text-2xl font-black text-slate-900">1,248</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 px-6 rounded-2xl border border-slate-100 flex flex-col">
+                        <span class="text-[10px] font-black tracking-widest text-slate-400 uppercase">Licences
+                            Formateurs</span>
+                        <span class="text-2xl font-black text-primary-600">42/50</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Filter & Search Bar -->
+        <div class="flex flex-col md:flex-row gap-4 mb-8">
+            <div class="flex-1 relative">
+                <input type="text" placeholder="Filtrer par nom, email ou promotion..."
+                    class="w-full py-3.5 px-5 pl-12 border border-slate-200 rounded-2xl text-sm font-medium text-slate-600 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all shadow-sm">
+                <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-300">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+            <select
+                class="px-6 py-3.5 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:border-primary-500 transition-all cursor-pointer min-w-[200px] shadow-sm">
+                <option>Tous les Rôles</option>
+                <option>Administrateur</option>
+                <option>Formateur</option>
+                <option>Apprenant</option>
+            </select>
+        </div>
+
+        <!-- Admin Data Table -->
+        <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-2xl shadow-slate-200/50">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic">
+                            Identité</th>
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic">
+                            Rôle</th>
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic">
+                            Status Accès</th>
+                        <th
+                            class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic text-right">
+                            Modifier</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    <!-- User 1 (Admin) -->
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="size-10 rounded-full bg-slate-900 flex items-center justify-center font-bold text-white text-xs">
+                                    AB</div>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-slate-900 uppercase italic">Anouar Benyekhlef</span>
+                                    <span
+                                        class="text-xs text-slate-400 font-medium italic">anouar.admin@solicode.co</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span
+                                class="px-3 py-1 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-wider italic">Administrateur</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-2">
+                                <span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Actif</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5 text-right">
+                            <button
+                                class="p-2 text-slate-300 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all">
+                                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- User 2 (Formateur) -->
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-4">
+                                <img class="size-10 rounded-full grayscale"
+                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=facearea&facepad=2"
+                                    alt="F">
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-slate-900">Dr. Khalid Mansouri</span>
+                                    <span class="text-xs text-slate-400 font-medium italic">mansouri@solicode.co</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span
+                                class="px-3 py-1 bg-primary-100 text-primary-700 rounded-lg text-[10px] font-black uppercase tracking-wider italic border border-primary-200">Formateur</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-2">
+                                <span class="size-2 rounded-full bg-emerald-500"></span>
+                                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Actif</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5 text-right">
+                            <button class="p-2 text-slate-300 hover:text-slate-900 rounded-xl transition-all"><svg
+                                    class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg></button>
+                        </td>
+                    </tr>
+
+                    <!-- User 3 (Apprenant) -->
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-4">
+                                <img class="size-10 rounded-full"
+                                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=facearea&facepad=2"
+                                    alt="A">
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-slate-900">Sara Filali</span>
+                                    <span
+                                        class="text-xs text-slate-400 font-medium italic">sara.filali@solicode.co</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span
+                                class="px-3 py-1 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase tracking-wider italic border border-slate-200">Apprenant</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-2 opacity-50">
+                                <span class="size-2 rounded-full bg-red-400"></span>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Suspendu</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5 text-right">
+                            <button class="p-2 text-slate-300 hover:text-slate-900 rounded-xl transition-all"><svg
+                                    class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg></button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div class="p-6 bg-slate-50 border-t border-slate-100 text-center">
+                <button
+                    class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-primary-500 transition-colors italic group">
+                    Charger les 50 prochains utilisateurs
+                    <span class="inline-block transition-transform group-hover:translate-y-1">↓</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Preline UI Script -->
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+</body>
+
+</html>
+```

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: List History</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 max-w-lg mx-auto">
+
+    <!-- Molecule : List History -->
+    <!-- Wrapper de la liste des list-items -->
+    <!-- Atoms : list-item (molécule) -->
+
+    <div class="flex flex-col gap-2">
+
+        <!-- Molecule: List Item x3 -->
+        <!-- Item 1 -->
+        <div
+            class="flex items-center justify-between bg-white border border-slate-100 rounded-xl px-4 py-3 shadow-sm hover:border-primary-200 transition-colors">
+            <div class="flex flex-col">
+                <span class="text-sm font-semibold text-slate-800">HTML / CSS — Bases</span>
+                <span class="text-xs text-slate-400 mt-0.5">28 fév 2026</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span
+                    class="inline-flex items-center py-1 px-2.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">80%</span>
+                <a href="#" class="text-xs text-primary-500 hover:underline font-medium">Voir correction</a>
+            </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div
+            class="flex items-center justify-between bg-white border border-slate-100 rounded-xl px-4 py-3 shadow-sm hover:border-primary-200 transition-colors">
+            <div class="flex flex-col">
+                <span class="text-sm font-semibold text-slate-800">PHP — Fonctions</span>
+                <span class="text-xs text-slate-400 mt-0.5">25 fév 2026</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span
+                    class="inline-flex items-center py-1 px-2.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">55%</span>
+                <a href="#" class="text-xs text-primary-500 hover:underline font-medium">Voir correction</a>
+            </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div
+            class="flex items-center justify-between bg-white border border-slate-100 rounded-xl px-4 py-3 shadow-sm hover:border-primary-200 transition-colors">
+            <div class="flex flex-col">
+                <span class="text-sm font-semibold text-slate-800">Algorithmique — Tri</span>
+                <span class="text-xs text-slate-400 mt-0.5">20 fév 2026</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span
+                    class="inline-flex items-center py-1 px-2.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">30%</span>
+                <a href="#" class="text-xs text-primary-500 hover:underline font-medium">Voir correction</a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

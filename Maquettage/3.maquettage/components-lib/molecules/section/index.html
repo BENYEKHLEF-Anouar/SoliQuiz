@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Section</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 space-y-8">
+
+    <!-- Molecule : Section -->
+    <!-- Wrapper générique : Titre H2 + slot contenu -->
+    <!-- Utilisé dans tous les dashboards -->
+
+    <section class="w-full">
+        <!-- Atom: Title h2 -->
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-heading font-semibold text-slate-800">
+                Vos évaluations en attente
+            </h2>
+            <!-- Action optionnelle (lien "Voir tout") -->
+            <a href="#" class="text-sm text-primary-500 hover:underline font-medium transition-colors">
+                Voir tout
+            </a>
+        </div>
+        <!-- Slot : contenu injecté (card-qcm, list-history, progress-item, etc.) -->
+        <div class="space-y-3">
+            <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm text-slate-400 italic text-center">
+                [ Contenu injecté ici — ex: card-qcm, list-item, alert-box ]
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

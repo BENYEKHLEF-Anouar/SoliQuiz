@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Choice List</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: '#f0fdfe', 500: 'var(--color-primary-500)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 max-w-lg mx-auto">
+
+    <!-- Molecule : Choice List -->
+    <!-- Wrapper de choice-items -->
+
+    <fieldset class="space-y-2" aria-label="Liste des choix de réponse">
+        <legend class="sr-only">Choisissez votre réponse</legend>
+
+        <!-- Molécule: Choice Item x4 -->
+        <label
+            class="flex items-center gap-4 p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-all group">
+            <input type="radio" name="choice-list-demo" value="a"
+                class="w-4 h-4 text-primary-500 border-slate-300 focus:ring-primary-500 shrink-0">
+            <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900">echo()</span>
+        </label>
+
+        <label class="flex items-center gap-4 p-4 border-2 border-primary-400 bg-primary-50 rounded-xl cursor-pointer">
+            <input type="radio" name="choice-list-demo" value="b" checked
+                class="w-4 h-4 text-primary-500 border-primary-400 focus:ring-primary-500 shrink-0">
+            <span class="text-sm font-semibold text-primary-700">print()</span>
+        </label>
+
+        <label
+            class="flex items-center gap-4 p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-all group">
+            <input type="radio" name="choice-list-demo" value="c"
+                class="w-4 h-4 text-primary-500 border-slate-300 focus:ring-primary-500 shrink-0">
+            <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900">alert()</span>
+        </label>
+
+        <label
+            class="flex items-center gap-4 p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-all group">
+            <input type="radio" name="choice-list-demo" value="d"
+                class="w-4 h-4 text-primary-500 border-slate-300 focus:ring-primary-500 shrink-0">
+            <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900">display()</span>
+        </label>
+    </fieldset>
+
+</body>
+
+</html>

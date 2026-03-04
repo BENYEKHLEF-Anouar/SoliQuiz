@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-slate-50">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz - Résultats Évaluation</title>
+    <link rel="stylesheet" href="../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: 'var(--color-primary-50)', 100: 'var(--color-primary-100)', 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)', 800: 'var(--color-primary-800)', 900: 'var(--color-primary-900)' } } } } };
+    </script>
+</head>
+
+<body class="text-slate-800">
+
+    <!-- Header / Navbar Apprenant -->
+    <header
+        class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-slate-200 sticky top-0">
+        <nav class="relative max-w-7xl w-full flex flex-wrap md:grid md:grid-cols-12 basis-full items-center px-4 md:px-6 mx-auto py-3"
+            aria-label="Global">
+
+            <!-- Logo -->
+            <div class="md:col-span-3">
+                <a class="flex items-center gap-2 group outline-none" href="02-apprenant-dashboard.html"
+                    aria-label="SoliQuiz Accueil">
+                    <div
+                        class="size-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/10 transition-transform group-hover:scale-110">
+                        <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-xl font-heading font-bold text-slate-900 tracking-tight">Soli<span
+                                class="text-primary-500">Quiz</span></span>
+                        <span
+                            class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-0.5">Apprenant</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Navbar Center (Menu - Hidden on Mobile) -->
+            <div class="hidden md:flex md:col-span-6 justify-center items-center gap-x-8">
+                <a href="02-apprenant-dashboard.html"
+                    class="font-bold text-slate-400 hover:text-slate-800 transition-colors focus:outline-none flex items-center gap-x-2 font-heading uppercase tracking-wide text-sm">Dashboard</a>
+                <a href="08-apprenant-bibliotheque.html"
+                    class="font-bold text-slate-400 hover:text-slate-800 transition-colors focus:outline-none flex items-center gap-x-2 font-heading uppercase tracking-wide text-sm">Bibliothèque</a>
+                <a href="#"
+                    class="font-bold text-primary-600 focus:outline-none flex items-center gap-x-2 font-heading uppercase tracking-wide text-sm"
+                    aria-current="page">Progression</a>
+            </div>
+
+            <!-- User Avatar / Dropdown -->
+            <div class="flex items-center gap-x-3 md:gap-x-4 ms-auto md:col-span-3 justify-end relative">
+                <div class="hs-dropdown relative inline-flex">
+                    <button id="hs-dropdown-avatar" type="button"
+                        class="hs-dropdown-toggle inline-flex items-center gap-x-2 text-sm font-semibold rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50 focus:outline-none focus:bg-slate-50 disabled:opacity-50 disabled:pointer-events-none p-1 pr-3 transition-all active:scale-95">
+                        <img class="inline-block size-8 rounded-full shadow-sm"
+                            src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+                            alt="Avatar">
+                        <span
+                            class="hidden md:inline-block text-slate-800 font-heading font-bold text-sm">Mehdi.B</span>
+                        <svg class="hs-dropdown-open:rotate-180 size-4 transition" xmlns="http://www.w3.org/2000/svg"
+                            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </button>
+
+                    <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-48 bg-white shadow-xl rounded-2xl p-2 mt-2 border border-slate-100 z-50"
+                        role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-avatar">
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-800 hover:bg-slate-50 focus:outline-none focus:bg-slate-100 font-medium"
+                            href="#">Mon Profil</a>
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-800 hover:bg-slate-50 focus:outline-none focus:bg-slate-100 font-medium"
+                            href="#">Paramètres</a>
+                        <div class="my-1 border-t border-slate-100"></div>
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 focus:outline-none font-bold"
+                            href="01-auth-login.html">
+                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                            Déconnexion
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-12">
+
+        <!-- Hero Section: Résultats -->
+        <section
+            class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-12 mb-10 overflow-hidden relative shadow-sm">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg class="w-48 h-48 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                </svg>
+            </div>
+
+            <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
+                <!-- Score Circle -->
+                <div class="relative size-48 flex-none flex flex-col items-center justify-center">
+                    <svg class="absolute inset-0 size-full -rotate-90" viewBox="0 0 192 192">
+                        <circle cx="96" cy="96" r="88" fill="none" stroke="currentColor" stroke-width="8"
+                            class="text-emerald-500/10" />
+                        <circle cx="96" cy="96" r="88" fill="none" stroke="currentColor" stroke-width="8"
+                            class="text-emerald-500" stroke-dasharray="552.92" stroke-dashoffset="55.29"
+                            stroke-linecap="round" />
+                    </svg>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <span class="text-4xl font-black font-heading text-slate-900 leading-tight">18/20</span>
+                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Excellent !</span>
+                    </div>
+                </div>
+
+                <div class="flex-1 text-center md:text-left">
+                    <span
+                        class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold uppercase tracking-widest">Évaluation
+                        Terminée</span>
+                    <h1 class="text-3xl font-heading font-bold text-slate-900 mt-4 leading-tight">Fondamentaux du PHP
+                        8.x</h1>
+                    <p class="mt-4 text-slate-500 leading-relaxed font-medium">Bravon Mehdi ! Vous avez validé
+                        l'objectif de "Développer en PHP Sécurisé" avec succès. Retrouvez le détail de vos réponses
+                        ci-dessous.</p>
+
+                    <div class="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
+                        <div class="bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 flex flex-col">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Temps
+                                mis</span>
+                            <span class="text-sm font-bold text-slate-800">12:45 min</span>
+                        </div>
+                        <div class="bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 flex flex-col">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Rank
+                                Cohorte</span>
+                            <span class="text-sm font-bold text-slate-800">3ème / 24</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Liste des Questions / Réponses -->
+        <section class="space-y-6">
+            <h2 class="text-xl font-heading font-bold text-slate-900 mb-6">Révision des réponses</h2>
+
+            <!-- Question Card 1 (Correct) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4">
+                    <span class="bg-emerald-100 text-emerald-700 p-1 rounded-full inline-block">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+                    </span>
+                </div>
+                <h3 class="font-bold text-slate-800 pr-10">Quelle fonction PHP permet d'afficher du texte dans le
+                    navigateur ?</h3>
+                <div class="mt-6 space-y-2">
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl text-sm font-medium text-slate-600">
+                        printf()</div>
+                    <div
+                        class="bg-emerald-50 border border-emerald-500 p-4 rounded-xl text-sm font-bold text-emerald-800 flex justify-between items-center group">
+                        echo()
+                        <span class="text-xs font-bold uppercase tracking-widest text-emerald-600">Ma réponse —
+                            Correcte</span>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl text-sm font-medium text-slate-600">
+                        console.log()</div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-50">
+                    <p class="text-xs font-medium text-slate-400 flex items-start gap-2 italic">
+                        <svg class="size-4 shrink-0 text-primary-500" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Explication : echo est une structure de langage, plus rapide que print(), utilisée pour envoyer
+                        une ou plusieurs chaînes.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Question Card 2 (Incorrect) -->
+            <div
+                class="bg-white border-2 border-red-100 rounded-2xl p-6 shadow-sm relative overflow-hidden bg-red-50/20">
+                <div class="absolute top-0 right-0 p-4">
+                    <span class="bg-red-100 text-red-700 p-1 rounded-full inline-block">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </span>
+                </div>
+                <h3 class="font-bold text-slate-800 pr-10">Comment déclarer une variable constante en PHP 8 ?</h3>
+                <div class="mt-6 space-y-2">
+                    <div
+                        class="bg-red-50 border border-red-500 p-4 rounded-xl text-sm font-bold text-red-800 flex justify-between items-center">
+                        int CONST = 1;
+                        <span class="text-xs font-bold uppercase tracking-widest text-red-600">Ma réponse —
+                            Fausse</span>
+                    </div>
+                    <div
+                        class="bg-emerald-50 border border-emerald-500 p-4 rounded-xl text-sm font-bold text-emerald-800 flex justify-between items-center">
+                        const MY_VALUE = 1;
+                        <span class="text-xs font-bold uppercase tracking-widest text-emerald-600">Réponse
+                            attendue</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- CTA footer results -->
+        <footer class="mt-16 flex justify-center">
+            <a href="02-apprenant-dashboard.html"
+                class="px-8 py-3 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/10">Revenir
+                au tableau de bord</a>
+        </footer>
+
+    </main>
+
+    <!-- Preline UI Script -->
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+</body>
+
+</html>

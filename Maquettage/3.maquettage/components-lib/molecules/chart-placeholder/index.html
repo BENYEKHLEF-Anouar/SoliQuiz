@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Chart Placeholder</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 max-w-2xl mx-auto">
+
+    <!-- Molecule : Chart Placeholder -->
+    <!-- Atoms : image (placeholder graphique), filter select -->
+    <!-- Contexte : dashboards (statistiques success rate) -->
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-sm font-semibold text-slate-800 uppercase tracking-wider">Taux de réussite global</h3>
+
+            <!-- Atom: Select (Filter) -->
+            <select
+                class="py-1.5 px-3 border border-slate-200 rounded-lg text-xs font-medium text-slate-600 focus:border-primary-500 focus:ring-primary-500 outline-none hover:bg-slate-50 transition-all cursor-pointer">
+                <option>7 derniers jours</option>
+                <option>30 derniers jours</option>
+                <option>Année 2026</option>
+            </select>
+        </div>
+
+        <!-- Atom: Image (Chart Placeholder) -->
+        <div
+            class="w-full h-48 bg-slate-50 border-2 border-dashed border-slate-100 rounded-xl flex items-center justify-center group relative overflow-hidden">
+            <!-- Simulated Chart using SVG/CSS for better visual than just an image tag -->
+            <div class="flex items-end gap-3 h-32">
+                <div class="w-8 bg-primary-100 rounded-t-sm h-[40%]" title="Lun"></div>
+                <div class="w-8 bg-primary-100 rounded-t-sm h-[60%]" title="Mar"></div>
+                <div class="w-8 bg-primary-500 rounded-t-sm h-[85%]" title="Mer"></div>
+                <div class="w-8 bg-primary-200 rounded-t-sm h-[50%]" title="Jeu"></div>
+                <div class="w-8 bg-primary-100 rounded-t-sm h-[45%]" title="Ven"></div>
+                <div class="w-8 bg-slate-200 rounded-t-sm h-[10%]" title="Sam"></div>
+                <div class="w-8 bg-slate-200 rounded-t-sm h-[5%]" title="Dim"></div>
+            </div>
+
+            <div class="absolute inset-0 bg-white/40 flex items-center justify-center backdrop-blur-[1px]">
+                <span
+                    class="px-4 py-2 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-500 shadow-sm">Graphique
+                    de performance</span>
+            </div>
+        </div>
+
+        <div class="mt-4 flex items-center justify-center gap-6">
+            <div class="flex items-center gap-2">
+                <span class="size-2 rounded-full bg-primary-500"></span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Moyenne Centre</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="size-2 rounded-full bg-primary-100"></span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Baseline SoliLMS</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Breadcrumbs</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 p-10 max-w-lg mx-auto">
+
+    <!-- Molecule : Breadcrumbs -->
+    <!-- Atoms : link -->
+    <!-- Contexte : Navigation secondaire haute -->
+
+    <nav class="flex items-center whitespace-nowrap overflow-x-auto gap-x-1.5 py-1 px-3 bg-white border border-slate-200 rounded-full shadow-sm w-fit"
+        aria-label="Breadcrumb">
+        <ol class="flex items-center text-xs font-medium text-slate-500 list-none p-0 m-0">
+            <li class="inline-flex items-center">
+                <a class="flex items-center gap-x-1 hover:text-primary-500 transition-colors" href="#">
+                    <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Accueil
+                </a>
+                <svg class="w-3 h-3 text-slate-300 mx-1.5 shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+            </li>
+            <li class="inline-flex items-center">
+                <a class="hover:text-primary-500 transition-colors" href="#">Mes QCM</a>
+                <svg class="w-3 h-3 text-slate-300 mx-1.5 shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+            </li>
+            <li class="inline-flex items-center font-bold text-primary-500" aria-current="page">
+                Nouveau
+            </li>
+        </ol>
+    </nav>
+
+</body>
+
+</html>

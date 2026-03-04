@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Footer Simple</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 flex justify-center items-end h-screen">
+
+    <!-- Molecule : Footer Simple -->
+    <!-- Atoms : text, link -->
+    <footer class="w-full border-t border-slate-200 py-4 px-6 text-center">
+        <p class="text-xs text-slate-400">
+            En cas de problème de connexion, contactez
+            <a href="mailto:support@solicode.co"
+               class="text-primary-500 hover:underline font-medium transition-colors"
+               rel="noopener noreferrer">
+                l'administration
+            </a>.
+        </p>
+        <p class="text-xs text-slate-300 mt-1">© 2026 SoliQuiz — Solicode</p>
+    </footer>
+
+</body>
+
+</html>

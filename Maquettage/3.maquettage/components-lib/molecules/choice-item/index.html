@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Choice Item</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: '#f0fdfe', 500: 'var(--color-primary-500)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 max-w-lg mx-auto space-y-2">
+
+    <!-- Molecule : Choice Item -->
+    <!-- Atoms : input-check (radio ou checkbox), label -->
+
+    <!-- Variant: Radio (choix unique) — non sélectionné -->
+    <label id="choice-item-radio-1"
+        class="flex items-center gap-4 p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-all group">
+        <input type="radio" name="demo-radio" value="1"
+            class="w-4 h-4 text-primary-500 border-slate-300 focus:ring-primary-500 shrink-0">
+        <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900">echo()</span>
+    </label>
+
+    <!-- Variant: Radio — sélectionné -->
+    <label id="choice-item-radio-2"
+        class="flex items-center gap-4 p-4 border-2 border-primary-400 bg-primary-50 rounded-xl cursor-pointer transition-all">
+        <input type="radio" name="demo-radio" value="2" checked
+            class="w-4 h-4 text-primary-500 border-primary-400 focus:ring-primary-500 shrink-0">
+        <span class="text-sm font-semibold text-primary-700">print()</span>
+    </label>
+
+    <!-- Variant: Checkbox (choix multiple) — non coché -->
+    <label id="choice-item-check-1"
+        class="flex items-center gap-4 p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-all group">
+        <input type="checkbox" name="demo-check" value="A"
+            class="w-4 h-4 text-primary-500 border-slate-300 rounded focus:ring-primary-500 shrink-0">
+        <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900">Tableau associatif</span>
+    </label>
+
+    <!-- Variant: Checkbox — coché -->
+    <label id="choice-item-check-2"
+        class="flex items-center gap-4 p-4 border-2 border-primary-400 bg-primary-50 rounded-xl cursor-pointer transition-all">
+        <input type="checkbox" name="demo-check" value="B" checked
+            class="w-4 h-4 text-primary-500 border-primary-400 rounded focus:ring-primary-500 shrink-0">
+        <span class="text-sm font-semibold text-primary-700">Tableau indexé</span>
+    </label>
+
+</body>
+
+</html>

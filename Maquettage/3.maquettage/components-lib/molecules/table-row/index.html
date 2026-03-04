@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Table Row</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };</script>
+</head>
+
+<body class="bg-slate-50 p-10 max-w-4xl mx-auto">
+
+    <!-- Molecule : Table Row -->
+    <!-- Atoms : text, badge, link -->
+    <!-- Destiné à être injecté dans un <tbody> -->
+
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+        <table class="min-w-full">
+            <tbody class="divide-y divide-slate-100">
+                <tr class="hover:bg-slate-50 transition-colors group">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <!-- Atom: Text -->
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold text-slate-800 tracking-tight">Anouar Benyekhlef</span>
+                            <span class="text-xs text-slate-400">anouar@solicode.co</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <!-- Atom: Badge -->
+                        <span
+                            class="inline-flex items-center py-1 px-2.5 rounded-full text-xs font-semibold bg-primary-100 text-primary-700">
+                            Apprenant
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="text-sm text-slate-500 font-medium">Cohorte DW101</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                        <!-- Atom: Link (Action) -->
+                        <button type="button"
+                            class="text-primary-500 hover:text-primary-600 transition-colors">Modifier</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>
