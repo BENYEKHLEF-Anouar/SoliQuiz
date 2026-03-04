@@ -8,10 +8,39 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SoliQuiz: Mobile UI Kit</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
-        rel="stylesheet">
-    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] }, colors: { primary: { 50: 'hsl(190, 80%, 95%)', 100: 'hsl(190, 80%, 90%)', 200: 'hsl(190, 80%, 80%)', 300: 'hsl(190, 80%, 70%)', 400: 'hsl(190, 80%, 60%)', 500: 'hsl(190, 80%, 45%)', 600: 'hsl(190, 80%, 35%)', 700: 'hsl(190, 80%, 25%)', 800: 'hsl(190, 80%, 15%)', 900: 'hsl(190, 80%, 5%)' }, semantic: { success: 'hsl(140, 65%, 45%)', error: 'hsl(0, 75%, 55%)', warning: 'hsl(35, 95%, 55%)', info: 'hsl(220, 80%, 55%)' } } } } };</script>
+    <link rel="stylesheet" href="charte-graphique/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    },
+                    colors: {
+                        primary: {
+                            50: 'var(--color-primary-50)',
+                            100: 'var(--color-primary-100)',
+                            200: 'var(--color-primary-200)',
+                            300: 'var(--color-primary-300)',
+                            400: 'var(--color-primary-400)',
+                            500: 'var(--color-primary-500)',
+                            600: 'var(--color-primary-600)',
+                            700: 'var(--color-primary-700)',
+                            800: 'var(--color-primary-800)',
+                            900: 'var(--color-primary-900)'
+                        },
+                        semantic: {
+                            success: 'var(--color-success-500)',
+                            error: 'var(--color-error-500)',
+                            warning: 'var(--color-warning-500)',
+                            info: 'var(--color-info-500)'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
 </head>
 
 <body class="bg-slate-100 flex flex-col h-full font-sans overflow-hidden">
@@ -22,6 +51,22 @@
     </header>
 
     <main class="flex-1 overflow-y-auto px-5 py-6">
+
+        <div class="mb-6">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-800"></span> Fondations
+            </h2>
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50 space-y-3">
+                <a href="charte-graphique/index.html"
+                    class="flex justify-between items-center bg-primary-50 p-3 rounded-xl active:bg-primary-100">
+                    <span class="text-sm font-semibold text-primary-700">Couleurs & Typographie</span>
+                    <svg class="size-4 text-primary-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </a>
+            </div>
+        </div>
 
         <div class="mb-6">
             <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
