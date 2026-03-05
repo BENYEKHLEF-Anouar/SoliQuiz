@@ -104,6 +104,30 @@
         </div>
     </main>
 
+    <!-- Preline UI Script -->
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+
+    <!-- Interactions Basiques JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value.toLowerCase();
+
+                    // Simple simulation
+                    if (email.includes('admin')) {
+                        window.location.href = '06-admin-dashboard.html';
+                    } else if (email.includes('formateur')) {
+                        window.location.href = '04-formateur-dashboard.html';
+                    } else {
+                        window.location.href = '02-apprenant-dashboard.html';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

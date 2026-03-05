@@ -310,6 +310,43 @@
 
         </div>
 
+        <!-- Pagination -->
+        <div class="mt-12 flex justify-center">
+            <nav class="flex items-center gap-x-2" aria-label="Pagination">
+                <button type="button"
+                    class="group min-h-10 min-w-10 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-xs font-black uppercase tracking-widest italic rounded-2xl text-slate-400 hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 disabled:opacity-50 disabled:pointer-events-none transition-all"
+                    aria-label="Previous">
+                    <svg class="shrink-0 size-3.5 transition-transform group-hover:-translate-x-0.5"
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m15 18-6-6 6-6" />
+                    </svg>
+                    <span class="hidden sm:inline-block">Précédent</span>
+                </button>
+
+                <div class="flex items-center gap-x-1.5">
+                    <button type="button"
+                        class="size-10 flex justify-center items-center bg-primary-500 text-white font-black text-sm rounded-2xl shadow-lg shadow-primary-500/20 active:scale-90 transition-all"
+                        aria-current="page">1</button>
+                    <button type="button"
+                        class="size-10 flex justify-center items-center text-slate-500 font-bold text-sm rounded-2xl border border-slate-100 bg-white hover:border-primary-200 hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 active:scale-90 transition-all">2</button>
+                    <button type="button"
+                        class="size-10 flex justify-center items-center text-slate-500 font-bold text-sm rounded-2xl border border-slate-100 bg-white hover:border-primary-200 hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 active:scale-90 transition-all">3</button>
+                </div>
+
+                <button type="button"
+                    class="group min-h-10 min-w-10 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-xs font-black uppercase tracking-widest italic rounded-2xl text-slate-400 hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 disabled:opacity-50 disabled:pointer-events-none transition-all"
+                    aria-label="Next">
+                    <span class="hidden sm:inline-block">Suivant</span>
+                    <svg class="shrink-0 size-3.5 transition-transform group-hover:translate-x-0.5"
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </button>
+            </nav>
+        </div>
+
         <!-- Filters Legend (Footer of page) -->
         <div
             class="mt-16 flex flex-wrap gap-x-8 gap-y-4 items-center justify-center text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] border-t border-slate-100 pt-12">
@@ -357,6 +394,38 @@
 
     <!-- Preline UI Script -->
     <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+
+    <!-- Interactions Basiques JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let cardToDelete = null;
+
+            // Catch all delete buttons that open the modal
+            document.querySelectorAll('button[data-hs-overlay="#hs-modal-delete-qcm"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    cardToDelete = e.target.closest('article');
+                });
+            });
+
+            // Confirm delete
+            const confirmBtn = document.querySelector('#hs-modal-delete-qcm button.bg-red-500');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', () => {
+                    if (cardToDelete) {
+                        cardToDelete.style.display = 'none';
+                        // Update counter
+                        const totalEl = document.querySelector('.ml-auto span.text-slate-900');
+                        if (totalEl && totalEl.textContent.includes('15')) {
+                            totalEl.textContent = 'Total : 14 items';
+                        }
+                    }
+                    // Close Modal (Simulated click on cancel)
+                    const cancelBtn = document.querySelector('#hs-modal-delete-qcm button.bg-slate-100');
+                    if (cancelBtn) cancelBtn.click();
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../charte-graphique/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: 'var(--color-primary-50)', 100: 'var(--color-primary-100)', 500: 'var(--color-primary-500)', 800: 'var(--color-primary-800)', 900: 'var(--color-primary-900)' }, semantic: { warningLight: 'var(--color-warning-100)', warning: 'var(--color-warning-500)', successLight: 'var(--color-success-100)', success: 'var(--color-success-500)' } } } } };
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: 'var(--color-primary-50)', 100: 'var(--color-primary-100)', 200: 'var(--color-primary-200)', 300: 'var(--color-primary-300)', 400: 'var(--color-primary-400)', 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)', 700: 'var(--color-primary-700)', 800: 'var(--color-primary-800)', 900: 'var(--color-primary-900)' }, semantic: { warningLight: 'var(--color-warning-100)', warning: 'var(--color-warning-500)', successLight: 'var(--color-success-100)', success: 'var(--color-success-500)', error: 'var(--color-error-500)' } } } } };
     </script>
 </head>
 
@@ -79,7 +79,7 @@
                         <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-800 hover:bg-slate-50 focus:outline-none focus:bg-slate-100 font-medium"
                             href="#">Paramètres</a>
                         <div class="my-1 border-t border-slate-100"></div>
-                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-red-600 hover:bg-red-50 focus:outline-none font-bold"
+                        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 focus:outline-none font-bold"
                             href="01-auth-login.html">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"

@@ -118,6 +118,60 @@
         </div>
     </footer>
 
+    <!-- Preline UI Script -->
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+
+    <!-- Interactions Basiques JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const labels = document.querySelectorAll('label.cursor-pointer');
+            const radios = document.querySelectorAll('input[type="radio"][name="php-comm"]');
+
+            radios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    // Reset all labels
+                    labels.forEach(label => {
+                        label.className = "flex p-4 w-full bg-white border border-slate-200 rounded-xl text-base hover:bg-primary-50 cursor-pointer transition-colors shadow-sm focus-within:ring-2 focus-within:ring-primary-500 focus-within:border-primary-500";
+                        const span = label.querySelector('span.font-medium');
+                        if (span) {
+                            span.classList.remove('text-primary-900');
+                            span.classList.add('text-slate-800');
+                        }
+                    });
+
+                    // Set active label
+                    if (e.target.checked) {
+                        const activeLabel = e.target.closest('label');
+                        activeLabel.className = "flex p-4 w-full bg-primary-50 border border-primary-500 ring-1 ring-primary-500 rounded-xl text-base cursor-pointer transition-colors shadow-sm";
+                        const span = activeLabel.querySelector('span.font-medium');
+                        if (span) {
+                            span.classList.remove('text-slate-800');
+                            span.classList.add('text-primary-900');
+                        }
+                    }
+                });
+            });
+
+            // Simulate Timer
+            const timerEl = document.querySelector('.font-mono');
+            if (timerEl) {
+                let timeParts = timerEl.textContent.split(':');
+                let minutes = parseInt(timeParts[0]);
+                let seconds = parseInt(timeParts[1]);
+
+                setInterval(() => {
+                    if (seconds === 0) {
+                        if (minutes === 0) return;
+                        minutes--;
+                        seconds = 59;
+                    } else {
+                        seconds--;
+                    }
+                    timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+        });
+    </script>
 </body>
 
 </html>

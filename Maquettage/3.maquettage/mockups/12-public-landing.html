@@ -41,7 +41,13 @@
     </script>
 </head>
 
-<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden relative">
+
+    <!-- Background Blobs -->
+    <div class="blob opacity-20 -top-24 -left-24 animate-pulse-soft"></div>
+    <div class="blob opacity-10 top-1/2 right-0 animate-float"></div>
+    <div class="blob opacity-15 top-[70%] -left-48 animate-pulse-soft"
+        style="background: linear-gradient(to left, #38bdf8, transparent)"></div>
 
     <!-- Header / Nav -->
     <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100">
@@ -75,12 +81,12 @@
 
     <main class="pt-20">
         <!-- Hero Section -->
-        <section class="relative py-20 lg:py-32 overflow-hidden">
+        <section class="relative py-20 lg:py-32 overflow-hidden reveal">
             <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
                 <div class="relative z-10">
                     <span
                         class="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6">
-                        Nouvelle Version 2.0
+                        Première version 1.0
                     </span>
                     <h1 class="text-5xl lg:text-7xl font-heading font-bold text-slate-900 leading-[1.1] mb-8">
                         L'évaluation qui <span class="text-primary-500">booste</span> l'apprentissage.
@@ -118,8 +124,25 @@
             </div>
         </section>
 
+        <!-- Trust Bar -->
+        <!-- <div class="max-w-7xl mx-auto px-6 pb-20 reveal">
+            <p class="text-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Propulsé par
+                les technologies de pointe</p>
+            <div
+                class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind"
+                    class="h-6">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" alt="AWS"
+                    class="h-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Vercel_logo_black.svg" alt="Vercel"
+                    class="h-5">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JS" class="h-6">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" class="h-7">
+            </div>
+        </div> -->
+
         <!-- Features Section -->
-        <section id="features" class="py-24 bg-slate-50">
+        <section id="features" class="py-24 bg-white/40 backdrop-blur-sm reveal">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center max-w-3xl mx-auto mb-20">
                     <h2 class="text-xs font-black text-primary-500 uppercase tracking-[0.3em] mb-4">Pourquoi choisir
@@ -176,8 +199,39 @@
             </div>
         </section>
 
+        <!-- Stats Section -->
+        <!-- <section id="stats-section" class="py-20 bg-slate-900 reveal relative overflow-hidden">
+            <div class="absolute inset-0 bg-primary-500/5 animate-pulse-soft"></div>
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center text-white">
+                    <div>
+                        <div class="text-4xl lg:text-5xl font-heading font-black mb-2 counter" data-target="1500">0
+                        </div>
+                        <p class="text-xs font-bold text-primary-400 uppercase tracking-widest leading-loose">Apprenants
+                            Actifs</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl lg:text-5xl font-heading font-black mb-2 counter" data-target="45000">0
+                        </div>
+                        <p class="text-xs font-bold text-primary-400 uppercase tracking-widest leading-loose">Quiz
+                            Passés</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl lg:text-5xl font-heading font-black mb-2 counter" data-target="120">0</div>
+                        <p class="text-xs font-bold text-primary-400 uppercase tracking-widest leading-loose">Formateurs
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-4xl lg:text-5xl font-heading font-black mb-2 counter" data-target="98">0</div>
+                        <p class="text-xs font-bold text-primary-400 uppercase tracking-widest leading-loose">%
+                            Satisfaction</p>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
         <!-- Roles Section -->
-        <section id="roles" class="py-24">
+        <section id="roles" class="py-24 reveal">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="grid lg:grid-cols-2 gap-16 items-center">
                     <div>
@@ -232,8 +286,7 @@
                 </div>
                 <span class="text-xl font-heading font-bold text-slate-900">SoliQuiz</span>
             </div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-[0.3em]">© 2026 — Une réalisation Solicode &
-                OFPPT</p>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-[0.3em]">© 2026 — Une réalisation Solicode</p>
         </div>
     </footer>
 
@@ -250,11 +303,120 @@
             }
         }
 
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(15px, 25px);
+            }
+
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        @keyframes pulse-soft {
+
+            0%,
+            100% {
+                opacity: 0.1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.15;
+                transform: scale(1.1);
+            }
+        }
+
         .animate-bounce-slow {
             animation: bounce-slow 4s ease-in-out infinite;
         }
+
+        .animate-float {
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .animate-pulse-soft {
+            animation: pulse-soft 8s ease-in-out infinite;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .blob {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--color-primary-200), transparent 70%);
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: -10;
+            pointer-events: none;
+        }
     </style>
 
+    <script shadow>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Intersection Observer for scroll reveals
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.05 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // Counter animation
+            const animateCounter = (el, target) => {
+                let current = 0;
+                const duration = 2000; // 2 seconds
+                const start = performance.now();
+
+                const update = (timestamp) => {
+                    const elapsed = timestamp - start;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Cubic ease out
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    const currentVal = Math.floor(easeOut * target);
+
+                    el.innerText = currentVal >= target ? target.toLocaleString() : currentVal.toLocaleString();
+
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    }
+                };
+
+                requestAnimationFrame(update);
+            };
+
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counters = entry.target.querySelectorAll('.counter');
+                        counters.forEach(c => animateCounter(c, parseInt(c.dataset.target)));
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const statsSection = document.getElementById('stats-section');
+            if (statsSection) statsObserver.observe(statsSection);
+        });
+    </script>
 </body>
 
 </html>

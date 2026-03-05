@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
     <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js" defer></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;900&display=swap"
         rel="stylesheet">
 
     <script>
@@ -24,9 +24,6 @@
                             500: 'hsl(190, 80%, 45%)',
                             600: 'hsl(190, 85%, 35%)',
                             700: 'hsl(190, 85%, 28%)'
-                        },
-                        secondary: {
-                            500: 'hsl(140, 65%, 45%)' /* Success Semantic utilisé comme accent */
                         }
                     },
                     fontFamily: {
@@ -43,24 +40,24 @@
         }
 
         .nav-btn {
-            @apply w-full text-left text-sm px-3 py-2 rounded-lg text-slate-600 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-150;
+            @apply w-full text-left text-[11px] font-bold uppercase tracking-wider px-3 py-2.5 rounded-xl text-slate-500 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 italic;
         }
 
         .nav-btn.active {
-            @apply bg-primary-100 text-primary-700 font-semibold;
+            @apply bg-primary-500 text-white shadow-lg shadow-primary-500/20 font-black;
         }
 
         .active-vp {
-            @apply bg-white shadow-sm;
+            @apply bg-white shadow-sm text-primary-600 !important;
         }
 
         #preview-frame {
             transition: opacity 0.15s ease, width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Custom Scrollbar for sidebar */
+        /* Custom Scrollbar */
         #sidebar-nav::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
 
         #sidebar-nav::-webkit-scrollbar-track {
@@ -68,42 +65,50 @@
         }
 
         #sidebar-nav::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
+            background-color: #e2e8f0;
             border-radius: 20px;
+        }
+
+        .cat-label {
+            @apply text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2 italic;
         }
     </style>
 </head>
 
-<body class="bg-slate-100 flex h-[100dvh] overflow-hidden">
+<body class="bg-slate-50 flex h-[100dvh] overflow-hidden text-slate-800">
 
     <!-- Sidebar -->
-    <aside class="w-72 bg-white border-r border-slate-200 flex flex-col h-full flex-shrink-0 shadow-sm z-20 relative">
+    <aside
+        class="w-72 bg-white border-r border-slate-100 flex flex-col h-full flex-shrink-0 shadow-xl shadow-slate-200/50 z-20 relative">
         <!-- Header -->
-        <div class="p-5 border-b border-slate-100">
-            <div class="flex items-center gap-3 mb-4">
+        <div class="p-6 border-b border-slate-50">
+            <div class="flex items-center gap-3 mb-6">
                 <div
-                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shrink-0 shadow-sm">
-                    <svg class="text-white w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    class="size-10 rounded-2xl bg-primary-500 flex items-center justify-center shrink-0 shadow-lg shadow-primary-500/20">
+                    <svg class="text-white size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                         <path d="m9 15 2 2 4-4" />
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg font-heading font-bold text-slate-900 leading-tight">UI Kit Gallery</h1>
-                    <p class="text-xs font-semibold text-primary-500 uppercase tracking-wider">SoliQuiz</p>
+                    <h1 class="text-xl font-heading font-black text-slate-900 leading-none tracking-tighter">Soli<span
+                            class="text-primary-500">Quiz</span></h1>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic mt-1">Design
+                        System</p>
                 </div>
             </div>
 
             <!-- Viewport buttons -->
-            <div class="flex bg-slate-100 rounded-lg p-1 text-xs" id="vp-controls">
+            <div class="flex bg-slate-100 rounded-xl p-1 text-[10px] font-black uppercase italic tracking-widest"
+                id="vp-controls">
                 <button onclick="resizeIframe('100%', this)"
-                    class="vp-btn flex-1 py-1.5 rounded-md transition-all font-medium text-slate-600 active-vp">Desktop</button>
+                    class="vp-btn flex-1 py-2 rounded-lg transition-all text-slate-500 active-vp">Desktop</button>
                 <button onclick="resizeIframe('768px', this)"
-                    class="vp-btn flex-1 py-1.5 rounded-md hover:text-slate-900 transition-all font-medium text-slate-600">Tablet</button>
+                    class="vp-btn flex-1 py-2 rounded-lg hover:text-primary-600 transition-all text-slate-500">Tablet</button>
                 <button onclick="resizeIframe('390px', this)"
-                    class="vp-btn flex-1 py-1.5 rounded-md hover:text-slate-900 transition-all font-medium text-slate-600">Mobile</button>
+                    class="vp-btn flex-1 py-2 rounded-lg hover:text-primary-600 transition-all text-slate-500">Mobile</button>
             </div>
         </div>
 
@@ -112,326 +117,315 @@
 
             <!-- Charte Graphique -->
             <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-slate-800"></span> Fondations
-                </p>
+                <p class="cat-label">Fondations</p>
                 <div class="space-y-1">
-                    <button
-                        onclick="loadComponent('charte-graphique/index.html', '🎨 Charte Graphique — Design Tokens SoliQuiz', this)"
+                    <button onclick="loadComponent('charte-graphique/index.html', 'Charte Graphique', this)"
                         class="nav-btn">
-                        Couleurs & Typographie
+                        Couleurs & Typo
                     </button>
                 </div>
             </div>
 
             <!-- Atoms -->
             <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-slate-400"></span> Atoms (17)
-                </p>
+                <p class="cat-label">Atoms (17)</p>
                 <div class="space-y-1">
-                    <button onclick="loadComponent('components-lib/atoms/logo/index.html', '⚛️ Atom: Logo', this)"
+                    <button onclick="loadComponent('components-lib/atoms/logo/index.html', 'Atom: Logo', this)"
                         class="nav-btn">logo</button>
-                    <button
-                        onclick="loadComponent('components-lib/atoms/title/index.html', '⚛️ Atom: Title (H1-H3)', this)"
+                    <button onclick="loadComponent('components-lib/atoms/title/index.html', 'Atom: Title', this)"
                         class="nav-btn">title</button>
-                    <button onclick="loadComponent('components-lib/atoms/text/index.html', '⚛️ Atom: Text', this)"
+                    <button onclick="loadComponent('components-lib/atoms/text/index.html', 'Atom: Text', this)"
                         class="nav-btn">text</button>
-                    <button onclick="loadComponent('components-lib/atoms/link/index.html', '⚛️ Atom: Link', this)"
+                    <button onclick="loadComponent('components-lib/atoms/link/index.html', 'Atom: Link', this)"
                         class="nav-btn">link</button>
-                    <button onclick="loadComponent('components-lib/atoms/button/index.html', '⚛️ Atom: Button', this)"
+                    <button onclick="loadComponent('components-lib/atoms/button/index.html', 'Atom: Button', this)"
                         class="nav-btn">button</button>
-                    <button onclick="loadComponent('components-lib/atoms/input/index.html', '⚛️ Atom: Input', this)"
+                    <button onclick="loadComponent('components-lib/atoms/input/index.html', 'Atom: Input', this)"
                         class="nav-btn">input</button>
-                    <button
-                        onclick="loadComponent('components-lib/atoms/textarea/index.html', '⚛️ Atom: Textarea', this)"
+                    <button onclick="loadComponent('components-lib/atoms/textarea/index.html', 'Atom: Textarea', this)"
                         class="nav-btn">textarea</button>
                     <button
-                        onclick="loadComponent('components-lib/atoms/input-check/index.html', '⚛️ Atom: Radio & Checkbox', this)"
+                        onclick="loadComponent('components-lib/atoms/input-check/index.html', 'Atom: Radio & Check', this)"
                         class="nav-btn">input-check</button>
-                    <button onclick="loadComponent('components-lib/atoms/select/index.html', '⚛️ Atom: Select', this)"
+                    <button onclick="loadComponent('components-lib/atoms/select/index.html', 'Atom: Select', this)"
                         class="nav-btn">select</button>
-                    <button onclick="loadComponent('components-lib/atoms/label/index.html', '⚛️ Atom: Label', this)"
+                    <button onclick="loadComponent('components-lib/atoms/label/index.html', 'Atom: Label', this)"
                         class="nav-btn">label</button>
-                    <button onclick="loadComponent('components-lib/atoms/badge/index.html', '⚛️ Atom: Badge', this)"
+                    <button onclick="loadComponent('components-lib/atoms/badge/index.html', 'Atom: Badge', this)"
                         class="nav-btn">badge</button>
                     <button
-                        onclick="loadComponent('components-lib/atoms/progress-bar/index.html', '⚛️ Atom: Progress Bar', this)"
+                        onclick="loadComponent('components-lib/atoms/progress-bar/index.html', 'Atom: Progress Bar', this)"
                         class="nav-btn">progress-bar</button>
-                    <button onclick="loadComponent('components-lib/atoms/avatar/index.html', '⚛️ Atom: Avatar', this)"
+                    <button onclick="loadComponent('components-lib/atoms/avatar/index.html', 'Atom: Avatar', this)"
                         class="nav-btn">avatar</button>
-                    <button onclick="loadComponent('components-lib/atoms/icon/index.html', '⚛️ Atom: Icon', this)"
+                    <button onclick="loadComponent('components-lib/atoms/icon/index.html', 'Atom: Icon', this)"
                         class="nav-btn">icon</button>
-                    <button onclick="loadComponent('components-lib/atoms/stat/index.html', '⚛️ Atom: Stat (KPI)', this)"
+                    <button onclick="loadComponent('components-lib/atoms/stat/index.html', 'Atom: Stat', this)"
                         class="nav-btn">stat</button>
                     <button
-                        onclick="loadComponent('components-lib/atoms/toggle/index.html', '⚛️ Atom: Toggle Switch', this)"
+                        onclick="loadComponent('components-lib/atoms/toggle/index.html', 'Atom: Toggle Switch', this)"
                         class="nav-btn">toggle</button>
-                    <button onclick="loadComponent('components-lib/atoms/image/index.html', '⚛️ Atom: Image', this)"
+                    <button onclick="loadComponent('components-lib/atoms/image/index.html', 'Atom: Image', this)"
                         class="nav-btn">image</button>
                 </div>
             </div>
 
             <!-- Molecules -->
-            <div x-data="{ activeCat: 'all' }">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-primary-500"></span> Molécules (35)
-                </p>
-
+            <div>
+                <p class="cat-label">Molécules (36)</p>
                 <div class="space-y-6">
                     <!-- Category: Navigation -->
-                    <div class="space-y-2">
-                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
-                            Navigation & Structure</span>
-                        <div class="grid grid-cols-1 gap-1">
-                            <button
-                                onclick="loadComponent('components-lib/molecules/navbar-apprenant/index.html', '🧩 Navbar Apprenant', this)"
-                                class="nav-btn">navbar-apprenant</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/navbar-formateur/index.html', '🧩 Navbar Formateur', this)"
-                                class="nav-btn">navbar-formateur</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/navbar-admin/index.html', '🧩 Navbar Admin', this)"
-                                class="nav-btn">navbar-admin</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/nav-menu/index.html', '🧩 Nav Menu', this)"
-                                class="nav-btn">nav-menu</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/user-dropdown/index.html', '🧩 User Dropdown', this)"
-                                class="nav-btn">user-dropdown</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/breadcrumbs/index.html', '🧩 Breadcrumbs', this)"
-                                class="nav-btn">breadcrumbs</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/footer-simple/index.html', '🧩 Footer Simple', this)"
-                                class="nav-btn">footer-simple</button>
-                        </div>
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Navigation</span>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/navbar-apprenant/index.html', 'Navbar Apprenant', this)"
+                            class="nav-btn">navbar-apprenant</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/navbar-formateur/index.html', 'Navbar Formateur', this)"
+                            class="nav-btn">navbar-formateur</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/navbar-admin/index.html', 'Navbar Admin', this)"
+                            class="nav-btn">navbar-admin</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/nav-menu/index.html', 'Nav Menu', this)"
+                            class="nav-btn">nav-menu</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/user-dropdown/index.html', 'User Dropdown', this)"
+                            class="nav-btn">user-dropdown</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/breadcrumbs/index.html', 'Breadcrumbs', this)"
+                            class="nav-btn">breadcrumbs</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/footer-simple/index.html', 'Footer Simple', this)"
+                            class="nav-btn">footer-simple</button>
                     </div>
 
                     <!-- Category: Dashboard -->
-                    <div class="space-y-2">
-                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
-                            Dashboards & Stats</span>
-                        <div class="grid grid-cols-1 gap-1">
-                            <button
-                                onclick="loadComponent('components-lib/molecules/hero-dashboard/index.html', '🧩 Hero Dashboard', this)"
-                                class="nav-btn">hero-dashboard</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/hero-admin/index.html', '🧩 Hero Admin', this)"
-                                class="nav-btn">hero-admin</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/stats-banner/index.html', '🧩 Stats Banner', this)"
-                                class="nav-btn">stats-banner</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/kpi-cards-grid/index.html', '🧩 KPI Cards Grid', this)"
-                                class="nav-btn">kpi-cards-grid</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/kpi-card/index.html', '🧩 KPI Card', this)"
-                                class="nav-btn">kpi-card</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/chart-placeholder/index.html', '🧩 Chart Placeholder', this)"
-                                class="nav-btn">chart-placeholder</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/section/index.html', '🧩 Section Wrapper', this)"
-                                class="nav-btn">section</button>
-                        </div>
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Dashboards</span>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/hero-dashboard/index.html', 'Hero Dashboard', this)"
+                            class="nav-btn">hero-dashboard</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/hero-admin/index.html', 'Hero Admin', this)"
+                            class="nav-btn">hero-admin</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/stats-banner/index.html', 'Stats Banner', this)"
+                            class="nav-btn">stats-banner</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/kpi-cards-grid/index.html', 'KPI Cards Grid', this)"
+                            class="nav-btn">kpi-cards-grid</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/kpi-card/index.html', 'KPI Card', this)"
+                            class="nav-btn">kpi-card</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/chart-placeholder/index.html', 'Chart Placeholder', this)"
+                            class="nav-btn">chart-placeholder</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/section/index.html', 'Section Wrapper', this)"
+                            class="nav-btn">section</button>
                     </div>
 
                     <!-- Category: Data & Lists -->
-                    <div class="space-y-2">
-                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
-                            Données & Listes</span>
-                        <div class="grid grid-cols-1 gap-1">
-                            <button
-                                onclick="loadComponent('components-lib/molecules/data-table/index.html', '🧩 Data Table', this)"
-                                class="nav-btn">data-table</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/table-row/index.html', '🧩 Table Row', this)"
-                                class="nav-btn">table-row</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/search-form/index.html', '🧩 Search Form', this)"
-                                class="nav-btn">search-form</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/list-history/index.html', '🧩 List History', this)"
-                                class="nav-btn">list-history</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/list-item/index.html', '🧩 List Item', this)"
-                                class="nav-btn">list-item</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/progress-list/index.html', '🧩 Progress List', this)"
-                                class="nav-btn">progress-list</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/progress-item/index.html', '🧩 Progress Item', this)"
-                                class="nav-btn">progress-item</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/progress-item-cohort/index.html', '🧩 Progress Item Cohort', this)"
-                                class="nav-btn">progress-item-cohort</button>
-                        </div>
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Données</span>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/data-table/index.html', 'Data Table', this)"
+                            class="nav-btn">data-table</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/table-row/index.html', 'Table Row', this)"
+                            class="nav-btn">table-row</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/search-form/index.html', 'Search Form', this)"
+                            class="nav-btn">search-form</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/list-history/index.html', 'List History', this)"
+                            class="nav-btn">list-history</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/list-item/index.html', 'List Item', this)"
+                            class="nav-btn">list-item</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/progress-list/index.html', 'Progress List', this)"
+                            class="nav-btn">progress-list</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/progress-item/index.html', 'Progress Item', this)"
+                            class="nav-btn">progress-item</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/progress-item-cohort/index.html', 'Progress Item Cohort', this)"
+                            class="nav-btn">progress-item-cohort</button>
                     </div>
 
-                    <!-- Category: Formateur Editor -->
-                    <div class="space-y-2">
-                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
-                            Éditeur de QCM</span>
-                        <div class="grid grid-cols-1 gap-1">
-                            <button
-                                onclick="loadComponent('components-lib/molecules/header-editor/index.html', '🧩 Header Editor', this)"
-                                class="nav-btn">header-editor</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/sidebar-settings/index.html', '🧩 Sidebar Settings', this)"
-                                class="nav-btn">sidebar-settings</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/editor-main/index.html', '🧩 Editor Main', this)"
-                                class="nav-btn">editor-main</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/question-card/index.html', '🧩 Question Card Editor', this)"
-                                class="nav-btn">question-card</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/editable-title/index.html', '🧩 Editable Title', this)"
-                                class="nav-btn">editable-title</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/type-selector/index.html', '🧩 Type Selector', this)"
-                                class="nav-btn">type-selector</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/options-list/index.html', '🧩 Options List', this)"
-                                class="nav-btn">options-list</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/option-item/index.html', '🧩 Option Item', this)"
-                                class="nav-btn">option-item</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/footer-editor/index.html', '🧩 Footer Editor', this)"
-                                class="nav-btn">footer-editor</button>
-                        </div>
+                    <!-- Category: Editor -->
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Éditeur</span>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/header-editor/index.html', 'Header Editor', this)"
+                            class="nav-btn">header-editor</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/sidebar-settings/index.html', 'Sidebar Settings', this)"
+                            class="nav-btn">sidebar-settings</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/editor-main/index.html', 'Editor Main', this)"
+                            class="nav-btn">editor-main</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/question-card/index.html', 'Question Card', this)"
+                            class="nav-btn">question-card</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/editable-title/index.html', 'Editable Title', this)"
+                            class="nav-btn">editable-title</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/type-selector/index.html', 'Type Selector', this)"
+                            class="nav-btn">type-selector</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/options-list/index.html', 'Options List', this)"
+                            class="nav-btn">options-list</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/option-item/index.html', 'Option Item', this)"
+                            class="nav-btn">option-item</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/footer-editor/index.html', 'Footer Editor', this)"
+                            class="nav-btn">footer-editor</button>
                     </div>
 
-                    <!-- Category: Apprenant Passation -->
-                    <div class="space-y-2">
-                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">
-                            Passation & Quiz</span>
-                        <div class="grid grid-cols-1 gap-1">
-                            <button
-                                onclick="loadComponent('components-lib/molecules/header-timer/index.html', '🧩 Header Timer', this)"
-                                class="nav-btn">header-timer</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/question-container/index.html', '🧩 Question Container', this)"
-                                class="nav-btn">question-container</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/choice-list/index.html', '🧩 Choice List', this)"
-                                class="nav-btn">choice-list</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/choice-item/index.html', '🧩 Choice Item', this)"
-                                class="nav-btn">choice-item</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/footer-navigation/index.html', '🧩 Footer Navigation', this)"
-                                class="nav-btn">footer-navigation</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/card-qcm/index.html', '🧩 Card QCM', this)"
-                                class="nav-btn">card-qcm</button>
-                        </div>
+                    <!-- Category: Quiz -->
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Passation</span>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/header-timer/index.html', 'Header Timer', this)"
+                            class="nav-btn">header-timer</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/question-container/index.html', 'Question Container', this)"
+                            class="nav-btn">question-container</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/choice-list/index.html', 'Choice List', this)"
+                            class="nav-btn">choice-list</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/choice-item/index.html', 'Choice Item', this)"
+                            class="nav-btn">choice-item</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/footer-navigation/index.html', 'Footer Nav', this)"
+                            class="nav-btn">footer-navigation</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/card-qcm/index.html', 'Card QCM', this)"
+                            class="nav-btn">card-qcm</button>
                     </div>
 
-                    <!-- Category: Auth & Misc -->
-                    <div class="space-y-2">
-                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mb-1">Auth
-                            & Divers</span>
-                        <div class="grid grid-cols-1 gap-1">
-                            <button
-                                onclick="loadComponent('components-lib/molecules/login-form/index.html', '🧩 Login Form', this)"
-                                class="nav-btn">login-form</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/alert-box/index.html', '🧩 Alert Box', this)"
-                                class="nav-btn">alert-box</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/dropdown-select/index.html', '🧩 Dropdown Select', this)"
-                                class="nav-btn">dropdown-select</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/select-group/index.html', '🧩 Select Group', this)"
-                                class="nav-btn">select-group</button>
-                            <button
-                                onclick="loadComponent('components-lib/molecules/toggle-group/index.html', '🧩 Toggle Group', this)"
-                                class="nav-btn">toggle-group</button>
-                        </div>
+                    <!-- Category: Misc -->
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Divers</span>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/login-form/index.html', 'Login Form', this)"
+                            class="nav-btn">login-form</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/alert-box/index.html', 'Alert Box', this)"
+                            class="nav-btn">alert-box</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/dropdown-select/index.html', 'Dropdown Select', this)"
+                            class="nav-btn">dropdown-select</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/select-group/index.html', 'Select Group', this)"
+                            class="nav-btn">select-group</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/toggle-group/index.html', 'Toggle Group', this)"
+                            class="nav-btn">toggle-group</button>
+                        <button
+                            onclick="loadComponent('components-lib/molecules/pagination/index.html', 'Pagination', this)"
+                            class="nav-btn">pagination</button>
                     </div>
                 </div>
             </div>
 
             <!-- Mockups -->
-            <div class="space-y-4">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-secondary-500"></span> Mockups (12)
-                </p>
-                <div class="grid grid-cols-1 gap-1">
-                    <button onclick="loadComponent('mockups/12-public-landing.html', '🌐 12. Accueil Public', this)"
-                        class="nav-btn font-medium">12-public-landing</button>
-                    <button onclick="loadComponent('mockups/01-auth-login.html', '🖥️ 01. Authentification', this)"
-                        class="nav-btn font-medium">01-auth-login</button>
+            <div>
+                <p class="cat-label">Mockups (12)</p>
+                <div class="space-y-4">
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Public</span>
+                        <button onclick="loadComponent('mockups/12-public-landing.html', '12. Accueil Public', this)"
+                            class="nav-btn">12-public-landing</button>
+                        <button onclick="loadComponent('mockups/01-auth-login.html', '01. Authentification', this)"
+                            class="nav-btn">01-auth-login</button>
+                    </div>
 
-                    <div class="h-1"></div>
-                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest pl-2">Apprenant</span>
-                    <button
-                        onclick="loadComponent('mockups/02-apprenant-dashboard.html', '🖥️ 02. Apprenant Dashboard', this)"
-                        class="nav-btn font-medium text-xs">02-apprenant-dashboard</button>
-                    <button
-                        onclick="loadComponent('mockups/03-apprenant-passation-qcm.html', '🖥️ 03. Passation QCM', this)"
-                        class="nav-btn font-medium text-xs">03-passation-qcm</button>
-                    <button onclick="loadComponent('mockups/07-apprenant-resultats.html', '🖥️ 07. Résultats', this)"
-                        class="nav-btn font-medium text-xs">07-apprenant-resultats</button>
-                    <button
-                        onclick="loadComponent('mockups/08-apprenant-bibliotheque.html', '🖥️ 08. Bibliothèque', this)"
-                        class="nav-btn font-medium text-xs">08-apprenant-bibliotheque</button>
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Apprenant</span>
+                        <button
+                            onclick="loadComponent('mockups/02-apprenant-dashboard.html', '02. Apprenant Dashboard', this)"
+                            class="nav-btn">02-apprenant-dashboard</button>
+                        <button
+                            onclick="loadComponent('mockups/03-apprenant-passation-qcm.html', '03. Passation QCM', this)"
+                            class="nav-btn">03-passation-qcm</button>
+                        <button onclick="loadComponent('mockups/07-apprenant-resultats.html', '07. Résultats', this)"
+                            class="nav-btn">07-apprenant-resultats</button>
+                        <button
+                            onclick="loadComponent('mockups/08-apprenant-bibliotheque.html', '08. Bibliothèque', this)"
+                            class="nav-btn">08-apprenant-bibliotheque</button>
+                    </div>
 
-                    <div class="h-1"></div>
-                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest pl-2">Formateur</span>
-                    <button
-                        onclick="loadComponent('mockups/04-formateur-dashboard.html', '🖥️ 04. Formateur Dashboard', this)"
-                        class="nav-btn font-medium text-xs">04-formateur-dashboard</button>
-                    <button
-                        onclick="loadComponent('mockups/05-formateur-creation-qcm.html', '🖥️ 05. Éditeur QCM', this)"
-                        class="nav-btn font-medium text-xs">05-editeur-qcm</button>
-                    <button
-                        onclick="loadComponent('mockups/09-formateur-bibliotheque.html', '🖥️ 09. Bibliothèque', this)"
-                        class="nav-btn font-medium text-xs">09-formateur-bibliotheque</button>
-                    <button
-                        onclick="loadComponent('mockups/10-formateur-resultats-cohorte.html', '🖥️ 10. Résultats Cohorte', this)"
-                        class="nav-btn font-medium text-xs">10-resultats-cohorte</button>
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Formateur</span>
+                        <button
+                            onclick="loadComponent('mockups/04-formateur-dashboard.html', '04. Formateur Dashboard', this)"
+                            class="nav-btn">04-formateur-dashboard</button>
+                        <button
+                            onclick="loadComponent('mockups/05-formateur-creation-qcm.html', '05. Éditeur QCM', this)"
+                            class="nav-btn">05-editeur-qcm</button>
+                        <button
+                            onclick="loadComponent('mockups/09-formateur-bibliotheque.html', '09. Bibliothèque', this)"
+                            class="nav-btn">09-formateur-bibliotheque</button>
+                        <button
+                            onclick="loadComponent('mockups/10-formateur-resultats-cohorte.html', '10. Résultats Cohorte', this)"
+                            class="nav-btn">10-resultats-cohorte</button>
+                    </div>
 
-                    <div class="h-1"></div>
-                    <span
-                        class="text-[10px] font-black text-slate-300 uppercase tracking-widest pl-2">Administration</span>
-                    <button
-                        onclick="loadComponent('mockups/06-admin-dashboard.html', '🖥️ 06. Supervision Admin', this)"
-                        class="nav-btn font-medium text-xs">06-admin-dashboard</button>
-                    <button
-                        onclick="loadComponent('mockups/11-admin-gestion-utilisateurs.html', '🖥️ 11. Gestion Utilisateurs', this)"
-                        class="nav-btn font-medium text-xs">11-admin-users</button>
+                    <div class="space-y-1">
+                        <span
+                            class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Admin</span>
+                        <button
+                            onclick="loadComponent('mockups/06-admin-dashboard.html', '06. Supervision Admin', this)"
+                            class="nav-btn">06-admin-dashboard</button>
+                        <button
+                            onclick="loadComponent('mockups/11-admin-gestion-utilisateurs.html', '11. Gestion Utilisateurs', this)"
+                            class="nav-btn">11-admin-users</button>
+                    </div>
                 </div>
             </div>
 
         </nav>
 
         <!-- Footer Sidebar -->
-        <div class="p-4 border-t border-slate-100 text-center bg-slate-50">
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Design System v1.0</p>
+        <div class="p-6 border-t border-slate-50 text-center bg-white">
+            <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">SoliQuiz Gallery v2.0</p>
         </div>
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col h-full bg-slate-100 relative z-10">
+    <main class="flex-1 flex flex-col h-full bg-slate-50 relative z-10">
 
         <!-- Topbar -->
         <header
-            class="bg-white border-b border-slate-200 px-6 py-3.5 flex justify-between items-center shadow-sm z-20 shrink-0 h-[65px]">
-            <div class="flex items-center gap-3 min-w-0">
-                <div id="component-icon" class="text-xl shrink-0">✨</div>
-                <h2 id="component-title" class="text-sm font-bold text-slate-800 truncate font-heading tracking-wide">
-                    Sélectionnez un composant dans la sidebar
+            class="bg-white border-b border-slate-100 px-8 py-4 flex justify-between items-center z-20 shrink-0 h-[70px]">
+            <div class="flex items-center gap-4 min-w-0">
+                <div id="status-dot" class="size-2.5 rounded-full bg-primary-500 shadow-lg shadow-primary-500/20"></div>
+                <h2 id="component-title"
+                    class="text-xs font-black text-slate-900 uppercase italic tracking-[0.2em] truncate font-heading">
+                    Sélectionnez un composant
                 </h2>
             </div>
             <a id="open-new-tab" href="#" target="_blank" rel="noopener noreferrer"
-                class="hidden shrink-0 text-xs font-semibold px-4 py-2 border border-slate-200 rounded-lg bg-white shadow-sm hover:bg-slate-50 hover:text-primary-600 text-slate-600 flex items-center gap-2 transition-all">
-                Ouvrir en plein écran
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
+                class="hidden shrink-0 text-[10px] font-black uppercase tracking-widest italic px-6 py-2.5 border-2 border-slate-100 rounded-xl bg-white shadow-sm hover:border-primary-200 hover:text-primary-600 text-slate-500 flex items-center gap-3 transition-all font-heading">
+                Plein Écran
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="3">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
@@ -440,55 +434,71 @@
 
         <!-- Preview Wrapper -->
         <div class="flex-1 overflow-hidden flex items-stretch justify-center relative p-0"
-            style="background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px); background-size: 24px 24px;">
+            style="background-image: radial-gradient(circle, #e2e8f0 1.5px, transparent 1.5px); background-size: 32px 32px;">
 
-            <!-- Welcome State Initial -->
+            <!-- Loading Spinner -->
+            <div id="loader"
+                class="absolute inset-0 flex items-center justify-center bg-slate-50/40 backdrop-blur-[2px] z-[5] hidden transition-opacity duration-300">
+                <div class="relative flex items-center justify-center">
+                    <div class="size-12 border-4 border-slate-200 border-t-primary-500 rounded-full animate-spin"></div>
+                    <div class="absolute size-4 bg-primary-500 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+
+            <!-- Welcome State -->
             <div id="welcome-state"
-                class="absolute inset-0 flex flex-col items-center justify-center gap-6 text-center bg-slate-100/80 backdrop-blur-sm z-10 px-4">
+                class="absolute inset-0 flex flex-col items-center justify-center gap-10 text-center bg-slate-50/90 backdrop-blur-md z-10 px-6">
                 <div
-                    class="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-xl shadow-primary-500/20">
-                    <svg class="text-white w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    class="size-24 rounded-[2rem] bg-primary-500 flex items-center justify-center shadow-2xl shadow-primary-500/30">
+                    <svg class="text-white size-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                         <path d="m9 15 2 2 4-4" />
                     </svg>
                 </div>
-                <div>
-                    <h2 class="font-heading font-bold text-3xl text-slate-800 mb-2">UI Kit Gallery</h2>
-                    <p class="text-slate-500 text-base max-w-md mx-auto">Design System complet pour SoliQuiz, basé sur
-                        Preline UI, Tailwind CSS et l'Atomic Design.</p>
+                <div class="space-y-4">
+                    <h2 class="font-heading font-black text-5xl text-slate-900 tracking-tighter uppercase italic">UI Kit
+                        <span class="text-primary-500">Gallery</span>
+                    </h2>
+                    <p
+                        class="text-slate-400 text-sm max-w-md mx-auto font-medium uppercase tracking-widest italic leading-relaxed">
+                        Design System complet basé sur l'Atomic Design pour SoliQuiz.</p>
                 </div>
-                <!-- Stats Badges -->
-                <div class="flex flex-wrap gap-4 justify-center mt-2">
-                    <div
-                        class="flex flex-col border border-slate-200 bg-white rounded-xl px-4 py-2 shadow-sm min-w-[100px]">
-                        <span class="text-2xl font-bold text-slate-800 font-heading">17</span>
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Atoms</span>
+
+                <!-- Stats -->
+                <div class="flex gap-8">
+                    <div class="text-center group">
+                        <span class="block text-3xl font-black text-slate-900 font-heading">17</span>
+                        <span
+                            class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Atoms</span>
                     </div>
-                    <div
-                        class="flex flex-col border border-primary-200 bg-primary-50 rounded-xl px-4 py-2 shadow-sm min-w-[100px]">
-                        <span class="text-2xl font-bold text-primary-600 font-heading">35</span>
-                        <span class="text-[10px] font-bold text-primary-400 uppercase tracking-widest">Molécules</span>
+                    <div class="w-px h-8 bg-slate-200 self-center"></div>
+                    <div class="text-center group">
+                        <span class="block text-3xl font-black text-primary-500 font-heading">36</span>
+                        <span
+                            class="text-[9px] font-black text-primary-400 uppercase tracking-[0.3em] italic">Molécules</span>
                     </div>
-                    <div
-                        class="flex flex-col border border-secondary-200 bg-secondary-50/50 rounded-xl px-4 py-2 shadow-sm min-w-[100px]">
-                        <span class="text-2xl font-bold text-secondary-600 font-heading">12</span>
-                        <span class="text-[10px] font-bold text-secondary-400 uppercase tracking-widest">Mockups</span>
+                    <div class="w-px h-8 bg-slate-200 self-center"></div>
+                    <div class="text-center group">
+                        <span class="block text-3xl font-black text-slate-900 font-heading">12</span>
+                        <span
+                            class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Mockups</span>
                     </div>
                 </div>
 
-                <p class="text-sm font-medium text-slate-400 mt-4 animate-pulse">👈 Sélectionnez un élément dans la
-                    liste pour commencer</p>
+                <p
+                    class="text-[10px] font-black text-primary-500 mt-8 animate-pulse uppercase tracking-[0.4em] italic bg-primary-50 px-6 py-2.5 rounded-full">
+                    Sélectionnez un élément pour commencer
+                </p>
             </div>
 
-            <!-- Iframe de rendu -->
-            <!-- Note: Container div applied to handle responsive resizing gracefully without jumping -->
+            <!-- Iframe Container -->
             <div id="iframe-container"
                 class="h-full w-full flex justify-center items-start transition-all duration-300 ease-in-out">
                 <iframe id="preview-frame" src=""
-                    class="w-full h-full border-x border-slate-200 bg-white shadow-2xl opacity-0"
-                    title="Prévisualisation composant"></iframe>
+                    class="w-full h-full border-x border-slate-100 bg-white shadow-2xl opacity-0"
+                    title="Prévisualisation"></iframe>
             </div>
         </div>
     </main>
@@ -501,65 +511,53 @@
             const titleEl = document.getElementById('component-title');
             const openLink = document.getElementById('open-new-tab');
             const welcomeState = document.getElementById('welcome-state');
-            const iconEl = document.getElementById('component-icon');
+            const loader = document.getElementById('loader');
 
-            // Active state on buttons
+            // Active state
             if (currentBtn) currentBtn.classList.remove('active');
             btn.classList.add('active');
             currentBtn = btn;
 
-            // Extract Icon from title if present
-            const firstChar = title.charAt(0);
-            if (['🎨', '⚛', '🧩', '🖥'].includes(firstChar) || (title.length > 1 && title.substring(0, 2) === '⚛️') || (title.length > 2 && title.substring(0, 3) === '🖥️')) {
-                const parts = title.split(' ');
-                iconEl.textContent = parts[0];
-                titleEl.textContent = title.replace(parts[0], '').trim();
-            } else {
-                iconEl.textContent = '📄';
-                titleEl.textContent = title;
-            }
+            // Update Title
+            titleEl.textContent = title;
 
-            // Hide welcome state
+            // Hide welcome
             welcomeState.style.display = 'none';
 
-            // Fade out & load
+            // Show loader & hide frame
+            loader.classList.remove('hidden');
             frame.classList.add('opacity-0');
+
             setTimeout(() => {
                 frame.src = path;
                 openLink.href = path;
                 openLink.classList.remove('hidden');
 
-                // Fade in on load
                 frame.onload = () => {
                     frame.classList.remove('opacity-0');
+                    loader.classList.add('hidden');
                 };
-            }, 150);
+            }, 100);
         }
 
         function resizeIframe(width, btn) {
             const frame = document.getElementById('preview-frame');
             const container = document.getElementById('iframe-container');
 
-            // Manage Active States on VP Buttons
-            const vpControls = document.getElementById('vp-controls');
-            const btns = vpControls.querySelectorAll('button');
-            btns.forEach(b => {
-                b.classList.remove('active-vp');
-                b.classList.add('hover:text-slate-900');
-            });
+            // Buttons state
+            const btns = document.getElementById('vp-controls').querySelectorAll('button');
+            btns.forEach(b => b.classList.remove('active-vp'));
             btn.classList.add('active-vp');
-            btn.classList.remove('hover:text-slate-900');
 
             // Apply resize
             if (width === '100%') {
                 frame.style.width = '100%';
-                frame.classList.add('border-x');
-                container.classList.remove('py-4');
-                frame.classList.remove('rounded-xl', 'my-4', 'max-h-[850px]');
+                frame.classList.remove('rounded-3xl', 'my-8', 'max-h-[90%]');
+                container.classList.remove('p-8');
             } else {
                 frame.style.width = width;
-                frame.classList.add('rounded-xl', 'max-h-[850px]');
-                container.classList.add('py-4'); // Add padding TOP/BOTTOM when confined
+                frame.classList.add('rounded-3xl', 'max-h-[90%]');
+                container.classList.add('p-8');
             }
         }
     </script>

@@ -289,6 +289,120 @@
 
     <!-- Preline UI Script -->
     <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+
+    <!-- Interactions Basiques JS pour la Maquette -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainWorkSpace = document.querySelector('.max-w-3xl.mx-auto');
+
+            // Corriger l'attribut type des boutons de suppression existants pour éviter qu'ils ne rechargent la page
+            document.querySelectorAll('button.text-slate-300:not([type])').forEach(btn => btn.type = 'button');
+
+            // Event Delegation
+            mainWorkSpace.addEventListener('click', (e) => {
+
+                // 1. Bouton "Ajouter une option"
+                const addOptBtn = e.target.closest('button.py-2.px-3.text-primary-600');
+                if (addOptBtn && addOptBtn.textContent.includes('Ajouter une option')) {
+                    const optionsContainer = addOptBtn.parentElement;
+                    const typeSelect = optionsContainer.querySelector('select');
+                    const isMultiple = typeSelect && typeSelect.value.includes('Multiple');
+                    const inputType = isMultiple ? 'checkbox' : 'radio';
+                    const roundClass = isMultiple ? 'rounded' : 'rounded-full';
+                    const groupName = "ans-" + Math.random().toString(36).substr(2, 9);
+
+                    const newRow = document.createElement('div');
+                    newRow.className = "flex items-center gap-3 bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm focus-within:ring-2 focus-within:border-primary-500 focus-within:ring-primary-100 transition-all";
+                    newRow.innerHTML = `
+                        <input type="${inputType}" name="${groupName}" class="shrink-0 size-4 border-slate-300 ${roundClass} text-primary-500 focus:ring-primary-500 cursor-pointer ml-1">
+                        <input type="text" placeholder="Nouvelle option" class="block w-full text-sm font-medium text-slate-800 outline-none pb-0.5 border-b border-transparent focus:border-slate-300 placeholder-slate-400 bg-transparent">
+                        <button type="button" class="text-slate-300 hover:text-slate-500 p-1 remove-opt-btn">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 6 6 18" />
+                                <path d="m6 6 12 12" />
+                            </svg>
+                        </button>
+                    `;
+                    // Synchronize radio name if it's radio, so they share the same group
+                    if (inputType === 'radio') {
+                        const existingRadios = optionsContainer.querySelectorAll('input[type="radio"]');
+                        if (existingRadios.length > 0) {
+                            newRow.querySelector('input').name = existingRadios[0].name;
+                        }
+                    }
+
+                    optionsContainer.insertBefore(newRow, addOptBtn);
+                }
+
+                // 2. Bouton "Supprimer option"
+                const removeOptBtn = e.target.closest('button.text-slate-300.hover\\:text-slate-500, .remove-opt-btn');
+                if (removeOptBtn && removeOptBtn.parentElement.classList.contains('flex')) {
+                    const row = removeOptBtn.parentElement;
+                    row.remove();
+                }
+
+                // 3. Bouton "Nouvelle Question"
+                const newQuestionBtn = e.target.closest('button.shadow-md.rounded-full');
+                if (newQuestionBtn && newQuestionBtn.textContent.includes('Nouvelle Question')) {
+                    const baseArticle = document.querySelector('article.bg-white.border.shadow-md.border-primary-100');
+                    if (baseArticle) {
+                        const clone = baseArticle.cloneNode(true);
+
+                        // Nettoyer les champs de saisie
+                        clone.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+
+                        // Mettre à jour le numéro de la question (approximatif pour la maquette)
+                        const count = mainWorkSpace.querySelectorAll('article').length + 2;
+                        const badge = clone.querySelector('span.bg-primary-500.text-white');
+                        if (badge) badge.textContent = count;
+
+                        // Grouper les radios pour la nouvelle carte
+                        const radioName = "ans-" + Math.random().toString(36).substr(2, 9);
+                        clone.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => {
+                            el.checked = false;
+                            el.name = radioName;
+                        });
+
+                        mainWorkSpace.insertBefore(clone, newQuestionBtn.parentElement);
+                    }
+                }
+            });
+
+            // 4. Changement du Select (Choix Unique / Multiple)
+            mainWorkSpace.addEventListener('change', (e) => {
+                if (e.target.tagName === 'SELECT') {
+                    const optionsContainer = e.target.closest('.space-y-3');
+                    if (optionsContainer) {
+                        const isMultiple = e.target.value.includes('Multiple');
+                        const isTrueFalse = e.target.value.includes('Vrai/Faux');
+                        const inputs = optionsContainer.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+
+                        inputs.forEach(input => {
+                            input.type = isMultiple ? "checkbox" : "radio";
+                            if (isMultiple) {
+                                input.classList.remove('rounded-full');
+                                input.classList.add('rounded');
+                            } else {
+                                input.classList.remove('rounded');
+                                input.classList.add('rounded-full');
+                            }
+                        });
+
+                        // Simulation de la bascule Vrai/Faux
+                        if (isTrueFalse) {
+                            const rows = optionsContainer.querySelectorAll('.flex.items-center.gap-3.bg-white');
+                            if (rows.length > 2) {
+                                for (let i = 2; i < rows.length; i++) rows[i].remove();
+                            }
+                            const textInputs = optionsContainer.querySelectorAll('input[type="text"]');
+                            if (textInputs[0]) textInputs[0].value = "Vrai";
+                            if (textInputs[1]) textInputs[1].value = "Faux";
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -100,7 +100,7 @@
 
     <!-- Preline Bottom Sticky Footer -->
     <div
-        class="fixed inset-x-0 bottom-0 z-50 bg-white border-t border-slate-200 dark:bg-neutral-900 dark:border-neutral-800 max-w-[430px] mx-auto rounded-b-[2.5rem]">
+        class="fixed inset-x-0 bottom-8 z-50 bg-white border-t border-slate-200 dark:bg-neutral-900 dark:border-neutral-800 max-w-[430px] mx-auto rounded-b-[2.5rem]">
         <div class="p-4 flex gap-3 items-center justify-between pb-[env(safe-area-inset-bottom,20px)]">
             <!-- Preline Secondary Icon Button -->
             <button type="button"
@@ -128,6 +128,62 @@
             display: none;
         }
     </style>
+    <!-- Interactions Basiques JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const labels = document.querySelectorAll('.grid.space-y-3 label');
+            const radios = document.querySelectorAll('input[type="radio"][name="hs-radio-in-form"]');
+
+            radios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    // Reset all labels
+                    labels.forEach(label => {
+                        label.className = "flex p-4 w-full bg-white border border-slate-200 rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500 cursor-pointer hover:bg-slate-50 active:scale-[0.98] transition-all";
+                        const span = label.querySelector('span.text-sm');
+                        if (span) {
+                            span.classList.remove('text-primary-800', 'font-bold');
+                            span.classList.add('text-slate-800', 'font-medium');
+                        }
+                    });
+
+                    // Set active label
+                    if (e.target.checked) {
+                        const activeLabel = e.target.closest('label');
+                        activeLabel.className = "flex p-4 w-full bg-primary-50/80 border-2 border-primary-600 rounded-xl text-sm cursor-pointer shadow-sm active:scale-[0.98] transition-all";
+                        const span = activeLabel.querySelector('span.text-sm');
+                        if (span) {
+                            span.classList.remove('text-slate-800', 'font-medium');
+                            span.classList.add('text-primary-800', 'font-bold');
+                        }
+                    }
+                });
+            });
+
+            // Simulate Timer
+            const timerEl = document.querySelector('.animate-pulse').nextSibling;
+            const timerContainer = timerEl.parentElement;
+            if (timerContainer) {
+                // Get the text node containing the time
+                const textNodes = Array.from(timerContainer.childNodes).filter(node => node.nodeType === 3 && node.textContent.trim().includes(':'));
+                if (textNodes.length > 0) {
+                    let timeParts = textNodes[0].textContent.trim().split(':');
+                    let minutes = parseInt(timeParts[0]);
+                    let seconds = parseInt(timeParts[1]);
+
+                    setInterval(() => {
+                        if (seconds === 0) {
+                            if (minutes === 0) return;
+                            minutes--;
+                            seconds = 59;
+                        } else {
+                            seconds--;
+                        }
+                        textNodes[0].textContent = ` ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }, 1000);
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

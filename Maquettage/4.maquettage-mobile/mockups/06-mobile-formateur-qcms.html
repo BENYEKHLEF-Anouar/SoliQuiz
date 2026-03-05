@@ -253,6 +253,45 @@
             display: none;
         }
     </style>
+
+    <!-- Interactions Basiques JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Search filter
+            const searchInput = document.querySelector('input[placeholder*="Rechercher"]');
+            const cards = document.querySelectorAll('main > .space-y-4 > div');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const val = e.target.value.toLowerCase();
+                    cards.forEach(card => {
+                        const title = card.querySelector('h3');
+                        if (title) {
+                            if (title.textContent.toLowerCase().includes(val)) {
+                                card.style.display = '';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Simulate create draft
+            const btnCreate = document.querySelector('#hs-basic-modal button.bg-primary-600');
+            if (btnCreate) {
+                btnCreate.addEventListener('click', () => {
+                    const cancelBtn = btnCreate.previousElementSibling;
+                    if (cancelBtn && cancelBtn.hasAttribute('data-hs-overlay')) {
+                        cancelBtn.click(); // close modal
+                    }
+                    if (searchInput) {
+                        searchInput.value = 'Nouveau Brouillon'; // simulate effect somehow, not really needed but visual
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

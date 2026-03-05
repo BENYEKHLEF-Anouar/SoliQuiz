@@ -402,12 +402,43 @@
 
                         </tbody>
                     </table>
-                    <div class="p-6 bg-slate-50 border-t border-slate-100 text-center">
-                        <button
-                            class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-primary-500 transition-colors italic group">
-                            Charger les 50 prochains utilisateurs
-                            <span class="inline-block transition-transform group-hover:translate-y-1">↓</span>
-                        </button>
+                    <div class="p-6 bg-slate-50 border-t border-slate-100 flex justify-center">
+                        <!-- Pagination -->
+                        <nav class="flex items-center gap-x-2" aria-label="Pagination">
+                            <button type="button"
+                                class="group min-h-10 min-w-10 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-xs font-black uppercase tracking-widest italic rounded-2xl text-slate-400 hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 disabled:opacity-50 disabled:pointer-events-none transition-all"
+                                aria-label="Previous">
+                                <svg class="shrink-0 size-3.5 transition-transform group-hover:-translate-x-0.5"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="m15 18-6-6 6-6" />
+                                </svg>
+                                <span class="hidden sm:inline-block">Précédent</span>
+                            </button>
+
+                            <div class="flex items-center gap-x-1.5">
+                                <button type="button"
+                                    class="size-10 flex justify-center items-center bg-primary-500 text-white font-black text-sm rounded-2xl shadow-lg shadow-primary-500/20 active:scale-90 transition-all"
+                                    aria-current="page">1</button>
+                                <button type="button"
+                                    class="size-10 flex justify-center items-center text-slate-500 font-bold text-sm rounded-2xl border border-slate-100 bg-white hover:border-primary-200 hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 active:scale-90 transition-all">2</button>
+                                <button type="button"
+                                    class="size-10 flex justify-center items-center text-slate-500 font-bold text-sm rounded-2xl border border-slate-100 bg-white hover:border-primary-200 hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 active:scale-90 transition-all">3</button>
+                            </div>
+
+                            <button type="button"
+                                class="group min-h-10 min-w-10 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-xs font-black uppercase tracking-widest italic rounded-2xl text-slate-400 hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 disabled:opacity-50 disabled:pointer-events-none transition-all"
+                                aria-label="Next">
+                                <span class="hidden sm:inline-block">Suivant</span>
+                                <svg class="shrink-0 size-3.5 transition-transform group-hover:translate-x-0.5"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="m9 18 6-6-6-6" />
+                                </svg>
+                            </button>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -547,6 +578,54 @@
 
     <!-- Preline UI Script -->
     <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+
+    <!-- Interactions Basiques JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulated Delete
+            document.body.addEventListener('click', (e) => {
+                const deleteBtn = e.target.closest('button[data-hs-overlay="#hs-modal-delete-confirm"]');
+                if (deleteBtn) {
+                    // For the sake of a quick mockup simulation, remove immediately since modal might be dynamic
+                    const row = deleteBtn.closest('tr');
+                    const card = deleteBtn.closest('.group.bg-white'); // for categories
+                    if (row) row.style.display = 'none';
+                    if (card) card.style.display = 'none';
+                }
+            });
+
+            // Filtering Users by Role
+            const roleSelect = document.getElementById('filter-user-role');
+            const searchInput = document.querySelector('input[placeholder*="Rechercher"]');
+
+            function filterTable() {
+                const tbody = document.querySelector('tbody');
+                if (!tbody) return;
+                const rows = tbody.querySelectorAll('tr');
+                const roleFilter = roleSelect ? roleSelect.value.toLowerCase() : '';
+                const textFilter = searchInput ? searchInput.value.toLowerCase() : '';
+
+                rows.forEach(row => {
+                    const textContent = row.textContent.toLowerCase();
+                    const matchesText = textContent.includes(textFilter);
+                    const matchesRole = roleFilter === '' || roleFilter === 'tous les rôles' || textContent.includes(roleFilter);
+
+                    if (matchesText && matchesRole) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            if (roleSelect) {
+                roleSelect.addEventListener('change', filterTable);
+            }
+            if (searchInput) {
+                searchInput.addEventListener('input', filterTable);
+            }
+        });
+    </script>
 </body>
 
 </html>

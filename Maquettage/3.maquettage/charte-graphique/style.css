@@ -68,3 +68,38 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   color: var(--color-neutral-900);
 }
+
+/* =========================================
+   Preline UI Fallbacks for Tailwind CDN
+   ========================================= */
+
+/* Dropdowns */
+.hs-dropdown.open .hs-dropdown-open\:opacity-100 {
+    opacity: 1 !important;
+}
+.hs-dropdown.open .hs-dropdown-open\:rotate-180,
+.hs-dropdown.open.hs-dropdown-open\:rotate-180 {
+    transform: rotate(180deg) !important;
+}
+
+/* Modals & Overlays */
+.hs-overlay.open .hs-overlay-open\:opacity-100,
+.hs-overlay.open.hs-overlay-open\:opacity-100 {
+    opacity: 1 !important;
+}
+.hs-overlay.open .hs-overlay-open\:mt-7,
+.hs-overlay.open.hs-overlay-open\:mt-7 {
+    margin-top: 1.75rem !important;
+}
+.hs-overlay.open .hs-overlay-open\:mt-auto,
+.hs-overlay.open.hs-overlay-open\:mt-auto {
+    margin-top: auto !important;
+}
+.hs-overlay.open .hs-overlay-open\:duration-500,
+.hs-overlay.open.hs-overlay-open\:duration-500 {
+    transition-duration: 500ms !important;
+}
+.hs-overlay.open .hs-overlay-open\:translate-y-0,
+.hs-overlay.open.hs-overlay-open\:translate-y-0 {
+    transform: translateY(0) !important;
+}
