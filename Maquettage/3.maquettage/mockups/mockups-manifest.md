@@ -14,4 +14,10 @@
 | 08. Bibliothèque Apprenant | `mockups/08-apprenant-bibliotheque.html` | `08-apprenant-bibliotheque.md` | Terminé |
 | 09. Bibliothèque Formateur | `mockups/09-formateur-bibliotheque.html` | `09-formateur-bibliotheque.md` | Terminé |
 | 10. Résultats Cohorte | `mockups/10-formateur-resultats-cohorte.html` | `10-formateur-resultats-cohorte.md` | Terminé |
-| 11. Gestion Utilisateurs | `mockups/11-admin-gestion-utilisateurs.html` | `11-admin-gestion-utilisateurs.md` | Terminé |
+| 11. Gestion Utilisateurs & CRUD | `mockups/11-admin-gestion-utilisateurs.html` | `11-admin-gestion-utilisateurs.md` | Terminé (CRUD+) |
+| 12. Accueil Public (Landing) | `mockups/12-public-landing.html` | - | Terminé |
+
+
+
+
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Molécule: Navbar Public</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        primary: { 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' }
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="bg-slate-50">
+
+    <!-- Molecule : Navbar Public -->
+    <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100">
+        <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <!-- Atom: Logo -->
+            <a href="#" class="flex items-center gap-2 group outline-none">
+                <div
+                    class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/10 transition-transform group-hover:scale-110">
+                    <svg class="text-white size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <path d="m9 15 2 2 4-4" />
+                    </svg>
+                </div>
+                <span class="text-2xl font-heading font-bold tracking-tight text-slate-900">Soli<span
+                        class="text-primary-500">Quiz</span></span>
+            </a>
+
+            <!-- Nav Links -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#features"
+                    class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Fonctionnalités</a>
+                <a href="#roles"
+                    class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Utilisation</a>
+                <!-- Atom: Button Small -->
+                <a href="#"
+                    class="py-3 px-6 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/25 active:scale-95 text-sm uppercase tracking-widest">
+                    Se Connecter
+                </a>
+            </div>
+        </nav>
+    </header>
+
+</body>
+
+</html>

@@ -46,3 +46,9 @@
 | `table-row` | `components-lib/molecules/table-row/` | text, badge, link | admin-dashboard |
 | `chart-placeholder` | `components-lib/molecules/chart-placeholder/` | image, select | admin-dashboard |
 | `search-form` | `components-lib/molecules/search-form/` | input, button | admin-dashboard |
+| `navbar-public`| `components-lib/molecules/navbar-public/`| logo, button, link | landing |
+| `hero-public` | `components-lib/molecules/hero-public/` | title, text, image, button | landing |
+| `feature-card` | `components-lib/molecules/feature-card/` | icon, title, text | landing |
+| `cta-section-dark`| `components-lib/molecules/cta-section-dark/`| title, text, button | landing |
+| `footer-landing`| `components-lib/molecules/footer-landing/`| logo, text | landing |
+| `modal` | `components-lib/molecules/modal/` | button, input, icon | common |

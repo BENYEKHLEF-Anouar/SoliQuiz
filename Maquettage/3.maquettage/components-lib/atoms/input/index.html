@@ -65,6 +65,42 @@
         <p class="text-sm text-semantic-error mt-2">Mot de passe invalide.</p>
     </div>
 
+    <div>
+        <h2 class="text-xs text-slate-400 font-mono uppercase mb-4 tracking-widest">SearchBox (Advanced ComboBox)</h2>
+        <!-- Atom : SearchBox ComboBox Advanced -->
+        <div class="relative" data-hs-combo-box='{
+            "groupingType": "default",
+            "isOpenOnFocus": true,
+            "apiUrl": "../assets/data/searchbox.json",
+            "apiGroupField": "category",
+            "outputItemTemplate": "<div data-hs-combo-box-output-item class=\"rounded-xl hover:bg-slate-50 focus:outline-none focus:bg-slate-50\"><span class=\"flex items-center cursor-pointer py-2.5 px-4 w-full text-sm text-slate-700 rounded-xl font-medium transition-colors\"><div class=\"flex items-center w-full\"><div class=\"flex items-center justify-center rounded-full bg-slate-100 size-6 overflow-hidden me-2.5 shadow-sm\"><img class=\"shrink-0\" data-hs-combo-box-output-item-attr=&apos;[{\"valueFrom\": \"image\", \"attr\": \"src\"}, {\"valueFrom\": \"name\", \"attr\": \"alt\"}]&apos; /></div><div data-hs-combo-box-output-item-field=\"name\" data-hs-combo-box-value></div><div class=\"hidden\" data-hs-combo-box-output-item-field=&apos;[\"name\", \"category\"]&apos; data-hs-combo-box-search-text></div></div><span class=\"hidden hs-combo-box-selected:block\"><svg class=\"shrink-0 size-3.5 text-primary-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg></span></span></div>",
+            "groupingTitleTemplate": "<div class=\"text-[10px] font-black uppercase text-slate-400 m-3 mb-1 tracking-widest\"></div>"
+          }'>
+            <div class="relative group">
+                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
+                    <svg class="shrink-0 size-4 text-slate-300 group-hover:text-primary-500 transition-colors"
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                </div>
+                <input
+                    class="py-3 ps-11 pe-4 block w-full border-slate-200 rounded-2xl text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all border shadow-sm group-hover:border-slate-300"
+                    type="text" role="combobox" aria-expanded="false" placeholder="Rechercher..."
+                    data-hs-combo-box-input="">
+            </div>
+
+            <!-- SearchBox Dropdown -->
+            <div class="absolute z-50 w-full bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 mt-2"
+                style="display: none;" data-hs-combo-box-output="">
+                <div class="max-h-72 rounded-b-2xl overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-slate-300"
+                    data-hs-combo-box-output-items-wrapper=""></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
 </body>
 
 </html>

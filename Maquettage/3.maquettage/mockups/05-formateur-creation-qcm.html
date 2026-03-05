@@ -114,7 +114,7 @@
 
                 <!-- Skeleton/Card Question 1 (Rétrécie / Validée) -->
                 <div
-                    class="bg-white border shadow-sm border-slate-200 rounded-xl p-4 flex gap-4 items-start opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
+                    class="bg-white border shadow-sm border-slate-200 rounded-xl p-4 flex gap-4 items-start opacity-70 hover:opacity-100 transition-opacity cursor-pointer group/item">
                     <span
                         class="inline-flex size-[28px] bg-slate-200 text-slate-600 rounded-full items-center justify-center text-xs font-bold shrink-0">1</span>
                     <div class="flex-1 truncate pt-1">
@@ -122,7 +122,17 @@
                         </h4>
                         <div class="text-xs text-slate-500 mt-1">Choix Multiple • 4 options</div>
                     </div>
-                    <button class="text-primary-500 text-sm font-medium hover:underline p-1">Éditer</button>
+                    <div class="flex items-center gap-2 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                        <button class="text-primary-500 text-sm font-medium hover:underline p-1">Éditer</button>
+                        <button class="text-red-400 hover:text-red-500 p-1" data-hs-overlay="#hs-modal-delete-question">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18" />
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                            </svg>
+                        </button>
+                    </div>
                     <!-- Drag Handle indicator -->
                     <div class="h-full flex items-center px-2 cursor-grab text-slate-300 hover:text-slate-500">
                         <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -148,14 +158,13 @@
                             <span class="text-sm font-bold text-slate-800 uppercase tracking-wider">Édition en
                                 cours</span>
                         </div>
-                        <button class="text-slate-400 hover:text-slate-600 transition-colors" title="Supprimer">
+                        <button class="text-slate-400 hover:text-red-500 transition-colors" title="Supprimer"
+                            data-hs-overlay="#hs-modal-delete-question">
                             <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 6h18" />
                                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
                                 <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                                <line x1="10" x2="10" y1="11" y2="17" />
-                                <line x1="14" x2="14" y1="11" y2="17" />
                             </svg>
                         </button>
                     </header>
@@ -249,6 +258,37 @@
         </main>
     </div>
 
+    <!-- Modal: Delete Question Confirmation -->
+    <div id="hs-modal-delete-question"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[70] overflow-x-hidden overflow-y-auto pointer-events-none">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-sm sm:w-full m-3 sm:mx-auto">
+            <div class="bg-white border border-slate-200 shadow-2xl rounded-3xl pointer-events-auto p-8 text-center">
+                <div class="size-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <svg class="size-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18" />
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    </svg>
+                </div>
+                <h3 class="font-heading font-black text-slate-900 uppercase italic tracking-tight text-xl mb-4">
+                    Supprimer la question</h3>
+                <p class="text-slate-500 text-sm mb-8 leading-relaxed">Voulez-vous vraiment retirer cette question du
+                    QCM ?</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button"
+                        class="py-3 px-4 font-bold text-xs text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-all uppercase tracking-widest"
+                        data-hs-overlay="#hs-modal-delete-question">Annuler</button>
+                    <button type="button"
+                        class="py-3 px-4 font-black text-xs text-white bg-red-500 rounded-xl hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all uppercase tracking-widest">Confirmer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preline UI Script -->
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
 </body>
 
 </html>

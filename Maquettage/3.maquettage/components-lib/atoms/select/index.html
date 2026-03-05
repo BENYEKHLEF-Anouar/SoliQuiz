@@ -15,16 +15,27 @@
 <body class="bg-gray-50 p-10 font-sans space-y-8 max-w-sm w-full">
 
     <div>
-        <h2 class="text-xs text-slate-400 font-mono uppercase mb-3">Select (Native Styled)</h2>
-        <!-- Atom : Select Native -->
-        <label for="select-cohorte" class="block text-sm font-medium mb-2 text-slate-800">Cohorte</label>
-        <select id="select-cohorte"
-            class="py-3 px-4 pe-9 block w-full border-slate-200 rounded-xl text-sm border shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-colors">
-            <option selected>Sélectionner une classe</option>
-            <option>DW_101</option>
-            <option>DW_102</option>
+        <h2 class="text-xs text-slate-400 font-mono uppercase mb-4 tracking-widest">Select : Preline Advanced</h2>
+        <!-- Atom : Select Multi-Action -->
+        <select id="hs-select-advanced" data-hs-select='{
+          "placeholder": "Filtrer les options...",
+          "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
+          "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 ps-4 pe-9 flex text-nowrap w-full cursor-pointer bg-white border border-slate-200 text-slate-800 rounded-2xl text-start text-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-sm transition-all",
+          "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-slate-100 rounded-2xl shadow-2xl overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300",
+          "optionClasses": "hs-selected:bg-primary-50 hs-selected:text-primary-600 py-2.5 px-4 w-full text-sm text-slate-600 cursor-pointer hover:bg-slate-50 rounded-xl focus:outline-none focus:bg-slate-50 hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 font-medium transition-colors",
+          "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3.5 text-primary-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
+          "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-slate-400 group-hover:text-primary-500 transition-colors\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
+        }' class="hidden">
+            <option value="">Tous les Rôles</option>
+            <option>Administrateur</option>
+            <option>Formateur</option>
+            <option>Apprenant</option>
+            <option disabled>Désactivé</option>
         </select>
     </div>
+
+    <!-- Scripts Preline requis pour les selects avancés -->
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
 
 </body>
 

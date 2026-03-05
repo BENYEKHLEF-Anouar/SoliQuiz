@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecule: Modal</title>
+    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 50: 'var(--color-primary-50)', 500: 'var(--color-primary-500)', 600: 'var(--color-primary-600)' } } } } };
+    </script>
+</head>
+
+<body class="bg-gray-50 p-10 font-sans space-y-12">
+
+    <div class="space-y-4">
+        <h2 class="text-xs text-slate-400 font-mono uppercase tracking-widest">Modal Variant: Confirmation / Danger</h2>
+        <button type="button"
+            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none"
+            data-hs-overlay="#hs-modal-delete-example">
+            Ouvrir Modal Suppression
+        </button>
+
+        <!-- Modal: Confirmation Suppression -->
+        <div id="hs-modal-delete-example"
+            class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none">
+            <div
+                class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-sm sm:w-full m-3 sm:mx-auto">
+                <div
+                    class="bg-white border border-slate-200 shadow-2xl rounded-3xl pointer-events-auto p-8 text-center uppercase tracking-tight">
+                    <div
+                        class="size-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <svg class="size-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6h18" />
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                            <line x1="10" y1="11" x2="10" y2="17" />
+                            <line x1="14" y1="11" x2="14" y2="17" />
+                        </svg>
+                    </div>
+                    <h3 class="font-heading font-black text-slate-900 uppercase italic tracking-tight text-xl mb-4">
+                        Confirmer la suppression</h3>
+                    <p class="text-slate-500 text-sm mb-8 leading-relaxed font-medium lowercase">Cette action est
+                        irréversible. Voulez-vous vraiment continuer ?</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button"
+                            class="py-3 px-4 font-bold text-xs text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-all uppercase tracking-widest"
+                            data-hs-overlay="#hs-modal-delete-example">Annuler</button>
+                        <button type="button"
+                            class="py-3 px-4 font-black text-xs text-white bg-red-500 rounded-xl hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all uppercase tracking-widest">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        <h2 class="text-xs text-slate-400 font-mono uppercase tracking-widest">Modal Variant: Formulaire / Edition</h2>
+        <button type="button"
+            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none"
+            data-hs-overlay="#hs-modal-form-example">
+            Ouvrir Modal Formulaire
+        </button>
+
+        <!-- Modal: Formulaire Standard -->
+        <div id="hs-modal-form-example"
+            class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none">
+            <div
+                class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+                <div class="flex flex-col bg-white border border-slate-200 shadow-2xl rounded-3xl pointer-events-auto">
+                    <div class="flex justify-between items-center py-5 px-8 border-b border-slate-100">
+                        <h3 class="font-heading font-black text-slate-900 uppercase italic tracking-tight">Titre du
+                            Formulaire</h3>
+                        <button type="button"
+                            class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-slate-100 text-slate-800 hover:bg-slate-200 disabled:opacity-50 disabled:pointer-events-none"
+                            data-hs-overlay="#hs-modal-form-example">
+                            <span class="sr-only">Fermer</span>
+                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 6 6 18" />
+                                <path d="m6 6 12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-8 space-y-5">
+                        <div class="space-y-2">
+                            <label
+                                class="block text-xs font-black text-slate-400 uppercase tracking-widest italic">Libellé
+                                du champ</label>
+                            <input type="text"
+                                class="py-3 px-4 block w-full border border-slate-200 rounded-xl text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all"
+                                placeholder="Ex: Entrez une valeur">
+                        </div>
+                    </div>
+                    <div
+                        class="flex justify-end items-center gap-x-2 py-5 px-8 border-t border-slate-100 bg-slate-50 rounded-b-3xl">
+                        <button type="button"
+                            class="py-3 px-6 font-bold text-xs text-slate-500 rounded-xl hover:bg-slate-100 transition-all uppercase tracking-widest"
+                            data-hs-overlay="#hs-modal-form-example">Annuler</button>
+                        <button type="button"
+                            class="py-3 px-8 font-black text-xs text-white bg-primary-600 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20 transition-all uppercase tracking-widest">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
+</body>
+
+</html>
