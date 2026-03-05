@@ -1,114 +1,172 @@
 classDiagram
     direction TB
 
-    class User {
-        +Long id
-        +String name
+    class Utilisateur {
+        +Integer id
+        +String nom
         +String email
-        +String password
+        +String mot_de_passe
+        +DateTime derniere_connexion
         +DateTime created_at
         +DateTime updated_at
     }
 
     class Role {
-        +Long id
-        +String name
+        +Integer id
+        +String nom
         +String guard_name
         +DateTime created_at
         +DateTime updated_at
     }
 
     class Permission {
-        +Long id
-        +String name
+        +Integer id
+        +String nom
         +String guard_name
         +DateTime created_at
         +DateTime updated_at
     }
 
+    class Formateur {
+        +String matricule
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Etudiant {
+        +String code_etudiant
+        +Integer classe_id
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Classe {
+        +Integer id
+        +String nom
+        +String promotion
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
     class UniteApprentissage {
-        +Long id
-        +String name
-        +String description
+        +Integer id
+        +String nom
+        +String code
         +DateTime created_at
         +DateTime updated_at
     }
 
     class Session {
-        +Long id
-        +String name
+        +Integer id
+        +Integer unite_apprentissage_id
+        +String nom
         +DateTime date
         +DateTime created_at
         +DateTime updated_at
     }
 
     class Objectif {
-        +Long id
-        +String name
+        +Integer id
+        +Integer session_id
+        +String nom
         +String description
         +DateTime created_at
         +DateTime updated_at
     }
 
     class QCM {
-        +Long id
-        +String title
-        +Integer duration_minutes
-        +Boolean is_published
+        +Integer id
+        +Integer objectif_id
+        +Integer formateur_id
+        +String titre
+        +Integer duree_minutes
+        +Integer score_reussite
+        +Boolean est_publie
         +DateTime created_at
         +DateTime updated_at
     }
 
     class Question {
-        +Long id
-        +String text
+        +Integer id
+        +Integer qcm_id
+        +String texte
         +String type
-        +Float points
-        +String feedback
+        +Integer points
+        +String explication_feedback
         +DateTime created_at
         +DateTime updated_at
     }
 
     class Option {
-        +Long id
-        +String text
-        +Boolean is_correct
+        +Integer id
+        +Integer question_id
+        +String texte
+        +Boolean est_correcte
+        +String feedback_specifique
         +DateTime created_at
         +DateTime updated_at
     }
 
-    class Attempt {
-        +Long id
-        +Float score
-        +DateTime start_time
-        +DateTime end_time
+    class Tentative {
+        +Integer id
+        +Integer etudiant_id
+        +Integer qcm_id
+        +Integer score_obtenu
+        +DateTime date_debut
+        +DateTime date_fin
+        +String statut
         +DateTime created_at
         +DateTime updated_at
     }
 
-    class Answer {
-        +Long id
+    class Reponse {
+        +Integer id
+        +Integer tentative_id
+        +Integer question_id
+        +DateTime repondu_a
         +DateTime created_at
         +DateTime updated_at
     }
 
-    %% Relations corrigées
-    Role "1" -- "0..*" User : has
-    Role "*" -- "*" Permission : has
+    class ChoixReponse {
+        +Integer id
+        +Integer reponse_id
+        +Integer option_id
+        +DateTime created_at
+        +DateTime updated_at
+    }
 
-    User "1" -- "*" Role : manages (Admin)
-    User "1" -- "0..*" QCM : creates (Formateur)
-    User "1" -- "0..*" Attempt : makes (Etudiant)
+    %% ───────── RBAC ─────────
+    Utilisateur "1" -- "0..*" Role : possède
+    Role "*" -- "*" Permission : accorde
 
-    UniteApprentissage "1" -- "0..*" Session : contains
-    Session "1" -- "0..*" Objectif : has
-    Objectif "1" -- "1" QCM : evaluates
+    %% ───────── Héritage ─────────
+    Utilisateur <|-- Formateur
+    Utilisateur <|-- Etudiant
 
-    QCM "1" -- "1..*" Question : contains
-    Question "1" -- "2..*" Option : proposes
+    %% ───────── Structure des Classes ─────────
+    Classe "1" -- "0..*" Etudiant : appartient_a
 
-    QCM "1" -- "0..*" Attempt : receives
-    Attempt "1" -- "1..*" Answer : includes
-    
-    %% Question "1" -- "0..*" Answer : answered_in
-    Option "1" -- "0..*" Answer : selected_in
+    %% ───────── Structure Pédagogique ─────────
+    UniteApprentissage "1" -- "0..*" Session : contient
+    Session "1" -- "0..*" Objectif : possède
+    Objectif "1" -- "1" QCM : évalue
+
+    %% ───────── Structure du QCM ─────────
+    QCM "1" -- "1..*" Question : contient
+    Question "1" -- "2..*" Option : propose
+
+    %% ───────── Création ─────────
+    Formateur "1" -- "0..*" QCM : crée
+
+    %% ───────── Participation ─────────
+    Etudiant "1" -- "0..*" Tentative : effectue
+    QCM "1" -- "0..*" Tentative : reçoit
+
+    %% ───────── Réponses ─────────
+    Tentative "1" -- "1..*" Reponse : inclut
+    Question "1" -- "0..*" Reponse : répondue_dans
+
+    %% ───────── Sélections Choix Multiples ─────────
+    Reponse "1" -- "0..*" ChoixReponse : contient
+    Option "1" -- "0..*" ChoixReponse : sélectionnée_dans
