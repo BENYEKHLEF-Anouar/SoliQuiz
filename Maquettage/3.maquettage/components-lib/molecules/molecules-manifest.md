@@ -52,3 +52,5 @@
 | `cta-section-dark`| `components-lib/molecules/cta-section-dark/`| title, text, button | landing |
 | `footer-landing`| `components-lib/molecules/footer-landing/`| logo, text | landing |
 | `modal` | `components-lib/molecules/modal/` | button, input, icon | common |
+| `pagination` | `components-lib/molecules/pagination/` | button, link | data-table, lists |
+
