@@ -37,21 +37,40 @@
                 <div>
                     <label
                         class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 italic">Rôle</label>
-                    <select
-                        class="py-3 px-4 block w-full border border-slate-200 rounded-xl text-sm outline-none bg-white">
-                        <option>Apprenant</option>
-                        <option>Formateur</option>
-                        <option>Administrateur</option>
+                    <select data-hs-select='{
+                        "placeholder": "Choisir un rôle...",
+                        "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
+                        "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 px-4 flex text-nowrap w-full cursor-pointer bg-white border border-slate-200 text-slate-800 rounded-xl text-start text-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-sm transition-all",
+                        "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-slate-100 rounded-xl shadow-2xl overflow-hidden overflow-y-auto",
+                        "optionClasses": "hs-selected:bg-primary-50 hs-selected:text-primary-600 py-2.5 px-4 w-full text-sm text-slate-600 cursor-pointer hover:bg-slate-50 rounded-xl focus:outline-none focus:bg-slate-50 font-medium transition-colors",
+                        "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3.5 text-primary-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
+                        "extraMarkup": "<div class=\"absolute top-1/2 end-4 -translate-y-1/2\"><svg class=\"shrink-0 size-4 text-slate-400 group-hover:text-primary-500 transition-colors\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
+                      }' class="hidden">
+                        <option value="Apprenant">Apprenant</option>
+                        <option value="Formateur">Formateur</option>
+                        <option value="Administrateur">Administrateur</option>
                     </select>
                 </div>
             </div>
             <div
                 class="flex justify-end items-center gap-x-2 py-5 px-8 border-t border-slate-100 bg-slate-50 rounded-b-3xl">
                 <button type="button"
-                    class="py-3 px-6 font-bold text-xs text-slate-500 rounded-xl hover:bg-slate-100 transition-all"
-                    data-hs-overlay="#hs-modal-add-user">Annuler</button>
+                    class="py-3 px-6 inline-flex items-center gap-x-2 font-bold text-xs text-slate-500 rounded-xl hover:bg-slate-100 transition-all"
+                    data-hs-overlay="#hs-modal-add-user">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                    Annuler
+                </button>
                 <button type="button"
-                    class="py-3 px-8 font-black text-xs text-white bg-primary-600 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20 transition-all">Enregistrer</button>
+                    class="py-3 px-8 inline-flex items-center gap-x-2 font-black text-xs text-white bg-primary-600 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20 transition-all">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                    Enregistrer
+                </button>
             </div>
         </div>
     </div>
@@ -91,10 +110,23 @@
             </div>
             <div
                 class="flex justify-end items-center gap-x-2 py-5 px-8 border-t border-slate-100 bg-slate-50 rounded-b-3xl">
-                <button type="button" class="py-3 px-6 font-bold text-xs text-slate-500 rounded-xl hover:bg-slate-100"
-                    data-hs-overlay="#hs-modal-add-cohort">Annuler</button>
                 <button type="button"
-                    class="py-3 px-8 font-black text-xs text-white bg-primary-600 rounded-xl hover:bg-primary-700">Enregistrer</button>
+                    class="py-3 px-6 inline-flex items-center gap-x-2 font-bold text-xs text-slate-500 rounded-xl hover:bg-slate-100"
+                    data-hs-overlay="#hs-modal-add-cohort">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                    Annuler
+                </button>
+                <button type="button"
+                    class="py-3 px-8 inline-flex items-center gap-x-2 font-black text-xs text-white bg-primary-600 rounded-xl hover:bg-primary-700">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                    Enregistrer
+                </button>
             </div>
         </div>
     </div>
@@ -118,10 +150,22 @@
                 Voulez-vous vraiment continuer ?</p>
             <div class="grid grid-cols-2 gap-3">
                 <button type="button"
-                    class="py-3 px-4 font-bold text-xs text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-all uppercase tracking-widest"
-                    data-hs-overlay="#hs-modal-delete-confirm">Annuler</button>
-                <button type="button"
-                    class="py-3 px-4 font-black text-xs text-white bg-red-500 rounded-xl hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all uppercase tracking-widest">Supprimer</button>
+                    class="py-3 px-4 inline-flex items-center justify-center gap-x-2 font-bold text-xs text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-all uppercase tracking-widest"
+                    data-hs-overlay="#hs-modal-delete-confirm">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                    Annuler
+                </button>
+                <button type="button" data-hs-overlay="#hs-modal-delete-confirm"
+                    class="py-3 px-4 inline-flex items-center justify-center gap-x-2 font-black text-xs text-white bg-red-500 rounded-xl hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all uppercase tracking-widest confirm-delete-btn">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    </svg>
+                    Supprimer
+                </button>
             </div>
         </div>
     </div>
@@ -165,8 +209,14 @@
             </div>
             <div class="p-6 bg-slate-50 border-t border-slate-100 flex justify-end">
                 <button type="button"
-                    class="py-3 px-8 font-black text-xs text-white bg-primary-600 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20 uppercase tracking-widest"
-                    data-hs-overlay="#hs-modal-view-copy">Fermer</button>
+                    class="py-3 px-8 inline-flex items-center gap-x-2 font-black text-xs text-white bg-primary-600 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20 uppercase tracking-widest"
+                    data-hs-overlay="#hs-modal-view-copy">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                    Fermer
+                </button>
             </div>
         </div>
     </div>
@@ -199,10 +249,23 @@
             </div>
             <div
                 class="flex justify-end items-center gap-x-2 py-5 px-8 border-t border-slate-100 bg-slate-50 rounded-b-3xl">
-                <button type="button" class="py-3 px-6 font-bold text-xs text-slate-500 rounded-xl"
-                    data-hs-overlay="#hs-modal-add-category">Annuler</button>
                 <button type="button"
-                    class="py-3 px-8 font-black text-xs text-white bg-primary-600 rounded-xl">Enregistrer</button>
+                    class="py-3 px-6 inline-flex items-center gap-x-2 font-bold text-xs text-slate-500 rounded-xl hover:bg-slate-100"
+                    data-hs-overlay="#hs-modal-add-category">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                    Annuler
+                </button>
+                <button type="button"
+                    class="py-3 px-8 inline-flex items-center gap-x-2 font-black text-xs text-white bg-primary-600 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20 transition-all">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                    Enregistrer
+                </button>
             </div>
         </div>
     </div>
@@ -226,10 +289,22 @@
                 évaluation et tous les résultats associés ?</p>
             <div class="grid grid-cols-2 gap-3">
                 <button type="button"
-                    class="py-3 px-4 font-bold text-xs text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-all uppercase tracking-widest"
-                    data-hs-overlay="#hs-modal-delete-qcm">Annuler</button>
-                <button type="button"
-                    class="py-3 px-4 font-black text-xs text-white bg-red-500 rounded-xl hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all uppercase tracking-widest">Confirmer</button>
+                    class="py-3 px-4 inline-flex items-center justify-center gap-x-2 font-bold text-xs text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-all uppercase tracking-widest"
+                    data-hs-overlay="#hs-modal-delete-qcm">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                    Annuler
+                </button>
+                <button type="button" data-hs-overlay="#hs-modal-delete-qcm"
+                    class="py-3 px-4 inline-flex items-center justify-center gap-x-2 font-black text-xs text-white bg-red-500 rounded-xl hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all uppercase tracking-widest confirm-delete-btn">
+                    <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                    Confirmer
+                </button>
             </div>
         </div>
     </div>

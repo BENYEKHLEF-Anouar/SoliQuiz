@@ -215,9 +215,9 @@
                           "extraMarkup": "<div class=\"absolute top-1/2 end-4 -translate-y-1/2\"><svg class=\"shrink-0 size-4 text-slate-400 group-hover:text-primary-500 transition-colors\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
                         }' class="hidden">
                             <option value="">Tous les Rôles</option>
-                            <option>Administrateur</option>
-                            <option>Formateur</option>
-                            <option>Apprenant</option>
+                            <option value="Administrateur">Administrateur</option>
+                            <option value="Formateur">Formateur</option>
+                            <option value="Apprenant">Apprenant</option>
                         </select>
                     </div>
                     <button type="button" data-hs-overlay="#hs-modal-add-user"
@@ -573,8 +573,94 @@
 
 
 
-    <!-- Chargeur de Modals Globaux -->
-    <script src="../components-lib/molecules/modal/loader.js"></script>
+    <!-- ALL PROJECT MODALS (Directly included for stability) -->
+    <!-- Modal: Add/Edit User -->
+    <div id="hs-modal-add-user"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-white border border-slate-200 shadow-2xl rounded-3xl pointer-events-auto">
+                <div class="flex justify-between items-center py-5 px-8 border-b border-slate-100">
+                    <h3 class="font-heading font-black text-slate-900 uppercase italic tracking-tight">Utilisateur</h3>
+                    <button type="button"
+                        class="size-8 inline-flex justify-center items-center rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 transition-all"
+                        data-hs-overlay="#hs-modal-add-user">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path d="M18 6 6 18M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-8 space-y-5">
+                    <div>
+                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 italic">Nom
+                            complet</label>
+                        <input type="text"
+                            class="py-3 px-4 block w-full border border-slate-200 rounded-xl text-sm outline-none"
+                            placeholder="Ex: Jean Dupont">
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 italic">Email</label>
+                        <input type="email"
+                            class="py-3 px-4 block w-full border border-slate-200 rounded-xl text-sm outline-none"
+                            placeholder="jean@solicode.co">
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 italic">Rôle</label>
+                        <select data-hs-select='{
+                            "placeholder": "Choisir un rôle...",
+                            "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
+                            "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 ps-4 pe-9 flex text-nowrap w-full cursor-pointer bg-white border border-slate-200 text-slate-800 rounded-2xl text-start text-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-sm transition-all",
+                            "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-slate-100 rounded-2xl shadow-2xl overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300",
+                            "optionClasses": "hs-selected:bg-primary-50 hs-selected:text-primary-600 py-2.5 px-4 w-full text-sm text-slate-600 cursor-pointer hover:bg-slate-50 rounded-xl focus:outline-none focus:bg-slate-50 hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 font-medium transition-colors",
+                            "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3.5 text-primary-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
+                            "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-slate-400 group-hover:text-primary-500 transition-colors\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
+                          }' class="hidden">
+                            <option value="Apprenant">Apprenant</option>
+                            <option value="Formateur">Formateur</option>
+                            <option value="Administrateur">Administrateur</option>
+                        </select>
+                    </div>
+                </div>
+                <div
+                    class="flex justify-end items-center gap-x-2 py-5 px-8 border-t border-slate-100 bg-slate-50 rounded-b-3xl">
+                    <button type="button"
+                        class="py-3 px-6 inline-flex items-center gap-x-2 font-bold text-xs text-slate-500 rounded-xl hover:bg-slate-100 transition-all"
+                        data-hs-overlay="#hs-modal-add-user">Annuler</button>
+                    <button type="button"
+                        class="py-3 px-8 inline-flex items-center gap-x-2 font-black text-xs text-white bg-primary-600 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-500/20 transition-all">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Delete Confirmation -->
+    <div id="hs-modal-delete-confirm"
+        class="hs-overlay hidden size-full fixed top-0 start-0 z-[90] overflow-x-hidden overflow-y-auto pointer-events-none">
+        <div
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-sm sm:w-full m-3 sm:mx-auto">
+            <div class="bg-white border border-slate-200 shadow-2xl rounded-3xl pointer-events-auto p-8 text-center">
+                <div class="size-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <svg class="size-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5">
+                        <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    </svg>
+                </div>
+                <h3 class="font-heading font-black text-slate-900 uppercase italic tracking-tight text-xl mb-4">
+                    Confirmer la suppression</h3>
+                <p class="text-slate-500 text-sm mb-8 leading-relaxed font-medium">Cette action est irréversible.
+                    Voulez-vous vraiment continuer ?</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button"
+                        class="py-3 px-4 inline-flex items-center justify-center gap-x-2 font-bold text-xs text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-all uppercase tracking-widest"
+                        data-hs-overlay="#hs-modal-delete-confirm">Annuler</button>
+                    <button type="button" data-hs-overlay="#hs-modal-delete-confirm"
+                        class="py-3 px-4 inline-flex items-center justify-center gap-x-2 font-black text-xs text-white bg-red-500 rounded-xl hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all uppercase tracking-widest confirm-delete-btn">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Preline UI Script -->
     <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
@@ -582,17 +668,22 @@
     <!-- Interactions Basiques JS -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Simulated Delete
+            // Improved Mockup Delete Simulation
+            let itemToDelete = null;
+
+            // Capture phase pour être sûr d'attraper le clic avant d'autres scripts
             document.body.addEventListener('click', (e) => {
-                const deleteBtn = e.target.closest('button[data-hs-overlay="#hs-modal-delete-confirm"]');
-                if (deleteBtn) {
-                    // For the sake of a quick mockup simulation, remove immediately since modal might be dynamic
-                    const row = deleteBtn.closest('tr');
-                    const card = deleteBtn.closest('.group.bg-white'); // for categories
-                    if (row) row.style.display = 'none';
-                    if (card) card.style.display = 'none';
+                const deleteTrigger = e.target.closest('button[data-hs-overlay="#hs-modal-delete-confirm"]');
+                if (deleteTrigger) {
+                    itemToDelete = deleteTrigger.closest('tr') || deleteTrigger.closest('.group.bg-white');
                 }
-            });
+
+                const confirmBtn = e.target.closest('.confirm-delete-btn');
+                if (confirmBtn && itemToDelete) {
+                    itemToDelete.remove(); // On supprime vraiment du DOM
+                    itemToDelete = null;
+                }
+            }, true);
 
             // Filtering Users by Role
             const roleSelect = document.getElementById('filter-user-role');

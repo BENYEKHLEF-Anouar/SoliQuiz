@@ -20,12 +20,21 @@
             <h3 class="text-sm font-semibold text-slate-800 uppercase tracking-wider">Taux de réussite global</h3>
 
             <!-- Atom: Select (Filter) -->
-            <select
-                class="py-1.5 px-3 border border-slate-200 rounded-lg text-xs font-medium text-slate-600 focus:border-primary-500 focus:ring-primary-500 outline-none hover:bg-slate-50 transition-all cursor-pointer">
-                <option>7 derniers jours</option>
-                <option>30 derniers jours</option>
-                <option>Année 2026</option>
-            </select>
+            <div class="min-w-[150px]">
+                <select data-hs-select='{
+                    "placeholder": "Période",
+                    "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
+                    "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-1.5 px-3 flex text-nowrap w-full cursor-pointer bg-white border border-slate-200 text-slate-600 rounded-lg text-start text-xs font-medium hover:bg-slate-50 focus:outline-none focus:ring-1 focus:ring-primary-500 shadow-sm transition-all",
+                    "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-slate-100 rounded-xl shadow-2xl overflow-hidden overflow-y-auto",
+                    "optionClasses": "hs-selected:bg-primary-50 hs-selected:text-primary-600 py-1.5 px-3 w-full text-xs text-slate-600 cursor-pointer hover:bg-slate-50 rounded-lg focus:outline-none focus:bg-slate-50 font-medium transition-colors",
+                    "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3 text-primary-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
+                    "extraMarkup": "<div class=\"absolute top-1/2 end-2 -translate-y-1/2\"><svg class=\"shrink-0 size-3 text-slate-400 group-hover:text-primary-500 transition-colors\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
+                  }' class="hidden">
+                    <option selected>7 derniers jours</option>
+                    <option>30 derniers jours</option>
+                    <option>Année 2026</option>
+                </select>
+            </div>
         </div>
 
         <!-- Atom: Image (Chart Placeholder) -->
