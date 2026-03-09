@@ -194,38 +194,38 @@ style: |
 
 ---
 
-## 3. Branche Fonctionnelle : Design Thinking
+<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Formateur (Youssef) -->
 
-![w:800 h:590 Carte Empathie Youssef](./images/carte-empathie-formateur-youssef-nouvelle.png)
+![w:1300 h:600 Carte Empathie Youssef](./images/carte-empathie-formateur-youssef-nouvelle.png)
 
 ---
 
-## 3. Branche Fonctionnelle : Design Thinking
+<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Formatrice (Fatine) -->
 
-![w:800 h:590 Carte Empathie Fatine](./images/carte-empathie-formatrice-fatine-nouvelle.png)
+![w:1300 h:600 Carte Empathie Fatine](./images/carte-empathie-formatrice-fatine-nouvelle.png)
 
 ---
 
-## 3. Branche Fonctionnelle : Design Thinking
+<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Apprenant (Soufiane) -->
 
-![w:800 h:590 Carte Empathie Soufiane](./images/carte-empathie-apprenant-soufiane-nouvelle.png)
+![w:1300 h:600 Carte Empathie Soufiane](./images/carte-empathie-apprenant-soufiane-nouvelle.png)
 
 ---
 
-## 3. Branche Fonctionnelle : Design Thinking
+<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Apprenant (Mehdi) -->
 
-![w:800 h:590 Carte Empathie Mehdi](./images/carte-empathie-apprenant-mehdi-nouvelle.png)
+![w:1300 h:600 Carte Empathie Mehdi](./images/carte-empathie-apprenant-mehdi-nouvelle.png)
 
 ---
 
-## 3. Branche Fonctionnelle : Design Thinking
+<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Administrateur (Fouad) -->
 
-![w:800 h:590 Carte Empathie Fouad](./images/carte-empathie-admin-fouad-nouvelle.png)
+![w:1300 h:600 Carte Empathie Fouad](./images/carte-empathie-admin-fouad-nouvelle.png)
 
 ---
 
@@ -273,17 +273,17 @@ style: |
 
 ![w:1000 h:500 Ideation Global](./images/cas-utilisation-global-mobile.png)
 
----
+<!-- ---
 
 ## Branche Fonctionnelle : Cas d'utilisation — Sprint 1 MVP
 
-![w:1000 h:600 Use Case Sprint 1](./images/cas-utilisation-sprint-1-mvp.png)
+![w:1000 h:600 Use Case Sprint 1](./images/cas-utilisation-sprint-1-mvp.png) -->
 
----
+<!-- ---
 
 ## Branche Fonctionnelle : Cas d'utilisation — Sprint 2 Avancé
 
-![w:1000 h:500 Use Case Sprint 2](./images/cas-utilisation-sprint-2-avancé.png)
+![w:1000 h:500 Use Case Sprint 2](./images/cas-utilisation-sprint-2-avancé.png) -->
 
 ---
 
@@ -291,29 +291,29 @@ style: |
 
 ![h:500 Public Landing](./images/public-landing.png)
 
----
+<!-- ---
 
 ## Branche Fonctionnelle : Maquettage (Admin Dashboard)
 
-![h:500 Admin Dashboard](./images/admin-dashboard.png)
+![h:450 Admin Dashboard](./images/admin-dashboard.png) -->
 
 ---
 
 ## Branche Fonctionnelle : Maquettage (Formateur Dashboard)
 
-![h:500 Formateur Dashboard](./images/formateur-dashboard.png)
+![h:450 Formateur Dashboard](./images/formateur-dashboard.png)
 
 ---
 
 ## Branche Fonctionnelle : Maquettage (Apprenant Dashboard)
 
-![h:500 Apprenant Dashboard](./images/apprenant-dashboard.png)
+![h:450 Apprenant Dashboard](./images/apprenant-dashboard.png)
 
 ---
 
 ## Branche Fonctionnelle : Maquettage (Mobile Dashboard)
 
-![h:500 Mobile Dashboard](./images/mobile-dashboard.png)
+![h:450 Mobile Dashboard](./images/mobile-dashboard.png)
 
 ---
 
@@ -344,8 +344,10 @@ style: |
 
 ## 5. Conception : Diagramme de classes
 
+---
 
-![w:1400 h:550 Diagramme de classe](./images/diagramme-classes.png)
+
+![w:1800 h:650 Diagramme de classe](./images/diagramme-classes.png)
 
 ---
 
