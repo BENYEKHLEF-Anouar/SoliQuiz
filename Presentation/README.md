@@ -139,7 +139,7 @@ style: |
 </div>
 
 # **Projet de Fin de Formation**
-### Système de QCM Interactif — **SoliQuiz**
+### Système de Gestion & d'Auto-évaluation QCM — **SoliQuiz**
 
 **Réalisé par :** <span class="highlight">BENYEKHLEF Anouar</span>  
 **Encadré par :** <span class="highlight">M. ESSARRAJ Fouad</span>  
@@ -248,17 +248,31 @@ style: |
 
 ### 3. IDÉATION : Cas d'utilisation (Plateforme Web & Application Mobile)
 
----
-## Branche Fonctionnelle : Design Thinking
+<!-- --- -->
+<!-- ## Branche Fonctionnelle : Design Thinking -->
 <!-- ### 3. IDÉATION : Cas d'utilisation (Plateforme Web & Application Mobile) -->
 
-![w:1000 h:500 Ideation Global](./images/cas-utilisation-global.png)
+<!-- ![w:1000 h:500 Ideation Global](./images/cas-utilisation-global.png) -->
+
+
+---
+## Branche Fonctionnelle : Cas d'utilisation (Web)
+<!-- ### 3. IDÉATION : Cas d'utilisation (Plateforme Web) -->
+
+![w:1600 h:500 Ideation Global](./images/cas-utilisation-global-web.png)
+
+---
+
+## Branche Fonctionnelle : Cas d'utilisation (Apk)
+<!-- ### 3. IDÉATION : Cas d'utilisation (Application Mobile) -->
+
+![w:1000 h:500 Ideation Global](./images/cas-utilisation-global-mobile.png)
 
 ---
 
 ## Branche Fonctionnelle : Cas d'utilisation — Sprint 1 MVP
 
-![h:600 Use Case Sprint 1](./images/cas-utilisation-sprint-1-mvp.png)
+![w:1000 h:600 Use Case Sprint 1](./images/cas-utilisation-sprint-1-mvp.png)
 
 ---
 
