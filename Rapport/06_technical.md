@@ -18,6 +18,7 @@ Pour **SoliQuiz**, nous avons sélectionné une pile technologique moderne garan
 
 ### Outils Spécifiques
 - **Tiptap** : Éditeur de texte riche pour la rédaction des questions complexes.
+- **Vite** : Outil de build ultra-rapide utilisé pour compiler les assets front-end.
 
 ```{=openxml}
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
@@ -52,12 +53,13 @@ Conformément à l'analyse de sécurité, tous les accès sont privés et proté
 - **Feedback Immédiat** : Consultation de la correction détaillée après validation.
 - **Historique Personnel** : Suivi de sa propre montée en compétences par objectif.
 
-### 3. Les classes principales
-- **User** : {id, name, email, role}
-- **QCM** : {id, title, description, session_id, objective_id}
-- **Question** : {id, qcm_id, text, type[unique/multiple]}
-- **Choice** : {id, question_id, text, is_correct, explanation}
-- **Attempt** : {id, user_id, qcm_id, score_total, score_by_objective, validated_at}
+### 3. Les classes principales du modèle
+- **Utilisateur (Formateur / Etudiant)** : {id, nom, email, mot_de_passe}
+- **QCM** : {id, objectif_id, formateur_id, titre, duree_minutes, score_reussite}
+- **Question** : {id, qcm_id, texte, type[unique/multiple], points, explication_feedback}
+- **Option (Choix)** : {id, question_id, texte, est_correcte, feedback_specifique}
+- **Tentative (Passage)** : {id, etudiant_id, qcm_id, score_obtenu, statut, date_fin}
+- **Reponse & ChoixReponse** : Capture exacte des réponses cochées par l'étudiant pour chaque question.
 
 ```{=openxml}
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>

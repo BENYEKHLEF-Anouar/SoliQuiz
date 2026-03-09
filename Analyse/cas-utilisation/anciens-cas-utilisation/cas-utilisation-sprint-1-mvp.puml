@@ -1,0 +1,57 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam package {
+    BackgroundColor White
+    BorderColor #2C3E50
+}
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+actor "Administrateur" as A
+actor "Formateur" as F
+actor "Étudiant" as E
+
+package "SoliQuiz - Sprint 1 (MVP)" {
+    package "Sécurité — Connexion obligatoire" #FDEBD0 {
+        usecase "S'authentifier\n(accès sécurisé par rôle)" as UC1_5
+        usecase "Gérer les rôles\n(centraliser les accès)" as UC1_6
+    }
+    package "Espace Formateur — Création QCM" {
+        usecase "Créer la structure\nd'un QCM" as UC1_1
+        usecase "Ajouter Questions\net Choix de réponses" as UC1_2
+    }
+    package "Espace Étudiant — Passage QCM" {
+        usecase "Passer le QCM\n(étudiant)" as UC1_3
+        usecase "Calculer le score\nautomatiquement (global)" as UC1_4
+    }
+    package "Application Mobile — APK\n(Lecture seule)" #E8F8F5 {
+        usecase "Consulter son score\naprès évaluation" as UC1_MOB_E
+        usecase "Consulter ses QCM\net les scores de la classe" as UC1_MOB_F
+    }
+}
+' Acteurs vers Use Cases
+A -- UC1_5
+A -- UC1_6
+F -- UC1_5
+F -- UC1_1
+F -- UC1_2
+F -- UC1_MOB_F
+E -- UC1_5
+E -- UC1_3
+E -- UC1_MOB_E
+' Relations logiques
+UC1_1 ..> UC1_2 : <<include>>
+UC1_3 ..> UC1_4 : <<include>>
+UC1_6 ..> UC1_5 : <<include>>
+' Sécurité comme prérequis
+UC1_1 ..> UC1_5 : <<include>>
+UC1_3 ..> UC1_5 : <<include>>
+' APK — lecture seule
+UC1_MOB_E ..> UC1_5 : <<include>>
+UC1_MOB_E ..> UC1_4 : <<extend>>
+UC1_MOB_F ..> UC1_5 : <<include>>
+UC1_MOB_F ..> UC1_4 : <<extend>>
+@enduml

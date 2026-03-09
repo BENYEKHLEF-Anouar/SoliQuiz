@@ -1,11 +1,8 @@
 @startuml
 skinparam actorStyle awesome
 left to right direction
+skinparam packageStyle rectangle
 
-skinparam package {
-    BackgroundColor White
-    BorderColor #2C3E50
-}
 skinparam usecase {
     BackgroundColor #EBF5FB
     BorderColor #2E86C1
@@ -13,101 +10,83 @@ skinparam usecase {
 }
 
 ' ==============================
-' ACTORS (VERTICAL ALIGNMENT)
+' ACTORS HIERARCHY
 ' ==============================
-
+actor "Utilisateur" as U
 actor "Administrateur" as A
 actor "Formateur" as F
 actor "Étudiant" as E
 
-A -[hidden]down- F
-F -[hidden]down- E
+' Systems as Actors
+actor "Application Mobile" as M
+actor "SoliLMS" as LMS
 
+' Inheritance
+U <|-- A
+U <|-- F
+U <|-- E
 
 ' ==============================
-' SYSTEM
+' SYSTEM: SOLIQUIZ ECOSYSTEM
 ' ==============================
+package "Système global SoliQuiz" {
 
-package "SoliQuiz System (Web & APK)" {
-
-    ' --- AUTHENTICATION (COMMON) ---
-    usecase "S'authentifier" as UC_LOGIN
-
-    ' ==============================
-    ' ESPACE ADMINISTRATEUR
-    ' ==============================
-    package "Espace Administrateur" {
-        usecase "Voir le tableau de bord global" as UC10
-        usecase "Gérer les utilisateurs (Rôles)" as UC9
-        usecase "Configuration API SoliLMS" as UC11
+    package "Accès & Sécurité (Commun)" {
+        usecase "S'authentifier (Web/Mobile)" as UC_LOGIN
+        usecase "Accéder à la Landing Page" as UC_PUBLIC
+        U -- UC_LOGIN
+        U -- UC_PUBLIC
     }
 
-    ' ==============================
-    ' ESPACE FORMATEUR
-    ' ==============================
-    package "Espace Formateur" {
-        usecase "Gérer les QCM (CRUD)" as UC1
-        usecase "Gérer les Questions et Choix" as UC2
-        usecase "Lier QCM à une Session/Objectif" as UC3
-        usecase "Consulter les résultats (Total & Objectif)" as UC5
+    package "Espace Administrateur (Web)" {
+        usecase "Voir le tableau de bord global" as UC_DASH
+        usecase "Gérer les utilisateurs (Rôles)" as UC_ROLES
+        usecase "Configuration API SoliLMS" as UC_CONF
+        
+        A -- UC_DASH
+        A -- UC_ROLES
+        A -- UC_CONF
+        UC_CONF -- LMS
     }
 
-    ' ==============================
-    ' ESPACE ÉTUDIANT
-    ' ==============================
-    package "Espace Étudiant" {
-        usecase "Réaliser une évaluation (Passer QCM)" as UC4
-        usecase "Calculer automatiquement les scores" as UC6
-        usecase "Consulter l'historique des évaluations" as UC7
-        usecase "Accéder au feedback détaillé/correction" as UC8
+    package "Espace Formateur          " {
+        usecase "Gérer les QCM (CRUD)" as UC_CRUD
+        usecase "Gérer les Questions & Choix" as UC_QUEST
+        usecase "Lier QCM à une Session" as UC_LINK
+        usecase "Consulter les résultats & scores" as UC_RES
+        
+        F -- UC_CRUD
+        F -- UC_LINK
+        F -- UC_RES
+        
+        UC_CRUD <.. UC_QUEST : <<include>>
+        UC_LINK ..> UC_CRUD : <<extend>>
+    }
+
+    package "Espace Étudiant       " {
+        usecase "Passer un QCM (Évaluation)" as UC_PLAY
+        usecase "Calculer scores" as UC_CALC
+        usecase "Consulter historique & scores" as UC_HIST
+        usecase "Accéder au feedback/correction" as UC_FEED
+        
+        E -- UC_PLAY
+        E -- UC_HIST
+        
+        UC_PLAY ..> UC_CALC : <<include>>
+        UC_HIST ..> UC_FEED : <<extend>>
+    }
+
+    package "Interface API / Mobile Integration" {
+        usecase "Consommer les données (API)" as UC_API
+        
+        ' Mobile app interacts with the system via API
+        M -- UC_API
+        
+        ' Highlighting what Mobile actually accesses
+        UC_API ..> UC_RES : <<include>>
+        UC_API ..> UC_HIST : <<include>>
+        UC_API ..> UC_LOGIN : <<include>>
     }
 }
-
-' ==============================
-' ACTOR ASSOCIATIONS
-' ==============================
-
-A -- UC_LOGIN
-F -- UC_LOGIN
-E -- UC_LOGIN
-
-A -- UC9
-A -- UC10
-A -- UC11
-
-F -- UC1
-F -- UC2
-F -- UC3
-F -- UC5
-
-E -- UC4
-E -- UC7
-E -- UC8
-
-
-' ==============================
-' SECURITY (INCLUDE LOGIN)
-' ==============================
-
-UC9 ..> UC_LOGIN : <<include>>
-UC10 ..> UC_LOGIN : <<include>>
-UC11 ..> UC_LOGIN : <<include>>
-UC1 ..> UC_LOGIN : <<include>>
-UC3 ..> UC_LOGIN : <<include>>
-UC5 ..> UC_LOGIN : <<include>>
-UC4 ..> UC_LOGIN : <<include>>
-UC7 ..> UC_LOGIN : <<include>>
-UC8 ..> UC_LOGIN : <<include>>
-
-
-' ==============================
-' BUSINESS LOGIC RELATIONS
-' ==============================
-
-UC1 ..> UC2 : <<include>>
-UC3 ..> UC1 : <<extend>>
-UC4 ..> UC6 : <<include>>
-UC5 ..> UC8 : <<extend>>
-UC7 ..> UC5 : <<include>>
 
 @enduml

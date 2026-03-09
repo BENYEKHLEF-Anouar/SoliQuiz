@@ -13,7 +13,7 @@
 <br><br>
 
 **SoliQuiz**
-*L'application d'auto-évaluation pour les développeurs de Solicode*
+*Système de Gestion & d'Auto-évaluation QCM*
 
 <br>
 
@@ -30,7 +30,7 @@
 
 <br><br><br>
 
-**SOLICODE – Digital & IT Training Center**
+**SOLICODE – Centre Digital**
 *[www.solicode.co](http://www.solicode.co)*
 
 </div>

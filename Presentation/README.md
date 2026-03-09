@@ -47,16 +47,9 @@ style: |
     border-radius: 50%; font-weight: bold; margin-right: 15px; flex-shrink: 0;
   }
   
-  .img-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-  }
-  .img-methodo {
-    width: 85%;
-    height: auto;
-    max-height: 450px;
+  section > p > img {
+    display: block;
+    margin: 0 auto;
     object-fit: contain;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
@@ -150,7 +143,7 @@ style: |
 
 **Réalisé par :** <span class="highlight">BENYEKHLEF Anouar</span>  
 **Encadré par :** <span class="highlight">M. ESSARRAJ Fouad</span>  
-**Filière :** Développement Mobile et Web
+**Filière :** Développement Mobile
 
 ---
 
@@ -162,27 +155,14 @@ style: |
   <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text">Branche Fonctionnelle</div></div>
   <div class="sommaire-item"><div class="sommaire-num">4</div><div class="sommaire-text">Branche Technique</div></div>
   <div class="sommaire-item"><div class="sommaire-num">5</div><div class="sommaire-text">Conception</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">6</div><div class="sommaire-text">Démonstration</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">7</div><div class="sommaire-text">Conclusion</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">6</div><div class="sommaire-text">Conclusion</div></div>
 </div>
 
 ---
 
 ## 1. Contexte du projet
 
-<div class="context-grid">
-  <div class="context-card">
-    <h4>Contexte</h4>
-    <p>Les formateurs de Solicode font face à une gestion administrative lourde : double saisie, correction manuelle et manque de visibilité sur l'acquisition des compétences.</p>
-    <p>Ce projet analyse leurs besoins pour proposer une solution optimisant leur workflow et leur performance professionnelle.</p>
-  </div>
-
-  <div class="context-card">
-    <h4>Cadre du Projet</h4>
-    <p>Projet de fin de formation visant à centraliser les évaluations et supprimer les frictions entre Google Forms et SoliLMS.</p>
-    <p><strong>SoliQuiz</strong> automatise le scoring par micro-objectif et synchronise les notes pour un suivi pédagogique précis.</p>
-  </div>
-</div>
+![h:470 Context](./images/contexte.jpg)
 
 ---
 
@@ -190,47 +170,57 @@ style: |
 
 
 
-<div class="img-container">
-  <img src="images/design-thinking.png" class="img-methodo" alt="Design Thinking">
-</div>
+![h:430 Design Thinking](./images/design-thinking.png)
 
 ---
 
 ## Méthodologie : Scrum (Agile)
 
-<div class="img-container">
-  <img src="images/scrum-process.jpg" class="img-methodo" alt="Scrum">
-</div>
+![h:490 Scrum](./images/scrum-process.jpg)
 
 ---
 
 ## Méthodologie : Processus 2TUP
 
-<div class="img-container">
-  <img src="images/2tup.png" class="img-methodo" alt="2TUP">
-</div>
+![w:700 h:450 2TUP](./images/2tup.png)
+
+---
+### 1. EMPATHIE :
 
 ---
 
 ## 3. Branche Fonctionnelle : Design Thinking
-### 1. EMPATHIE : Comprendre l'utilisateur
+<!-- ### 1. EMPATHIE : Formateur (Youssef) -->
 
-<div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 10px;">
-  <div class="persona-card" style="border-top-color: #088dc7; background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%);">
-    <strong style="color: #088dc7;">Youssef (Formateur)</strong>
-    <p>Passe 40% de son temps à corriger manuellement des QCM Google Forms et à recopier les notes sur SoliLMS. Il veut automatiser son suivi pédagogique mais n'a aucun outil pour lier ses questions aux objectifs du bootcamp.</p>
-  </div>
-  
-  <div class="persona-card" style="border-top-color: #e74c3c; background: linear-gradient(180deg, #fff5f5 0%, #ffffff 100%);">
-    <strong style="color: #e74c3c;">Soufiane (Étudiant)</strong>
-    <p>Cherche à comprendre ses lacunes après chaque test mais ne reçoit que des scores bruts (ex: 12/20) sans explication. Il finit par réviser au hasard car il n'a aucun feedback détaillé sur les compétences non acquises.</p>
-  </div>
-  
-  <div class="persona-card" style="border-top-color: #27ae60; background: linear-gradient(180deg, #f0fff4 0%, #ffffff 100%);">
-    <strong style="color: #27ae60;">Fouad (Administrateur)</strong>
-    <p>Doit superviser les performances de plusieurs cohortes sans aucun tableau de bord centralisé. Il est incapable de détecter les décrochages en temps réel car les données sont dispersées entre Excel et Facebook.</p>
-  </div>
-</div>
+![w:800 h:590 Carte Empathie Youssef](./images/carte-empathie-formateur-youssef-nouvelle.png)
+
+---
+
+## 3. Branche Fonctionnelle : Design Thinking
+<!-- ### 1. EMPATHIE : Formatrice (Fatine) -->
+
+![w:800 h:590 Carte Empathie Fatine](./images/carte-empathie-formatrice-fatine-nouvelle.png)
+
+---
+
+## 3. Branche Fonctionnelle : Design Thinking
+<!-- ### 1. EMPATHIE : Apprenant (Soufiane) -->
+
+![w:800 h:590 Carte Empathie Soufiane](./images/carte-empathie-apprenant-soufiane-nouvelle.png)
+
+---
+
+## 3. Branche Fonctionnelle : Design Thinking
+<!-- ### 1. EMPATHIE : Apprenant (Mehdi) -->
+
+![w:800 h:590 Carte Empathie Mehdi](./images/carte-empathie-apprenant-mehdi-nouvelle.png)
+
+---
+
+## 3. Branche Fonctionnelle : Design Thinking
+<!-- ### 1. EMPATHIE : Administrateur (Fouad) -->
+
+![w:800 h:590 Carte Empathie Fouad](./images/carte-empathie-admin-fouad-nouvelle.png)
 
 ---
 
@@ -238,77 +228,73 @@ style: |
 ### 2. DÉFINITION : Cadrage du problème
 
 <div class="dt-card" style="border-top-color: #e74c3c; background: linear-gradient(135deg, #fffafa 0%, #ffffff 100%); box-shadow: 0 10px 40px rgba(231, 76, 60, 0.08); padding: 40px; border-radius: 16px;">
-  <h4 style="color: #e74c3c; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8em; margin-bottom: 15px;">Point de Vue (POV)</h4>
+  <h4 style="color: #e74c3c; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8em; margin-bottom: 15px;">Énoncé du problème</h4>
   <p style="font-size: 1.1em; line-height: 1.6; color: #2c3e50; margin: 0;">
-    "Les formateurs et apprenants de Solicode subissent une <strong>fracture numérique</strong> entre Google Forms, Excel et SoliLMS, provoquant une perte de temps administrative et une opacité pédagogique totale."
+    Les acteurs de Solicode <strong>ne disposent d'aucun outil d'évaluation unifié</strong>, les obligeant à jongler entre Google Forms, SoliLMS et Excel — entraînant une <strong>perte de temps, des erreurs de saisie et une absence de feedback pédagogique exploitable</strong> par objectif.
   </p>
 </div>
-
 
 <br>
 
 <div style="margin-top: 35px; background: #2c3e50; padding: 20px; border-radius: 10px; text-align: center;">
   <p style="margin: 0; font-style: italic; color: #ecf0f1; font-size: 1em;">
-    <strong style="color: #f1c40f;">How Might We :</strong> Créer un pont numérique qui automatise l'évaluation et révèle les compétences en temps réel ?
+    <strong style="color: #f1c40f;">How Might We :</strong> Comment pourrions-nous offrir un outil d'évaluation QCM intégré qui automatise la correction, structure les résultats par objectif et fournit un feedback immédiat ?
   </p>
 </div>
 
 ---
 
 ## Branche Fonctionnelle : Design Thinking
-### 3. IDÉATION
-#### Solutions retenues
 
-<div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px;">
-  <div class="persona-card" style="border-top-color: #088dc7; padding: 15px;">
-    <strong>~ Plateforme centralisée (Web & APK) de gestion des QCM.</strong>
-  </div>
-  <div class="persona-card" style="border-top-color: #27ae60; padding: 15px;">
-    <strong>~ Création et structuration des tests par micro-objectifs pédagogiques.</strong>
-  </div>
-  <div class="persona-card" style="border-top-color: #f39c12; padding: 15px;">
-    <strong>~ Passation sécurisée avec feedback immédiat pour les étudiants.</strong>
-  </div>
-  <div class="persona-card" style="border-top-color: #9b59b6; padding: 15px;">
-    <strong>~ Tableau de bord de suivi et synchronisation automatique vers SoliLMS.</strong>
-  </div>
-</div>
+### 3. IDÉATION : Cas d'utilisation (Plateforme Web & Application Mobile)
 
 ---
+## Branche Fonctionnelle : Design Thinking
+<!-- ### 3. IDÉATION : Cas d'utilisation (Plateforme Web & Application Mobile) -->
 
-## Branche Fonctionnelle : Cas d'utilisation
-
-<div class="img-container">
-  <h3>Interaction Utilisateur — Vue globale (UML)</h3>
-  <img src="images/cas-utilisation-global.png" class="img-methodo" alt="Use Case Global">
-</div>
+![w:1000 h:500 Ideation Global](./images/cas-utilisation-global.png)
 
 ---
 
 ## Branche Fonctionnelle : Cas d'utilisation — Sprint 1 MVP
 
-<div class="img-container">
-  <img src="images/cas-utilisation-sprint-1-mvp.png" class="img-methodo" alt="Use Case Sprint 1">
-</div>
+![h:600 Use Case Sprint 1](./images/cas-utilisation-sprint-1-mvp.png)
 
 ---
 
 ## Branche Fonctionnelle : Cas d'utilisation — Sprint 2 Avancé
 
-<div class="img-container">
-  <img src="images/cas-utilisation-sprint-2-avance.png" class="img-methodo" alt="Use Case Sprint 2">
-</div>
+![w:1000 h:500 Use Case Sprint 2](./images/cas-utilisation-sprint-2-avancé.png)
 
 ---
 
-## Branche Fonctionnelle : Maquettes (UI/UX)
+## Branche Fonctionnelle : Maquettage (Public Landing)
 
-<div class="maquette-grid">
-  <div style="text-align: center;">
-    <img src="images/maquette.png" class="img-methodo" style="height: 360px; width: auto;" alt="Maquette Desktop">
-    <p style="font-size: 0.3rem; color: #666;">Interface Administration</p>
-  </div>
-</div>
+![h:500 Public Landing](./images/public-landing.png)
+
+---
+
+## Branche Fonctionnelle : Maquettage (Admin Dashboard)
+
+![h:500 Admin Dashboard](./images/admin-dashboard.png)
+
+---
+
+## Branche Fonctionnelle : Maquettage (Formateur Dashboard)
+
+![h:500 Formateur Dashboard](./images/formateur-dashboard.png)
+
+---
+
+## Branche Fonctionnelle : Maquettage (Apprenant Dashboard)
+
+![h:500 Apprenant Dashboard](./images/apprenant-dashboard.png)
+
+---
+
+## Branche Fonctionnelle : Maquettage (Mobile Dashboard)
+
+![h:500 Mobile Dashboard](./images/mobile-dashboard.png)
 
 ---
 
@@ -337,56 +323,16 @@ style: |
 ---
 
 
-## 5. Conception : Diagramme de classe
+## 5. Conception : Diagramme de classes
 
- <h3>Modélisation des données (MLD)</h3>
-<div class="img-container">
- 
-  <img src="images/diagramme-class.png" style="width: 100%;" alt="Diagramme de classe">
-</div>
+
+![w:1400 h:550 Diagramme de classe](./images/diagramme-classes.png)
 
 ---
 
-## 6. Démonstration : Environnement & Outils
+## 6. Conclusion
 
-<div class="sommaire-grid">
-  <div class="dt-card" style="margin-top:0;">
-    <h4>Environnement de Développement</h4>
-    <ul>
-      <li><strong>IDE :</strong> VS Code & Antigravity</li>
-      <li><strong>Monitoring DB :</strong> MySQL Workbench</li>
-      <li><strong>Navigateur :</strong> Chrome DevTools</li>
-    </ul>
-  </div>
-  <div class="dt-card" style="margin-top:0; border-top-color: #27ae60;">
-    <h4>Gestion & Déploiement</h4>
-    <ul>
-      <li><strong>Modélisation UML :</strong> Mermaid / PlantUML</li>
-      <li><strong>Gestion de version :</strong> Git (GitHub)</li>
-    </ul>
-  </div>
-</div>
-
-<br>
-
----
-
-## 7. Conclusion
-
-<div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px;">
-  <div class="persona-card" style="border-top-color: #27ae60; padding: 15px;">
-    <strong>~ Objectifs :</strong> Solution QCM centralisée, Mobile-First et interconnectée (SoliLMS).
-  </div>
-  <div class="persona-card" style="border-top-color: #088dc7; padding: 15px;">
-    <strong>~ Expertise :</strong> Maîtrise du cycle Agile, de 2TUP et de l'écosystème Full-stack Laravel.
-  </div>
-  <div class="persona-card" style="border-top-color: #f39c12; padding: 15px;">
-    <strong>~ Impact :</strong> Suppression de la double saisie et apport d'un feedback granulaire par micro-objectif.
-  </div>
-  <div class="persona-card" style="border-top-color: #9b59b6; padding: 15px;">
-    <strong>~ Demain :</strong> Intelligence Artificielle pour la génération et l'analyse prédictive des tests.
-  </div>
-</div>
+<!-- ![h:450 Conclusion](./images/conclusion.png) -->
 
 <br>
 

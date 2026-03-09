@@ -23,6 +23,8 @@ L'analyse de terrain (entretiens d'empathie) a révélé une **fragmentation cri
 2.  **Lourdeur Administrative (Formateurs/Admin) :** Le report manuel des notes de Google Forms vers SoliLMS est chronophage (Youssef) et source d'erreurs de saisie frustrantes pour les étudiants (Fatine).
 3.  **Friction Technique (Étudiants) :** L'absence d'interface mobile fluide et de sauvegarde automatique génère une angoisse de perte de données chez Mehdi, exacerbée par des clôtures de tests brusques sans timer.
 
+> **How Might We (Comment pourrions-nous) :** Offrir aux acteurs de Solicode un outil d'évaluation QCM intégré, qui automatise la correction, structure les résultats par objectif pédagogique et fournit un feedback immédiat aux apprenants — éliminant ainsi la double saisie et l'opacité des résultats ?
+
 ---
 
 ## 3. Profils Utilisateurs (Personas)
