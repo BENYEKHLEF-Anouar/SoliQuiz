@@ -20,6 +20,10 @@ Pour **SoliQuiz**, nous avons sélectionné une pile technologique moderne garan
 - **Tiptap** : Éditeur de texte riche pour la rédaction des questions complexes.
 - **Vite** : Outil de build ultra-rapide utilisé pour compiler les assets front-end.
 
+### Outils de Modélisation et Documentation
+- **Mermaid** : Outil de génération de diagrammes à partir de texte, intégré directement dans la documentation technique.
+- **PlantUML** : Outil de modélisation UML permettant de créer des diagrammes tels que diagrammes de classes, cas d’utilisation, séquences et activités, facilitant la conception et la documentation de l’architecture du système.
+
 ```{=openxml}
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
 ```

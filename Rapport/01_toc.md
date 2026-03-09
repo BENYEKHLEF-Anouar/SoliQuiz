@@ -31,6 +31,7 @@
         - [Sprint 2 — Avancé](#43-sprint-2--avancé--pédagogie-analyse--intégration)
 6. [Branche Technique](#branche-technique)
     - 6.1 [Choix Technologiques](#choix-technologiques)
+        - [Outils de Modélisation](#outils-de-modélisation-et-documentation)
     - 6.2 [Architecture Système](#architecture-système)
     - 6.3 [Prototype — Espaces et Classes](#prototype-espaces-et-classes)
 7. [Conception](#conception)

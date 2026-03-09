@@ -36,13 +36,14 @@
      - [Sprint 1 — MVP](#sprint-1--mvp--éliminer-la-friction-de-base)
      - [Sprint 2 — Avancé](#sprint-2--avancé--pédagogie-analyse--intégration)
 6. [Branche Technique](#branche-technique)
-   - 6.1 [Choix Technologiques](#61-choix-technologiques)
-   - 6.2 [Architecture Système](#62-architecture-système)
-   - 6.3 [Prototype — Espaces et Classes](#63-prototype--espaces-et-classes)
+    - 6.1 [Choix Technologiques](#61-choix-technologiques)
+      - [Outils de Modélisation et Documentation](#outils-de-modélisation-et-documentation)
+    - 6.2 [Architecture Système](#62-architecture-système)
+    - 6.3 [Prototype — Espaces et Classes](#63-prototype--espaces-et-classes)
 7. [Conception](#conception)
    - 7.1 [Diagramme de Classes](#71-diagramme-de-classes)
    - 7.2 [Maquettes (UI/UX)](#72-maquettes-uiux)
-8. [Réalisation](#réalisation--interfaces)
+8. [Réalisation](#réalisation)
 9. [Conclusion](#conclusion)
 
 ---
@@ -357,6 +358,10 @@ Pour **SoliQuiz**, nous avons sélectionné une pile technologique moderne garan
 
 #### Outils Spécifiques
 - **Tiptap** : Éditeur de texte riche pour la rédaction des questions complexes.
+
+#### Outils de Modélisation et Documentation
+- **Mermaid** : Outil de génération de diagrammes à partir de texte, intégré directement dans la documentation technique.
+- **PlantUML** : Outil de modélisation UML permettant de créer des diagrammes tels que diagrammes de classes, cas d’utilisation, séquences et activités, facilitant la conception et la documentation de l’architecture du système.
 
 ### 6.2 Architecture Système
 
