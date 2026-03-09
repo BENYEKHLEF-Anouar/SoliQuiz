@@ -27,7 +27,7 @@ L'objectif est de remplacer les workflows fragmentés par une plateforme unique 
 - **Frontend** : Blade Templates, Tailwind CSS (Design System Preline), Alpine.js.
 - **Build Tool** : Vite.
 - **Base de données** : MySQL 8.
-- **Mobile** : APK Android via NativePHP (Bridge).
+- **Mobile** : APK Android via NativePHP.
 
 ---
 
