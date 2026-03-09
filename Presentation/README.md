@@ -162,7 +162,9 @@ style: |
 
 ## 1. Contexte du projet
 
-![h:470 Context](./images/contexte.jpg)
+<!-- ![w:700 h:470 Context](./images/contexte.png) -->
+![w:700 h:470 Context](./images/contexte.jpg)
+
 
 ---
 
@@ -185,6 +187,9 @@ style: |
 ![w:700 h:450 2TUP](./images/2tup.png)
 
 ---
+
+## 3. Branche Fonctionnelle : Design Thinking
+
 ### 1. EMPATHIE :
 
 ---
