@@ -42,7 +42,7 @@
 7. [Conception](#conception)
    - 7.1 [Diagramme de Classes](#71-diagramme-de-classes)
    - 7.2 [Maquettes (UI/UX)](#72-maquettes-uiux)
-8. [Réalisation — Interfaces](#réalisation--interfaces)
+8. [Réalisation](#réalisation--interfaces)
 9. [Conclusion](#conclusion)
 
 ---
@@ -407,13 +407,10 @@ Le diagramme de classes modélise l'architecture relationnelle du système et ga
 
 ### 7.2 Maquettes (UI/UX)
 
-Les interfaces ont été conçues pour être "Mobile-First", offrant une navigation fluide entre la sélection des quiz et le passage des tests. Chaque écran découle directement des besoins identifiés lors de la phase d'empathie.
+Les interfaces ont été conçues pour être "mobile-first", offrant une navigation fluide entre la sélection des quiz et le passage des tests.
 
----
-
-## Réalisation — Interfaces
-
-La réalisation de **SoliQuiz** s'est concrétisée par le développement d'interfaces réactives permettant aux apprenants de passer leurs tests sur n'importe quel support. Les tableaux de bord ont été pensés de bout en bout pour répondre aux problématiques soulevées lors de l'analyse (Design Thinking).
+**Charte Graphique**
+![Charte Graphique](images/charte-graphique.png)
 
 **Interface Publique (Landing Page)**  
 ![Public Landing](images/public-landing.png)
@@ -430,6 +427,13 @@ La réalisation de **SoliQuiz** s'est concrétisée par le développement d'inte
 **Application Mobile**  
 L'application mobile met l'accent sur la clarté et l'immédiateté des résultats.  
 ![Mobile Dashboard](images/mobile-dashboard.png)
+
+
+---
+
+## Réalisation
+
+La réalisation de **SoliQuiz** s’est concrétisée par le développement d’interfaces réactives permettant aux apprenants de passer leurs tests sur n'importe quel support. Les tableaux de bord ont été pensés de bout en bout pour répondre aux problématiques soulevées lors de l'analyse (Design Thinking).
 
 ---
 

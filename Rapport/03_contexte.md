@@ -5,7 +5,7 @@
 
 ---
 
-## 1. Vision et Objectifs du Projet
+## Vision et Objectifs du Projet
 
 **SoliQuiz** est une application web et mobile (Android/APK) conçue pour digitaliser l'évaluation quotidienne au sein de Solicode. L'objectif est de remplacer les solutions génériques disparates par une plateforme unique capable de :
 - **Automatiser** le cycle complet des QCM (création, passation, correction).
@@ -15,7 +15,7 @@
 
 ---
 
-## 2. Contexte et Problématique
+## Contexte et Problématique
 
 L'analyse de terrain (entretiens d'empathie) a révélé une **fragmentation critique des outils** (Google Forms, SoliLMS, Excel). Cette situation génère trois douleurs majeures :
 
@@ -27,7 +27,7 @@ L'analyse de terrain (entretiens d'empathie) a révélé une **fragmentation cri
 
 ---
 
-## 3. Profils Utilisateurs (Personas)
+## Profils Utilisateurs (Personas)
 
 | Profil | Rôle | Besoins Clés |
 |---|---|---|
@@ -37,7 +37,7 @@ L'analyse de terrain (entretiens d'empathie) a révélé une **fragmentation cri
 
 ---
 
-## 4. Spécifications Fonctionnelles (Agilité)
+## Spécifications Fonctionnelles (Agilité)
 
 ### Sprint 1 : MVP (Minimum Viable Product)
 *   **Sécurité Basique :** Authentification sécurisée avec redirection selon le rôle (Admin, Formateur, Étudiant).
@@ -53,7 +53,7 @@ L'analyse de terrain (entretiens d'empathie) a révélé une **fragmentation cri
 
 ---
 
-## 5. Exigences Non-Fonctionnelles (Qualité)
+## Exigences Non-Fonctionnelles (Qualité)
 
 -   **Performance :** Chargement instantané des pages et faible consommation de données pour l'APK.
 -   **Disponibilité :** Mode "dégradé" permettant la poursuite du test en cas de micro-coupure internet (local storage).
@@ -62,7 +62,7 @@ L'analyse de terrain (entretiens d'empathie) a révélé une **fragmentation cri
 
 ---
 
-## 6. Critères d'Acceptation (DoD)
+## Critères d'Acceptation (DoD)
 
 1.  Le formateur peut créer un QCM fonctionnel en moins de 3 minutes.
 2.  L'étudiant peut achever son test sur smartphone même après une perte de connexion.

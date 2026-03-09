@@ -4,16 +4,15 @@
 
 |                                          |                                       |
 | :--------------------------------------: | :-----------------------------------: |
-| ![](images/solicode_logo.png){width=140px} | ![](images/ofppt-logo.png){width=140px} |
+| ![](images/logo-solicode.png){width=140px} | ![](images/ofppt-logo.png){width=140px} |
 
 <br><br>
 
-**RAPPORT FINAL DE PROJET**
+**RAPPORT DU PROJET DE FIN DE FORMATION**
 
 <br><br>
 
-**SoliQuiz**
-*Système de Gestion & d'Auto-évaluation QCM*
+**SoliQuiz** - *Système de Gestion & d'Auto-évaluation QCM*
 
 <br>
 

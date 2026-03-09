@@ -1,6 +1,6 @@
 # Branche Fonctionnelle
 
-## 1. Analyse d'Empathie — Entretiens Terrain
+## Analyse d'Empathie — Entretiens Terrain
 
 **Date des entretiens :** 19 – 26 Février 2026
 **Objectif :** Identifier les besoins critiques de chaque acteur afin de concevoir une solution qui élimine les frictions réelles et non supposées.
@@ -90,7 +90,7 @@
 
 ---
 
-## 2. Définition du Problème
+## Définition du Problème
 
 ### 2.1 Énoncé du Problème (Point de Vue)
 
@@ -118,7 +118,7 @@ L'absence d'un outil **conçu pour Solicode** et **intégré à son écosystème
 
 ---
 
-## 3. Idéation & Spécifications Fonctionnelles
+## Idéation & Spécifications Fonctionnelles
 
 Basé sur l'analyse d'empathie, voici la traçabilité directe de chaque problème vers sa solution fonctionnelle :
 
@@ -135,7 +135,7 @@ Basé sur l'analyse d'empathie, voici la traçabilité directe de chaque problè
 
 ---
 
-## 4. Planification Agile : Sprints et Backlogs
+## Planification Agile : Sprints et Backlogs
 
 ### 4.1 Vue Globale du Système (Acteurs)
 

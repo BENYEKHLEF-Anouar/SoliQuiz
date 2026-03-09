@@ -1,4 +1,4 @@
-# Table des matières
+# Table des matières {-}
 
 1. [Remerciement](#remerciement)
 2. [Introduction](#introduction)
@@ -36,12 +36,14 @@
 7. [Conception](#conception)
     - 7.1 [Diagramme de Classes](#diagramme-de-classes)
     - 7.2 [Maquettes (UI/UX)](#maquettes-uiux)
-8. [Réalisation — Interfaces](#réalisation)
-    - 8.1 [Interface Publique (Landing Page)](#interfaces)
-    - 8.2 [Dashboard Administrateur](#interfaces)
-    - 8.3 [Dashboard Formateur](#interfaces)
-    - 8.4 [Interface Apprenant](#interfaces)
-    - 8.5 [Application Mobile](#interfaces)
+    - 7.3 [Charte Graphique](#charte-graphique)
+    - 7.4 [Interface Publique (Landing Page)](#interfaces)
+    - 7.5 [Dashboard Administrateur](#interfaces)
+    - 7.6 [Dashboard Formateur](#interfaces)
+    - 7.7 [Interface Apprenant](#interfaces)
+    - 7.8 [Application Mobile](#interfaces)
+8. [Réalisation](#réalisation)
+   
 9. [Conclusion](#conclusion)
 
 ```{=openxml}

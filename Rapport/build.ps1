@@ -16,16 +16,30 @@ $inputFiles = "00_title_page.md",
 
 Write-Host "--- Starting Pandoc Build for QCM (DOCX) ---" -ForegroundColor Cyan
 
-Write-Host "Generating DOCX: $outputDocx..."
+# Check if Pandoc is installed
+if (!(Get-Command pandoc -ErrorAction SilentlyContinue)) {
+    Write-Host "ERROR: Pandoc is not installed or not in PATH." -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "Generating DOCX: $outputDocx..." -ForegroundColor Yellow
+
+# Build command with options:
+# --number-sections : Automatically number headings (e.g., 3.1.2)
+# --toc : Pandoc can generate its own TOC, but we use 01_toc.md for custom control
 pandoc $inputFiles `
     --number-sections `
+    --toc-depth=3 `
     -o $outputDocx
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "DOCX SUCCESS: $outputDocx created." -ForegroundColor Green
+    Write-Host "-------------------------------------------" -ForegroundColor Cyan
+    Write-Host "SUCCESS: $outputDocx has been updated." -ForegroundColor Green
+    Write-Host "Files merged: $($inputFiles.Count)" -ForegroundColor Gray
+    Write-Host "-------------------------------------------" -ForegroundColor Cyan
 }
 else {
-    Write-Host "BUILD FAILED: Please check for errors above." -ForegroundColor Red
+    Write-Host "BUILD FAILED: Pandoc returned an error." -ForegroundColor Red
 }
 
-Write-Host "--- Build Complete ---" -ForegroundColor Cyan
+Write-Host "--- Build Process Finished ---" -ForegroundColor Cyan
