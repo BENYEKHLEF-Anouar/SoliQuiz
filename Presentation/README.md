@@ -181,12 +181,12 @@ style: |
 ![h:490 Scrum](./images/scrum-process.jpg)
 
 ---
-
+<!-- 
 ## Méthodologie : Processus 2TUP
 
 ![w:700 h:450 2TUP](./images/2tup.png)
 
----
+--- -->
 
 ## 3. Branche Fonctionnelle : Design Thinking
 
