@@ -150,25 +150,24 @@ style: |
 ## Sommaire
 
 <div class="sommaire-grid">
-  <div class="sommaire-item"><div class="sommaire-num">1</div><div class="sommaire-text">Contexte du projet</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text">Méthodologie de travail</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text">Branche Fonctionnelle</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">4</div><div class="sommaire-text">Branche Technique</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">5</div><div class="sommaire-text">Conception</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">6</div><div class="sommaire-text">Conclusion</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">1</div><div class="sommaire-text">Méthodologie de travail</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text">Branche Fonctionnelle</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text">Branche Technique</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">4</div><div class="sommaire-text">Conception</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">5</div><div class="sommaire-text">Conclusion</div></div>
 </div>
 
----
+<!-- ---
 
 ## 1. Contexte du projet
 
-<!-- ![w:700 h:470 Context](./images/contexte.png) -->
-![w:700 h:470 Context](./images/contexte.jpg)
+![w:700 h:470 Context](./images/contexte.png)
+![w:700 h:470 Context](./images/contexte.jpg) -->
 
 
 ---
 
-## 2. Méthodologie : Design Thinking
+## 1. Méthodologie : Design Thinking
 
 
 
@@ -187,49 +186,49 @@ style: |
 ![w:700 h:450 2TUP](./images/2tup.png)
 
 --- -->
-
+<!-- 
 ## 3. Branche Fonctionnelle : Design Thinking
 
 ### 1. EMPATHIE :
 
----
+--- -->
 
 <!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Formateur (Youssef) -->
 
-![w:1300 h:600 Carte Empathie Youssef](./images/carte-empathie-formateur-youssef-nouvelle.png)
+<!-- ![w:1300 h:600 Carte Empathie Youssef](./images/carte-empathie-formateur-youssef-nouvelle.png)
 
----
+--- -->
 
 <!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Formatrice (Fatine) -->
 
-![w:1300 h:600 Carte Empathie Fatine](./images/carte-empathie-formatrice-fatine-nouvelle.png)
+<!-- ![w:1300 h:600 Carte Empathie Fatine](./images/carte-empathie-formatrice-fatine-nouvelle.png)
 
----
+--- -->
 
 <!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Apprenant (Soufiane) -->
 
-![w:1300 h:600 Carte Empathie Soufiane](./images/carte-empathie-apprenant-soufiane-nouvelle.png)
+<!-- ![w:1300 h:600 Carte Empathie Soufiane](./images/carte-empathie-apprenant-soufiane-nouvelle.png)
 
----
+--- -->
 
 <!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Apprenant (Mehdi) -->
 
-![w:1300 h:600 Carte Empathie Mehdi](./images/carte-empathie-apprenant-mehdi-nouvelle.png)
+<!-- ![w:1300 h:600 Carte Empathie Mehdi](./images/carte-empathie-apprenant-mehdi-nouvelle.png)
 
----
+--- -->
 
 <!-- ## 3. Branche Fonctionnelle : Design Thinking -->
 <!-- ### 1. EMPATHIE : Administrateur (Fouad) -->
 
-![w:1300 h:600 Carte Empathie Fouad](./images/carte-empathie-admin-fouad-nouvelle.png)
+<!-- ![w:1300 h:600 Carte Empathie Fouad](./images/carte-empathie-admin-fouad-nouvelle.png)
 
----
+--- -->
 
-## Branche Fonctionnelle : Design Thinking
+## 2. Branche Fonctionnelle : Design Thinking
 ### 2. DÉFINITION : Cadrage du problème
 
 <div class="dt-card" style="border-top-color: #e74c3c; background: linear-gradient(135deg, #fffafa 0%, #ffffff 100%); box-shadow: 0 10px 40px rgba(231, 76, 60, 0.08); padding: 40px; border-radius: 16px;">
@@ -271,7 +270,7 @@ style: |
 ## Branche Fonctionnelle : Cas d'utilisation (Apk)
 <!-- ### 3. IDÉATION : Cas d'utilisation (Application Mobile) -->
 
-![w:1000 h:500 Ideation Global](./images/cas-utilisation-global-mobile.png)
+![w:1600 h:500 Ideation Global](./images/cas-utilisation-global-mobile.png)
 
 <!-- ---
 
@@ -317,7 +316,7 @@ style: |
 
 ---
 
-## 4. Branche Technique : Tech Stack
+## 3. Branche Technique : Tech Stack
 <div class="sommaire-grid">
   <div class="dt-card" style="margin-top:0;">
     <h4>Back-end & Architecture</h4>
@@ -333,7 +332,7 @@ style: |
     <ul>
       <li><strong>Tailwind CSS & Preline</strong> (Mobile-First)</li>
       <li><strong>Alpine.js</strong> (Interactions dynamiques / Timer)</li>
-      <li><strong>Tiptap</strong> (Éditeur de questions riches)</li>
+      <!-- <li><strong>Tiptap</strong> (Éditeur de questions riches)</li> -->
       <li><strong>Vite</strong> (Build Tooling)</li>
     </ul>
   </div>
@@ -342,7 +341,7 @@ style: |
 ---
 
 
-## 5. Conception : Diagramme de classes
+## 4. Conception : Diagramme de classes
 
 ---
 
@@ -351,7 +350,7 @@ style: |
 
 ---
 
-## 6. Conclusion
+## 5. Conclusion
 
 <!-- ![h:450 Conclusion](./images/conclusion.png) -->
 
