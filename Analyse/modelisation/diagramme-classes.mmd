@@ -44,6 +44,7 @@ classDiagram
         +Integer id
         +String nom
         +String promotion
+        +Integer formateur_id
         +DateTime created_at
         +DateTime updated_at
     }
@@ -145,7 +146,8 @@ classDiagram
     Utilisateur <|-- Etudiant
 
     %% ───────── Structure des Classes ─────────
-    Classe "1" -- "0..*" Etudiant : appartient_a
+Classe "1" -- "0..*" Etudiant : appartient_a
+Formateur "1" -- "1" Classe : gère
 
     %% ───────── Structure Pédagogique ─────────
     UniteApprentissage "1" -- "0..*" Session : contient

@@ -15,126 +15,82 @@ classDiagram
         +Integer id
         +String nom
         +String guard_name
-        +DateTime created_at
-        +DateTime updated_at
     }
 
     class Permission {
         +Integer id
         +String nom
-        +String guard_name
-        +DateTime created_at
-        +DateTime updated_at
     }
 
     class Formateur {
         +String matricule
-        +DateTime created_at
-        +DateTime updated_at
     }
 
     class Etudiant {
         +String code_etudiant
-        +Integer classe_id
-        +DateTime created_at
-        +DateTime updated_at
     }
 
     class Classe {
         +Integer id
         +String nom
         +String promotion
-        +Integer formateur_id
-        +DateTime created_at
-        +DateTime updated_at
+    }
+
+    class Competence {
+        +Integer id
+        +String code
+        +String libelle
+        +String description
     }
 
     class UniteApprentissage {
         +Integer id
         +String nom
         +String code
-        +DateTime created_at
-        +DateTime updated_at
     }
 
     class Session {
         +Integer id
-        +Integer unite_apprentissage_id
         +String nom
         +DateTime date
-        +DateTime created_at
-        +DateTime updated_at
-    }
-
-    class Objectif {
-        +Integer id
-        +Integer session_id
-        +String nom
-        +String description
-        +DateTime created_at
-        +DateTime updated_at
     }
 
     class QCM {
         +Integer id
-        +Integer objectif_id
-        +Integer formateur_id
         +String titre
         +Integer duree_minutes
         +Integer score_reussite
         +Boolean est_publie
-        +DateTime created_at
-        +DateTime updated_at
     }
 
     class Question {
         +Integer id
-        +Integer qcm_id
         +String texte
         +String type
         +Integer points
         +String explication_feedback
-        +DateTime created_at
-        +DateTime updated_at
     }
+    %% Question.type : 'unique' | 'multiple'
 
     class Option {
         +Integer id
-        +Integer question_id
         +String texte
         +Boolean est_correcte
         +String feedback_specifique
-        +DateTime created_at
-        +DateTime updated_at
     }
 
     class Tentative {
         +Integer id
-        +Integer etudiant_id
-        +Integer qcm_id
         +Integer score_obtenu
         +DateTime date_debut
         +DateTime date_fin
         +String statut
-        +DateTime created_at
-        +DateTime updated_at
     }
+    %% Tentative.statut : 'en_cours' | 'soumis' | 'expire'
 
     class Reponse {
         +Integer id
-        +Integer tentative_id
-        +Integer question_id
         +DateTime repondu_a
-        +DateTime created_at
-        +DateTime updated_at
-    }
-
-    class ChoixReponse {
-        +Integer id
-        +Integer reponse_id
-        +Integer option_id
-        +DateTime created_at
-        +DateTime updated_at
     }
 
     %% ───────── RBAC ─────────
@@ -146,29 +102,23 @@ classDiagram
     Utilisateur <|-- Etudiant
 
     %% ───────── Structure des Classes ─────────
-Classe "1" -- "0..*" Etudiant : appartient_a
-Formateur "1" -- "1" Classe : gère
+    Classe "1" -- "0..*" Etudiant : contient
+    Formateur "1" -- "1" Classe : gère
 
-    %% ───────── Structure Pédagogique ─────────
-    UniteApprentissage "1" -- "0..*" Session : contient
-    Session "1" -- "0..*" Objectif : possède
-    Objectif "1" -- "1" QCM : évalue
+    %% ───────── Nouvelle Structure Pédagogique ─────────
+    Session "1" -- "0..*" UniteApprentissage : inclut
+    UniteApprentissage "1" -- "0..*" Competence : vise
+    UniteApprentissage "1" -- "0..*" QCM : est_evaluée_par
 
     %% ───────── Structure du QCM ─────────
     QCM "1" -- "1..*" Question : contient
     Question "1" -- "2..*" Option : propose
-
-    %% ───────── Création ─────────
     Formateur "1" -- "0..*" QCM : crée
 
-    %% ───────── Participation ─────────
+    %% ───────── Participation & Réponses ─────────
     Etudiant "1" -- "0..*" Tentative : effectue
-    QCM "1" -- "0..*" Tentative : reçoit
-
-    %% ───────── Réponses ─────────
-    Tentative "1" -- "1..*" Reponse : inclut
-    Question "1" -- "0..*" Reponse : répondue_dans
-
-    %% ───────── Sélections Choix Multiples ─────────
-    Reponse "1" -- "0..*" ChoixReponse : contient
-    Option "1" -- "0..*" ChoixReponse : sélectionnée_dans
+    QCM "1" -- "0..*" Tentative : fait_objet_de
+    
+    Tentative "1" -- "1..*" Reponse : contient
+    Reponse "0..*" -- "1" Question : concerne
+    Reponse "0..*" -- "1..*" Option : choisit

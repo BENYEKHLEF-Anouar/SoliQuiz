@@ -1,0 +1,6 @@
+id,formateur_id,unite_apprentissage_id,titre,duree_minutes,score_reussite,est_publie
+1,2,6,QCM - Syntaxe PHP Fondamentaux,20,60,1
+2,2,7,QCM - Fonctions & Tableaux PHP,25,60,1
+3,3,4,QCM - Variables & Fonctions JavaScript,20,60,1
+4,3,2,QCM - HTML Sémantique,15,70,1
+5,2,8,QCM - Requêtes SQL de Base,30,60,0

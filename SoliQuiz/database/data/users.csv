@@ -1,0 +1,10 @@
+id,nom,email,password,matricule,code_etudiant,type_profil,derniere_connexion
+1,Fouad Benali,fouad@solicode.ma,$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,,admin,2026-03-10 09:00:00
+2,Youssef Alami,youssef@solicode.ma,$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,F001,,formateur,2026-03-11 08:30:00
+3,Fatima Oukhouya,fatima@solicode.ma,$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,F002,,formateur,2026-03-11 08:45:00
+4,Mehdi Rachidi,mehdi@solicode.ma,$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,,E001,etudiant,2026-03-11 09:15:00
+5,Soufiane Kettani,soufiane@solicode.ma,$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,,E002,etudiant,2026-03-11 09:20:00
+6,Sara Tahiri,sara@solicode.ma,$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,,E003,etudiant,2026-03-10 10:00:00
+7,Karim Azzouzi,karim@solicode.ma,$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,,E004,etudiant,2026-03-10 10:05:00
+8,Nadia Bousfiha,nadia@solicode.ma,$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,,E005,etudiant,2026-03-09 11:00:00
+9,Omar Fikri,omar@solicode.ma,$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,,E006,etudiant,2026-03-09 11:10:00

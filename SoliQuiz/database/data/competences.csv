@@ -1,0 +1,9 @@
+id,unite_apprentissage_id,code,libelle,description
+1,6,"C-PHP-SYN","Syntaxe PHP","Maîtriser la syntaxe de base : variables, types, opérateurs et structures de contrôle"
+2,6,"C-PHP-VAR","Variables & Types","Comprendre les types de données PHP et la déclaration des variables"
+3,7,"C-PHP-FUNC","Fonctions PHP","Définir et utiliser des fonctions en PHP avec paramètres et valeurs de retour"
+4,7,"C-PHP-ARR","Tableaux PHP","Manipuler les tableaux indexés et associatifs en PHP"
+5,4,"C-JS-VAR","Variables JS","Comprendre var/let/const et la portée des variables JavaScript"
+6,4,"C-JS-FUNC","Fonctions JS","Définir des fonctions anonymes et fléchées en JavaScript"
+7,2,"C-HTML-SEM","HTML Sémantique","Utiliser correctement les balises sémantiques HTML5"
+8,8,"C-SQL-REQ","Requêtes SQL","Écrire des requêtes SELECT avec WHERE, ORDER BY et GROUP BY"

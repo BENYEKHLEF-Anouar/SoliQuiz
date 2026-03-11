@@ -1,0 +1,6 @@
+id,qcm_id,texte,type,points,explication_feedback
+1,1,"Comment déclare-t-on une variable en PHP ?","unique",1,"En PHP, toutes les variables commencent par le symbole $."
+2,1,"Quels sont les types de données valides en PHP ?","multiple",2,"PHP supporte les types scalaire (int, float, bool, string) et composés (array, object)."
+3,2,"Quelle fonction permet de compter les éléments d'un tableau ?","unique",1,"La fonction count() ou sizeof() permet de compter les éléments d'un tableau."
+4,3,"Quels mots-clés permettent de déclarer une variable en JavaScript ?","multiple",2,"var, let et const sont les mots-clés pour déclarer des variables en JS modern."
+5,4,"Quelle balise HTML5 est utilisée pour le pied de page ?","unique",1,"La balise <footer> définit le pied de page d'une section ou du document."

@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class QCM extends Model
+{
+    protected $table = 'qcms';
+
+    protected $fillable = [
+        'formateur_id',
+        'unite_apprentissage_id',
+        'titre',
+        'duree_minutes',
+        'score_reussite',
+        'est_publie',
+    ];
+
+    protected $casts = [
+        'est_publie' => 'boolean',
+    ];
+
+    public function formateur(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'formateur_id');
+    }
+
+    public function uniteApprentissage(): BelongsTo
+    {
+        return $this->belongsTo(UniteApprentissage::class);
+    }
+
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    public function tentatives(): HasMany
+    {
+        return $this->hasMany(Tentative::class);
+    }
+}
