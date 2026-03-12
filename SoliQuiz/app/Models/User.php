@@ -16,6 +16,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'nom',
+        'prenom',
         'email',
         'password',
         'matricule',        // Formateur uniquement
@@ -25,6 +26,11 @@ class User extends Authenticatable
         'derniere_connexion',
     ];
 
+    public function getNomCompletAttribute(): string
+    {
+        return "{$this->prenom} {$this->nom}";
+    }
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -33,16 +39,25 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at'  => 'datetime',
+            'email_verified_at' => 'datetime',
             'derniere_connexion' => 'datetime',
-            'password'           => 'hashed',
+            'password' => 'hashed',
         ];
     }
 
     // ─── Helpers de profil ───────────────────────────────
-    public function isFormateur(): bool { return $this->type_profil === 'formateur'; }
-    public function isEtudiant(): bool  { return $this->type_profil === 'etudiant'; }
-    public function isAdmin(): bool     { return $this->type_profil === 'admin'; }
+    public function isFormateur(): bool
+    {
+        return $this->type_profil === 'formateur';
+    }
+    public function isEtudiant(): bool
+    {
+        return $this->type_profil === 'etudiant';
+    }
+    public function isAdmin(): bool
+    {
+        return $this->type_profil === 'admin';
+    }
 
     // ─── Relations Formateur ─────────────────────────────
 

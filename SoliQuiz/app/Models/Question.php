@@ -18,7 +18,7 @@ class Question extends Model
 
     public function qcm(): BelongsTo
     {
-        return $this->belongsTo(QCM::class);
+        return $this->belongsTo(QCM::class, 'qcm_id');
     }
 
     public function options(): HasMany

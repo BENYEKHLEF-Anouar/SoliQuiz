@@ -17,10 +17,29 @@ class Tentative extends Model
         'date_fin',
     ];
 
+    // Statuts : 'en_cours' | 'reussi' | 'echoue' | 'abandonne'
     protected $casts = [
         'date_debut' => 'datetime',
-        'date_fin'   => 'datetime',
+        'date_fin' => 'datetime',
+        'score_obtenu' => 'integer',
     ];
+
+    public function isReussi(): bool
+    {
+        return $this->statut === 'reussi';
+    }
+    public function isEchoue(): bool
+    {
+        return $this->statut === 'echoue';
+    }
+    public function isEnCours(): bool
+    {
+        return $this->statut === 'en_cours';
+    }
+    public function isAbandonne(): bool
+    {
+        return $this->statut === 'abandonne';
+    }
 
     public function etudiant(): BelongsTo
     {
@@ -29,7 +48,7 @@ class Tentative extends Model
 
     public function qcm(): BelongsTo
     {
-        return $this->belongsTo(QCM::class);
+        return $this->belongsTo(QCM::class, 'qcm_id');
     }
 
     public function reponses(): HasMany

@@ -35,11 +35,11 @@ class QCM extends Model
 
     public function questions(): HasMany
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany(Question::class, 'qcm_id');
     }
 
     public function tentatives(): HasMany
     {
-        return $this->hasMany(Tentative::class);
+        return $this->hasMany(Tentative::class, 'qcm_id');
     }
 }
