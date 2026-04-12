@@ -1,58 +1,122 @@
-@extends('layouts.app')
+@extends('components.layout.app')
 
 @section('content')
-<div x-data="profile()" x-init="init()">
+<div x-data="profile()" x-init="init()" class="h-[100dvh] flex flex-col relative overflow-hidden font-sans">
     <!-- Header -->
     <header class="bg-white px-5 pt-safe-top pb-4 border-b border-slate-200 shadow-sm shrink-0 sticky top-0 z-40">
-        <div class="h-[44px] hidden ios:block"></div>
-        <div class="flex items-center justify-between mt-2">
-            <a href="{{ route('student.dashboard') }}" class="text-slate-400 hover:text-slate-600">
-                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-            </a>
-            <div class="flex-1 text-center">
-                <span class="text-sm font-bold text-slate-800">Profil</span>
+        <div class="flex justify-between items-center mt-2">
+            <div class="flex items-center gap-3">
+                <a class="flex items-center gap-2 group outline-none" href="{{ route('student.dashboard') }}" aria-label="SoliQuiz Accueil">
+                    <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-110">
+                        <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-xl font-heading font-bold text-slate-900 tracking-tight">Soli<span class="text-primary-500">Quiz</span></span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-0.5">Apprenant</span>
+                    </div>
+                </a>
             </div>
-            <div class="w-6"></div>
+            <h1 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Mon Profil</h1>
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto w-full hide-scrollbar pb-24 px-5 py-6">
-        <!-- Avatar -->
+    <main class="flex-1 overflow-y-auto px-5 py-8 hide-scrollbar pb-24">
+        <!-- Profile Card -->
         <div class="flex flex-col items-center mb-8">
             <div class="relative">
-                <img class="size-24 rounded-full border-4 border-white shadow-lg"
-                    src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
-                    alt="Avatar">
-                <button class="absolute bottom-0 right-0 size-8 bg-primary-500 rounded-full text-white flex items-center justify-center shadow-lg">
-                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                <img class="inline-block size-24 rounded-full border-4 border-white shadow-md" src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80" alt="Avatar">
+                <button class="absolute bottom-0 right-0 bg-primary-600 text-white p-2 rounded-full shadow-lg border-2 border-white active:scale-90 transition-transform">
+                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                     </svg>
                 </button>
             </div>
-            <h2 class="mt-4 text-xl font-heading font-bold text-slate-900" x-text="profile.nom + ' ' + profile.prenom"></h2>
-            <span class="text-sm font-medium text-primary-500" x-text="profile.role"></span>
-            <span class="text-xs text-slate-400 mt-1" x-text="profile.cohort"></span>
+            <h2 class="mt-4 text-xl font-heading font-bold text-slate-900 leading-none" x-text="profile.nom + ' ' + profile.prenom"></h2>
+            <p class="text-sm text-primary-600 font-bold mt-1 uppercase tracking-widest"><span x-text="profile.role"></span> - <span x-text="profile.cohort"></span></p>
         </div>
 
-        <!-- Info list -->
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-            <div class="px-5 py-4 border-b border-slate-100">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email</span>
-                <p class="text-sm font-medium text-slate-800" x-text="profile.email"></p>
+        <!-- Info List -->
+        <div class="space-y-4">
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="size-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
+                            <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Email</p>
+                            <p class="text-sm font-semibold text-slate-800" x-text="profile.email"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="size-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
+                            <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Mot de passe</p>
+                            <p class="text-sm font-semibold text-slate-800">••••••••••••</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="px-5 py-4 border-b border-slate-100">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Mot de passe</span>
-                <p class="text-sm font-medium text-slate-800">••••••••</p>
-            </div>
-        </div>
 
-        <!-- Logout button -->
-        <button class="w-full mt-8 py-3 bg-danger-500 text-white font-bold rounded-xl shadow-lg shadow-danger-500/20">
-            Déconnexion
-        </button>
+            <!-- Logout Button -->
+            <a href="{{ route('landing') }}" class="w-full py-4 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-bold rounded-2xl border-2 border-semantic-error/20 bg-white text-semantic-error hover:bg-semantic-error hover:text-white transition-all shadow-sm">
+                Déconnexion
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+            </a>
+        </div>
     </main>
+
+    <!-- Navigation Mobile Fixe (Apprenant) -->
+    <nav class="fixed bottom-0 w-full max-w-[430px] bg-white border-t border-slate-200 z-50">
+        <div class="flex justify-around items-center h-[72px] px-4 pb-safe">
+            <a href="{{ route('student.dashboard') }}" class="flex flex-col items-center justify-center text-slate-400 gap-1.5">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Home</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-slate-400 gap-1.5">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.168.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Library</span>
+            </a>
+            <a href="{{ route('student.history') }}" class="flex flex-col items-center justify-center text-slate-400 gap-1.5">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Stats</span>
+            </a>
+            <a href="{{ route('student.profile') }}" class="flex flex-col items-center justify-center text-primary-500 gap-1.5">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Profil</span>
+            </a>
+        </div>
+    </nav>
+
+    <style>
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </div>
 
 <script>

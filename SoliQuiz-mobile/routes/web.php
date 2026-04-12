@@ -2,7 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Student routes
+Route::get('/', function () {
+    return view('landing');
+})->name('landing');
+
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
 Route::prefix('student')->group(function () {
     Route::get('/dashboard', function () {
         return view('student.dashboard');
@@ -21,7 +28,6 @@ Route::prefix('student')->group(function () {
     })->name('student.profile');
 });
 
-// Formateur routes
 Route::prefix('formateur')->group(function () {
     Route::get('/qcms', function () {
         return view('formateur.qcms');
@@ -32,9 +38,4 @@ Route::prefix('formateur')->group(function () {
     Route::get('/profile', function () {
         return view('formateur.profile');
     })->name('formateur.profile');
-});
-
-// Landing page (redirect to login maybe)
-Route::get('/', function () {
-    return view('welcome');
 });

@@ -1,66 +1,51 @@
-@extends('layouts.app')
+@extends('components.layout.app')
 
 @section('content')
-<div x-data="qcmPassation()" x-init="init()">
+<div x-data="qcmPassation()" x-init="init()" class="h-[100dvh] flex flex-col relative overflow-hidden font-sans">
     <!-- Header -->
-    <header class="bg-white px-5 pt-safe-top pb-4 border-b border-slate-200 shadow-sm shrink-0 sticky top-0 z-40">
-        <div class="h-[44px] hidden ios:block"></div>
-        <div class="flex items-center justify-between mt-2">
-            <a href="{{ route('student.dashboard') }}" class="text-slate-400 hover:text-slate-600">
-                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-            </a>
-            <div class="flex-1 text-center">
-                <span class="text-sm font-bold text-slate-800" x-text="qcm.title"></span>
+    <header class="flex flex-wrap w-full bg-white text-sm py-4 border-b border-slate-200 z-40 shrink-0">
+        <nav class="max-w-[85rem] w-full mx-auto px-4 flex items-center justify-between">
+            <div class="flex items-center gap-x-2">
+                <span class="inline-flex items-center justify-center size-8 rounded-full bg-slate-800 text-white text-xs font-semibold leading-none" x-text="currentIndex + 1"></span>
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest">/ <span x-text="totalQuestions"></span></span>
             </div>
-            <div class="w-6"></div>
-        </div>
+            <div class="flex items-center gap-x-2">
+                <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-semantic-error/20 text-semantic-error">
+                    <svg class="size-3 animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span x-text="timerDisplay">03:45</span>
+                </span>
+                <a href="{{ route('student.dashboard') }}" class="size-8 inline-flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 focus:outline-none transition-colors ml-1">
+                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
     </header>
 
-    <main class="flex-1 overflow-y-auto w-full hide-scrollbar pb-24 px-5 py-6">
-        <!-- Progress -->
-        <div class="flex justify-between items-center mb-6">
-            <span class="text-sm font-bold text-slate-500">
-                Question <span x-text="currentIndex + 1"></span>/<span x-text="totalQuestions"></span>
-            </span>
-            <div class="w-32 h-2 bg-slate-200 rounded-full overflow-hidden">
-                <div class="h-full bg-primary-500 transition-all duration-300"
-                    :style="`width: ${((currentIndex + 1) / totalQuestions) * 100}%`"></div>
-            </div>
-        </div>
+    <!-- Progress Bar -->
+    <div class="w-full h-1.5 bg-slate-200 shrink-0">
+        <div class="h-1.5 bg-primary-600 transition-all duration-500" :style="`width: ${((currentIndex + 1) / totalQuestions) * 100}%`"></div>
+    </div>
 
-        <!-- Timer (static for now) -->
-        <div class="flex justify-end mb-4">
-            <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">
-                <svg class="inline size-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>03:45</span>
-            </span>
-        </div>
-
-        <!-- Question -->
+    <!-- Main Workspace -->
+    <main class="flex-1 overflow-y-auto w-full px-4 py-8 hide-scrollbar">
         <template x-if="currentQuestion">
             <div>
-                <h2 class="text-lg font-heading font-bold text-slate-900 mb-6" x-text="currentQuestion.text"></h2>
-                <div class="space-y-3">
+                <h1 class="text-xl font-bold text-slate-800 leading-snug mb-8 font-heading" x-text="currentQuestion.text"></h1>
+
+                <div class="grid space-y-3 pb-24">
                     <template x-for="option in currentQuestion.options" :key="option.id">
-                        <label class="block p-4 border rounded-xl cursor-pointer transition-all"
-                            :class="selectedOptionIds.includes(option.id) ? 'border-primary-500 bg-primary-50' : 'border-slate-200 bg-white hover:bg-slate-50'">
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 mt-0.5">
-                                    <input :type="currentQuestion.type === 'unique' ? 'radio' : 'checkbox'"
-                                        :name="'question-' + currentQuestion.id"
-                                        :value="option.id"
-                                        class="size-4 text-primary-600 border-slate-300 focus:ring-primary-500"
-                                        @change="selectOption(option.id)"
-                                        :checked="selectedOptionIds.includes(option.id)">
-                                </div>
-                                <div class="ml-3">
-                                    <span class="text-sm font-medium text-slate-800" x-text="option.text"></span>
-                                </div>
-                            </div>
+                        <label class="flex p-4 w-full border rounded-xl cursor-pointer transition-all"
+                            :class="selectedOptionIds.includes(option.id) ? 'bg-primary-50/80 border-2 border-primary-600 shadow-sm' : 'bg-white border-slate-200 hover:bg-slate-50'">
+                            <input type="radio" :name="'question-' + currentQuestion.id" :value="option.id"
+                                class="shrink-0 mt-0.5 border-slate-300 rounded-full text-primary-600 focus:ring-primary-500"
+                                @change="selectOption(option.id)" :checked="selectedOptionIds.includes(option.id)">
+                            <span class="text-sm ms-3 font-medium" :class="selectedOptionIds.includes(option.id) ? 'text-primary-800 font-bold' : 'text-slate-800'" x-text="option.text"></span>
                         </label>
                     </template>
                 </div>
@@ -76,19 +61,29 @@
         </div>
     </main>
 
-    <!-- Navigation buttons -->
-    <nav class="fixed bottom-0 w-full max-w-[430px] bg-white border-t border-slate-200 z-50">
-        <div class="flex justify-between items-center h-[72px] px-4 pb-safe">
-            <button @click="prevQuestion" :disabled="currentIndex === 0"
-                class="px-4 py-2 rounded-xl font-bold text-slate-500 disabled:opacity-50">
-                Précédent
+    <!-- Bottom Sticky Footer -->
+    <div class="fixed inset-x-0 bottom-8 z-50 bg-white border-t border-slate-200 max-w-[430px] mx-auto rounded-b-[2.5rem]">
+        <div class="p-4 flex gap-3 items-center justify-between pb-[env(safe-area-inset-bottom,20px)]">
+            <button type="button" @click="prevQuestion()" :disabled="currentIndex === 0"
+                class="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-slate-200 text-slate-500 hover:border-primary-600 hover:text-primary-600 disabled:opacity-50 disabled:pointer-events-none">
+                <svg class="shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
             </button>
-            <button @click="nextQuestion" :disabled="currentIndex === totalQuestions - 1"
-                class="px-4 py-2 rounded-xl font-bold bg-primary-500 text-white shadow-lg shadow-primary-500/20 disabled:opacity-50">
-                Suivant
+
+            <button type="button" @click="nextQuestion()" :disabled="currentIndex === totalQuestions - 1"
+                class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none">
+                Question Suivante
+                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m9 18 6-6-6-6" />
+                </svg>
             </button>
         </div>
-    </nav>
+    </div>
+
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </div>
 
 <script>
@@ -99,20 +94,23 @@ function qcmPassation() {
         questions: [],
         currentIndex: 0,
         loading: false,
-        selectedOptions: {}, // questionId => array of optionIds
-        get totalQuestions() {
-            return this.questions.length;
-        },
-        get currentQuestion() {
-            return this.questions[this.currentIndex];
-        },
+        selectedOptions: {},
+        timerMinutes: 3,
+        timerSeconds: 45,
+        timerInterval: null,
+        get totalQuestions() { return this.questions.length; },
+        get currentQuestion() { return this.questions[this.currentIndex]; },
         get selectedOptionIds() {
             if (!this.currentQuestion) return [];
             return this.selectedOptions[this.currentQuestion.id] || [];
         },
+        get timerDisplay() {
+            return `${this.timerMinutes.toString().padStart(2, '0')}:${this.timerSeconds.toString().padStart(2, '0')}`;
+        },
         async init() {
             await this.fetchQcm();
             await this.fetchQuestions();
+            this.startTimer();
         },
         async fetchQcm() {
             try {
@@ -127,7 +125,6 @@ function qcmPassation() {
             try {
                 const response = await fetch(`${Alpine.store('config').apiBaseUrl}/qcm/${this.qcmId}/questions`);
                 this.questions = await response.json();
-                // Initialize selected options
                 this.questions.forEach(q => {
                     this.selectedOptions[q.id] = [];
                 });
@@ -143,7 +140,6 @@ function qcmPassation() {
             if (q.type === 'unique') {
                 this.selectedOptions[q.id] = [optionId];
             } else {
-                // multiple
                 const idx = this.selectedOptions[q.id].indexOf(optionId);
                 if (idx > -1) {
                     this.selectedOptions[q.id].splice(idx, 1);
@@ -157,6 +153,20 @@ function qcmPassation() {
         },
         nextQuestion() {
             if (this.currentIndex < this.totalQuestions - 1) this.currentIndex++;
+        },
+        startTimer() {
+            this.timerInterval = setInterval(() => {
+                if (this.timerSeconds === 0) {
+                    if (this.timerMinutes === 0) {
+                        clearInterval(this.timerInterval);
+                        return;
+                    }
+                    this.timerMinutes--;
+                    this.timerSeconds = 59;
+                } else {
+                    this.timerSeconds--;
+                }
+            }, 1000);
         }
     }
 }

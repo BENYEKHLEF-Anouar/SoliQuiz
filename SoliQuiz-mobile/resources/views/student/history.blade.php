@@ -1,36 +1,50 @@
-@extends('layouts.app')
+@extends('components.layout.app')
 
 @section('content')
-<div x-data="history()" x-init="init()">
+<div x-data="history()" x-init="init()" class="h-[100dvh] flex flex-col relative overflow-hidden font-sans">
     <!-- Header -->
     <header class="bg-white px-5 pt-safe-top pb-4 border-b border-slate-200 shadow-sm shrink-0 sticky top-0 z-40">
         <div class="h-[44px] hidden ios:block"></div>
-        <div class="flex items-center justify-between mt-2">
-            <a href="{{ route('student.dashboard') }}" class="text-slate-400 hover:text-slate-600">
-                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-            </a>
-            <div class="flex-1 text-center">
-                <span class="text-sm font-bold text-slate-800">Historique</span>
+        <div class="flex justify-between items-center mt-2">
+            <div class="flex items-center gap-3">
+                <a class="flex items-center gap-2 group outline-none" href="{{ route('student.dashboard') }}" aria-label="SoliQuiz Accueil">
+                    <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-110">
+                        <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-xl font-heading font-bold text-slate-900 tracking-tight">Soli<span class="text-primary-500">Quiz</span></span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-0.5">Apprenant</span>
+                    </div>
+                </a>
             </div>
-            <div class="w-6"></div>
+            <h1 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Stats</h1>
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto w-full hide-scrollbar pb-24 px-5 py-6">
-        <!-- History list -->
-        <div class="space-y-4">
-            <template x-for="item in history" :key="item.id">
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" x-text="item.date"></span>
-                        <span class="text-sm font-bold" :class="item.score >= 10 ? 'text-success-500' : 'text-danger-500'"
-                            x-text="item.score + '/' + item.totalQuestions"></span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 leading-snug font-heading" x-text="item.title"></h3>
-                </div>
-            </template>
+    <main class="flex-1 overflow-y-auto w-full px-4 py-6 pb-24 hide-scrollbar">
+        <div class="space-y-6">
+            <div>
+                <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Historique des scores</h2>
+                <ul class="flex flex-col bg-white border border-slate-200 shadow-sm rounded-xl divide-y divide-slate-200">
+                    <template x-for="item in history" :key="item.id">
+                        <li class="p-4 hover:bg-slate-50 cursor-pointer transition">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-bold text-slate-800 text-sm" x-text="item.title"></h3>
+                                    <p class="text-xs text-slate-500 mt-1" x-text="item.date"></p>
+                                </div>
+                                <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-bold font-mono"
+                                    :class="item.score >= 10 ? 'bg-primary-100 text-primary-800' : 'bg-semantic-warning/20 text-semantic-warning'"
+                                    x-text="item.score + '/' + item.totalQuestions"></span>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
         </div>
 
         <!-- Loading state -->
@@ -46,6 +60,42 @@
             Aucun historique trouvé.
         </div>
     </main>
+
+    <!-- Navigation Mobile Fixe (Apprenant) -->
+    <nav class="fixed bottom-0 w-full max-w-[430px] bg-white border-t border-slate-200 z-50">
+        <div class="flex justify-around items-center h-[72px] px-4 pb-safe">
+            <a href="{{ route('student.dashboard') }}" class="flex flex-col items-center justify-center text-slate-400 gap-1.5">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Home</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-slate-400 gap-1.5">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.168.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Library</span>
+            </a>
+            <a href="{{ route('student.history') }}" class="flex flex-col items-center justify-center text-primary-500 gap-1.5">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Stats</span>
+            </a>
+            <a href="{{ route('student.profile') }}" class="flex flex-col items-center justify-center text-slate-400 gap-1.5">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Profil</span>
+            </a>
+        </div>
+    </nav>
+
+    <style>
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        .pt-safe-top { padding-top: env(safe-area-inset-top, 0px); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </div>
 
 <script>
