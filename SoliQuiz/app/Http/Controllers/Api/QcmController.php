@@ -39,7 +39,7 @@ class QcmController extends Controller
                     return [
                         'id' => $option->id,
                         'text' => $option->texte,
-                        'isCorrect' => $option->est_correcte, // Only include if needed (maybe not for student)
+                        // 'isCorrect' => $option->est_correcte, // Only include if needed (maybe not for student)
                     ];
                 }),
             ];

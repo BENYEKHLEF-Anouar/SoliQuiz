@@ -1,7 +1,7 @@
 @extends('components.layout.app')
 
 @section('content')
-<div x-data="qcmPassation()" x-init="init()" class="h-[100dvh] flex flex-col relative overflow-hidden font-sans">
+<div x-data="qcmPassation()" x-init="init()" x-data-qcm-id="{{ $qcmId }}" class="h-[100dvh] flex flex-col relative overflow-hidden font-sans">
     <!-- Header -->
     <header class="flex flex-wrap w-full bg-white text-sm py-4 border-b border-slate-200 z-40 shrink-0">
         <nav class="max-w-[85rem] w-full mx-auto px-4 flex items-center justify-between">
@@ -85,90 +85,4 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </div>
-
-<script>
-function qcmPassation() {
-    return {
-        qcmId: @json($qcmId),
-        qcm: {},
-        questions: [],
-        currentIndex: 0,
-        loading: false,
-        selectedOptions: {},
-        timerMinutes: 3,
-        timerSeconds: 45,
-        timerInterval: null,
-        get totalQuestions() { return this.questions.length; },
-        get currentQuestion() { return this.questions[this.currentIndex]; },
-        get selectedOptionIds() {
-            if (!this.currentQuestion) return [];
-            return this.selectedOptions[this.currentQuestion.id] || [];
-        },
-        get timerDisplay() {
-            return `${this.timerMinutes.toString().padStart(2, '0')}:${this.timerSeconds.toString().padStart(2, '0')}`;
-        },
-        async init() {
-            await this.fetchQcm();
-            await this.fetchQuestions();
-            this.startTimer();
-        },
-        async fetchQcm() {
-            try {
-                const response = await fetch(`${Alpine.store('config').apiBaseUrl}/qcm/${this.qcmId}`);
-                this.qcm = await response.json();
-            } catch (e) {
-                console.error('Failed to load QCM', e);
-            }
-        },
-        async fetchQuestions() {
-            this.loading = true;
-            try {
-                const response = await fetch(`${Alpine.store('config').apiBaseUrl}/qcm/${this.qcmId}/questions`);
-                this.questions = await response.json();
-                this.questions.forEach(q => {
-                    this.selectedOptions[q.id] = [];
-                });
-            } catch (e) {
-                console.error('Failed to load questions', e);
-            } finally {
-                this.loading = false;
-            }
-        },
-        selectOption(optionId) {
-            const q = this.currentQuestion;
-            if (!q) return;
-            if (q.type === 'unique') {
-                this.selectedOptions[q.id] = [optionId];
-            } else {
-                const idx = this.selectedOptions[q.id].indexOf(optionId);
-                if (idx > -1) {
-                    this.selectedOptions[q.id].splice(idx, 1);
-                } else {
-                    this.selectedOptions[q.id].push(optionId);
-                }
-            }
-        },
-        prevQuestion() {
-            if (this.currentIndex > 0) this.currentIndex--;
-        },
-        nextQuestion() {
-            if (this.currentIndex < this.totalQuestions - 1) this.currentIndex++;
-        },
-        startTimer() {
-            this.timerInterval = setInterval(() => {
-                if (this.timerSeconds === 0) {
-                    if (this.timerMinutes === 0) {
-                        clearInterval(this.timerInterval);
-                        return;
-                    }
-                    this.timerMinutes--;
-                    this.timerSeconds = 59;
-                } else {
-                    this.timerSeconds--;
-                }
-            }, 1000);
-        }
-    }
-}
-</script>
 @endsection

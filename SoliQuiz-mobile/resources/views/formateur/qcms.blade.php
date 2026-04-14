@@ -15,7 +15,7 @@
                         <path d="m21 21-4.3-4.3" />
                     </svg>
                 </div>
-                <input type="text" x-model="search" class="py-3 px-4 ps-11 block w-full border-slate-200 rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500" placeholder="Rechercher un QCM...">
+                <input type="text" x-model="search" class="py-3 px-11 block w-full border-slate-200 rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500" placeholder="Rechercher un QCM...">
             </div>
             <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Mes Créations (<span x-text="filteredQcms.length"></span>)</h2>
         </div>
@@ -85,33 +85,4 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </div>
-
-<script>
-function formateurQcms() {
-    return {
-        qcms: [],
-        loading: false,
-        search: '',
-        get filteredQcms() {
-            if (!this.search) return this.qcms;
-            const term = this.search.toLowerCase();
-            return this.qcms.filter(q => q.title.toLowerCase().includes(term));
-        },
-        async init() {
-            await this.fetchQcms();
-        },
-        async fetchQcms() {
-            this.loading = true;
-            try {
-                const response = await fetch(`${Alpine.store('config').apiBaseUrl}/formateur/qcms`);
-                this.qcms = await response.json();
-            } catch (e) {
-                console.error('Failed to load QCMs', e);
-            } finally {
-                this.loading = false;
-            }
-        }
-    }
-}
-</script>
 @endsection
