@@ -30,6 +30,7 @@ Route::prefix('qcm')->group(function () {
 Route::prefix('formateur')->group(function () {
     Route::get('/profile', [FormateurController::class, 'profile']);
     Route::get('/qcms', [FormateurController::class, 'qcms']);
+    Route::get('/qcms/{qcmId}/results', [FormateurController::class, 'qcmResults']);
     Route::get('/cohorts', [FormateurController::class, 'cohorts']);
     Route::get('/cohorts/{cohortId}/students', [FormateurController::class, 'cohortStudents']);
     Route::get('/students/{studentId}/performance', [FormateurController::class, 'studentPerformance']);

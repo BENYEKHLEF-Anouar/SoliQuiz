@@ -151,31 +151,97 @@ Routes:
 
 ## Part 5: Running Both Simultaneously
 
-**Terminal 1: SoliQuiz API**
+> **Both servers must be running at all times** for the mobile app to fetch data.
+
+**Terminal 1 — SoliQuiz API (port 8000)**
 ```bash
 cd D:\WebProjects\SoliQuiz\SoliQuiz
 php artisan serve --port=8000
 ```
 
-**Terminal 2: SoliQuiz-mobile**
+**Terminal 2 — SoliQuiz-mobile server (port 8001)**
 ```bash
 cd D:\WebProjects\SoliQuiz\SoliQuiz-mobile
-npm run dev
 php artisan serve --port=8001
 ```
 
-**Note**: Run `npm run build` after any CSS/JS changes.
+**Terminal 3 — Vite dev server (live CSS/JS rebuild)**
+```bash
+cd D:\WebProjects\SoliQuiz\SoliQuiz-mobile
+npm run dev
+```
+
+> Run `npm run build` instead of `npm run dev` when you only need a one-time compile (e.g., before a demo).
 
 ---
 
-## Part 6: Testing Flow
+## Part 6: Accessing SoliQuiz-mobile
 
-1. Start SoliQuiz on port 8000
-2. Start SoliQuiz-mobile on port 8001
-3. Open mobile in browser: `http://localhost:8001`
-4. Click "Se Connecter maintenant" → Login page
-5. Enter any email (e.g., `test@solicode.co`) → Student dashboard
-6. Enter email with "formateur" (e.g., `formateur@solicode.co`) → Formateur QCMs
+### URL
+```
+http://localhost:8001
+```
+
+### Login Credentials (Demo)
+
+The login system uses **email-based routing** — no password check is performed in the demo. Any non-empty password works.
+
+| Role | Email | Password | Redirects to |
+|------|-------|----------|--------------|
+| 🎓 **Étudiant** | `etudiant@solicode.co` | *(any)* | `/student/dashboard` |
+| 🎓 **Étudiant** | `mehdi@solicode.co` | *(any)* | `/student/dashboard` |
+| 👨‍🏫 **Formateur** | `formateur@solicode.co` | *(any)* | `/formateur/qcms` |
+| 👨‍🏫 **Formateur** | `youssef.formateur@solicode.co` | *(any)* | `/formateur/qcms` |
+
+> **Rule**: Any email containing the word `formateur` routes to the Formateur space. All other emails route to the Student space.
+
+### Navigation Flow
+
+```
+Landing (/)
+  └─ Se Connecter → Login (/login)
+        ├─ [email with "formateur"] → Formateur QCMs (/formateur/qcms)
+        │       ├─ Notes & Suivi (/formateur/class-notes)
+        │       └─ Profil (/formateur/profile)
+        └─ [any other email]   → Student Dashboard (/student/dashboard)
+                ├─ Start QCM  (/student/qcm/{id})
+                │       └─ Results (/student/qcm/{id}/result)
+                ├─ Historique (/student/history)
+                └─ Profil     (/student/profile)
+```
+
+### Direct Access (Bypass Login)
+
+You can navigate directly to any screen without logging in:
+
+| Screen | URL |
+|--------|-----|
+| Student Dashboard | `http://localhost:8001/student/dashboard` |
+| QCM Passation | `http://localhost:8001/student/qcm/1` |
+| QCM Result | `http://localhost:8001/student/qcm/1/result` |
+| Historique | `http://localhost:8001/student/history` |
+| Profil Étudiant | `http://localhost:8001/student/profile` |
+| Formateur QCMs | `http://localhost:8001/formateur/qcms` |
+| Notes & Suivi | `http://localhost:8001/formateur/class-notes` |
+| Profil Formateur | `http://localhost:8001/formateur/profile` |
+
+### Demo Hardcoded Data
+
+All API data is fetched from the SoliQuiz backend using these hardcoded IDs:
+
+| Role | Name | API User ID |
+|------|------|-------------|
+| Étudiant | Mehdi | `4` |
+| Formateur | Youssef | `2` |
+
+> These IDs are set in `resources/js/app.js` under the `Alpine.store('config')` object.
+
+### Quick-Start Checklist
+
+- [ ] SoliQuiz API running → `http://localhost:8000/api/student/profile` returns JSON
+- [ ] SoliQuiz-mobile running → `http://localhost:8001` loads the landing page
+- [ ] CSS/JS compiled → `public/build/` directory exists (run `npm run build` if missing)
+- [ ] Open in browser in a **430px simulated mobile viewport** (Chrome DevTools → iPhone 14 Pro)
 
 ---
 

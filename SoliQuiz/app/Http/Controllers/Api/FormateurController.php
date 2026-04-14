@@ -117,4 +117,30 @@ class FormateurController extends Controller
         });
         return response()->json($history);
     }
+
+    public function qcmResults($qcmId)
+    {
+        $qcm = QCM::where('formateur_id', $this->formateurId)->findOrFail($qcmId);
+        $tentatives = Tentative::where('qcm_id', $qcmId)
+            ->whereNotNull('score_obtenu')
+            ->with('user')
+            ->orderBy('score_obtenu', 'desc')
+            ->get();
+
+        $formatted = $tentatives->map(function ($tentative) use ($qcm) {
+            return [
+                'id' => $tentative->id,
+                'studentName' => $tentative->user ? $tentative->user->prenom . ' ' . $tentative->user->nom : 'Étudiant Inconnu',
+                'score' => $tentative->score_obtenu,
+                'totalQuestions' => tap($qcm->questions)->count(),
+                'date' => $tentative->date_fin ? $tentative->date_fin->format('Y-m-d H:i') : null,
+            ];
+        });
+
+        return response()->json([
+            'qcmId' => $qcm->id,
+            'title' => $qcm->titre,
+            'results' => $formatted
+        ]);
+    }
 }
