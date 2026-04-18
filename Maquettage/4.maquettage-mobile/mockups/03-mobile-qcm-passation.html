@@ -1,189 +1,243 @@
 <!DOCTYPE html>
-<html lang="fr"
-    class="bg-slate-900 border-x border-slate-200 shadow-2xl h-[100dvh] mx-auto w-full max-w-[430px] overflow-hidden">
+<html lang="fr" class="bg-slate-900 border-x border-slate-200 shadow-2xl h-[100dvh] mx-auto w-full max-w-[430px] overflow-hidden">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Mockup: QCM Passation</title>
-    <!-- Preline Core -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.js"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
-        rel="stylesheet">
-    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Outfit', 'sans-serif'] }, colors: { primary: { 50: 'hsl(190, 80%, 95%)', 100: 'hsl(190, 80%, 90%)', 200: 'hsl(190, 80%, 80%)', 300: 'hsl(190, 80%, 70%)', 400: 'hsl(190, 80%, 60%)', 500: 'hsl(190, 80%, 45%)', 600: 'hsl(190, 80%, 35%)', 700: 'hsl(190, 80%, 25%)', 800: 'hsl(190, 80%, 15%)', 900: 'hsl(190, 80%, 5%)' }, semantic: { success: 'hsl(140, 65%, 45%)', error: 'hsl(0, 75%, 55%)', warning: 'hsl(35, 95%, 55%)', info: 'hsl(220, 80%, 55%)' } } } } };</script>
+    <title>SoliQuiz - Passation QCM</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../charte-graphique/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    },
+                    colors: {
+                        primary: {
+                            50: 'var(--color-primary-50)',
+                            100: 'var(--color-primary-100)',
+                            200: 'var(--color-primary-200)',
+                            300: 'var(--color-primary-300)',
+                            400: 'var(--color-primary-400)',
+                            500: 'var(--color-primary-500)',
+                            600: 'var(--color-primary-600)',
+                            700: 'var(--color-primary-700)',
+                            800: 'var(--color-primary-800)',
+                            900: 'var(--color-primary-900)'
+                        },
+                        semantic: {
+                            success: 'var(--color-success-500)',
+                            error: 'var(--color-error-500)',
+                            warning: 'var(--color-warning-500)',
+                            info: 'var(--color-info-500)'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
 </head>
 
-<body class="bg-slate-50 h-[100dvh] flex flex-col relative overflow-hidden font-sans">
+<body class="bg-slate-50 h-[100dvh] flex flex-col relative overflow-hidden font-sans antialiased text-slate-900">
 
-    <!-- Preline Header Pattern -->
-    <header
-        class="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-4 dark:bg-neutral-800 z-40 shrink-0 border-b border-slate-200 dark:border-neutral-700">
-        <nav class="max-w-[85rem] w-full mx-auto px-4 flex items-center justify-between" aria-label="Global">
-            <div class="flex items-center gap-x-2">
-                <span
-                    class="inline-flex items-center justify-center size-8 rounded-full bg-slate-800 text-white text-xs font-semibold leading-none dark:bg-white dark:text-slate-800">
-                    4
-                </span>
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest dark:text-neutral-500">/
-                    20</span>
+<div x-data="qcmPassation" x-init="init()" class="h-full flex flex-col relative overflow-hidden font-sans">
+    
+    <!-- Header Pattern (Inlined) -->
+    <header class="bg-white/80 backdrop-blur-md px-5 pt-safe-top pb-4 border-b border-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.02)] shrink-0 sticky top-0 z-40">
+        <div class="h-[44px] hidden ios:block"></div>
+        <div class="flex justify-between items-center mt-2">
+            <div class="flex items-center gap-3">
+                <div class="size-10 bg-slate-950 text-white rounded-xl flex items-center justify-center shadow-lg shadow-slate-950/20">
+                    <span class="text-sm font-black italic" x-text="currentIndex + 1"></span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Progression</span>
+                    <span class="text-xs font-black text-slate-600">Question <span x-text="currentIndex + 1"></span> <span class="text-slate-300">/</span> <span x-text="totalQuestions"></span></span>
+                </div>
             </div>
-            <div class="flex items-center gap-x-2">
-                <!-- Preline Soft Badge Pattern -->
-                <span
-                    class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-semantic-error/20 text-semantic-error dark:bg-semantic-error/30 dark:text-semantic-error">
-                    <svg class="size-3 animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <div class="flex items-center gap-x-3">
+                <!-- Timer Badge -->
+                <div class="inline-flex items-center gap-x-2 py-2 px-4 rounded-[1.25rem] bg-semantic-error/5 text-semantic-error border border-semantic-error/10">
+                    <svg class="size-4 animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                         <circle cx="12" cy="12" r="10" />
                         <polyline points="12 6 12 12 16 14" />
                     </svg>
-                    03:45
-                </span>
-                <a href="02-mobile-dashboard.html"
-                    class="size-8 inline-flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 focus:outline-none transition-colors ml-1">
-                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 6 18" />
-                        <path d="m6 6 12 12" />
+                    <span class="text-[11px] font-black tracking-widest italic" x-text="timerDisplay">00:00</span>
+                </div>
+                
+                <a href="02-mobile-dashboard.html" class="size-10 inline-flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-slate-100 transition-colors active:scale-90 outline-none">
+                    <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M18 6 6 18M6 6l12 12" />
                     </svg>
                 </a>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <!-- Preline Progress Bar -->
-    <div class="w-full h-1.5 bg-slate-200 dark:bg-neutral-700 shrink-0">
-        <div class="h-1.5 bg-primary-600 dark:bg-primary-500 transition-all duration-500" style="width: 20%"></div>
+    <!-- Progress Bar -->
+    <div class="w-full h-1 bg-slate-50 shrink-0 relative overflow-hidden">
+        <div class="h-1 bg-primary-500 transition-all duration-1000 cubic-bezier(0.4, 0, 0.2, 1)" :style="`width: ${((currentIndex + 1) / totalQuestions) * 100}%`"></div>
     </div>
 
     <!-- Main Workspace -->
-    <main class="flex-1 overflow-y-auto w-full px-4 py-8 hide-scrollbar">
-        <h1 class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white leading-snug mb-8 font-heading">
-            Parmi les propositions suivantes, laquelle crée un commentaire sur plusieurs lignes en PHP ?
-        </h1>
-
-        <!-- PRELINE ADVANCED RADIO BUTTONS -->
-        <div class="grid space-y-3 pb-24">
-            <!-- Option 1 -->
-            <label for="hs-radio-in-form-1"
-                class="flex p-4 w-full bg-white border border-slate-200 rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 cursor-pointer hover:bg-slate-50 active:scale-[0.98] transition-all has-[:checked]:border-primary-600 has-[:checked]:bg-primary-50/50">
-                <input type="radio" name="hs-radio-in-form"
-                    class="shrink-0 mt-0.5 border-slate-300 rounded-full text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-500 dark:checked:bg-primary-500 dark:checked:border-primary-500 dark:focus:ring-offset-slate-800"
-                    id="hs-radio-in-form-1">
-                <span class="text-sm text-slate-800 ms-3 dark:text-neutral-300 font-medium font-mono text-base">// Ceci
-                    est un commentaire //</span>
-            </label>
-
-            <!-- Option 2 (Checked) -->
-            <label for="hs-radio-in-form-2"
-                class="flex p-4 w-full bg-primary-50/80 border-2 border-primary-600 rounded-xl text-sm cursor-pointer shadow-sm active:scale-[0.98] transition-all">
-                <input type="radio" name="hs-radio-in-form"
-                    class="shrink-0 mt-0.5 border-slate-300 rounded-full text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none"
-                    id="hs-radio-in-form-2" checked>
-                <span class="text-sm text-primary-800 ms-3 font-bold font-mono text-base">/* Ceci est un commentaire
-                    */</span>
-            </label>
-
-            <!-- Option 3 -->
-            <label for="hs-radio-in-form-3"
-                class="flex p-4 w-full bg-white border border-slate-200 rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 cursor-pointer hover:bg-slate-50 active:scale-[0.98] transition-all has-[:checked]:border-primary-600 has-[:checked]:bg-primary-50">
-                <input type="radio" name="hs-radio-in-form"
-                    class="shrink-0 mt-0.5 border-slate-300 rounded-full text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none"
-                    id="hs-radio-in-form-3">
-                <span class="text-sm text-slate-800 ms-3 dark:text-neutral-300 font-medium font-mono text-base">&lt;!--
-                    Comm --&gt;</span>
-            </label>
+    <main class="flex-1 overflow-y-auto w-full px-6 py-10 pb-40 hide-scrollbar">
+        <!-- Global Loading State -->
+        <div x-show="loading" 
+             x-transition:leave="transition ease-in duration-500"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="absolute inset-0 z-50 bg-white flex items-center justify-center">
+            <div class="flex flex-col items-center gap-4">
+                <div class="relative size-16">
+                    <div class="absolute inset-0 border-4 border-primary-500/10 rounded-full"></div>
+                    <div class="absolute inset-0 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Extraction des données...</p>
+            </div>
         </div>
+
+        <template x-if="currentQuestion && !loading">
+            <div x-show="!loading"
+                 x-transition:enter="transition ease-out duration-700 delay-300"
+                 x-transition:enter-start="opacity-0 translate-y-8"
+                 x-transition:enter-end="opacity-100 translate-y-0">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="size-1.5 rounded-full bg-primary-500"></span>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">ÉVALUATION EN COURS</span>
+                </div>
+                <h1 class="text-3xl font-heading font-extrabold text-slate-900 leading-tight mb-12" x-text="currentQuestion.text"></h1>
+
+                <div class="grid space-y-5">
+                    <template x-for="(option, index) in currentQuestion.options" :key="option.id">
+                        <label class="flex items-center p-6 w-full border border-slate-100 rounded-[2rem] cursor-pointer transition-all active:scale-[0.98] group relative shadow-[0_4px_15px_-3px_rgba(0,0,0,0.02)]"
+                            :class="selectedOptionIds.includes(option.id) 
+                                ? 'bg-primary-50/30 border-primary-500/30 shadow-xl shadow-primary-500/5' 
+                                : 'bg-white hover:border-slate-200'">
+                            
+                            <div class="flex items-center justify-center shrink-0">
+                                <input type="radio" 
+                                    :name="'question-' + currentQuestion.id" 
+                                    :value="option.id"
+                                    class="hidden"
+                                    @change="selectOption(option.id)" 
+                                    :checked="selectedOptionIds.includes(option.id)">
+                                <div class="size-7 rounded-2xl border-2 flex items-center justify-center transition-all duration-500"
+                                    :class="selectedOptionIds.includes(option.id) ? 'border-primary-500 bg-primary-500 shadow-lg shadow-primary-500/30' : 'border-slate-100 bg-slate-50 group-hover:border-slate-200'">
+                                    <svg x-show="selectedOptionIds.includes(option.id)" class="size-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                            </div>
+                            
+                            <span class="text-lg ms-5 transition-all font-bold tracking-tight leading-tight" 
+                                :class="selectedOptionIds.includes(option.id) ? 'text-primary-950' : 'text-slate-800'" 
+                                x-text="option.text"></span>
+
+                            <span class="absolute top-1/2 -translate-y-1/2 right-6 text-[10px] font-black text-slate-200 group-hover:text-slate-300 transition-colors uppercase italic" x-text="String.fromCharCode(65 + index)"></span>
+                        </label>
+                    </template>
+                </div>
+            </div>
+        </template>
     </main>
 
-    <!-- Preline Bottom Sticky Footer -->
-    <div
-        class="fixed inset-x-0 bottom-8 z-50 bg-white border-t border-slate-200 dark:bg-neutral-900 dark:border-neutral-800 max-w-[430px] mx-auto rounded-b-[2.5rem]">
-        <div class="p-4 flex gap-3 items-center justify-between pb-[env(safe-area-inset-bottom,20px)]">
-            <!-- Preline Secondary Icon Button -->
-            <button type="button"
-                class="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-slate-200 text-slate-500 hover:border-primary-600 hover:text-primary-600 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-semantic-info dark:hover:border-semantic-info">
-                <svg class="shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Bottom Sticky Footer -->
+    <div class="fixed inset-x-0 bottom-0 z-50 bg-white/80 backdrop-blur-2xl border-t border-slate-100 max-w-[430px] mx-auto rounded-b-[2.5rem]">
+        <div class="p-6 flex gap-4 items-center justify-between pb-[env(safe-area-inset-bottom,32px)]">
+            
+            <button type="button" @click="prevQuestion()" :disabled="currentIndex === 0"
+                class="size-16 inline-flex justify-center items-center rounded-2xl border border-slate-100 bg-slate-50 text-slate-400 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-90 outline-none">
+                <svg class="size-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m15 18-6-6 6-6" />
                 </svg>
             </button>
 
-            <!-- Preline Primary Button -->
-            <button type="button"
-                class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none">
-                Question Suivante
-                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <button type="button" @click="nextQuestion()" :disabled="!selectedOptionIds.length"
+                class="flex-1 h-16 inline-flex justify-center items-center gap-x-2 text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl border border-transparent bg-slate-950 text-white shadow-2xl shadow-slate-950/20 hover:bg-slate-900 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] transition-all outline-none">
+                <span x-text="currentIndex === totalQuestions - 1 ? 'Soumettre l\'examen' : 'Suivante'"></span>
+                <svg x-show="currentIndex !== totalQuestions - 1" class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m9 18 6-6-6-6" />
                 </svg>
             </button>
         </div>
     </div>
 
-    <style>
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-    </style>
-    <!-- Interactions Basiques JS -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const labels = document.querySelectorAll('.grid.space-y-3 label');
-            const radios = document.querySelectorAll('input[type="radio"][name="hs-radio-in-form"]');
+</div>
 
-            radios.forEach(radio => {
-                radio.addEventListener('change', (e) => {
-                    // Reset all labels
-                    labels.forEach(label => {
-                        label.className = "flex p-4 w-full bg-white border border-slate-200 rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500 cursor-pointer hover:bg-slate-50 active:scale-[0.98] transition-all";
-                        const span = label.querySelector('span.text-sm');
-                        if (span) {
-                            span.classList.remove('text-primary-800', 'font-bold');
-                            span.classList.add('text-slate-800', 'font-medium');
-                        }
-                    });
-
-                    // Set active label
-                    if (e.target.checked) {
-                        const activeLabel = e.target.closest('label');
-                        activeLabel.className = "flex p-4 w-full bg-primary-50/80 border-2 border-primary-600 rounded-xl text-sm cursor-pointer shadow-sm active:scale-[0.98] transition-all";
-                        const span = activeLabel.querySelector('span.text-sm');
-                        if (span) {
-                            span.classList.remove('text-slate-800', 'font-medium');
-                            span.classList.add('text-primary-800', 'font-bold');
-                        }
-                    }
-                });
-            });
-
-            // Simulate Timer
-            const timerEl = document.querySelector('.animate-pulse').nextSibling;
-            const timerContainer = timerEl.parentElement;
-            if (timerContainer) {
-                // Get the text node containing the time
-                const textNodes = Array.from(timerContainer.childNodes).filter(node => node.nodeType === 3 && node.textContent.trim().includes(':'));
-                if (textNodes.length > 0) {
-                    let timeParts = textNodes[0].textContent.trim().split(':');
-                    let minutes = parseInt(timeParts[0]);
-                    let seconds = parseInt(timeParts[1]);
-
-                    setInterval(() => {
-                        if (seconds === 0) {
-                            if (minutes === 0) return;
-                            minutes--;
-                            seconds = 59;
-                        } else {
-                            seconds--;
-                        }
-                        textNodes[0].textContent = ` ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                    }, 1000);
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('qcmPassation', () => ({
+            questions: [
+                { id: 1, text: 'Qu\'est-ce que PHP ?', options: [{id: 1, text: 'Un langage de script côté serveur'}, {id: 2, text: 'Un logiciel de dessin'}, {id: 3, text: 'Un type de base de données'}], type: 'unique' },
+                { id: 2, text: 'Quelle version de PHP a introduit le typage strict ?', options: [{id: 4, text: 'PHP 5.6'}, {id: 5, text: 'PHP 7.0'}, {id: 6, text: 'PHP 8.2'}], type: 'unique' }
+            ],
+            currentIndex: 0,
+            loading: true,
+            selectedOptions: {},
+            timerMinutes: 5,
+            timerSeconds: 0,
+            timerInterval: null,
+            get totalQuestions() { return this.questions.length; },
+            get currentQuestion() { return this.questions[this.currentIndex]; },
+            get selectedOptionIds() {
+                if (!this.currentQuestion) return [];
+                return this.selectedOptions[this.currentQuestion.id] || [];
+            },
+            get timerDisplay() {
+                return `${this.timerMinutes.toString().padStart(2, '0')}:${this.timerSeconds.toString().padStart(2, '0')}`;
+            },
+            async init() {
+                this.loading = true;
+                this.questions.forEach(q => { this.selectedOptions[q.id] = []; });
+                setTimeout(() => { this.loading = false; this.startTimer(); }, 800);
+            },
+            selectOption(optionId) {
+                const q = this.currentQuestion;
+                if (!q) return;
+                this.selectedOptions[q.id] = [optionId];
+            },
+            prevQuestion() {
+                if (this.currentIndex > 0) this.currentIndex--;
+            },
+            nextQuestion() {
+                if (this.currentIndex < this.totalQuestions - 1) {
+                    this.currentIndex++;
+                } else {
+                    window.location.href = '04-mobile-qcm-result.html';
                 }
+            },
+            startTimer() {
+                this.timerInterval = setInterval(() => {
+                    if (this.timerSeconds === 0) {
+                        if (this.timerMinutes === 0) {
+                            clearInterval(this.timerInterval);
+                            return;
+                        }
+                        this.timerMinutes--;
+                        this.timerSeconds = 59;
+                    } else {
+                        this.timerSeconds--;
+                    }
+                }, 1000);
             }
-        });
-    </script>
-</body>
+        }));
+    });
+</script>
 
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+</style>
+
+</body>
 </html>

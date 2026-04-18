@@ -154,9 +154,3 @@ Open `http://localhost:8001/student/dashboard` (or any other route) in a browser
 3. Implement write operations (formateurs can create/edit QCMs, students can submit answers).
 4. Add real‑time features (e.g., timer, auto‑save) using Alpine.js or Livewire.
 5. Package the mobile app as an APK with NativePHP.
-
----
-
-**Author**: AI Assistant  
-**Date**: 31 March 2026  
-**Project**: SoliQuiz – Système de Gestion & d’Auto‑évaluation QCM
