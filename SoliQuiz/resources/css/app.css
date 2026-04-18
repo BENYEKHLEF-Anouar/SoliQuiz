@@ -6,6 +6,99 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+
+    --color-primary-50: var(--color-primary-50);
+    --color-primary-100: var(--color-primary-100);
+    --color-primary-200: var(--color-primary-200);
+    --color-primary-300: var(--color-primary-300);
+    --color-primary-400: var(--color-primary-400);
+    --color-primary-500: var(--color-primary-500);
+    --color-primary-600: var(--color-primary-600);
+    --color-primary-700: var(--color-primary-700);
+    --color-primary-800: var(--color-primary-800);
+    --color-primary-900: var(--color-primary-900);
+
+    --color-semantic-success: var(--color-success-500);
+    --color-semantic-warning: var(--color-warning-500);
+    --color-semantic-error: var(--color-error-500);
+    --color-semantic-info: var(--color-info-500);
+}
+
+:root {
+    --color-primary-50: #e6f0ff;
+    --color-primary-100: #cce0ff;
+    --color-primary-200: #99c2ff;
+    --color-primary-300: #66a3ff;
+    --color-primary-400: #3385ff;
+    --color-primary-500: #0066ff;
+    --color-primary-600: #0052cc;
+    --color-primary-700: #003d99;
+    --color-primary-800: #002966;
+    --color-primary-900: #001433;
+
+    --color-success-500: #22c55e;
+    --color-warning-500: #f59e0b;
+    --color-error-500: #ef4444;
+    --color-info-500: #3b82f6;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.font-heading {
+    font-family: 'Outfit', sans-serif;
+}
+
+@keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(15px, 25px); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes pulse-soft {
+    0%, 100% { opacity: 0.1; transform: scale(1); }
+    50% { opacity: 0.15; transform: scale(1.1); }
+}
+
+.animate-bounce-slow {
+    animation: bounce-slow 4s ease-in-out infinite;
+}
+
+.animate-float {
+    animation: float 10s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+    animation: pulse-soft 8s ease-in-out infinite;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--color-primary-200), transparent 70%);
+    filter: blur(100px);
+    border-radius: 50%;
+    z-index: -10;
+    pointer-events: none;
 }

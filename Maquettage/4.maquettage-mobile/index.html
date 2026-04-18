@@ -1,40 +1,34 @@
-﻿<!DOCTYPE html>
-<html lang="fr"
-    class="bg-slate-900 border-x border-slate-200 shadow-2xl h-[100dvh] mx-auto w-full max-w-[430px] overflow-hidden">
+<!DOCTYPE html>
+<html lang="fr" class="bg-slate-900 border-x border-slate-200 shadow-2xl h-[100dvh] mx-auto w-full max-w-[430px] overflow-hidden">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SoliQuiz: Mobile UI Kit</title>
+    <title>SoliQuiz: Mobile UI Library</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Outfit:wght@800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="charte-graphique/style.css">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
                         heading: ['Outfit', 'sans-serif']
                     },
                     colors: {
                         primary: {
                             50: 'var(--color-primary-50)',
                             100: 'var(--color-primary-100)',
-                            200: 'var(--color-primary-200)',
-                            300: 'var(--color-primary-300)',
-                            400: 'var(--color-primary-400)',
                             500: 'var(--color-primary-500)',
-                            600: 'var(--color-primary-600)',
-                            700: 'var(--color-primary-700)',
-                            800: 'var(--color-primary-800)',
-                            900: 'var(--color-primary-900)'
-                        },
-                        semantic: {
-                            success: 'var(--color-success-500)',
-                            error: 'var(--color-error-500)',
-                            warning: 'var(--color-warning-500)',
-                            info: 'var(--color-info-500)'
                         }
                     }
                 }
@@ -43,256 +37,181 @@
     </script>
 </head>
 
-<body class="bg-slate-100 flex flex-col h-full font-sans overflow-hidden">
+<body class="bg-slate-50 flex flex-col h-full font-sans overflow-hidden antialiased">
 
-    <header class="bg-white px-5 pt-10 pb-4 shadow-[0_4px_10px_-4px_rgba(0,0,0,0.1)] z-20 shrink-0">
-        <h1 class="text-2xl font-heading font-bold text-slate-900 leading-tight">Mobile UI Library</h1>
-        <p class="text-xs font-semibold text-primary-500 uppercase tracking-widest mt-1">SoliQuiz APP</p>
+    <!-- Header -->
+    <header class="bg-white px-6 pt-12 pb-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] z-20 shrink-0 border-b border-slate-100">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="size-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/20">
+                <svg class="text-white size-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><path d="m9 15 2 2 4-4" /></svg>
+            </div>
+            <h1 class="text-2xl font-heading font-extrabold text-slate-900 tracking-tight leading-none">Mobile UI <span class="text-primary-500">Kit</span></h1>
+        </div>
+        <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">SoliQuiz v1.0 • High-Fidelity</p>
     </header>
 
-    <main class="flex-1 overflow-y-auto px-5 py-6">
+    <main class="flex-1 overflow-y-auto px-6 py-8 hide-scrollbar pb-12">
 
-        <div class="mb-6">
-            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-slate-800"></span> Fondations
+        <!-- Foundation -->
+        <div class="mb-10">
+            <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Fondations
             </h2>
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50 space-y-3">
-                <a href="charte-graphique/index.html"
-                    class="flex justify-between items-center bg-primary-50 p-3 rounded-xl active:bg-primary-100">
-                    <span class="text-sm font-semibold text-primary-700">Couleurs & Typographie</span>
-                    <svg class="size-4 text-primary-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+            <div class="bg-white rounded-[2rem] p-4 shadow-sm border border-slate-100 space-y-2">
+                <a href="charte-graphique/index.html" class="flex justify-between items-center bg-primary-50 px-4 py-3.5 rounded-2xl active:scale-[0.98] transition-all">
+                    <span class="text-xs font-black uppercase tracking-tight text-primary-700">Couleurs & Typographie</span>
+                    <svg class="size-4 text-primary-400" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg>
                 </a>
             </div>
         </div>
 
-        <div class="mb-6">
-            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+        <!-- Atoms -->
+        <div class="mb-10">
+            <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Atoms
             </h2>
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50 space-y-3">
-                <a href="components-lib/atoms/logo/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Logo App</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+            <div class="bg-white rounded-[2rem] p-4 shadow-sm border border-slate-100 grid grid-cols-2 gap-2 text-center">
+                <a href="components-lib/atoms/logo/index.html" class="p-4 bg-slate-50 rounded-2xl active:scale-95 transition-all">
+                    <span class="text-[10px] font-black uppercase tracking-tighter text-slate-500">Logo</span>
                 </a>
-                <a href="components-lib/atoms/avatar/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Avatar</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+                <a href="components-lib/atoms/button/index.html" class="p-4 bg-slate-50 rounded-2xl active:scale-95 transition-all">
+                    <span class="text-[10px] font-black uppercase tracking-tighter text-slate-500">Buttons</span>
                 </a>
-                <a href="components-lib/atoms/button/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Button (Touch optimized)</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+                <a href="components-lib/atoms/input/index.html" class="p-4 bg-slate-50 rounded-2xl active:scale-95 transition-all">
+                    <span class="text-[10px] font-black uppercase tracking-tighter text-slate-500">Inputs</span>
                 </a>
-                <a href="components-lib/atoms/input/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Input Form</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+                <a href="components-lib/atoms/badge/index.html" class="p-4 bg-slate-50 rounded-2xl active:scale-95 transition-all">
+                    <span class="text-[10px] font-black uppercase tracking-tighter text-slate-500">Badges</span>
                 </a>
-                <a href="components-lib/atoms/radio-check/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Radio & Checkbox</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+                <a href="components-lib/atoms/avatar/index.html" class="p-4 bg-slate-50 rounded-2xl active:scale-95 transition-all">
+                    <span class="text-[10px] font-black uppercase tracking-tighter text-slate-500">Avatars</span>
                 </a>
-                <a href="components-lib/atoms/badge/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Badge & Indicators</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
-                </a>
-                <a href="components-lib/atoms/progress-bar/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Progress Bar</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
-                </a>
-                <a href="components-lib/atoms/icon/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Icon Button</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+                <a href="components-lib/atoms/progress-bar/index.html" class="p-4 bg-slate-50 rounded-2xl active:scale-95 transition-all">
+                    <span class="text-[10px] font-black uppercase tracking-tighter text-slate-500">Progress</span>
                 </a>
             </div>
         </div>
 
-        <div class="mb-6">
-            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+        <!-- Molecules -->
+        <div class="mb-10">
+            <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Molecules
             </h2>
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50 space-y-3">
-                <a href="components-lib/molecules/header-app/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Header App</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+            <div class="bg-white rounded-[2rem] p-4 shadow-sm border border-slate-100 space-y-2">
+                <a href="components-lib/molecules/header-app/index.html" class="flex justify-between items-center bg-slate-50 px-4 py-3.5 rounded-2xl active:bg-slate-100 transition-colors">
+                    <span class="text-[10px] font-black uppercase tracking-tight text-slate-600">Header App</span>
+                    <svg class="size-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg>
                 </a>
-                <a href="components-lib/molecules/header-timer/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Header Timer Focus</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+                <a href="components-lib/molecules/bottom-nav/index.html" class="flex justify-between items-center bg-slate-50 px-4 py-3.5 rounded-2xl active:bg-slate-100 transition-colors">
+                    <span class="text-[10px] font-black uppercase tracking-tight text-slate-600">Bottom Navigation</span>
+                    <svg class="size-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg>
                 </a>
-                <a href="components-lib/molecules/bottom-nav/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Bottom Navigation Bar</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+                <a href="components-lib/molecules/card-qcm/index.html" class="flex justify-between items-center bg-slate-50 px-4 py-3.5 rounded-2xl active:bg-slate-100 transition-colors">
+                    <span class="text-[10px] font-black uppercase tracking-tight text-slate-600">Evaluation Cards</span>
+                    <svg class="size-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg>
                 </a>
-                <a href="components-lib/molecules/card-qcm/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Card QCM (Touch Layout)</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
-                </a>
-                <a href="components-lib/molecules/list-item/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">List Item (Historique)</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
-                </a>
-                <a href="components-lib/molecules/score-circle/index.html"
-                    class="flex justify-between items-center bg-slate-50 p-3 rounded-xl active:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Score Circle Graph</span>
-                    <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+                <a href="components-lib/molecules/score-circle/index.html" class="flex justify-between items-center bg-slate-50 px-4 py-3.5 rounded-2xl active:bg-slate-100 transition-colors">
+                    <span class="text-[10px] font-black uppercase tracking-tight text-slate-600">Score Dashboard</span>
+                    <svg class="size-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg>
                 </a>
             </div>
         </div>
 
-        <div class="mb-4">
-            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> App Screens
+        <!-- App Screens -->
+        <div class="mb-10">
+            <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Mobile Mockups
             </h2>
-            <div class="grid gap-3">
-                <a href="mockups/01-mobile-login.html"
-                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
-                    <div
-                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
-                        1</div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">01. Authentification</h3>
-                        <p class="text-[11px] text-slate-500 font-medium">Ecran initial</p>
+            <div class="grid gap-4">
+                <a href="mockups/00-mobile-landing.html" class="group flex items-center p-5 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center font-black shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-colors">00</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-slate-900 text-base leading-tight">Landing Page</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-1">Introduction & Branding</p>
                     </div>
                 </a>
 
-                <a href="mockups/02-mobile-dashboard.html"
-                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
-                    <div
-                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
-                        2</div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">02. Apprenant Dashboard</h3>
-                        <p class="text-[11px] text-slate-500 font-medium">Menu, Stats, Bottom Nav</p>
+                <a href="mockups/01-mobile-login.html" class="group flex items-center p-5 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center font-black shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-colors">01</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-slate-900 text-base leading-tight">Authentification</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-1">Login Apprenant / Formateur</p>
                     </div>
                 </a>
 
-                <a href="mockups/03-mobile-qcm-passation.html"
-                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
-                    <div
-                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
-                        3</div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">03. Passation QCM</h3>
-                        <p class="text-[11px] text-slate-500 font-medium">Vue immersive, Timer, Input Check</p>
+                <a href="mockups/02-mobile-dashboard.html" class="group flex items-center p-5 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center font-black shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-colors">02</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-slate-900 text-base leading-tight">Dashboard Étudiant</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-1">Espace de travail principal</p>
                     </div>
                 </a>
 
-                <a href="mockups/04-mobile-qcm-result.html"
-                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
-                    <div
-                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
-                        4</div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">04. Résultat Évaluation</h3>
-                        <p class="text-[11px] text-slate-500 font-medium">Score Apprenant et Correction</p>
+                <a href="mockups/03-mobile-qcm-passation.html" class="group flex items-center p-5 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center font-black shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-colors">03</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-slate-900 text-base leading-tight">Passation QCM</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-1">Timer, Questions & Radio check</p>
                     </div>
                 </a>
 
-
-                <a href="mockups/05-mobile-history.html"
-                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
-                    <div
-                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
-                        5</div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">05. Historique Apprenant</h3>
-                        <p class="text-[11px] text-slate-500 font-medium">Anciennes passes et notes</p>
+                <a href="mockups/04-mobile-qcm-result.html" class="group flex items-center p-5 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center font-black shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-colors">04</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-slate-900 text-base leading-tight">Résultats & Score</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-1">Analyse détaillée du score</p>
                     </div>
                 </a>
 
-                <a href="mockups/06-mobile-formateur-qcms.html"
-                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
-                    <div
-                        class="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center shrink-0">
-                        6</div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">06. Mes QCM (Formateur)</h3>
-                        <p class="text-[11px] text-slate-500 font-medium">Listing et gestion de bibliothèque</p>
+                <a href="mockups/05-mobile-history.html" class="group flex items-center p-5 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center font-black shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-colors">05</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-slate-900 text-base leading-tight">Historique</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-1">Suivi des performances passées</p>
                     </div>
                 </a>
 
-                <a href="mockups/07-mobile-formateur-class-notes.html"
-                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
-                    <div
-                        class="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center shrink-0">
-                        7</div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">07. Notes Classe (Formateur)</h3>
-                        <p class="text-[11px] text-slate-500 font-medium">Suivi pédagogique centralisé</p>
+                <a href="mockups/08-mobile-profile.html" class="group flex items-center p-5 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center font-black shrink-0 group-hover:bg-primary-500 group-hover:text-white transition-colors">08</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-slate-900 text-base leading-tight">Profil Étudiant</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-1">Paramètres du compte</p>
                     </div>
                 </a>
 
-                <a href="mockups/08-mobile-profile.html"
-                    class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200/50 active:border-primary-500 transition-colors">
-                    <div
-                        class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shrink-0">
-                        8</div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-[15px] leading-snug">08. Profil Utilisateur</h3>
-                        <p class="text-[11px] text-slate-500 font-medium">Gestion du compte et déconnexion</p>
+                <div class="h-px bg-slate-100 my-4 mx-10"></div>
+
+                <a href="mockups/06-mobile-formateur-qcms.html" class="group flex items-center p-5 bg-slate-950 border border-white/5 rounded-[2.5rem] shadow-2xl active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-500 text-white rounded-2xl flex items-center justify-center font-black shrink-0">06</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-white text-base leading-tight">Mes QCM (Formateur)</h3>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mt-1">Gestion de bibliothèque</p>
+                    </div>
+                </a>
+
+                <a href="mockups/07-mobile-formateur-class-notes.html" class="group flex items-center p-5 bg-slate-950 border border-white/5 rounded-[2.5rem] shadow-2xl active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-500 text-white rounded-2xl flex items-center justify-center font-black shrink-0">07</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-white text-base leading-tight">Notes & Classes</h3>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mt-1">Suivi pédagogique par cohorte</p>
+                    </div>
+                </a>
+
+                <a href="mockups/09-mobile-formateur-profile.html" class="group flex items-center p-5 bg-slate-950 border border-white/5 rounded-[2.5rem] shadow-2xl active:scale-[0.98] transition-all">
+                    <div class="size-12 bg-primary-500 text-white rounded-2xl flex items-center justify-center font-black shrink-0">09</div>
+                    <div class="ms-5">
+                        <h3 class="font-extrabold text-white text-base leading-tight">Profil Formateur</h3>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mt-1">Réglages expert</p>
                     </div>
                 </a>
             </div>
         </div>
 
     </main>
+    
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </body>
 
 </html>

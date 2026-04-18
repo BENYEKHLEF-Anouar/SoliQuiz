@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz - L'évaluation interactive par Solicode</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden relative">
+
+    <!-- Background Blobs -->
+    <div class="blob opacity-20 -top-24 -left-24 animate-pulse-soft"></div>
+    <div class="blob opacity-10 top-1/2 right-0 animate-float"></div>
+    <div class="blob opacity-15 top-[70%] -left-48 animate-pulse-soft" style="background: linear-gradient(to left, #38bdf8, transparent)"></div>
+
+    <!-- Header / Nav -->
+    <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100">
+        <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2 group outline-none">
+                <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/10 transition-transform group-hover:scale-110">
+                    <svg class="text-white size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <path d="m9 15 2 2 4-4" />
+                    </svg>
+                </div>
+                <span class="text-2xl font-heading font-bold tracking-tight text-slate-900">Soli<span class="text-primary-500">Quiz</span></span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Fonctionnalités</a>
+                <a href="#roles" class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Utilisation</a>
+                <a href="http://localhost:8001" target="_blank" class="py-3 px-6 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/25 active:scale-95 text-sm uppercase tracking-widest">
+                    Se Connecter
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section class="relative py-20 lg:py-32 overflow-hidden reveal">
+            <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+                <div class="relative z-10">
+                    <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6">
+                        Première version 1.0
+                    </span>
+                    <h1 class="text-5xl lg:text-7xl font-heading font-bold text-slate-900 leading-[1.1] mb-8">
+                        L'évaluation qui <span class="text-primary-500">booste</span> l'apprentissage.
+                    </h1>
+                    <p class="text-lg text-slate-600 mb-10 leading-relaxed max-w-xl">
+                        SoliQuiz transforme vos sessions d'évaluation en expériences interactives. Synchronisé en temps réel avec SoliLMS pour un suivi sans effort.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="http://localhost:8001" target="_blank" class="py-4 px-10 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all shadow-xl shadow-primary-500/30 text-center uppercase tracking-widest">
+                            Commencer maintenant
+                        </a>
+                        <a href="#features" class="py-4 px-10 bg-white text-slate-700 border border-slate-200 font-bold rounded-2xl hover:bg-slate-50 transition-all text-center uppercase tracking-widest">
+                            Découvrir
+                        </a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-0 bg-primary-500/10 rounded-full blur-3xl scale-125 -z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1000" alt="Collaboration" class="rounded-[2.5rem] shadow-2xl border-4 border-white">
+                    <!-- Float Card -->
+                    <div class="absolute -bottom-10 -left-10 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 hidden sm:block max-w-[200px] animate-bounce-slow">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="size-2 rounded-full bg-emerald-500 animate-ping"></div>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Sync Active</span>
+                        </div>
+                        <p class="text-sm font-bold text-slate-900">SoliLMS Connecté</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-24 bg-white/40 backdrop-blur-sm reveal">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-20">
+                    <h2 class="text-xs font-black text-primary-500 uppercase tracking-[0.3em] mb-4">Pourquoi choisir SoliQuiz ?</h2>
+                    <p class="text-3xl md:text-4xl font-heading font-bold text-slate-900">Des outils puissants pour une éducation moderne.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-white p-10 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                        <div class="size-14 bg-primary-50 text-primary-500 rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Temps Réel</h3>
+                        <p class="text-slate-500 leading-relaxed text-sm">Visualisez les réponses de vos apprenants en direct et réajustez votre cours instantanément.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="bg-white p-10 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                        <div class="size-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 text-slate-900">Sync SoliLMS</h3>
+                        <p class="text-slate-600 leading-relaxed text-sm">Plus besoin de copier les notes. Tout est exporté automatiquement vers votre plateforme LMS.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="bg-white p-10 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                        <div class="size-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 text-slate-900">Analyses Précises</h3>
+                        <p class="text-slate-600 leading-relaxed text-sm">Identifiez les compétences non acquises par cohorte grâce à nos graphiques de performance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roles Section -->
+        <section id="roles" class="py-24 reveal">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h2 class="text-3xl lg:text-4xl font-heading font-bold text-slate-900 mb-8">Un outil, deux univers.</h2>
+                        <div class="space-y-8">
+                            <div class="flex gap-6">
+                                <span class="size-10 rounded-full bg-primary-100 text-primary-600 font-bold flex items-center justify-center shrink-0">1</span>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-2">Pour l'Apprenant</h4>
+                                    <p class="text-slate-500 text-sm">Espace personnel, suivi de progression, historique de résultats et gamification via podium.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6">
+                                <span class="size-10 rounded-full bg-primary-100 text-primary-600 font-bold flex items-center justify-center shrink-0">2</span>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-2">Pour le Formateur</h4>
+                                    <p class="text-slate-500 text-sm">Éditeur de QCM intuitif, gestion de cohortes, supervision en direct et rapports automatisés.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 rounded-[3rem] p-12 text-center relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl"></div>
+                        <h3 class="text-2xl font-heading font-bold text-white mb-6">Prêt à évaluer ?</h3>
+                        <p class="text-slate-400 mb-10">Rejoignez les centres qui utilisent SoliQuiz pour dynamiser leurs formations.</p>
+                        <a href="http://localhost:8001" target="_blank" class="inline-flex py-4 px-12 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all uppercase tracking-widest text-sm">
+                            Accéder à mon espace
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 py-16">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col items-center">
+            <div class="flex items-center gap-2 mb-8 opacity-50">
+                <div class="size-7 bg-slate-900 rounded-lg flex items-center justify-center">
+                    <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <path d="m9 15 2 2 4-4" />
+                    </svg>
+                </div>
+                <span class="text-xl font-heading font-bold text-slate-900">SoliQuiz</span>
+            </div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-[0.3em]">© 2026 — Une réalisation Solicode</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.05 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
