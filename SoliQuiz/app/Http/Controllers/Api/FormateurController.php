@@ -11,11 +11,15 @@ use Illuminate\Http\Request;
 
 class FormateurController extends Controller
 {
-    private $formateurId = 2; // hardcoded (Youssef)
-
-    public function profile()
+    /**
+     * Get the profile of the authenticated formateur.
+     */
+    public function profile(Request $request)
     {
-        $formateur = User::where('type_profil', 'formateur')->findOrFail($this->formateurId);
+        $formateur = $request->user();
+        if (!$formateur->isFormateur()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         return response()->json([
             'id' => $formateur->id,
             'nom' => $formateur->nom,
@@ -26,9 +30,9 @@ class FormateurController extends Controller
         ]);
     }
 
-    public function qcms()
+    public function qcms(Request $request)
     {
-        $qcms = QCM::where('formateur_id', $this->formateurId)
+        $qcms = QCM::where('formateur_id', $request->user()->id)
             ->withCount('questions')
             ->withCount('tentatives')
             ->get();
@@ -45,9 +49,9 @@ class FormateurController extends Controller
         return response()->json($formatted);
     }
 
-    public function cohorts()
+    public function cohorts(Request $request)
     {
-        $classes = Classe::where('formateur_id', $this->formateurId)->get();
+        $classes = Classe::where('formateur_id', $request->user()->id)->get();
         $formatted = $classes->map(function ($classe) {
             return [
                 'id' => $classe->id,
@@ -118,9 +122,9 @@ class FormateurController extends Controller
         return response()->json($history);
     }
 
-    public function qcmResults($qcmId)
+    public function qcmResults(Request $request, $qcmId)
     {
-        $qcm = QCM::where('formateur_id', $this->formateurId)->findOrFail($qcmId);
+        $qcm = QCM::where('formateur_id', $request->user()->id)->findOrFail($qcmId);
         $tentatives = Tentative::where('qcm_id', $qcmId)
             ->whereNotNull('score_obtenu')
             ->with('user')

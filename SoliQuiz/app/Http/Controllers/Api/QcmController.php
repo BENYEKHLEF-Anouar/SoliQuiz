@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 class QcmController extends Controller
 {
-    private $studentId = 4; // hardcoded
 
     public function show($id)
     {
@@ -47,11 +46,11 @@ class QcmController extends Controller
         return response()->json($formatted);
     }
 
-    public function result($id)
+    public function result(Request $request, $id)
     {
         // Get the latest completed tentative for this QCM and student
         $tentative = Tentative::where('qcm_id', $id)
-            ->where('etudiant_id', $this->studentId)
+            ->where('etudiant_id', $request->user()->id)
             ->whereNotNull('score_obtenu')
             ->latest('date_fin')
             ->first();

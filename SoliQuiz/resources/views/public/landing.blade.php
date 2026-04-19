@@ -31,9 +31,24 @@
             <div class="hidden md:flex items-center gap-8">
                 <a href="#features" class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Fonctionnalités</a>
                 <a href="#roles" class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Utilisation</a>
-                <a href="http://localhost:8001" target="_blank" class="py-3 px-6 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/25 active:scale-95 text-sm uppercase tracking-widest">
-                    Se Connecter
-                </a>
+                
+                @guest
+                    <a href="{{ route('login') }}" class="py-3 px-6 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/25 active:scale-95 text-sm uppercase tracking-widest">
+                        Se Connecter
+                    </a>
+                @else
+                    <div class="flex items-center gap-4">
+                        <a href="{{ route('dashboard') }}" class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors uppercase tracking-widest">
+                            Mon Espace
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="py-2 px-4 border border-slate-200 text-slate-600 font-bold rounded-lg hover:bg-slate-50 transition-all text-xs uppercase tracking-widest">
+                                Déconnexion
+                            </button>
+                        </form>
+                    </div>
+                @endguest
             </div>
         </nav>
     </header>
@@ -53,7 +68,7 @@
                         SoliQuiz transforme vos sessions d'évaluation en expériences interactives. Synchronisé en temps réel avec SoliLMS pour un suivi sans effort.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="http://localhost:8001" target="_blank" class="py-4 px-10 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all shadow-xl shadow-primary-500/30 text-center uppercase tracking-widest">
+                        <a href="{{ Auth::check() ? route('dashboard') : route('login') }}" class="py-4 px-10 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all shadow-xl shadow-primary-500/30 text-center uppercase tracking-widest">
                             Commencer maintenant
                         </a>
                         <a href="#features" class="py-4 px-10 bg-white text-slate-700 border border-slate-200 font-bold rounded-2xl hover:bg-slate-50 transition-all text-center uppercase tracking-widest">
@@ -146,7 +161,7 @@
                         <div class="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl"></div>
                         <h3 class="text-2xl font-heading font-bold text-white mb-6">Prêt à évaluer ?</h3>
                         <p class="text-slate-400 mb-10">Rejoignez les centres qui utilisent SoliQuiz pour dynamiser leurs formations.</p>
-                        <a href="http://localhost:8001" target="_blank" class="inline-flex py-4 px-12 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all uppercase tracking-widest text-sm">
+                        <a href="{{ Auth::check() ? route('dashboard') : route('login') }}" class="inline-flex py-4 px-12 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all uppercase tracking-widest text-sm">
                             Accéder à mon espace
                         </a>
                     </div>

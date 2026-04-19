@@ -25,7 +25,7 @@
             </button>
             <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-48 bg-white shadow-xl rounded-2xl p-2 mt-2 border border-slate-100 z-50" role="menu">
                 <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-800 hover:bg-slate-50 font-medium" href="{{ route('student.profile') }}">Mon Profil</a>
-                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 font-bold" href="{{ route('landing') }}">Déconnexion</a>
+                <button type="button" @click="Alpine.store('config').logout()" class="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 font-bold">Déconnexion</button>
             </div>
         </div>
     </div>

@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
 
         // Appel de tous les seeders dans l'ordre logique d'intégrité référentielle
         $this->call([
+            RolesAndPermissionsSeeder::class,
             UserSeeder::class,
             ClasseSeeder::class,
             UserClasseSeeder::class,

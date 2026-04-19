@@ -27,15 +27,53 @@
                     <form x-data="{
                         email: '',
                         password: '',
-                        handleLogin() {
-                            const e = this.email.toLowerCase();
-                            if (e.includes('formateur')) {
-                                window.location.href = '/formateur/qcms';
-                            } else {
-                                window.location.href = '/student/dashboard';
+                        error: null,
+                        loading: false,
+                        async handleLogin() {
+                            this.loading = true;
+                            this.error = null;
+                            try {
+                                const response = await fetch(`${Alpine.store('config').apiBaseUrl}/login`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        email: this.email,
+                                        password: this.password,
+                                        device_name: 'MobileApp'
+                                    })
+                                });
+
+                                const data = await response.json();
+
+                                if (!response.ok) {
+                                    throw new Error(data.message || 'Échec de la connexion');
+                                }
+
+                                // Store authentication data
+                                Alpine.store('config').setAuth(data.token, data.user);
+
+                                // Redirect based on role
+                                if (data.user.type_profil === 'formateur') {
+                                    window.location.href = '/formateur/qcms';
+                                } else if (data.user.type_profil === 'admin') {
+                                    window.location.href = '/admin/dashboard'; // Assuming this exists or falls back
+                                } else {
+                                    window.location.href = '/student/dashboard';
+                                }
+                            } catch (e) {
+                                this.error = e.message;
+                            } finally {
+                                this.loading = false;
                             }
                         }
                     }" @submit.prevent="handleLogin" class="grid gap-y-6">
+                        
+                        <!-- Error Alert -->
+                        <div x-show="error" x-cloak class="p-4 bg-red-50 border border-red-100 rounded-2xl text-[10px] font-black text-red-600 uppercase tracking-widest text-center" x-text="error"></div>
+
                         <!-- Input Email -->
                         <div>
                             <label for="email"

@@ -9,16 +9,20 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     protected $fillable = [
         'nom',
         'prenom',
         'email',
         'password',
+        'role',
         'matricule',        // Formateur uniquement
         'code_etudiant',    // Etudiant uniquement
         'classe_id',        // Etudiant uniquement

@@ -6,9 +6,8 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
     --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
     --color-primary-50: var(--color-primary-50);
     --color-primary-100: var(--color-primary-100);
@@ -21,28 +20,53 @@
     --color-primary-800: var(--color-primary-800);
     --color-primary-900: var(--color-primary-900);
 
-    --color-semantic-success: var(--color-success-500);
-    --color-semantic-warning: var(--color-warning-500);
-    --color-semantic-error: var(--color-error-500);
-    --color-semantic-info: var(--color-info-500);
+    --color-neutral-50: var(--color-neutral-50);
+    --color-neutral-100: var(--color-neutral-100);
+    --color-neutral-200: var(--color-neutral-200);
+    --color-neutral-300: var(--color-neutral-300);
+    --color-neutral-400: var(--color-neutral-400);
+    --color-neutral-500: var(--color-neutral-500);
+    --color-neutral-600: var(--color-neutral-600);
+    --color-neutral-700: var(--color-neutral-700);
+    --color-neutral-800: var(--color-neutral-800);
+    --color-neutral-900: var(--color-neutral-900);
+
+    --color-success-500: var(--color-success-500);
+    --color-warning-500: var(--color-warning-500);
+    --color-error-500: var(--color-error-500);
+    --color-info-500: var(--color-info-500);
 }
 
 :root {
-    --color-primary-50: #e6f0ff;
-    --color-primary-100: #cce0ff;
-    --color-primary-200: #99c2ff;
-    --color-primary-300: #66a3ff;
-    --color-primary-400: #3385ff;
-    --color-primary-500: #0066ff;
-    --color-primary-600: #0052cc;
-    --color-primary-700: #003d99;
-    --color-primary-800: #002966;
-    --color-primary-900: #001433;
+    /* Primary (Ocean Teal) */
+    --color-primary-50: hsl(190, 85%, 96%);
+    --color-primary-100: hsl(190, 85%, 90%);
+    --color-primary-200: hsl(190, 85%, 80%);
+    --color-primary-300: hsl(190, 80%, 70%);
+    --color-primary-400: hsl(190, 75%, 60%);
+    --color-primary-500: hsl(190, 80%, 45%);
+    --color-primary-600: hsl(190, 85%, 35%);
+    --color-primary-700: hsl(190, 85%, 28%);
+    --color-primary-800: hsl(190, 80%, 22%);
+    --color-primary-900: hsl(190, 75%, 15%);
 
-    --color-success-500: #22c55e;
-    --color-warning-500: #f59e0b;
-    --color-error-500: #ef4444;
-    --color-info-500: #3b82f6;
+    /* Neutral (Slate) */
+    --color-neutral-50: hsl(210, 20%, 98%);
+    --color-neutral-100: hsl(210, 16%, 93%);
+    --color-neutral-200: hsl(210, 14%, 85%);
+    --color-neutral-300: hsl(210, 12%, 75%);
+    --color-neutral-400: hsl(210, 11%, 65%);
+    --color-neutral-500: hsl(210, 10%, 45%);
+    --color-neutral-600: hsl(210, 12%, 35%);
+    --color-neutral-700: hsl(210, 14%, 25%);
+    --color-neutral-800: hsl(210, 15%, 18%);
+    --color-neutral-900: hsl(210, 20%, 10%);
+
+    /* Semantic */
+    --color-success-500: hsl(140, 65%, 45%);
+    --color-warning-500: hsl(35, 95%, 55%);
+    --color-error-500: hsl(0, 75%, 55%);
+    --color-info-500: hsl(220, 80%, 55%);
 }
 
 body {

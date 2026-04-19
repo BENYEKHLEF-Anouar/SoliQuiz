@@ -11,12 +11,15 @@ use Illuminate\Http\Response;
 
 class StudentController extends Controller
 {
-    // Hardcoded student ID for testing (user with ID 4 is Mehdi)
-    private $studentId = 4;
-
-    public function profile()
+    /**
+     * Get the profile of the authenticated student.
+     */
+    public function profile(Request $request)
     {
-        $student = User::where('type_profil', 'etudiant')->findOrFail($this->studentId);
+        $student = $request->user();
+        if (!$student->isEtudiant()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         return response()->json([
             'id' => $student->id,
             'nom' => $student->nom,
@@ -28,9 +31,9 @@ class StudentController extends Controller
         ]);
     }
 
-    public function scores()
+    public function scores(Request $request)
     {
-        $student = User::findOrFail($this->studentId);
+        $student = $request->user();
         // Compute global score average from tentatives where score_obtenu is not null
         $tentatives = $student->tentatives()->whereNotNull('score_obtenu')->get();
         $globalScore = $tentatives->avg('score_obtenu') ?? 0;
@@ -55,9 +58,9 @@ class StudentController extends Controller
         ]);
     }
 
-    public function evaluations()
+    public function evaluations(Request $request)
     {
-        $student = User::findOrFail($this->studentId);
+        $student = $request->user();
         // Get published QCMs that the student has not attempted (or tentatives not completed)
         $attemptedQcmIds = $student->tentatives()->pluck('qcm_id');
         $pendingQcms = QCM::where('est_publie', true)
@@ -96,9 +99,9 @@ class StudentController extends Controller
         ]);
     }
 
-    public function history()
+    public function history(Request $request)
     {
-        $student = User::findOrFail($this->studentId);
+        $student = $request->user();
         $tentatives = $student->tentatives()
             ->whereNotNull('score_obtenu')
             ->with('qcm')
