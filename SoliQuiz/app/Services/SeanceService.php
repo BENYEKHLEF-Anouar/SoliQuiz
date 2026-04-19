@@ -73,4 +73,30 @@ class SeanceService
             'code' => $data['code'],
         ]);
     }
+    /**
+     * Supprime une unité d'apprentissage
+     */
+    public function deleteUniteApprentissage(UniteApprentissage $unite): void
+    {
+        $unite->delete();
+    }
+
+    /**
+     * Ajoute une compétence spécifique à une unité d'apprentissage
+     */
+    public function addCompetence(UniteApprentissage $unite, array $data): Competence
+    {
+        return tap(new Competence($data), function ($competence) use ($unite) {
+            $competence->unite_apprentissage_id = $unite->id;
+            $competence->save();
+        });
+    }
+
+    /**
+     * Supprime une compétence
+     */
+    public function deleteCompetence(Competence $competence): void
+    {
+        $competence->delete();
+    }
 }

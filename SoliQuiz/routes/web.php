@@ -14,9 +14,42 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', function () { return view('admin.dashboard'); })->name('admin.dashboard');
-    Route::get('/formateur/dashboard', function () { return view('formateur.dashboard'); })->name('formateur.dashboard');
-    Route::get('/student/dashboard', function () { return view('student.dashboard'); })->name('student.dashboard');
+    Route::get('/admin/dashboard', [\App\Http\Controllers\Web\AdminController::class, 'dashboard'])->name('admin.dashboard');
+    
+    // Web Admin Routes
+    Route::get('/admin/utilisateurs', [\App\Http\Controllers\Web\AdminController::class, 'gestionUtilisateurs'])->name('admin.utilisateurs');
+    Route::post('/admin/utilisateurs', [\App\Http\Controllers\Web\AdminController::class, 'storeUser'])->name('admin.utilisateurs.store');
+    Route::delete('/admin/utilisateurs/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroyUser'])->name('admin.utilisateurs.destroy');
+    
+    // Pedagogie / Seance Routes
+    Route::get('/admin/pedagogie', [\App\Http\Controllers\Web\AdminController::class, 'pedagogie'])->name('admin.pedagogie');
+    Route::post('/admin/pedagogie/seance', [\App\Http\Controllers\Web\AdminController::class, 'storeSeance'])->name('admin.pedagogie.seance.store');
+    Route::delete('/admin/pedagogie/seance/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroySeance'])->name('admin.pedagogie.seance.destroy');
+    Route::post('/admin/pedagogie/seance/{id}/ua', [\App\Http\Controllers\Web\AdminController::class, 'storeUA'])->name('admin.pedagogie.ua.store');
+    Route::delete('/admin/pedagogie/ua/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroyUA'])->name('admin.pedagogie.ua.destroy');
+    Route::post('/admin/pedagogie/ua/{id}/competence', [\App\Http\Controllers\Web\AdminController::class, 'storeCompetence'])->name('admin.pedagogie.competence.store');
+    Route::delete('/admin/pedagogie/competence/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroyCompetence'])->name('admin.pedagogie.competence.destroy');
+    
+    // Classes Routes
+    Route::get('/admin/classes', [\App\Http\Controllers\Web\AdminController::class, 'gestionClasses'])->name('admin.classes');
+    Route::post('/admin/classes', [\App\Http\Controllers\Web\AdminController::class, 'storeClasse'])->name('admin.classes.store');
+    Route::delete('/admin/classes/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroyClasse'])->name('admin.classes.destroy');
+    Route::post('/admin/classes/{id}/formateur', [\App\Http\Controllers\Web\AdminController::class, 'assignFormateur'])->name('admin.classes.assign');
+
+    // Web Formateur Routes
+    Route::get('/formateur/dashboard', [\App\Http\Controllers\Web\FormateurController::class, 'dashboard'])->name('formateur.dashboard');
+    Route::get('/formateur/bibliotheque', [\App\Http\Controllers\Web\FormateurController::class, 'bibliotheque'])->name('formateur.bibliotheque');
+    Route::get('/formateur/qcm/create', [\App\Http\Controllers\Web\FormateurController::class, 'createQcm'])->name('formateur.qcm.create');
+    Route::post('/formateur/qcm', [\App\Http\Controllers\Web\FormateurController::class, 'storeQcm'])->name('formateur.qcm.store');
+    Route::delete('/formateur/qcm/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'destroyQcm'])->name('formateur.qcm.destroy');
+    Route::get('/formateur/resultats', [\App\Http\Controllers\Web\FormateurController::class, 'resultatsCohorte'])->name('formateur.resultats');
+    
+    // Web Student Routes
+    Route::get('/student/dashboard', [\App\Http\Controllers\Web\StudentController::class, 'dashboard'])->name('student.dashboard');
+    Route::get('/student/bibliotheque', [\App\Http\Controllers\Web\StudentController::class, 'bibliotheque'])->name('student.bibliotheque');
+    Route::get('/student/qcm/{id}', [\App\Http\Controllers\Web\StudentController::class, 'passation'])->name('student.passation');
+    Route::post('/student/qcm/{id}', [\App\Http\Controllers\Web\StudentController::class, 'submitQcm'])->name('student.qcm.submit');
+    Route::get('/student/qcm/{id}/resultats', [\App\Http\Controllers\Web\StudentController::class, 'resultats'])->name('student.resultats');
 });
 
 Auth::routes();
