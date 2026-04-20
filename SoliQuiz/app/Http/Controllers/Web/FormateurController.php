@@ -59,7 +59,7 @@ class FormateurController extends Controller
      */
     public function createQcm()
     {
-        $unites = UniteApprentissage::all();
+        $unites = UniteApprentissage::with('competences')->get();
         return view('formateur.creation-qcm', compact('unites'));
     }
 
@@ -73,25 +73,28 @@ class FormateurController extends Controller
             'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id',
             'duree_minutes' => 'required|integer|min:1',
             'score_reussite' => 'required|integer|min:0|max:100',
+            'est_publie' => 'nullable',
+            'competence_ids' => 'nullable|array',
+            'competence_ids.*' => 'exists:competences,id',
             'questions' => 'required|array|min:1',
             'questions.*.texte' => 'required|string',
             'questions.*.points' => 'required|integer|min:1',
             'questions.*.type' => 'required|in:choix_unique,choix_multiple',
             'questions.*.options' => 'required|array|min:2',
             'questions.*.options.*.texte' => 'required|string',
-            'questions.*.options.*.est_correcte' => 'boolean', // This input can come as boolean or 1/0
+            'questions.*.options.*.est_correcte' => 'nullable',
         ]);
 
         $data = $request->all();
         $data['formateur_id'] = Auth::id();
+        $data['est_publie'] = $request->input('est_publie') === '1';
         
         // Transform the nested options syntax format logic if needed
-        // QcmService expects simple options array structure mapping to Option model attributes.
         foreach ($data['questions'] as &$question) {
             $question['type'] = $question['type'] === 'choix_unique' ? 'unique' : 'multiple';
             foreach ($question['options'] as &$option) {
                 // Ensure `est_correcte` is boolean
-                $option['est_correcte'] = !empty($option['est_correcte']);
+                $option['est_correcte'] = isset($option['est_correcte']) && $option['est_correcte'] === '1';
             }
         }
 
@@ -116,14 +119,9 @@ class FormateurController extends Controller
      */
     public function resultatsCohorte()
     {
-        $formateur = Auth::user();
-        $classes = $formateur->classesFormateur()->with('etudiants')->get();
-
-        // Récupérer tous les QCM publiés du formateur avec les tentatives
-        $qcms = QCM::where('formateur_id', $formateur->id)
-            ->where('est_publie', true)
-            ->with(['tentatives.etudiant', 'uniteApprentissage'])
-            ->get();
+        $data = $this->qcmService->getResultsForFormateur(Auth::id());
+        $classes = $data['classes'];
+        $qcms = $data['qcms'];
 
         return view('formateur.resultats-cohorte', compact('classes', 'qcms'));
     }

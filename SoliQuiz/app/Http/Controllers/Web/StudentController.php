@@ -95,43 +95,15 @@ class StudentController extends Controller
      */
     public function submitQcm(Request $request, $id)
     {
-        $qcm = QCM::with('questions.options')->findOrFail($id);
         $tentative = Tentative::where('etudiant_id', Auth::id())
-            ->where('qcm_id', $qcm->id)
+            ->where('qcm_id', $id)
             ->where('statut', 'en_cours')
             ->firstOrFail();
 
-        $answers = $request->input('answers', []);
-
-        foreach ($qcm->questions as $question) {
-            // Check if response already exists (for "resume" scenarios not fully implemented, but safe)
-            $reponse = Reponse::firstOrCreate([
-                'tentative_id' => $tentative->id,
-                'question_id' => $question->id,
-            ], [
-                'repondu_a' => now()
-            ]);
-
-            // Clear old choices if resubmitting somehow
-            $reponse->choixReponses()->delete();
-
-            $selectedOptionIds = $answers[$question->id] ?? [];
-            if (!is_array($selectedOptionIds)) {
-                $selectedOptionIds = [$selectedOptionIds];
-            }
-
-            foreach ($selectedOptionIds as $optId) {
-                ChoixReponse::create([
-                    'reponse_id' => $reponse->id,
-                    'option_id' => $optId
-                ]);
-            }
-        }
-
-        // Utiliser le service pour calculer et soumettre la tentative
+        $this->passationService->enregistrerReponses($tentative, $request->input('answers', []));
         $this->passationService->soumettre($tentative);
 
-        return redirect()->route('student.resultats', ['id' => $qcm->id]);
+        return redirect()->route('student.resultats', ['id' => $id]);
     }
 
     /**

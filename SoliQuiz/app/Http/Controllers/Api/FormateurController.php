@@ -42,7 +42,7 @@ class FormateurController extends Controller
                 'title' => $qcm->titre,
                 'status' => $qcm->est_publie ? 'Actif' : 'Brouillon',
                 'questionsCount' => $qcm->questions_count,
-                'assignedCohort' => null, // Not in schema
+                'assignedCohort' => $qcm->uniteApprentissage->classe->nom ?? 'Général',
                 'resultsCount' => $qcm->tentatives_count,
             ];
         });
@@ -127,14 +127,14 @@ class FormateurController extends Controller
         $qcm = QCM::where('formateur_id', $request->user()->id)->findOrFail($qcmId);
         $tentatives = Tentative::where('qcm_id', $qcmId)
             ->whereNotNull('score_obtenu')
-            ->with('user')
+            ->with('etudiant')
             ->orderBy('score_obtenu', 'desc')
             ->get();
 
         $formatted = $tentatives->map(function ($tentative) use ($qcm) {
             return [
                 'id' => $tentative->id,
-                'studentName' => $tentative->user ? $tentative->user->prenom . ' ' . $tentative->user->nom : 'Étudiant Inconnu',
+                'studentName' => $tentative->etudiant ? $tentative->etudiant->prenom . ' ' . $tentative->etudiant->nom : 'Étudiant Inconnu',
                 'score' => $tentative->score_obtenu,
                 'totalQuestions' => tap($qcm->questions)->count(),
                 'date' => $tentative->date_fin ? $tentative->date_fin->format('Y-m-d H:i') : null,

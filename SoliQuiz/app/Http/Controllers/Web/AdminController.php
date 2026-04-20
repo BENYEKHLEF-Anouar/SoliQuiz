@@ -66,32 +66,20 @@ class AdminController extends Controller
             'classe_id' => 'nullable|exists:classes,id',
         ]);
 
-        $roleType = strtolower($request->role) === 'administrateur' ? 'admin' : (strtolower($request->role) === 'formateur' ? 'formateur' : 'etudiant');
+        $roleMapping = [
+            'Administrateur' => 'admin',
+            'Formateur' => 'formateur',
+            'Apprenant' => 'etudiant'
+        ];
 
-        $user = $this->userService->create([
+        $this->userService->create([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'email' => $request->email,
             'password' => $request->password,
-            'type_profil' => $roleType,
-            'role' => $roleType === 'etudiant' ? 'student' : $roleType, // fallback for spatie roles
-            'classe_id' => $request->classe_id ?? null,
+            'type_profil' => $roleMapping[$request->role],
+            'classe_id' => $request->classe_id,
         ]);
-
-        // Assigner le role Spatie
-        if ($roleType === 'admin') {
-            $user->assignRole('admin');
-        } elseif ($roleType === 'formateur') {
-            $user->assignRole('formateur');
-            
-            // Si une classe a été selectionnée pour un formateur, on assigne la classe à ce formateur.
-            if ($request->classe_id) {
-                $classe = Classe::find($request->classe_id);
-                $classe->update(['formateur_id' => $user->id]);
-            }
-        } else {
-            $user->assignRole('student');
-        }
 
         return redirect()->route('admin.utilisateurs')->with('success', 'Utilisateur créé avec succès !');
     }
@@ -110,6 +98,40 @@ class AdminController extends Controller
         $this->userService->delete($user);
         
         return redirect()->route('admin.utilisateurs')->with('success', 'Utilisateur supprimé avec succès.');
+    }
+
+    /**
+     * Met à jour un utilisateur existant.
+     */
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'role' => 'required|in:Apprenant,Formateur,Administrateur',
+            'password' => 'nullable|string|min:8',
+            'classe_id' => 'nullable|exists:classes,id',
+        ]);
+
+        $roleMapping = [
+            'Administrateur' => 'admin',
+            'Formateur' => 'formateur',
+            'Apprenant' => 'etudiant'
+        ];
+
+        $this->userService->update($user, [
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'email' => $request->email,
+            'password' => $request->password,
+            'type_profil' => $roleMapping[$request->role],
+            'classe_id' => $request->classe_id,
+        ]);
+
+        return redirect()->route('admin.utilisateurs')->with('success', 'Utilisateur mis à jour avec succès !');
     }
 
     /**
@@ -184,7 +206,8 @@ class AdminController extends Controller
     public function gestionClasses()
     {
         $classes = Classe::with(['formateur', 'etudiants'])->withCount('etudiants')->get();
-        $formateurs = \App\Models\User::role('formateur')->get();
+        // Utilisation du type_profil pour plus de robustesse par rapport aux rôles Spatie
+        $formateurs = User::where('type_profil', 'formateur')->orderBy('nom')->get();
         
         return view('admin.classes', compact('classes', 'formateurs'));
     }
@@ -214,6 +237,42 @@ class AdminController extends Controller
         ]);
         $this->classeService->assignFormateur($classe, $request->formateur_id);
         return redirect()->route('admin.classes')->with('success', 'Formateur assigné avec succès à la classe.');
+    }
+    /**
+     * Affiche le détail d'une classe et ses membres.
+     */
+    public function showClasse($id)
+    {
+        $classe = Classe::with(['formateur', 'etudiants'])->findOrFail($id);
+        // On récupère les étudiants qui n'ont pas encore de classe pour pouvoir les ajouter
+        // On utilise type_profil 'etudiant' pour correspondre au modèle User
+        $etudiantsSansClasse = User::where('type_profil', 'etudiant')
+            ->whereNull('classe_id')
+            ->orderBy('nom')
+            ->get();
+        
+        return view('admin.classes-show', compact('classe', 'etudiantsSansClasse'));
+    }
+
+    /**
+     * Ajoute un étudiant à une classe.
+     */
+    public function addStudentToClasse(Request $request, $id)
+    {
+        $classe = Classe::findOrFail($id);
+        $request->validate(['user_id' => 'required|exists:users,id']);
+        
+        $this->classeService->addStudent($classe, $request->user_id);
+        return redirect()->route('admin.classes.show', $id)->with('success', 'Étudiant ajouté à la classe.');
+    }
+
+    /**
+     * Retire un étudiant d'une classe.
+     */
+    public function removeStudentFromClasse($id, $userId)
+    {
+        $this->classeService->removeStudent($userId);
+        return redirect()->route('admin.classes.show', $id)->with('success', 'Étudiant retiré de la classe.');
     }
 }
 

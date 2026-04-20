@@ -72,6 +72,22 @@ class ClasseService
     }
 
     /**
+     * Ajoute un étudiant à la classe
+     */
+    public function addStudent(Classe $classe, int $etudiantId): void
+    {
+        User::where('id', $etudiantId)->update(['classe_id' => $classe->id]);
+    }
+
+    /**
+     * Retire un étudiant de la classe
+     */
+    public function removeStudent(int $etudiantId): void
+    {
+        User::where('id', $etudiantId)->update(['classe_id' => null]);
+    }
+
+    /**
      * Renvoie les statistiques globales d'une classe
      */
     public function stats(Classe $classe): array

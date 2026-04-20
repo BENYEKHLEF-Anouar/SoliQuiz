@@ -13,4 +13,10 @@ class Competence extends Model
     {
         return $this->belongsTo(UniteApprentissage::class);
     }
+
+    /** Les QCM qui évaluent cette compétence */
+    public function qcms(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(QCM::class, 'competence_qcm');
+    }
 }

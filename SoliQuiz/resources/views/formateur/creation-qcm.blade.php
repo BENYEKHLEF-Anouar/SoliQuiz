@@ -1,46 +1,39 @@
 @extends('components.layout.app')
 
 @section('content')
-<div x-data="qcmBuilder()" class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<div x-data="qcmBuilder({{ Js::from($unites) }})" class="bg-slate-50 flex flex-col h-screen overflow-hidden">
     
     <!-- Action Form -->
     <form id="qcmForm" action="{{ route('formateur.qcm.store') }}" method="POST" class="contents">
     @csrf
 
-    <!-- Header Editor -->
-    <header class="w-full bg-white border-b border-slate-200 shrink-0 z-50 flex items-center h-[60px]">
+    <!-- Toolbar Editor -->
+    <div class="w-full bg-white border-b border-slate-200 shrink-0 z-50 flex items-center h-[60px]">
         <div class="max-w-[1600px] w-full mx-auto px-4 flex justify-between items-center h-full">
             <div class="flex items-center gap-4">
-                <a class="flex items-center gap-2 group outline-none" href="{{ route('formateur.dashboard') }}">
-                    <div class="size-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-105">
-                        <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
+                <a class="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500" href="{{ route('formateur.dashboard') }}">
+                    <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                 </a>
                 <div class="h-6 w-px bg-slate-200"></div>
                 <!-- Editable Title -->
                 <input type="text" name="titre" required x-model="titre" class="text-lg font-bold font-heading text-slate-900 border-transparent hover:border-slate-300 focus:border-primary-500 focus:ring-primary-500 rounded bg-transparent px-2 py-1 outline-none transition-colors w-[250px] md:w-[400px]" placeholder="Titre du QCM">
-                <span class="hidden md:inline-flex items-center gap-1.5 py-1 px-2 rounded bg-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Création</span>
             </div>
 
             <div class="flex items-center gap-3">
                 <input type="hidden" name="est_publie" :value="isPublished ? '1' : '0'">
                 <button type="button" @click="isPublished = false; document.getElementById('qcmForm').submit()" class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50 transition-colors">
-                    Sauvegarder
+                    Sauvegarder Brouillon
                 </button>
                 <button type="button" @click="isPublished = true; document.getElementById('qcmForm').submit()" class="py-1.5 px-4 inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-primary-500 text-white shadow-sm hover:bg-primary-600 transition-colors">
                     <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m22 2-7 20-4-9-9-4Z" />
                         <path d="M22 2 11 13" />
                     </svg>
-                    Publier
+                    Publier le Test
                 </button>
             </div>
         </div>
-    </header>
+    </div>
 
     @if ($errors->any())
         <div class="bg-red-50 text-red-600 p-4 border-b border-red-200 text-sm">
@@ -62,11 +55,28 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-semibold mb-1.5 text-slate-800">Unité d'apprentissage</label>
-                        <select name="unite_apprentissage_id" required class="py-2.5 px-3 w-full bg-white border border-slate-200 text-slate-800 rounded-lg text-sm shadow-sm outline-none">
-                            @foreach($unites as $unite)
-                                <option value="{{ $unite->id }}">{{ $unite->nom }}</option>
-                            @endforeach
+                        <select name="unite_apprentissage_id" x-model="selectedUniteId" required class="py-2.5 px-3 w-full bg-white border border-slate-200 text-slate-800 rounded-lg text-sm shadow-sm outline-none">
+                            <option value="">Sélectionnez une UA</option>
+                            <template x-for="unite in allUnites" :key="unite.id">
+                                <option :value="unite.id" x-text="unite.nom"></option>
+                            </template>
                         </select>
+                    </div>
+
+                    <!-- Liste des compétences filtrées -->
+                    <div x-show="selectedUniteId" x-transition>
+                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Compétences cibles</h3>
+                        <div class="space-y-2 bg-white border border-slate-200 rounded-xl p-3 max-h-[200px] overflow-y-auto shadow-inner">
+                            <template x-for="comp in filteredCompetences" :key="comp.id">
+                                <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors group">
+                                    <input type="checkbox" name="competence_ids[]" :value="comp.id" class="mt-1 size-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 cursor-pointer">
+                                    <div class="flex flex-col">
+                                        <span class="text-xs font-bold text-slate-700 group-hover:text-primary-600 transition-colors" x-text="comp.code"></span>
+                                        <span class="text-[10px] text-slate-500 leading-tight" x-text="comp.libelle"></span>
+                                    </div>
+                                </label>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -170,12 +180,19 @@
 </div>
 
 <!-- Alpine Logic -->
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <script>
 document.addEventListener('alpine:init', () => {
-    Alpine.data('qcmBuilder', () => ({
+    Alpine.data('qcmBuilder', (initialUnites) => ({
         titre: 'Nouveau QCM',
         isPublished: false,
+        allUnites: initialUnites,
+        selectedUniteId: '',
+        
+        get filteredCompetences() {
+            if (!this.selectedUniteId) return [];
+            const unite = this.allUnites.find(u => u.id == this.selectedUniteId);
+            return unite ? unite.competences : [];
+        },
         questions: [
             {
                 texte: '',

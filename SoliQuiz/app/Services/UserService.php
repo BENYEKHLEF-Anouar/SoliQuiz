@@ -24,12 +24,30 @@ class UserService
     }
 
     /**
-     * Crée un nouvel utilisateur (avec hachage du mot de passe)
+     * Crée un nouvel utilisateur avec rôles et assignation de classe
      */
     public function create(array $data): User
     {
-        $data['password'] = Hash::make($data['password']);
-        return User::create($data);
+        $user = User::create([
+            'nom' => $data['nom'],
+            'prenom' => $data['prenom'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'type_profil' => $data['type_profil'],
+            'classe_id' => $data['classe_id'] ?? null,
+            'role' => $data['type_profil'] === 'etudiant' ? 'student' : $data['type_profil'], // Spatie role mapping
+        ]);
+
+        // Assigner le rôle Spatie
+        $spatieRole = $data['type_profil'] === 'etudiant' ? 'student' : $data['type_profil'];
+        $user->assignRole($spatieRole);
+
+        // Si c'est un formateur et qu'une classe est fournie, on lie la classe au formateur
+        if ($user->isFormateur() && !empty($data['classe_id'])) {
+            \App\Models\Classe::where('id', $data['classe_id'])->update(['formateur_id' => $user->id]);
+        }
+
+        return $user;
     }
 
     /**
@@ -37,13 +55,26 @@ class UserService
      */
     public function update(User $user, array $data): User
     {
-        if (isset($data['password']) && $data['password']) {
+        if (isset($data['password']) && !empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
         }
 
         $user->update($data);
+
+        // Synchroniser les rôles Spatie si le type_profil a changé
+        if (isset($data['type_profil'])) {
+            $spatieRole = $data['type_profil'] === 'etudiant' ? 'student' : $data['type_profil'];
+            $user->syncRoles([$spatieRole]);
+            $user->update(['role' => $spatieRole]);
+        }
+
+        // Si c'est un formateur et qu'une classe est fournie
+        if ($user->isFormateur() && !empty($data['classe_id'])) {
+            \App\Models\Classe::where('id', $data['classe_id'])->update(['formateur_id' => $user->id]);
+        }
+
         return $user->fresh();
     }
 

@@ -39,6 +39,34 @@ class PassationService
     }
 
     /**
+     * Enregistre les réponses envoyées par l'étudiant pour une tentative.
+     */
+    public function enregistrerReponses(Tentative $tentative, array $answers): void
+    {
+        DB::transaction(function () use ($tentative, $answers) {
+            foreach ($answers as $questionId => $optionIds) {
+                $reponse = Reponse::updateOrCreate(
+                    ['tentative_id' => $tentative->id, 'question_id' => $questionId],
+                    ['repondu_a' => now()]
+                );
+
+                $reponse->choixReponses()->delete();
+
+                if (!is_array($optionIds)) {
+                    $optionIds = [$optionIds];
+                }
+
+                foreach ($optionIds as $optId) {
+                    ChoixReponse::create([
+                        'reponse_id' => $reponse->id,
+                        'option_id' => $optId
+                    ]);
+                }
+            }
+        });
+    }
+
+    /**
      * Soumet la tentative et calcule le score global.
      */
     public function soumettre(Tentative $tentative): array

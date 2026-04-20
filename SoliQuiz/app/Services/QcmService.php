@@ -51,7 +51,11 @@ class QcmService
                 $this->syncQuestions($qcm, $data['questions']);
             }
 
-            return $qcm->load('questions.options');
+            if (!empty($data['competence_ids'])) {
+                $qcm->competences()->sync($data['competence_ids']);
+            }
+
+            return $qcm->load(['questions.options', 'competences']);
         });
     }
 
@@ -74,7 +78,11 @@ class QcmService
                 $this->syncQuestions($qcm, $data['questions']);
             }
 
-            return $qcm->fresh('questions.options');
+            if (isset($data['competence_ids'])) {
+                $qcm->competences()->sync($data['competence_ids']);
+            }
+
+            return $qcm->fresh(['questions.options', 'competences']);
         });
     }
 
@@ -118,4 +126,20 @@ class QcmService
         }
     }
 
+    /**
+     * Récupère les résultats globaux pour un formateur (Classes + QCMs avec tentatives)
+     */
+    public function getResultsForFormateur(int $formateurId): array
+    {
+        $formateur = \App\Models\User::findOrFail($formateurId);
+        
+        return [
+            'classes' => $formateur->classesFormateur()->with('etudiants')->get(),
+            'qcms' => QCM::where('formateur_id', $formateurId)
+                ->where('est_publie', true)
+                ->with(['tentatives.etudiant', 'uniteApprentissage'])
+                ->latest()
+                ->get()
+        ];
+    }
 }

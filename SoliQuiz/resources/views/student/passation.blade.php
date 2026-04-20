@@ -10,7 +10,18 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
-<body class="text-slate-800 flex flex-col h-full overflow-hidden font-sans antialiased" x-data="qcmPassation({{ count($qcm->questions) }}, {{ $qcm->duree_minutes }})" x-init="startTimer()">
+@php
+    $initialAnswers = [];
+    foreach($qcm->questions as $q) {
+        if ($q->type === 'choix_multiple') {
+            $initialAnswers[$q->id] = [];
+        }
+    }
+@endphp
+
+<body class="text-slate-800 flex flex-col h-full overflow-hidden font-sans antialiased" 
+      x-data="qcmPassation({{ count($qcm->questions) }}, {{ $qcm->duree_minutes }}, {{ Js::from($initialAnswers) }})" 
+      x-init="startTimer()">
 
     <!-- Header Timer (Sticky) -->
     <header class="w-full bg-white border-b border-slate-200 shadow-sm shrink-0 z-50">
@@ -100,16 +111,16 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('qcmPassation', (total, durationMinutes) => ({
+            Alpine.data('qcmPassation', (total, durationMinutes, initialAnswers = {}) => ({
                 currentQuestion: 0,
                 totalQuestions: total,
-                answers: {},
+                answers: initialAnswers,
                 timeRemaining: durationMinutes * 60, // in seconds
 
                 isSelected(questionId, optionId) {
                     if (!this.answers[questionId]) return false;
                     if (Array.isArray(this.answers[questionId])) {
-                        return this.answers[questionId].includes(optionId);
+                        return this.answers[questionId].map(String).includes(String(optionId));
                     }
                     return String(this.answers[questionId]) === String(optionId);
                 },
