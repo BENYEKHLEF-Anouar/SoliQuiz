@@ -1,37 +1,51 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SoliQuiz - L'évaluation interactive par Solicode</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Styles / Scripts -->
+    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
 </head>
+
 <body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden relative">
 
     <!-- Background Blobs -->
     <div class="blob opacity-20 -top-24 -left-24 animate-pulse-soft"></div>
     <div class="blob opacity-10 top-1/2 right-0 animate-float"></div>
-    <div class="blob opacity-15 top-[70%] -left-48 animate-pulse-soft" style="background: linear-gradient(to left, #38bdf8, transparent)"></div>
+    <div class="blob opacity-15 top-[70%] -left-48 animate-pulse-soft"
+        style="background: linear-gradient(to left, #38bdf8, transparent)"></div>
 
     <!-- Header / Nav -->
     <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100">
         <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
             <a href="#" class="flex items-center gap-2 group outline-none">
                 <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/10 transition-transform group-hover:scale-110">
-                    <svg class="text-white size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="text-white size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                         <path d="m9 15 2 2 4-4" />
                     </svg>
                 </div>
-                <span class="text-2xl font-heading font-bold tracking-tight text-slate-900">Soli<span class="text-primary-500">Quiz</span></span>
+                <span class="text-2xl font-heading font-bold tracking-tight text-slate-900">Soli<span
+                        class="text-primary-500">Quiz</span></span>
             </a>
 
             <div class="hidden md:flex items-center gap-8">
-                <a href="#features" class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Fonctionnalités</a>
-                <a href="#roles" class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Utilisation</a>
-                <a href="http://localhost:8001" target="_blank" class="py-3 px-6 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/25 active:scale-95 text-sm uppercase tracking-widest">
+                <a href="#features"
+                    class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Fonctionnalités</a>
+                <a href="#roles"
+                    class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors uppercase tracking-widest">Utilisation</a>
+                <a href="{{ Route::has('login') ? route('login') : 'http://localhost:8001' }}" target="_blank"
+                    class="py-3 px-6 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/25 active:scale-95 text-sm uppercase tracking-widest">
                     Se Connecter
                 </a>
             </div>
@@ -43,29 +57,35 @@
         <section class="relative py-20 lg:py-32 overflow-hidden reveal">
             <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
                 <div class="relative z-10">
-                    <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6">
+                    <span
+                        class="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6">
                         Première version 1.0
                     </span>
                     <h1 class="text-5xl lg:text-7xl font-heading font-bold text-slate-900 leading-[1.1] mb-8">
                         L'évaluation qui <span class="text-primary-500">booste</span> l'apprentissage.
                     </h1>
                     <p class="text-lg text-slate-600 mb-10 leading-relaxed max-w-xl">
-                        SoliQuiz transforme vos sessions d'évaluation en expériences interactives. Synchronisé en temps réel avec SoliLMS pour un suivi sans effort.
+                        SoliQuiz transforme vos sessions d'évaluation en expériences interactives. Synchronisé en temps
+                        réel avec SoliLMS pour un suivi sans effort.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="http://localhost:8001" target="_blank" class="py-4 px-10 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all shadow-xl shadow-primary-500/30 text-center uppercase tracking-widest">
+                        <a href="{{ Route::has('login') ? route('login') : 'http://localhost:8001' }}" target="_blank"
+                            class="py-4 px-10 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all shadow-xl shadow-primary-500/30 text-center uppercase tracking-widest">
                             Commencer maintenant
                         </a>
-                        <a href="#features" class="py-4 px-10 bg-white text-slate-700 border border-slate-200 font-bold rounded-2xl hover:bg-slate-50 transition-all text-center uppercase tracking-widest">
+                        <a href="#features"
+                            class="py-4 px-10 bg-white text-slate-700 border border-slate-200 font-bold rounded-2xl hover:bg-slate-50 transition-all text-center uppercase tracking-widest">
                             Découvrir
                         </a>
                     </div>
                 </div>
                 <div class="relative">
                     <div class="absolute inset-0 bg-primary-500/10 rounded-full blur-3xl scale-125 -z-10"></div>
-                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1000" alt="Collaboration" class="rounded-[2.5rem] shadow-2xl border-4 border-white">
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1000"
+                        alt="Collaboration" class="rounded-[2.5rem] shadow-2xl border-4 border-white">
                     <!-- Float Card -->
-                    <div class="absolute -bottom-10 -left-10 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 hidden sm:block max-w-[200px] animate-bounce-slow">
+                    <div
+                        class="absolute -bottom-10 -left-10 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 hidden sm:block max-w-[200px] animate-bounce-slow">
                         <div class="flex items-center gap-3 mb-2">
                             <div class="size-2 rounded-full bg-emerald-500 animate-ping"></div>
                             <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Sync Active</span>
@@ -146,7 +166,7 @@
                         <div class="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl"></div>
                         <h3 class="text-2xl font-heading font-bold text-white mb-6">Prêt à évaluer ?</h3>
                         <p class="text-slate-400 mb-10">Rejoignez les centres qui utilisent SoliQuiz pour dynamiser leurs formations.</p>
-                        <a href="http://localhost:8001" target="_blank" class="inline-flex py-4 px-12 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all uppercase tracking-widest text-sm">
+                        <a href="{{ Route::has('login') ? route('login') : 'http://localhost:8001' }}" target="_blank" class="inline-flex py-4 px-12 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all uppercase tracking-widest text-sm">
                             Accéder à mon espace
                         </a>
                     </div>
@@ -159,7 +179,8 @@
         <div class="max-w-7xl mx-auto px-6 flex flex-col items-center">
             <div class="flex items-center gap-2 mb-8 opacity-50">
                 <div class="size-7 bg-slate-900 rounded-lg flex items-center justify-center">
-                    <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                         <path d="m9 15 2 2 4-4" />
