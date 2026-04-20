@@ -12,7 +12,12 @@ class UniteApprentissage extends Model
 {
     protected $table = 'unites_apprentissage';
 
-    protected $fillable = ['seance_id', 'nom', 'code'];
+    protected $fillable = ['seance_id', 'user_id', 'nom', 'code'];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function seance(): BelongsTo
     {

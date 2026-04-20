@@ -118,6 +118,24 @@ class PassationService
                 'date_fin' => now(),
             ]);
 
+            // Auto-close logic
+            if ($qcm->classe_id && $qcm->statut === 'public') {
+                $totalStudents = \App\Models\User::where('classe_id', $qcm->classe_id)->count();
+                if ($totalStudents > 0) {
+                    $submittedStudentsCount = Tentative::where('qcm_id', $qcm->id)
+                        ->whereIn('etudiant_id', function($query) use ($qcm) {
+                            $query->select('id')->from('users')->where('classe_id', $qcm->classe_id);
+                        })
+                        ->where('statut', '!=', 'en_cours')
+                        ->distinct('etudiant_id')
+                        ->count('etudiant_id');
+
+                    if ($submittedStudentsCount >= $totalStudents) {
+                        $qcm->update(['statut' => 'termine']);
+                    }
+                }
+            }
+
             return [
                 'tentative' => $tentative->fresh(),
                 'score_obtenu' => $pourcentage,
@@ -136,11 +154,11 @@ class PassationService
         sort($correctes);
 
         if ($type === 'unique') {
-            return count($choisies) === 1 && $choisies[0] === $correctes[0];
+            return count($choisies) === 1 && $choisies[0] == $correctes[0];
         }
 
         // type === 'multiple' : les deux tableaux doivent être identiques
-        return $choisies === $correctes;
+        return $choisies == $correctes;
     }
 
     private function buildResultat(Tentative $tentative): array

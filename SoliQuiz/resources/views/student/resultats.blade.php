@@ -1,4 +1,4 @@
-@extends('components.layout.app')
+@extends('layouts.app')
 
 @section('content')
 <div class="bg-slate-50 min-h-screen pb-16">
@@ -46,55 +46,97 @@
         </section>
 
         <!-- Liste des Questions / Réponses -->
-        <section class="space-y-6">
-            <h2 class="text-xl font-heading font-bold text-slate-900 mb-6">Révision des réponses</h2>
+        <section class="space-y-8">
+            <div class="flex items-center justify-between px-2">
+                <h2 class="text-xl font-heading font-black text-slate-900 tracking-tight uppercase">Révision des réponses</h2>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ count($questionDetails) }} Questions évaluées</span>
+            </div>
 
             @foreach($questionDetails as $index => $question)
-            <div class="bg-white border {{ $question->isCorrect ? 'border-emerald-200' : 'border-red-200' }} rounded-2xl p-6 shadow-sm relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4">
-                    <span class="{{ $question->isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700' }} p-1 rounded-full inline-block">
-                        @if($question->isCorrect)
-                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7" /></svg>
-                        @else
-                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12" /></svg>
-                        @endif
-                    </span>
+            <div class="bg-white border-2 {{ $question->isCorrect ? 'border-emerald-50' : 'border-rose-50' }} rounded-[32px] p-8 md:p-10 shadow-sm relative group/card transition-all duration-500 hover:shadow-premium">
+                
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8 mt-2">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="inline-flex size-7 items-center justify-center rounded-lg font-black text-[10px] shadow-sm {{ $question->isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white' }}">
+                                {{ $index + 1 }}
+                            </span>
+                            <span class="text-[9px] font-black uppercase tracking-[0.2em] {{ $question->isCorrect ? 'text-emerald-500' : 'text-rose-500' }}">
+                                {{ $question->isCorrect ? 'Succès' : 'Échec' }} ({{ $question->points }} pts)
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 leading-snug">{{ $question->texte }}</h3>
+                    </div>
+
+                    @if($question->explication)
+                    <div x-data="{ open: false }" class="relative z-20">
+                        <button @mouseenter="open = true" @mouseleave="open = false" 
+                                class="size-10 bg-primary-50 text-primary-500 rounded-xl flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-sm">
+                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </button>
+                        <!-- Creative Popover -->
+                        <div x-show="open" 
+                             x-cloak
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-2"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="absolute right-0 mt-3 w-72 bg-slate-900 text-white p-5 rounded-2xl shadow-2xl z-[60] text-xs font-medium leading-relaxed border border-white/10">
+                            <div class="absolute -top-1.5 right-4 size-3 bg-slate-900 rotate-45 border-t border-l border-white/10"></div>
+                            <p class="font-bold text-primary-300 uppercase tracking-widest text-[9px] mb-2 font-heading">L'expertise du formateur</p>
+                            {{ $question->explication }}
+                        </div>
+                    </div>
+                    @endif
                 </div>
-                <h3 class="font-bold text-slate-800 pr-10">Q{{ $index + 1 }}. {{ $question->texte }}</h3>
-                <div class="mt-6 space-y-2">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach($question->options as $option)
                         @php
-                            $classes = "bg-white border border-slate-200 p-4 rounded-xl text-sm font-medium text-slate-600"; // default
-                            $badge = "";
+                            $isUserCorrect = $option->isSelected && $option->est_correcte;
+                            $isUserWrong = $option->isSelected && !$option->est_correcte;
+                            $isMissed = !$option->isSelected && $option->est_correcte;
+                            
+                            $cardStyle = "bg-slate-50/50 border-2 border-transparent p-5 rounded-2xl transition-all h-full";
+                            $iconColor = "text-slate-200";
+                            $statusText = "";
 
-                            if ($option->isSelected && $option->est_correcte) {
-                                $classes = "bg-emerald-50 border border-emerald-500 p-4 rounded-xl text-sm font-bold text-emerald-800 flex justify-between items-center group";
-                                $badge = "<span class='text-xs font-bold uppercase tracking-widest text-emerald-600'>Ma réponse — Correcte</span>";
-                            } elseif ($option->isSelected && !$option->est_correcte) {
-                                $classes = "bg-red-50 border border-red-500 p-4 rounded-xl text-sm font-bold text-red-800 flex justify-between items-center";
-                                $badge = "<span class='text-xs font-bold uppercase tracking-widest text-red-600'>Ma réponse — Fausse</span>";
-                            } elseif (!$option->isSelected && $option->est_correcte) {
-                                $classes = "bg-emerald-50 border border-emerald-500 p-4 rounded-xl text-sm font-bold text-emerald-800 flex justify-between items-center";
-                                $badge = "<span class='text-xs font-bold uppercase tracking-widest text-emerald-600'>Réponse attendue</span>";
+                            if ($isUserCorrect) {
+                                $cardStyle = "bg-emerald-50 border-emerald-200 p-5 rounded-2xl shadow-sm transition-all h-full relative overflow-hidden";
+                                $iconColor = "text-emerald-500";
+                                $statusText = "Correcte";
+                            } elseif ($isUserWrong) {
+                                $cardStyle = "bg-rose-50 border-rose-200 p-5 rounded-2xl shadow-sm transition-all h-full relative overflow-hidden";
+                                $iconColor = "text-rose-500";
+                                $statusText = "Ma réponse — Fausse";
+                            } elseif ($isMissed) {
+                                $cardStyle = "bg-emerald-50/50 border-2 border-dashed border-emerald-200 p-5 rounded-2xl transition-all h-full";
+                                $statusText = "Réponse attendue";
                             }
                         @endphp
-                        <div class="{!! $classes !!}">
-                            {{ $option->texte }}
-                            {!! $badge !!}
+                        
+                        <div class="{{ $cardStyle }}">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-slate-800 leading-tight">{{ $option->texte }}</span>
+                                @if($option->isSelected || $option->est_correcte)
+                                    <span class="text-[9px] font-black uppercase tracking-widest {{ ($isUserCorrect || $isMissed) ? 'text-emerald-600' : 'text-rose-600' }}">
+                                        {{ $statusText }}
+                                    </span>
+                                @endif
+                            </div>
+
+                            @if($option->isSelected && $option->feedback_specifique)
+                                <div class="mt-3 pt-3 border-t border-slate-900/5 items-center flex gap-2">
+                                    <span class="size-1 rounded-full {{ $isUserCorrect ? 'bg-emerald-400' : 'bg-rose-400' }}"></span>
+                                    <p class="text-[10px] font-bold text-slate-500 italic leading-snug">
+                                        {{ $option->feedback_specifique }}
+                                    </p>
+                                </div>
+                            @endif
                         </div>
                     @endforeach
                 </div>
-                
-                @if($question->explication)
-                <div class="mt-6 pt-4 border-t border-slate-50">
-                    <p class="text-xs font-medium text-slate-400 flex items-start gap-2 italic">
-                        <svg class="size-4 shrink-0 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Explication : {{ $question->explication }}
-                    </p>
-                </div>
-                @endif
             </div>
             @endforeach
         </section>

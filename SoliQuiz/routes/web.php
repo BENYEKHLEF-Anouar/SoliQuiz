@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('public.landing');
+    return view('welcome');
 })->name('home');
 
 Route::get('/dashboard', function () {
@@ -47,6 +47,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/formateur/qcm', [\App\Http\Controllers\Web\FormateurController::class, 'storeQcm'])->name('formateur.qcm.store');
     Route::delete('/formateur/qcm/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'destroyQcm'])->name('formateur.qcm.destroy');
     Route::get('/formateur/resultats', [\App\Http\Controllers\Web\FormateurController::class, 'resultatsCohorte'])->name('formateur.resultats');
+    
+    // Formateur Pedagogie Management
+    Route::get('/formateur/pedagogie', [\App\Http\Controllers\Web\FormateurController::class, 'pedagogie'])->name('formateur.pedagogie');
+    Route::post('/formateur/pedagogie/seance', [\App\Http\Controllers\Web\FormateurController::class, 'storeSeance'])->name('formateur.pedagogie.seance.store');
+    Route::delete('/formateur/pedagogie/seance/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'destroySeance'])->name('formateur.pedagogie.seance.destroy');
+    Route::post('/formateur/pedagogie/ua', [\App\Http\Controllers\Web\FormateurController::class, 'storeUA'])->name('formateur.pedagogie.ua.store');
+    Route::delete('/formateur/pedagogie/ua/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'destroyUA'])->name('formateur.pedagogie.ua.destroy');
+    Route::post('/formateur/pedagogie/competence', [\App\Http\Controllers\Web\FormateurController::class, 'storeCompetence'])->name('formateur.pedagogie.competence.store');
+    Route::delete('/formateur/pedagogie/competence/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'destroyCompetence'])->name('formateur.pedagogie.competence.destroy');
     
     // Web Student Routes
     Route::get('/student/dashboard', [\App\Http\Controllers\Web\StudentController::class, 'dashboard'])->name('student.dashboard');

@@ -41,10 +41,11 @@ class QcmService
             $qcm = QCM::create([
                 'formateur_id' => $data['formateur_id'],
                 'unite_apprentissage_id' => $data['unite_apprentissage_id'] ?? null,
+                'classe_id' => $data['classe_id'] ?? null,
                 'titre' => $data['titre'],
                 'duree_minutes' => $data['duree_minutes'],
                 'score_reussite' => $data['score_reussite'] ?? 20,
-                'est_publie' => $data['est_publie'] ?? false,
+                'statut' => $data['statut'] ?? 'brouillon',
             ]);
 
             if (!empty($data['questions'])) {
@@ -67,10 +68,11 @@ class QcmService
         return DB::transaction(function () use ($qcm, $data) {
             $qcm->update([
                 'unite_apprentissage_id' => $data['unite_apprentissage_id'] ?? $qcm->unite_apprentissage_id,
+                'classe_id' => $data['classe_id'] ?? $qcm->classe_id,
                 'titre' => $data['titre'] ?? $qcm->titre,
                 'duree_minutes' => $data['duree_minutes'] ?? $qcm->duree_minutes,
                 'score_reussite' => $data['score_reussite'] ?? $qcm->score_reussite,
-                'est_publie' => $data['est_publie'] ?? $qcm->est_publie,
+                'statut' => $data['statut'] ?? $qcm->statut,
             ]);
 
             if (isset($data['questions'])) {
@@ -91,7 +93,8 @@ class QcmService
      */
     public function togglePublication(QCM $qcm): QCM
     {
-        $qcm->update(['est_publie' => !$qcm->est_publie]);
+        $newStatut = $qcm->statut === 'public' ? 'brouillon' : 'public';
+        $qcm->update(['statut' => $newStatut]);
         return $qcm->fresh();
     }
 
@@ -134,9 +137,9 @@ class QcmService
         $formateur = \App\Models\User::findOrFail($formateurId);
         
         return [
-            'classes' => $formateur->classesFormateur()->with('etudiants')->get(),
+            'classes' => $formateur->classeGeree()->with('etudiants')->get(),
             'qcms' => QCM::where('formateur_id', $formateurId)
-                ->where('est_publie', true)
+                ->where('statut', '!=', 'brouillon')
                 ->with(['tentatives.etudiant', 'uniteApprentissage'])
                 ->latest()
                 ->get()

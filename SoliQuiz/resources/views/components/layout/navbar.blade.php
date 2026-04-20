@@ -8,7 +8,7 @@
         <!-- Logo -->
         <div class="md:col-span-3">
             <a class="flex items-center gap-2 group outline-none" href="{{ route('dashboard') }}">
-                <div class="size-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-110">
+                <div class="size-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/20">
                     <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
@@ -45,7 +45,7 @@
         <div class="flex items-center gap-x-3 md:gap-x-4 ms-auto md:col-span-3 justify-end relative">
             <div class="hs-dropdown relative inline-flex" x-data="{ open: false }">
                 <button @click="open = !open" @click.away="open = false" type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-full border {{ $role === 'admin' ? 'border-slate-700 bg-slate-800 text-white' : 'border-slate-200 bg-white text-slate-800' }} shadow-sm hover:opacity-80 p-1 pr-3 transition-all active:scale-95">
-                    <img class="inline-block size-8 rounded-full shadow-sm" src="https://ui-avatars.com/api/?name={{ urlencode($user->prenom . ' ' . $user->nom) }}&background=0ea5e9&color=fff" alt="Avatar">
+                    <img class="inline-block size-8 rounded-full shadow-sm" src="https://ui-avatars.com/api/?name={{ urlencode($user->prenom . ' ' . $user->nom) }}&background=17a2b8&color=fff" alt="Avatar">
                     <span class="hidden md:inline-block font-heading font-bold text-sm">{{ $user->prenom }}.{{ substr($user->nom, 0, 1) }}</span>
                     <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                 </button>

@@ -77,6 +77,18 @@ class User extends Authenticatable
         return $this->hasMany(QCM::class, 'formateur_id');
     }
 
+    /** Les sessions créées par ce formateur */
+    public function seances(): HasMany
+    {
+        return $this->hasMany(Seance::class);
+    }
+
+    /** Les unités d'apprentissage créées par ce formateur */
+    public function unitesApprentissage(): HasMany
+    {
+        return $this->hasMany(UniteApprentissage::class);
+    }
+
     // ─── Relations Etudiant ──────────────────────────────
 
     /** La classe de l'étudiant */

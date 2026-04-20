@@ -1,4 +1,4 @@
-@extends('components.layout.app')
+@extends('layouts.app')
 
 @section('content')
 <div class="shell-outer min-h-screen">

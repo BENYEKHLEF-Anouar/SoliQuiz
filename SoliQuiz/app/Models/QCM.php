@@ -13,19 +13,25 @@ class QCM extends Model
     protected $fillable = [
         'formateur_id',
         'unite_apprentissage_id',
+        'classe_id',
         'titre',
         'duree_minutes',
         'score_reussite',
-        'est_publie',
+        'statut',
     ];
 
     protected $casts = [
-        'est_publie' => 'boolean',
+        'statut' => 'string',
     ];
 
     public function formateur(): BelongsTo
     {
         return $this->belongsTo(User::class, 'formateur_id');
+    }
+
+    public function classe(): BelongsTo
+    {
+        return $this->belongsTo(Classe::class);
     }
 
     public function uniteApprentissage(): BelongsTo
