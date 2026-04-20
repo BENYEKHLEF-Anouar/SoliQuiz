@@ -8,6 +8,9 @@
 
     <title>{{ config('app.name', 'SoliQuiz') }}</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+
     <!-- Tailwind V4 & Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
