@@ -7,13 +7,9 @@
     <!-- Header Hero -->
     <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12">
         <div>
-            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
-                <span>Espace Personnel</span>
-                <span class="size-1 rounded-full bg-slate-300"></span>
-                <span class="text-slate-600">Configurations</span>
-            </nav>
+            <x-ui.breadcrumb :items="['Espace Personnel' => route('dashboard'), 'Configurations' => null]" />
             <h1 class="text-4xl lg:text-5xl font-heading font-black text-slate-900 tracking-tight leading-none mb-4">
-                Paramètres <span class="text-primary-500">Profil</span>
+                Paramètres <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400">Profil</span>
             </h1>
             <p class="text-slate-500 font-medium max-w-xl leading-relaxed">
                 Personnalisez votre identité numérique sur la plateforme et renforcez la sécurité de votre compte SoliQuiz.
@@ -34,7 +30,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-10">
         <!-- Sidebar Navigation (Mockup behavior) -->
         <div class="xl:col-span-1 space-y-6">
-            <div class="glass bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm">
+            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)]">
                 <div class="flex items-center gap-6 mb-10">
                     <div class="relative">
                         <img class="size-20 rounded-[28px] shadow-xl border-4 border-white" 
@@ -50,7 +46,7 @@
                 <div class="space-y-2">
                     <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Membre depuis</span>
-                        <span class="text-xs font-bold text-slate-700">{{ $user->created_at->format('M Y') }}</span>
+                        <span class="text-xs font-bold text-slate-700">{{ $user->created_at ? $user->created_at->format('M Y') : 'N/A' }}</span>
                     </div>
                 </div>
             </div>
@@ -59,7 +55,7 @@
         <!-- Forms Section -->
         <div class="xl:col-span-2 space-y-10">
             <!-- Basic Info Form -->
-            <div class="glass bg-white rounded-[40px] p-8 lg:p-12 border border-slate-100 shadow-sm relative overflow-hidden">
+            <div class="bg-white rounded-[2.5rem] p-8 lg:p-12 border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] relative overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
                 <div class="absolute top-0 right-0 size-64 bg-slate-50 rounded-full -mr-32 -mt-32"></div>
                 
                 <div class="relative z-10">
@@ -102,7 +98,7 @@
             </div>
 
             <!-- Password Form -->
-            <div class="glass bg-white rounded-[40px] p-8 lg:p-12 border border-slate-100 shadow-sm">
+            <div class="bg-white rounded-[2.5rem] p-8 lg:p-12 border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
                 <h2 class="text-2xl font-black font-heading text-slate-900 tracking-tight uppercase italic mb-10">Protocole de Sécurité</h2>
                 
                 <form action="{{ route('profile.password.update') }}" method="POST" class="space-y-8">

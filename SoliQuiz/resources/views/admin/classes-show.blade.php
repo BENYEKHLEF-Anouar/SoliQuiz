@@ -12,13 +12,13 @@
                     <svg class="size-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M9 5l7 7-7 7"/></svg>
                     <span class="text-slate-900">Détails Classe</span>
                 </nav>
-                <h1 class="text-5xl font-heading font-black text-slate-900 tracking-tight italic uppercase leading-none">
-                    {{ $classe->nom }} <span class="text-primary-500 text-3xl not-italic">— {{ $classe->promotion }}</span>
+                <h1 class="text-4xl lg:text-5xl font-heading font-black text-slate-900 tracking-tight leading-none">
+                    {{ $classe->nom }} <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400">{{ $classe->promotion }}</span>
                 </h1>
             </div>
             
             <div class="flex items-center gap-4">
-                <div class="bg-white border border-slate-200/60 px-8 py-5 rounded-[2rem] shadow-xl shadow-slate-200/40">
+                <div class="bg-white border border-slate-100 px-8 py-5 rounded-[2rem] shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)]">
                     <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] block mb-2">Responsable Pédagogique</span>
                     <div class="flex items-center gap-3">
                         <div class="size-8 rounded-xl bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-xs uppercase">
@@ -48,7 +48,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <!-- Student List -->
             <div class="lg:col-span-2 space-y-8">
-                <div class="bg-white rounded-[3rem] border border-slate-200/60 overflow-hidden shadow-2xl shadow-slate-200/50">
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)]">
                     <div class="p-10 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
                         <div>
                             <h2 class="text-2xl font-heading font-black text-slate-900 uppercase italic tracking-tight">Liste des Apprenants</h2>

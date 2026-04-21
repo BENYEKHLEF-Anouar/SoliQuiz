@@ -1,124 +1,344 @@
 @extends('layouts.base')
 
-@section('title', 'SoliQuiz - Passation QCM - ' . $qcm->titre)
+@section('title', 'SoliQuiz - ' . $qcm->titre)
 
-@section('body-class', 'text-slate-800 flex flex-col h-full overflow-hidden font-sans antialiased')
+@section('body-class', 'bg-slate-50 min-h-screen font-sans antialiased')
 
 @section('body')
 
 @php
+    // CRITICAL: Initialize ALL questions (radio = null, checkbox = [])
+    // DB stores 'unique' and 'multiple' (storeQcm converts choix_* before saving)
     $initialAnswers = [];
     foreach($qcm->questions as $q) {
-        if ($q->type === 'choix_multiple') {
+        if ($q->type === 'multiple') {
             $initialAnswers[$q->id] = [];
+        } else {
+            $initialAnswers[$q->id] = null; // null for single-choice
         }
     }
 @endphp
 
-<body class="text-slate-800 flex flex-col h-full overflow-hidden font-sans antialiased" 
-      x-data="qcmPassation({{ count($qcm->questions) }}, {{ $qcm->duree_minutes }}, {{ Js::from($initialAnswers) }})" 
-      x-init="startTimer()">
+<div x-data="qcmForm({{ $tempsRestant }}, {{ Js::from($initialAnswers) }})" x-init="startTimer()" class="min-h-screen flex flex-col">
+    
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-4">
+            <div class="flex items-center justify-between gap-4">
+                <!-- Back & Title -->
+                <div class="flex items-center gap-4 min-w-0 flex-1">
+                    <a href="{{ route('student.bibliotheque') }}" 
+                       class="shrink-0 size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 transition-colors text-slate-500">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </a>
+                    <div class="min-w-0">
+                        <h1 class="text-lg font-bold text-slate-900 truncate">{{ $qcm->titre }}</h1>
+                        <p class="text-xs text-slate-500 truncate">
+                            {{ $qcm->uniteApprentissage ? $qcm->uniteApprentissage->nom : 'Évaluation' }}
+                        </p>
+                    </div>
+                </div>
 
-    <!-- Header Timer (Sticky) -->
-    <header class="w-full bg-white border-b border-slate-200 shadow-sm shrink-0 z-50">
-        <div class="max-w-3xl mx-auto px-4 py-4 md:py-5 flex justify-between items-center w-full">
-            <div class="flex items-center gap-4">
-                <a href="{{ route('student.bibliotheque') }}" class="text-slate-400 hover:text-slate-600 transition-colors">
-                    <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                </a>
-                <h1 class="text-lg md:text-xl font-bold font-heading text-slate-900 tracking-tight">{{ $qcm->titre }}</h1>
-                <span class="hidden md:inline-flex bg-slate-100 text-slate-600 py-1.5 px-3 rounded-full text-xs font-semibold" x-text="'Question ' + (currentQuestion + 1) + ' / ' + totalQuestions"></span>
+                <!-- Timer -->
+                <div class="shrink-0 flex items-center gap-2 py-2 px-3 rounded-xl font-mono text-sm font-bold"
+                     :class="timeRemaining <= 60 ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-slate-100 text-slate-700'">
+                    <svg class="size-4" :class="timeRemaining <= 60 ? 'animate-pulse' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span x-text="formattedTime"></span>
+                </div>
             </div>
 
-            <!-- Timer -->
-            <div class="flex items-center gap-2 py-1.5 px-3 rounded-xl transition-colors" :class="timeRemaining <= 60 ? 'bg-semantic-error/10 border border-semantic-error/30 text-semantic-error' : 'bg-semantic-warning/10 border border-semantic-warning/30 text-semantic-warning'">
-                <svg class="shrink-0 size-4 animate-pulse" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                </svg>
-                <span class="text-sm font-bold font-mono" x-text="formattedTime"></span>
+            <!-- Progress Bar -->
+            <div class="mt-4 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-primary-500 rounded-full transition-all duration-500"
+                     :style="`width: ${completionPercentage}%`"></div>
             </div>
-        </div>
-        <!-- Progress Bar -->
-        <div class="h-1 bg-slate-100 w-full" role="progressbar">
-            <div class="flex flex-col justify-center rounded-r-full overflow-hidden bg-primary-500 h-1 transition-all duration-500" :style="`width: ${((currentQuestion + 1) / totalQuestions) * 100}%`"></div>
+            <p class="mt-2 text-xs font-medium text-slate-400 text-center">
+                <span x-text="answeredCount"></span> / {{ count($qcm->questions) }} questions répondues
+            </p>
         </div>
     </header>
 
-    <!-- Main Content (Scrollable) -->
-    <main class="flex-1 overflow-y-auto w-full max-w-3xl mx-auto px-4 py-8 md:py-12">
-        <form id="qcm-form" action="{{ route('student.qcm.submit', $qcm->id) }}" method="POST">
-            @csrf
-
-            @foreach($qcm->questions as $index => $question)
-            <div x-show="currentQuestion === {{ $index }}" x-cloak class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 shrink-0">
-                <div class="md:hidden inline-flex mb-4 bg-slate-100 text-slate-600 py-1.5 px-3 rounded-full text-[10px] uppercase font-bold tracking-wider">
-                    Question {{ $index + 1 }} / {{ count($qcm->questions) }}
+    <!-- Main Content -->
+    <main class="flex-1 py-8 px-4 sm:px-6">
+        <div class="max-w-3xl mx-auto space-y-6">
+            
+            <!-- QCM Header Card -->
+            <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] p-8 md:p-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="size-10 bg-primary-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-500/30">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/>
+                        </svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">QCM à compléter</span>
                 </div>
-
-                <h2 class="text-xl md:text-2xl font-semibold text-slate-900 leading-relaxed mb-8">
-                    {{ $question->texte }}
-                    <span class="block text-sm font-normal text-slate-500 mt-2">{{ $question->type === 'choix_unique' ? '(Choix unique)' : '(Choix multiples)' }}</span>
-                </h2>
-
-                <div class="grid gap-3">
-                    @foreach($question->options as $option)
-                    <label class="flex p-4 w-full bg-white border border-slate-200 rounded-xl text-base focus-within:ring-2 focus-within:ring-primary-500 hover:bg-primary-50 cursor-pointer transition-colors shadow-sm"
-                           :class="isSelected('{{ $question->id }}', '{{ $option->id }}') ? 'bg-primary-50 border-primary-500 ring-1 ring-primary-500' : ''">
-                        <input type="{{ $question->type === 'choix_unique' ? 'radio' : 'checkbox' }}" 
-                               name="answers[{{ $question->id }}]{{ $question->type === 'choix_multiple' ? '[]' : '' }}" 
-                               value="{{ $option->id }}"
-                               x-model="answers['{{ $question->id }}']"
-                               class="shrink-0 mt-1 size-4 rounded-{{ $question->type === 'choix_unique' ? 'full' : 'md' }} border-slate-300 text-primary-500 focus:ring-primary-500">
-                        <span class="font-medium ms-4" :class="isSelected('{{ $question->id }}', '{{ $option->id }}') ? 'text-primary-900' : 'text-slate-800'">
-                            {{ $option->texte }}
-                        </span>
-                    </label>
-                    @endforeach
+                <h2 class="text-2xl md:text-3xl font-heading font-black text-slate-900 leading-tight mb-3">{{ $qcm->titre }}</h2>
+                <div class="flex flex-wrap gap-4 text-sm">
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                        </svg>
+                        <span class="font-medium">{{ $qcm->duree_minutes }} minutes</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4m-2 6v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                        </svg>
+                        <span class="font-medium">{{ count($qcm->questions) }} questions</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <span class="font-medium">Seuil: {{ $qcm->score_reussite }}/20</span>
+                    </div>
                 </div>
             </div>
-            @endforeach
 
-        </form>
+            <!-- Questions Form -->
+            <form id="qcm-form" action="{{ route('student.qcm.submit', $qcm->id) }}" method="POST" class="space-y-6">
+                @csrf
+
+                @foreach($qcm->questions as $index => $question)
+                @php $qId = (string) $question->id; @endphp
+                <div class="bg-white rounded-[2.5rem] border-2 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] p-8 md:p-10 transition-all duration-300"
+                     :class="isQuestionAnswered('{{ $qId }}') ? 'border-primary-200 shadow-[0_8px_30px_-4px_rgba(20,100,200,0.08)]' : 'border-slate-100'">
+                    
+                    <!-- Question Header -->
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="shrink-0 size-10 rounded-xl flex items-center justify-center font-black text-sm shadow-lg transition-colors duration-300"
+                             :class="isQuestionAnswered('{{ $qId }}') ? 'bg-primary-500 text-white shadow-primary-500/20' : 'bg-slate-900 text-white shadow-slate-900/10'">
+                            {{ $index + 1 }}
+                        </div>
+                        <div class="flex-1 pt-1">
+                            <h3 class="text-lg md:text-xl font-bold text-slate-900 leading-relaxed">{{ $question->texte }}</h3>
+                            <div class="flex items-center gap-3 mt-2">
+                                <span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-wider">
+                                    @if($question->type === 'unique')
+                                        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                                        Choix unique
+                                    @else
+                                        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                                        Choix multiples
+                                    @endif
+                                </span>
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">{{ $question->points }} point{{ $question->points > 1 ? 's' : '' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="space-y-3 pl-14">
+                        @foreach($question->options as $option)
+                        @php $oId = (string) $option->id; @endphp
+
+                        @if($question->type === 'unique')
+                        {{-- ================================ --}}
+                        {{-- SINGLE CHOICE: Click-handler based --}}
+                        {{-- ================================ --}}
+                        <div class="group flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200"
+                             :class="isSelected('{{ $qId }}', '{{ $oId }}') 
+                                 ? 'border-primary-500 bg-primary-50 shadow-sm' 
+                                 : 'border-slate-100 hover:border-primary-200 hover:bg-primary-50/30'"
+                             @click="selectAnswer('{{ $qId }}', '{{ $oId }}')">
+
+                            <!-- Custom Radio -->
+                            <div class="shrink-0 size-6 rounded-full border-2 flex items-center justify-center transition-all duration-200"
+                                 :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'border-primary-500 bg-primary-500' : 'border-slate-300'">
+                                <div class="size-2.5 rounded-full bg-white transition-transform duration-200"
+                                     :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'scale-100' : 'scale-0'"></div>
+                            </div>
+
+                            <!-- Option Text -->
+                            <span class="flex-1 font-medium transition-colors"
+                                  :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'text-slate-900' : 'text-slate-700'">
+                                {{ $option->texte }}
+                            </span>
+                        </div>
+
+                        @else
+                        {{-- ================================ --}}
+                        {{-- MULTIPLE CHOICE: Click-handler based --}}
+                        {{-- ================================ --}}
+                        <div class="group flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200"
+                             :class="isSelected('{{ $qId }}', '{{ $oId }}') 
+                                 ? 'border-primary-500 bg-primary-50 shadow-sm' 
+                                 : 'border-slate-100 hover:border-primary-200 hover:bg-primary-50/30'"
+                             @click="toggleAnswer('{{ $qId }}', '{{ $oId }}')">
+
+                            <!-- Custom Checkbox -->
+                            <div class="shrink-0 size-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200"
+                                 :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'border-primary-500 bg-primary-500' : 'border-slate-300'">
+                                <svg class="size-4 text-white transition-transform duration-200"
+                                     :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'scale-100' : 'scale-0'"
+                                     fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <path d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+
+                            <!-- Option Text -->
+                            <span class="flex-1 font-medium transition-colors"
+                                  :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'text-slate-900' : 'text-slate-700'">
+                                {{ $option->texte }}
+                            </span>
+                        </div>
+                        @endif
+
+                        @endforeach
+
+                        {{-- ================================ --}}
+                        {{-- HIDDEN INPUTS FOR FORM SUBMIT    --}}
+                        {{-- Reactive, driven by Alpine state --}}
+                        {{-- ================================ --}}
+                        @if($question->type === 'unique')
+                            <input type="hidden" 
+                                   name="answers[{{ $question->id }}]"
+                                   :value="answers['{{ $qId }}'] ?? ''">
+                        @else
+                            {{-- For checkboxes we generate one hidden input per selected option --}}
+                            <template x-for="selectedId in (answers['{{ $qId }}'] || [])" :key="selectedId">
+                                <input type="hidden" 
+                                       name="answers[{{ $question->id }}][]"
+                                       :value="selectedId">
+                            </template>
+                            {{-- Sentinel: ensures empty array sends something so controller knows --}}
+                            <input type="hidden" name="answers[{{ $question->id }}][]" value=""
+                                   x-show="false"
+                                   x-bind:disabled="(answers['{{ $qId }}'] || []).length > 0">
+                        @endif
+                    </div>
+
+                    <!-- Hint (only if provided by formateur) -->
+                    @if($question->explication_feedback)
+                    <div class="mt-6 pt-6 border-t border-slate-100 pl-14">
+                        <div class="flex items-start gap-3 bg-amber-50 rounded-xl p-4 border border-amber-100">
+                            <div class="shrink-0 size-6 bg-amber-500 rounded-lg flex items-center justify-center text-white">
+                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-black text-amber-600 uppercase tracking-wider block mb-1">Indice</span>
+                                <p class="text-sm text-amber-800">{{ $question->explication_feedback }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                @endforeach
+
+            </form>
+        </div>
     </main>
 
-    <!-- Footer Navigation (Sticky Fixed) -->
-    <footer class="w-full bg-white border-t border-slate-200 p-4 shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <div class="max-w-3xl mx-auto flex items-center justify-between">
-            <span class="text-xs text-slate-500 hidden sm:inline-block">Ne quittez pas cette page.</span>
-            <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-                <button type="button" x-show="currentQuestion > 0" @click="currentQuestion--" class="py-2.5 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 transition-colors group">
-                    <svg class="size-4 transition-transform group-hover:-translate-x-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-                    Précédent
-                </button>
-                
-                <button type="button" x-show="currentQuestion < totalQuestions - 1" @click="currentQuestion++" class="py-2.5 px-6 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-xl border border-transparent bg-primary-500 text-white shadow-sm hover:bg-primary-600 hover:-translate-y-0.5 transition-all w-full sm:w-auto">
-                    Suivant
-                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                </button>
-
-                <button type="submit" form="qcm-form" x-show="currentQuestion === totalQuestions - 1" class="py-2.5 px-6 inline-flex justify-center items-center gap-x-2 text-sm font-black rounded-xl border border-transparent bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 hover:-translate-y-0.5 transition-all w-full sm:w-auto uppercase tracking-wider">
-                    Terminer le QCM
-                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7" /></svg>
-                </button>
+    <!-- Sticky Submit Footer -->
+    <footer class="sticky bottom-0 z-40 bg-white/80 backdrop-blur-xl border-t border-slate-200 p-4 sm:p-6">
+        <div class="max-w-3xl mx-auto flex items-center justify-between gap-4">
+            <div class="hidden sm:block">
+                <p class="text-sm font-medium text-slate-600">
+                    <span x-text="answeredCount"></span> / {{ count($qcm->questions) }} répondues
+                </p>
+                <p class="text-xs text-slate-400">Vous pouvez modifier vos réponses avant de soumettre</p>
             </div>
+            
+            <button type="button"
+                    class="flex-1 sm:flex-none h-14 px-8 bg-slate-900 text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-primary-500 shadow-xl shadow-slate-900/10 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+                    :class="answeredCount < {{ count($qcm->questions) }} ? 'opacity-80' : ''"
+                    @click="submitForm()">
+                <span>Soumettre le QCM</span>
+                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path d="M5 13l4 4L19 7"/>
+                </svg>
+            </button>
         </div>
     </footer>
 
+    <!-- Incomplete Warning Modal -->
+    <div x-show="showWarning" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+        <div class="bg-white rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl" @click.away="showWarning = false">
+            <div class="size-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <svg class="size-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-heading font-black text-slate-900 text-center mb-2">Questions non répondues</h3>
+            <p class="text-slate-500 text-center mb-6">Vous n'avez pas répondu à toutes les questions. Êtes-vous sûr de vouloir soumettre ?</p>
+            <div class="flex gap-3">
+                <button @click="showWarning = false" class="flex-1 h-12 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+                    Continuer
+                </button>
+                <button @click="document.getElementById('qcm-form').submit()" class="flex-1 h-12 rounded-xl bg-slate-900 text-white font-bold hover:bg-primary-500 transition-colors">
+                    Soumettre quand même
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('qcmPassation', (total, durationMinutes, initialAnswers = {}) => ({
-                currentQuestion: 0,
-                totalQuestions: total,
+            Alpine.data('qcmForm', (timeRemainingSeconds, initialAnswers = {}) => ({
                 answers: initialAnswers,
-                timeRemaining: durationMinutes * 60, // in seconds
+                timeRemaining: timeRemainingSeconds,
+                showWarning: false,
+                totalQuestions: {{ count($qcm->questions) }},
 
-                isSelected(questionId, optionId) {
-                    if (!this.answers[questionId]) return false;
-                    if (Array.isArray(this.answers[questionId])) {
-                        return this.answers[questionId].map(String).includes(String(optionId));
+                /**
+                 * Select a single answer (radio behaviour).
+                 * Replaces any previous selection for this question.
+                 */
+                selectAnswer(questionId, optionId) {
+                    this.answers[questionId] = String(optionId);
+                    // Force Alpine reactivity by re-assigning the whole object
+                    this.answers = { ...this.answers };
+                },
+
+                /**
+                 * Toggle one option in a multi-choice answer array.
+                 */
+                toggleAnswer(questionId, optionId) {
+                    const current = this.answers[questionId] || [];
+                    const strId = String(optionId);
+                    const idx = current.map(String).indexOf(strId);
+                    if (idx === -1) {
+                        this.answers[questionId] = [...current, strId];
+                    } else {
+                        this.answers[questionId] = current.filter((_, i) => i !== idx);
                     }
-                    return String(this.answers[questionId]) === String(optionId);
+                    this.answers = { ...this.answers };
+                },
+
+                /**
+                 * Check if a given option is selected for a question.
+                 */
+                isSelected(questionId, optionId) {
+                    const answer = this.answers[questionId];
+                    if (answer === null || answer === undefined) return false;
+                    if (Array.isArray(answer)) {
+                        return answer.map(String).includes(String(optionId));
+                    }
+                    return String(answer) === String(optionId);
+                },
+
+                /**
+                 * Check if a question has at least one answer.
+                 */
+                isQuestionAnswered(questionId) {
+                    const answer = this.answers[questionId];
+                    if (answer === null || answer === undefined || answer === '') return false;
+                    if (Array.isArray(answer)) return answer.length > 0;
+                    return true;
+                },
+
+                get answeredCount() {
+                    return Object.keys(this.answers).filter(id => this.isQuestionAnswered(id)).length;
+                },
+
+                get completionPercentage() {
+                    return this.totalQuestions > 0 ? (this.answeredCount / this.totalQuestions) * 100 : 0;
                 },
 
                 get formattedTime() {
@@ -128,21 +348,30 @@
                 },
 
                 startTimer() {
-                    if(this.timeRemaining <= 0) return;
-                    
+                    if (this.timeRemaining <= 0) return;
                     const interval = setInterval(() => {
                         this.timeRemaining--;
                         if (this.timeRemaining <= 0) {
                             clearInterval(interval);
-                            this.autoSubmit();
+                            document.getElementById('qcm-form').submit();
                         }
                     }, 1000);
                 },
 
-                autoSubmit() {
-                    document.getElementById('qcm-form').submit();
+                submitForm() {
+                    if (this.answeredCount < this.totalQuestions) {
+                        this.showWarning = true;
+                    } else {
+                        document.getElementById('qcm-form').submit();
+                    }
                 }
             }));
         });
+
+        // Prevent accidental navigation
+        window.onbeforeunload = function() {
+            return "Vous êtes en train de passer un QCM. Êtes-vous sûr de vouloir quitter cette page ?";
+        };
     </script>
+</div>
 @endsection

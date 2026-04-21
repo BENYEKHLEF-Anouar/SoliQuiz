@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erreur Système - SoliQuiz</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-slate-900 h-full flex items-center justify-center p-6 antialiased font-sans text-white">
+    <div class="max-w-xl w-full text-center">
+        <div class="relative inline-block mb-12">
+            <h1 class="text-[180px] font-heading font-black text-white/5 leading-none select-none">500</h1>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div class="size-24 bg-rose-500 rounded-[2rem] shadow-2xl flex items-center justify-center -rotate-12 animate-pulse">
+                    <svg class="text-white size-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.83-5.83m0 0a2.978 2.978 0 01-3.07-3.07L7.31 3.51a2.652 2.652 0 00-3.8 3.8l4.89 4.89m5.83 5.83a2.978 2.978 0 01-3.07-3.07L4.5 11.42" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="text-4xl font-heading font-black text-white mb-4 uppercase italic tracking-tight">Maintenance <span class="text-rose-500">Imprévue</span>.</h2>
+        <p class="text-slate-400 font-medium text-lg mb-10 leading-relaxed">
+            Notre système rencontre une difficulté technique. Nos équipes d'ingénierie travaillent à la résolution du problème pour restaurer vos outils pédagogiques.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="{{ url('/') }}" class="w-full sm:w-auto px-8 py-5 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary-500 hover:text-white transition-all shadow-xl active:scale-95">
+                Retour à l'accueil
+            </a>
+            <button onclick="location.reload()" class="w-full sm:w-auto px-8 py-5 bg-slate-800 text-white border border-slate-700 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-700 transition-all shadow-sm">
+                Réessayer
+            </button>
+        </div>
+        
+        <p class="mt-16 text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">SoliQuiz Ecosystem — Resilience & stability</p>
+    </div>
+</body>
+</html>

@@ -2,8 +2,8 @@ id,seance_id,nom,code
 1,1,Environnement & Outils Web,UA-WEB-01
 2,2,HTML Structuration & Sémantique,UA-HTML-01
 3,2,CSS Mise en Page & Responsive,UA-CSS-01
-4,3,JavaScript Variables & Fonctions,UA-JS-01
-5,3,JavaScript DOM & Événements,UA-JS-02
-6,4,PHP Syntaxe & Variables,UA-PHP-01
-7,4,PHP Fonctions & Tableaux,UA-PHP-02
-8,5,SQL Requêtes & Jointures,UA-SQL-01
+4,3,JavaScript Fondamentaux,UA-JS-01
+5,3,JavaScript DOM & API,UA-JS-02
+6,4,PHP Bases & Tableaux,UA-PHP-01
+7,4,Laravel Fondamentaux,UA-LARAVEL-01
+8,5,SQL Bases de Données,UA-SQL-01

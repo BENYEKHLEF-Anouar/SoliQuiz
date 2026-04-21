@@ -14,7 +14,12 @@ class QcmPublicService
      */
     public function getQcmsDisponibles(User $etudiant): Collection
     {
-        return QCM::where('est_publie', true)
+        return QCM::where('statut', 'public')
+            ->where(function($query) use ($etudiant) {
+                // Either has no class restriction or student is in the target class
+                $query->whereNull('classe_id')
+                      ->orWhere('classe_id', $etudiant->classe_id);
+            })
             ->with(['formateur', 'uniteApprentissage'])
             ->withCount('questions')
             ->withCount([
@@ -29,9 +34,13 @@ class QcmPublicService
      * Retourne un QCM publié avec ses questions et options (sans révéler est_correcte).
      * Utilisé pour afficher l'interface de passation.
      */
-    public function getQcmPourPassation(int $qcmId): QCM
+    public function getQcmPourPassation(int $qcmId, ?int $etudiantClasseId = null): QCM
     {
-        $qcm = QCM::where('est_publie', true)
+        $qcm = QCM::where('statut', 'public')
+            ->where(function($query) use ($etudiantClasseId) {
+                $query->whereNull('classe_id')
+                      ->orWhere('classe_id', $etudiantClasseId);
+            })
             ->with([
                 'questions' => fn($q) => $q->with([
                     'options' => fn($o) =>

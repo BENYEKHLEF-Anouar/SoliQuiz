@@ -7,13 +7,13 @@
     <!-- Header Section -->
     <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12">
         <div>
-            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
+            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 italic">
                 <span>Ressources Humaines</span>
                 <span class="size-1 rounded-full bg-slate-300"></span>
-                <span class="text-slate-600">Gestion des Cohortes</span>
+                <span class="text-slate-600">Planification des Cohortes</span>
             </nav>
             <h1 class="text-4xl lg:text-5xl font-heading font-black text-slate-900 tracking-tight leading-none mb-4">
-                Équipes & <span class="text-primary-500">Promotions</span>
+                Équipes & <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400">Promotions</span>
             </h1>
             <p class="text-slate-500 font-medium max-w-xl leading-relaxed">
                 Supervisez les groupes d'apprentissage, connectez les formateurs et suivez le volume d'apprenants par section.
@@ -29,13 +29,14 @@
 
     <!-- Alert Messages -->
     <div class="space-y-4 mb-10">
+    <div class="space-y-4 mb-10">
         @if(session('success'))
             <div class="glass border-emerald-100 bg-emerald-50/50 p-6 rounded-[24px] flex items-center gap-4 animate-in slide-in-from-top duration-500">
                 <div class="size-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
                     <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7" /></svg>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-0.5">Opération Réussie</p>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-0.5">Notification Système</p>
                     <p class="text-sm font-bold text-slate-900">{{ session('success') }}</p>
                 </div>
             </div>
@@ -61,7 +62,7 @@
     <!-- Classes Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($classes as $classe)
-            <div class="glass bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm hover:shadow-premium transition-all relative overflow-hidden group">
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group active:scale-[0.98]">
                 <div class="absolute -right-8 -top-8 size-32 bg-primary-50 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
                 
                 <div class="flex justify-between items-start mb-8 relative z-10">

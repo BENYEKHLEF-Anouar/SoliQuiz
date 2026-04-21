@@ -27,14 +27,14 @@ class QcmPublicServiceTest extends TestCase
         $result = $this->service->getQcmsDisponibles($etudiant);
 
         foreach ($result as $qcm) {
-            $this->assertTrue($qcm->est_publie);
+            $this->assertEquals('public', $qcm->statut);
             $this->assertArrayHasKey('mes_tentatives_count', $qcm->toArray());
         }
     }
 
     public function test_it_can_get_qcm_pour_passation()
     {
-        $qcm = QCM::where('est_publie', true)->first();
+        $qcm = QCM::where('statut', 'public')->first();
 
         // Récupérer le QCM masquer pour l'examen
         $result = $this->service->getQcmPourPassation($qcm->id);

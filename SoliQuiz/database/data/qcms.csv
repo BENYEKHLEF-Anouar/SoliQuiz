@@ -1,7 +1,4 @@
-id,formateur_id,unite_apprentissage_id,titre,duree_minutes,score_reussite,est_publie
-1,2,6,PHP 8.4 : Nouvelles fonctionnalités et JIT,20,60,1
-2,2,7,Maîtrise des Collections et Tableaux en PHP,25,60,1
-3,3,4,JavaScript Moderne : ES2024 et au-delà,20,60,1
-4,3,2,Accessibilité & Sémantique HTML5 Avancée,15,70,1
-5,2,8,Optimisation de Bases de Données SQL,30,60,1
-6,2,6,Laravel 12 : Architecture et Service Container,45,70,1
+id,formateur_id,unite_apprentissage_id,titre,duree_minutes,score_reussite,statut
+1,2,7,Laravel Fondamentaux : Routing et Contrôleurs,20,10,public
+2,3,5,JavaScript DOM : Interactivité et Événements,15,10,public
+3,2,8,SQL : Requêtes et Jointures de base,25,10,public

@@ -3,12 +3,25 @@
 @section('title', 'Ingénierie Pédagogique - Formateur')
 
 @section('content')
-<div class="reveal active" x-data="{ 
-    showSeanceModal: false, 
-    showUaModal: false, 
-    showCompModal: false, 
-    activeSeanceId: null, 
-    activeUaId: null 
+<div class="reveal active" x-data="{
+    showSeanceModal: false,
+    showUaModal: false,
+    showCompModal: false,
+    activeSeanceId: null,
+    activeUaId: null,
+    // Edit modal states
+    showEditSeanceModal: false,
+    editSeanceId: null,
+    editSeanceNom: '',
+    editSeanceDate: '',
+    showEditUaModal: false,
+    editUaId: null,
+    editUaNom: '',
+    editUaCode: '',
+    showEditCompModal: false,
+    editCompId: null,
+    editCompNom: '',
+    editCompCode: ''
 }">
     <!-- Header Section -->
     <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12">
@@ -95,13 +108,19 @@
                                 <span class="text-[9px] uppercase font-black text-slate-400 tracking-widest">Séquences UA</span>
                             </div>
                             
-                            <form action="{{ route('formateur.pedagogie.seance.destroy', $seance->id) }}" method="POST"
-                                  @click.stop onsubmit="return confirm('Supprimer cette session ?');">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="size-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all hover:rotate-12">
-                                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                            <div class="flex items-center gap-3">
+                                <button @click.stop="showEditSeanceModal = true; editSeanceId = {{ $seance->id }}; editSeanceNom = '{{ addslashes($seance->nom) }}'; editSeanceDate = '{{ $seance->date->format('Y-m-d') }}'"
+                                        class="size-12 rounded-2xl bg-primary-50 text-primary-500 flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all hover:rotate-12">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                 </button>
-                            </form>
+                                <form action="{{ route('formateur.pedagogie.seance.destroy', $seance->id) }}" method="POST"
+                                      @click.stop onsubmit="return confirm('Supprimer cette session ?');">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="size-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all hover:rotate-12">
+                                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
 
@@ -130,11 +149,15 @@
                                                     <h4 class="text-xl font-heading font-black text-slate-900 group-hover/ua:text-primary-600 transition-colors">{{ $ua->nom }}</h4>
                                                 </div>
                                             </div>
-                                            <div class="flex items-center gap-8">
+                                            <div class="flex items-center gap-4">
                                                 <div class="text-right hidden sm:block">
                                                     <span class="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] block">Contenu</span>
                                                     <span class="text-xs font-black text-slate-900">{{ $ua->competences->count() }} Compétences</span>
                                                 </div>
+                                                <button @click.stop="showEditUaModal = true; editUaId = {{ $ua->id }}; editUaNom = '{{ addslashes($ua->nom) }}'; editUaCode = '{{ addslashes($ua->code) }}'"
+                                                        class="size-10 rounded-xl bg-primary-50 text-primary-500 hover:bg-primary-500 hover:text-white transition-all flex items-center justify-center">
+                                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                </button>
                                                 <form action="{{ route('formateur.pedagogie.ua.destroy', $ua->id) }}" method="POST"
                                                       @click.stop onsubmit="return confirm('Supprimer cette UA ?');">
                                                     @csrf @method('DELETE')
@@ -164,13 +187,19 @@
                                                             </div>
                                                             <p class="font-bold text-slate-900 text-sm leading-snug">{{ $comp->libelle }}</p>
                                                         </div>
-                                                        <form action="{{ route('formateur.pedagogie.competence.destroy', $comp->id) }}"
-                                                              method="POST" @click.stop onsubmit="return confirm('Retirer cette compétence ?');" class="relative z-10 self-start">
-                                                            @csrf @method('DELETE')
-                                                            <button type="submit" class="text-slate-300 hover:text-rose-500 p-1 transition-colors">
-                                                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12" /></svg>
+                                                        <div class="flex items-center gap-1 relative z-10 self-start">
+                                                            <button @click.stop="showEditCompModal = true; editCompId = {{ $comp->id }}; editCompNom = '{{ addslashes($comp->libelle) }}'; editCompCode = '{{ addslashes($comp->code) }}'"
+                                                                    class="text-primary-400 hover:text-primary-600 p-1 transition-colors">
+                                                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                                             </button>
-                                                        </form>
+                                                            <form action="{{ route('formateur.pedagogie.competence.destroy', $comp->id) }}"
+                                                                  method="POST" @click.stop onsubmit="return confirm('Retirer cette compétence ?');">
+                                                                @csrf @method('DELETE')
+                                                                <button type="submit" class="text-slate-300 hover:text-rose-500 p-1 transition-colors">
+                                                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12" /></svg>
+                                                                </button>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 @empty
                                                     <p class="col-span-full text-center text-[10px] font-bold text-slate-300 italic uppercase py-4">Aucune compétence</p>
@@ -299,6 +328,100 @@
                 
                 <button type="submit" class="w-full py-6 px-8 bg-emerald-500 text-white font-black rounded-[32px] hover:bg-emerald-600 shadow-2xl shadow-emerald-500/10 active:scale-95 transition-all uppercase tracking-[0.3em] text-xs mt-4">
                     Enregistrer le Pilier
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Modal: Seance -->
+    <div x-show="showEditSeanceModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6" x-cloak>
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" @click="showEditSeanceModal = false"></div>
+        <div class="relative w-full max-w-[480px] bg-white rounded-[40px] shadow-2xl p-10 overflow-hidden animate-in zoom-in-95 duration-300">
+            <div class="absolute top-0 right-0 size-32 bg-primary-50 rounded-full -mr-16 -mt-16"></div>
+            <div class="relative z-10">
+                <div class="flex justify-between items-center mb-10">
+                    <h3 class="text-3xl font-heading font-black text-slate-900 uppercase leading-none">Modifier <span class="text-primary-500">Session</span></h3>
+                    <button @click="showEditSeanceModal = false" class="text-slate-300 hover:text-slate-900 transition-colors">
+                        <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+                <form :action="`/formateur/pedagogie/seance/${editSeanceId}`" method="POST" class="space-y-8">
+                    @csrf @method('PUT')
+                    <div class="space-y-3">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Identification</label>
+                        <input type="text" name="nom" x-model="editSeanceNom" required
+                               class="w-full bg-slate-50 border-2 border-slate-50 rounded-[28px] py-5 px-8 font-bold text-slate-900 focus:bg-white transition-all text-sm">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Planification</label>
+                        <input type="date" name="date" x-model="editSeanceDate" required
+                               class="w-full bg-slate-50 border-2 border-slate-50 rounded-[28px] py-5 px-8 font-bold text-slate-900 focus:bg-white transition-all text-sm">
+                    </div>
+                    <button type="submit" class="w-full py-6 px-8 bg-primary-500 text-white font-black rounded-[32px] hover:bg-primary-600 shadow-2xl shadow-primary-500/10 active:scale-95 transition-all uppercase tracking-[0.3em] text-xs mt-4">
+                        Mettre à jour la Session
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal: UA -->
+    <div x-show="showEditUaModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6" x-cloak>
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" @click="showEditUaModal = false"></div>
+        <div class="relative w-full max-w-[480px] bg-white rounded-[40px] shadow-2xl p-10 animate-in zoom-in-95 duration-300">
+            <div class="flex justify-between items-center mb-10">
+                <h3 class="text-3xl font-heading font-black text-slate-900 uppercase leading-none">Modifier <span class="text-primary-500">UA</span></h3>
+                <button @click="showEditUaModal = false" class="text-slate-300 hover:text-slate-900 transition-colors">
+                    <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <form :action="`/formateur/pedagogie/ua/${editUaId}`" method="POST" class="space-y-8">
+                @csrf @method('PUT')
+                <div class="grid grid-cols-1 gap-8">
+                    <div class="space-y-3">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Architecture</label>
+                        <input type="text" name="code" x-model="editUaCode" required
+                               class="w-full bg-slate-50 border-2 border-slate-50 rounded-[28px] py-5 px-8 font-bold text-slate-900 focus:bg-white transition-all text-sm uppercase font-mono tracking-widest">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Libellé Technique</label>
+                        <input type="text" name="nom" x-model="editUaNom" required
+                               class="w-full bg-slate-50 border-2 border-slate-50 rounded-[28px] py-5 px-8 font-bold text-slate-900 focus:bg-white transition-all text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-6 px-8 bg-primary-500 text-white font-black rounded-[32px] hover:bg-primary-600 active:scale-95 transition-all uppercase tracking-[0.3em] text-xs mt-4">
+                    Mettre à jour l'Unité
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Modal: Competence -->
+    <div x-show="showEditCompModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6" x-cloak>
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" @click="showEditCompModal = false"></div>
+        <div class="relative w-full max-w-[520px] bg-white rounded-[40px] shadow-2xl p-10 animate-in zoom-in-95 duration-300">
+            <div class="flex justify-between items-center mb-10">
+                <h3 class="text-3xl font-heading font-black text-slate-900 uppercase leading-none">Modifier <span class="text-emerald-500">Compétence</span></h3>
+                <button @click="showEditCompModal = false" class="text-slate-300 hover:text-slate-900 transition-colors">
+                    <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <form :action="`/formateur/pedagogie/competence/${editCompId}`" method="POST" class="space-y-8">
+                @csrf @method('PUT')
+                <div class="grid grid-cols-1 gap-8">
+                    <div class="space-y-3">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Identification</label>
+                        <input type="text" name="code" x-model="editCompCode" required
+                               class="w-full bg-slate-50 border-2 border-slate-50 rounded-[28px] py-5 px-8 font-bold text-slate-900 focus:bg-white transition-all text-sm uppercase font-mono tracking-widest">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Désignation du Pilier</label>
+                        <input type="text" name="nom" x-model="editCompNom" required
+                               class="w-full bg-slate-50 border-2 border-slate-50 rounded-[28px] py-5 px-8 font-bold text-slate-900 focus:bg-white transition-all text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-6 px-8 bg-emerald-500 text-white font-black rounded-[32px] hover:bg-emerald-600 shadow-2xl shadow-emerald-500/10 active:scale-95 transition-all uppercase tracking-[0.3em] text-xs mt-4">
+                    Mettre à jour la Compétence
                 </button>
             </form>
         </div>

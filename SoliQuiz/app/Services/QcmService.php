@@ -16,8 +16,8 @@ class QcmService
      */
     public function paginate(int $perPage = 15, ?string $search = null, ?int $formateurId = null): LengthAwarePaginator
     {
-        return QCM::with(['formateur', 'uniteApprentissage'])
-            ->withCount('questions')
+        return QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
+            ->withCount(['questions', 'tentatives'])
             ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
             ->when($formateurId, fn($q) => $q->where('formateur_id', $formateurId))
             ->latest()
@@ -144,5 +144,42 @@ class QcmService
                 ->latest()
                 ->get()
         ];
+    }
+
+    /**
+     * Vérifie manuellement si un QCM doit être fermé (tous les étudiants ont terminé)
+     */
+    public function checkAndAutoClose(QCM $qcm): bool
+    {
+        if ($qcm->statut !== 'public' || !$qcm->classe_id) {
+            return false;
+        }
+
+        $totalStudents = $qcm->classe->etudiants()->count();
+        
+        if ($totalStudents === 0) {
+            return false;
+        }
+
+        $completedStudents = $qcm->tentatives()
+            ->whereIn('statut', ['reussi', 'echoue', 'abandonne'])
+            ->distinct('etudiant_id')
+            ->count('etudiant_id');
+
+        if ($completedStudents >= $totalStudents) {
+            $qcm->update(['statut' => 'termine']);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Ferme manuellement un QCM
+     */
+    public function closeQcm(QCM $qcm): QCM
+    {
+        $qcm->update(['statut' => 'termine']);
+        return $qcm->fresh();
     }
 }

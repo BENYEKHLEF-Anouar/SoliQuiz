@@ -35,11 +35,11 @@ class UserService
             'password' => Hash::make($data['password']),
             'type_profil' => $data['type_profil'],
             'classe_id' => $data['classe_id'] ?? null,
-            'role' => $data['type_profil'] === 'etudiant' ? 'student' : $data['type_profil'], // Spatie role mapping
+            'role' => $data['type_profil'] === 'etudiant' ? 'etudiant' : $data['type_profil'], // Spatie role mapping
         ]);
 
         // Assigner le rôle Spatie
-        $spatieRole = $data['type_profil'] === 'etudiant' ? 'student' : $data['type_profil'];
+        $spatieRole = $data['type_profil'] === 'etudiant' ? 'etudiant' : $data['type_profil'];
         $user->assignRole($spatieRole);
 
         // Si c'est un formateur et qu'une classe est fournie, on lie la classe au formateur
@@ -65,7 +65,7 @@ class UserService
 
         // Synchroniser les rôles Spatie si le type_profil a changé
         if (isset($data['type_profil'])) {
-            $spatieRole = $data['type_profil'] === 'etudiant' ? 'student' : $data['type_profil'];
+            $spatieRole = $data['type_profil'] === 'etudiant' ? 'etudiant' : $data['type_profil'];
             $user->syncRoles([$spatieRole]);
             $user->update(['role' => $spatieRole]);
         }

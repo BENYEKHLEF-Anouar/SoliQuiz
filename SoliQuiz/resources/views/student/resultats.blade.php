@@ -8,36 +8,39 @@
         @endphp
 
         <!-- Hero Section: Résultats -->
-        <section class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-12 mb-10 overflow-hidden relative shadow-sm">
+        <section class="bg-white border border-slate-100 rounded-[2.5rem] p-8 md:p-12 mb-10 overflow-hidden relative shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)]">
             <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
                 <!-- Score Circle -->
                 <div class="relative size-48 flex-none flex flex-col items-center justify-center">
                     <svg class="absolute inset-0 size-full -rotate-90" viewBox="0 0 192 192">
                         <circle cx="96" cy="96" r="88" fill="none" stroke="currentColor" stroke-width="8" class="{{ $isSuccess ? 'text-emerald-500/10' : 'text-red-500/10' }}" />
                         <circle cx="96" cy="96" r="88" fill="none" stroke="currentColor" stroke-width="8"
-                            class="{{ $isSuccess ? 'text-emerald-500' : 'text-red-500' }}" stroke-dasharray="552.92" stroke-dashoffset="{{ 552.92 - (552.92 * (($tentative->score_obtenu ?? 0) / 100)) }}"
+                            class="{{ $isSuccess ? 'text-emerald-500' : 'text-red-500' }}" stroke-dasharray="552.92" stroke-dashoffset="{{ 552.92 - (552.92 * (($tentative->score_obtenu ?? 0) / 20)) }}"
                             stroke-linecap="round" />
                     </svg>
                     <div class="relative z-10 flex flex-col items-center">
-                        <span class="text-4xl font-black font-heading text-slate-900 leading-tight">{{ $tentative->score_obtenu ?? 0 }}%</span>
+                        <span class="text-4xl font-black font-heading text-slate-900 leading-tight">{{ $tentative->score_obtenu ?? 0 }}/20</span>
                         <span class="text-[10px] font-bold {{ $isSuccess ? 'text-emerald-600' : 'text-red-600' }} uppercase tracking-widest">{{ $isSuccess ? 'Objectif Validé' : 'Non Validé' }}</span>
                     </div>
                 </div>
 
                 <div class="flex-1 text-center md:text-left">
-                    <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-[10px] font-bold uppercase tracking-widest">Évaluation Terminée</span>
+                    <span class="inline-flex items-center gap-x-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-slate-200">
+                    <span class="size-1.5 rounded-full bg-slate-500"></span>
+                    Évaluation Terminée
+                </span>
                     <h1 class="text-3xl font-heading font-bold text-slate-900 mt-4 leading-tight">{{ $qcm->titre }}</h1>
                     <p class="mt-4 text-slate-500 leading-relaxed font-medium">
                         {{ $isSuccess ? 'Félicitations ' . Auth::user()->prenom . ' ! Vous avez validé '. ($qcm->uniteApprentissage ? $qcm->uniteApprentissage->nom : 'ce test') .' avec succès.' : 'Dommage ' . Auth::user()->prenom . ', l\'objectif n\'a pas été atteint. Revoyez vos erreurs ci-dessous.' }}
                     </p>
 
                     <div class="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
-                        <div class="bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 flex flex-col">
-                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Terminé le</span>
+                        <div class="bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100 flex flex-col">
+                            <span class="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Terminé le</span>
                             <span class="text-sm font-bold text-slate-800">{{ $tentative->date_fin->format('d M Y à H:i') }}</span>
                         </div>
-                        <div class="bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 flex flex-col">
-                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Durée approx.</span>
+                        <div class="bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100 flex flex-col">
+                            <span class="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Durée approx.</span>
                             <span class="text-sm font-bold text-slate-800">{{ max(1, $tentative->date_fin->diffInMinutes($tentative->date_debut)) }} min</span>
                         </div>
                     </div>
@@ -53,7 +56,7 @@
             </div>
 
             @foreach($questionDetails as $index => $question)
-            <div class="bg-white border-2 {{ $question->isCorrect ? 'border-emerald-50' : 'border-rose-50' }} rounded-[32px] p-8 md:p-10 shadow-sm relative group/card transition-all duration-500 hover:shadow-premium">
+            <div class="bg-white border-2 {{ $question->isCorrect ? 'border-emerald-100' : 'border-rose-100' }} rounded-[2.5rem] p-8 md:p-10 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] relative group/card transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] active:scale-[0.98]">
                 
                 <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8 mt-2">
                     <div class="flex-1">
@@ -71,7 +74,7 @@
                     @if($question->explication)
                     <div x-data="{ open: false }" class="relative z-20">
                         <button @mouseenter="open = true" @mouseleave="open = false" 
-                                class="size-10 bg-primary-50 text-primary-500 rounded-xl flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-sm">
+                                class="size-10 bg-primary-50 text-primary-500 rounded-[1.25rem] flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)]">
                             <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                 <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -142,14 +145,30 @@
         </section>
 
         <!-- CTA footer results -->
-        <footer class="mt-16 flex justify-center">
-            <a href="{{ route('student.dashboard') }}" class="inline-flex items-center gap-x-2 px-8 py-3 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/10 group">
+        <footer class="mt-16 flex flex-col md:flex-row items-center justify-center gap-4">
+            <a href="{{ route('student.dashboard') }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-slate-100 text-slate-700 font-black rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-[0.2em] text-xs group active:scale-[0.98]">
                 <svg class="size-4 transition-transform group-hover:-translate-x-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m12 19-7-7 7-7" />
                     <path d="M19 12H5" />
                 </svg>
-                Revenir au tableau de bord
+                Tableau de bord
             </a>
+
+            @if(!$isSuccess)
+                <a href="{{ route('student.passation', $qcm->id) }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-3 px-10 py-4 h-16 bg-primary-600 text-white font-black rounded-2xl hover:bg-primary-700 transition-all shadow-xl shadow-primary-600/20 uppercase tracking-[0.2em] text-xs group active:scale-[0.98]">
+                    <svg class="size-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Retenter l'évaluation
+                </a>
+            @endif
+
+            <button onclick="window.print()" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-white border border-slate-200 text-slate-400 font-black rounded-2xl hover:bg-slate-50 hover:text-slate-900 transition-all uppercase tracking-[0.2em] text-xs active:scale-[0.98]">
+                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" />
+                </svg>
+                Imprimer mon bilan
+            </button>
         </footer>
     </main>
 </div>

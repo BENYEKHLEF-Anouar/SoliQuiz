@@ -20,13 +20,32 @@ class AdminController extends Controller
     private DashboardService $dashboardService;
     private SeanceService $seanceService;
     private ClasseService $classeService;
+    private \App\Services\QcmService $qcmService;
 
-    public function __construct(UserService $userService, DashboardService $dashboardService, SeanceService $seanceService, ClasseService $classeService)
+    public function __construct(
+        UserService $userService, 
+        DashboardService $dashboardService, 
+        SeanceService $seanceService, 
+        ClasseService $classeService,
+        \App\Services\QcmService $qcmService
+    )
     {
         $this->userService = $userService;
         $this->dashboardService = $dashboardService;
         $this->seanceService = $seanceService;
         $this->classeService = $classeService;
+        $this->qcmService = $qcmService;
+    }
+
+    /**
+     * Affiche la banque de tous les QCMs (Admin only)
+     */
+    public function indexQcms(Request $request)
+    {
+        $search = $request->input('search');
+        // Pass null as formateurId to get everything
+        $qcms = $this->qcmService->paginate(15, $search, null);
+        return view('admin.qcms', compact('qcms', 'search'));
     }
 
     /**
@@ -37,8 +56,9 @@ class AdminController extends Controller
         $kpis = $this->dashboardService->getKpis();
         $topQcms = $this->dashboardService->getTopQcms(5);
         $recentTentatives = $this->dashboardService->getRecentTentatives(10);
+        $topPerformers = $this->dashboardService->getTopPerformers(3);
         
-        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives'));
+        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers'));
     }
 
     /**
@@ -197,6 +217,76 @@ class AdminController extends Controller
         $competence = Competence::findOrFail($id);
         $this->seanceService->deleteCompetence($competence);
         return redirect()->route('admin.pedagogie')->with('success', 'Compétence supprimée.');
+    }
+
+    /**
+     * Show edit form for Seance (Admin)
+     */
+    public function editSeance($id)
+    {
+        $seance = Seance::findOrFail($id);
+        return response()->json($seance);
+    }
+
+    /**
+     * Update Seance (Admin)
+     */
+    public function updateSeance(Request $request, $id)
+    {
+        $seance = Seance::findOrFail($id);
+        $data = $request->validate([
+            'nom' => 'required|string|max:255',
+            'date' => 'required|date'
+        ]);
+        $seance->update($data);
+        return redirect()->route('admin.pedagogie')->with('success', 'Séance mise à jour.');
+    }
+
+    /**
+     * Show edit form for UA (Admin)
+     */
+    public function editUA($id)
+    {
+        $ua = UniteApprentissage::findOrFail($id);
+        return response()->json($ua);
+    }
+
+    /**
+     * Update UA (Admin)
+     */
+    public function updateUA(Request $request, $id)
+    {
+        $ua = UniteApprentissage::findOrFail($id);
+        $data = $request->validate([
+            'nom' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:unites_apprentissage,code,' . $id,
+        ]);
+        $ua->update($data);
+        return redirect()->route('admin.pedagogie')->with('success', 'Unité d\'apprentissage mise à jour.');
+    }
+
+    /**
+     * Show edit form for Competence (Admin)
+     */
+    public function editCompetence($id)
+    {
+        $competence = Competence::findOrFail($id);
+        return response()->json($competence);
+    }
+
+    /**
+     * Update Competence (Admin)
+     */
+    public function updateCompetence(Request $request, $id)
+    {
+        $competence = Competence::findOrFail($id);
+        $data = $request->validate([
+            'code' => 'required|string|max:50|unique:competences,code,' . $id,
+            'libelle' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+        $competence->update($data);
+        return redirect()->route('admin.pedagogie')->with('success', 'Compétence mise à jour.');
     }
 
     /**

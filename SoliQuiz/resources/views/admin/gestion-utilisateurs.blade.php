@@ -19,7 +19,7 @@
                 <span class="text-slate-600">Permissions & Accès</span>
             </nav>
             <h1 class="text-4xl lg:text-5xl font-heading font-black text-slate-900 tracking-tight leading-none mb-4">
-                Directory <span class="text-primary-500">Global</span>
+                Directory <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400">Utilisateurs</span>
             </h1>
             <p class="text-slate-500 font-medium max-w-xl leading-relaxed">
                 Supervisez le vivier de talents du centre. Gérez les privilèges des formateurs et suivez le déploiement des cohortes d'apprenants.
@@ -87,7 +87,7 @@
     </div>
 
     <!-- Data Table Container -->
-    <div class="glass bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>

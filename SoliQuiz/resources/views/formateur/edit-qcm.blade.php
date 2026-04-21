@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
+@section('title', 'Modifier QCM - SoliQuiz')
+
 @section('content')
-<div x-data="qcmBuilder({{ Js::from($unites) }}, {{ Js::from($classes) }})" class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<div x-data="qcmBuilder({{ Js::from($unites) }}, {{ Js::from($classes) }}, {{ Js::from($qcm) }})" class="bg-slate-50 flex flex-col h-screen overflow-hidden">
     
     <!-- Action Form -->
-    <form id="qcmForm" action="{{ route('formateur.qcm.store') }}" method="POST" class="contents" @submit.prevent="handleSubmit">
+    <form id="qcmForm" action="{{ route('formateur.qcm.update', $qcm->id) }}" method="POST" class="contents" @submit.prevent="handleSubmit">
     @csrf
+    @method('PUT')
 
     <!-- Toolbar Editor -->
     <div class="w-full bg-white border-b border-slate-200 shrink-0 z-50 flex items-center h-[70px]">
@@ -16,7 +19,7 @@
                 </a>
                 <div class="h-8 w-px bg-slate-200"></div>
                 <div class="flex flex-col">
-                    <span class="text-[9px] font-black text-primary-500 uppercase tracking-widest leading-none mb-1">Configuration</span>
+                    <span class="text-[9px] font-black text-primary-500 uppercase tracking-widest leading-none mb-1">Modification</span>
                     <input type="text" name="titre" required x-model="titre" class="text-xl font-heading font-black text-slate-900 border-transparent hover:border-slate-300 focus:border-primary-500 focus:ring-primary-500 rounded-lg bg-transparent px-2 py-0.5 outline-none transition-all w-[300px] md:w-[500px]" placeholder="Nom de l'évaluation...">
                 </div>
             </div>
@@ -33,7 +36,7 @@
                     </svg>
                     <span class="text-[10px] font-black uppercase tracking-[0.2em]">Total :</span>
                     <span class="text-sm font-black font-heading" x-text="`${totalPoints}/20`"></span>
-                    <button type="button" @click="equalizePoints()" title="Égaliser les points"
+                    <button type="button" @click="equalizePoints()"
                             class="ml-1 text-[9px] font-black uppercase tracking-widest underline opacity-70 hover:opacity-100 transition-opacity">
                         Égaliser
                     </button>
@@ -48,12 +51,11 @@
                         <option value="termine">Terminé</option>
                     </select>
                 </div>
-
                 <button type="submit" class="group btn-premium py-2.5 px-6 bg-slate-900 text-white font-black rounded-2xl hover:bg-primary-500 shadow-xl shadow-slate-900/10 active:scale-95 transition-all text-[11px] uppercase tracking-widest flex items-center gap-3">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" />
                     </svg>
-                    Enregistrer
+                    Mettre à jour
                 </button>
             </div>
         </div>
@@ -69,6 +71,13 @@
                     </li>
                 @endforeach
             </ul>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="bg-rose-50 text-rose-600 px-8 py-3 border-b border-rose-200 text-xs font-bold animate-in slide-in-from-top duration-500 flex items-center gap-2">
+            <span class="size-1 rounded-full bg-rose-400"></span>
+            {{ session('error') }}
         </div>
     @endif
 
@@ -112,7 +121,7 @@
                             <template x-for="comp in filteredCompetences" :key="comp.id">
                                 <label class="flex items-start gap-4 p-4 hover:bg-primary-50/50 rounded-2xl cursor-pointer transition-all group border-2 border-transparent hover:border-primary-100">
                                     <div class="mt-1">
-                                        <input type="checkbox" name="competence_ids[]" :value="comp.id" class="size-4 rounded-md border-2 border-slate-200 text-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all checked:border-primary-500">
+                                        <input type="checkbox" name="competence_ids[]" :value="comp.id" :checked="selectedCompetences.includes(comp.id)" class="size-4 rounded-md border-2 border-slate-200 text-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all checked:border-primary-500">
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-[9px] font-black text-primary-500/60 group-hover:text-primary-600 transition-colors" x-text="comp.code"></span>
@@ -141,11 +150,11 @@
                 <div class="grid grid-cols-2 gap-5">
                     <div class="space-y-3">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Durée (min)</label>
-                        <input type="number" name="duree_minutes" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-[20px] py-4 px-4 font-black text-slate-900 focus:bg-white transition-all text-center text-lg" value="30">
+                        <input type="number" name="duree_minutes" required x-model="dureeMinutes" class="w-full bg-slate-50 border-2 border-slate-50 rounded-[20px] py-4 px-4 font-black text-slate-900 focus:bg-white transition-all text-center text-lg">
                     </div>
                     <div class="space-y-3">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Note pour réussir (/20)</label>
-                        <input type="number" name="score_reussite" required step="0.5" min="0" max="20" class="w-full bg-slate-50 border-2 border-slate-50 rounded-[20px] py-4 px-4 font-black text-slate-900 focus:bg-white transition-all text-center text-lg" value="10">
+                        <input type="number" name="score_reussite" required step="0.5" min="0" max="20" x-model="scoreReussite" class="w-full bg-slate-50 border-2 border-slate-50 rounded-[20px] py-4 px-4 font-black text-slate-900 focus:bg-white transition-all text-center text-lg">
                     </div>
                 </div>
             </section>
@@ -262,10 +271,10 @@
             </div>
             <h3 class="text-xl font-heading font-black text-slate-900 text-center mb-2">Total de points incorrect</h3>
             <p class="text-slate-500 text-center text-sm mb-2">
-                La somme des points de vos questions est de 
+                La somme des points est de 
                 <strong :class="totalPoints > 20 ? 'text-rose-600' : 'text-amber-600'" x-text="totalPoints"></strong> /20.
             </p>
-            <p class="text-slate-400 text-center text-xs mb-6">Le total doit être exactement 20 pour un barème cohérent. Souhaitez-vous continuer quand même ?</p>
+            <p class="text-slate-400 text-center text-xs mb-6">Souhaitez-vous égaliser automatiquement ou sauvegarder quand même ?</p>
             <div class="flex gap-3">
                 <button @click="showPointsWarning = false; equalizePoints()" 
                         class="flex-1 h-12 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:bg-slate-50 transition-colors text-sm">
@@ -282,14 +291,17 @@
 
 <script>
 document.addEventListener('alpine:init', () => {
-    Alpine.data('qcmBuilder', (initialUnites, initialClasses) => ({
-        titre: 'Évaluation sans titre',
-        statut: 'brouillon',
+    Alpine.data('qcmBuilder', (initialUnites, initialClasses, initialQcm) => ({
+        titre: initialQcm?.titre || 'Évaluation sans titre',
+        statut: initialQcm?.statut || 'brouillon',
         showPointsWarning: false,
+        dureeMinutes: initialQcm?.duree_minutes || 30,
+        scoreReussite: initialQcm?.score_reussite || 10,
         allUnites: initialUnites,
         allClasses: initialClasses,
-        selectedUniteId: '',
-        selectedClasseId: '',
+        selectedUniteId: initialQcm?.unite_apprentissage_id || '',
+        selectedClasseId: initialQcm?.classe_id || '',
+        selectedCompetences: initialQcm?.competences?.map(c => c.id) || [],
         
         get filteredCompetences() {
             if (!this.selectedUniteId) return [];
@@ -297,17 +309,10 @@ document.addEventListener('alpine:init', () => {
             return unite ? unite.competences : [];
         },
 
-        /**
-         * Computed: sum of all question points.
-         */
         get totalPoints() {
             return this.questions.reduce((sum, q) => sum + (parseInt(q.points) || 0), 0);
         },
 
-        /**
-         * Distribute exactly 20 pts across all questions.
-         * Uses integer rounding; last question absorbs any remainder.
-         */
         equalizePoints() {
             const n = this.questions.length;
             if (n === 0) return;
@@ -318,15 +323,28 @@ document.addEventListener('alpine:init', () => {
             });
         },
 
-        questions: [
+        questions: initialQcm?.questions?.map(q => ({
+            texte: q.texte,
+            type: q.type === 'unique' ? 'choix_unique' : 'choix_multiple', // Map DB→UI
+            points: q.points,
+            explication_feedback: q.explication_feedback || '',
+            options: q.options?.map(o => ({
+                texte: o.texte,
+                est_correcte: o.est_correcte,
+                feedback_specifique: o.feedback_specifique || ''
+            })) || [
+                { texte: '', est_correcte: false, feedback_specifique: '' },
+                { texte: '', est_correcte: false, feedback_specifique: '' }
+            ]
+        })) || [
             {
                 texte: '',
                 type: 'choix_unique',
-                points: 20, // starts at 20 with 1 question
+                points: 20,
                 explication_feedback: '',
                 options: [
-                    { texte: 'Option A', est_correcte: true, feedback_specifique: '' },
-                    { texte: 'Option B', est_correcte: false, feedback_specifique: '' }
+                    { texte: '', est_correcte: false, feedback_specifique: '' },
+                    { texte: '', est_correcte: false, feedback_specifique: '' }
                 ]
             }
         ],
@@ -335,7 +353,7 @@ document.addEventListener('alpine:init', () => {
             this.questions.push({
                 texte: '',
                 type: 'choix_unique',
-                points: 0, // will be recalculated by equalizePoints
+                points: 0,
                 explication_feedback: '',
                 options: [
                     { texte: '', est_correcte: false, feedback_specifique: '' },
@@ -372,9 +390,6 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        /**
-         * Intercept form submit to warn if total != 20.
-         */
         handleSubmit() {
             if (this.totalPoints !== 20) {
                 this.showPointsWarning = true;

@@ -34,15 +34,45 @@ class EtudiantService
 
         $total = $tentatives->count();
         $reussis = $tentatives->where('statut', 'reussi')->count();
+        $enCoursCount = Tentative::where('etudiant_id', $etudiant->id)
+            ->where('statut', 'en_cours')
+            ->count();
 
         return [
             'nb_tentatives' => $total,
             'nb_reussies' => $reussis,
+            'nb_en_cours' => $enCoursCount,
             'taux_reussite' => $total > 0 ? round(($reussis / $total) * 100, 1) : 0,
             'score_moyen' => round($tentatives->avg('score_obtenu') ?? 0, 1),
             'meilleur_score' => $tentatives->max('score_obtenu') ?? 0,
             'derniere_activite' => $tentatives->sortByDesc('date_fin')->first()?->date_fin,
         ];
+    }
+
+    /**
+     * Récupère les QCM en cours pour l'étudiant.
+     */
+    public function getActiveSessions(User $etudiant): Collection
+    {
+        return Tentative::where('etudiant_id', $etudiant->id)
+            ->where('statut', 'en_cours')
+            ->with(['qcm.uniteApprentissage'])
+            ->latest()
+            ->get();
+    }
+
+    /**
+     * Récupère les derniers scores (pour le graphique).
+     */
+    public function getLastScores(User $etudiant, int $limit = 7): array
+    {
+        return Tentative::where('etudiant_id', $etudiant->id)
+            ->whereIn('statut', ['reussi', 'echoue'])
+            ->latest('date_fin')
+            ->limit($limit)
+            ->pluck('score_obtenu')
+            ->reverse()
+            ->toArray();
     }
 
     /**
@@ -57,5 +87,24 @@ class EtudiantService
             ])
             ->findOrFail($tentativeId);
     }
+    /**
+     * Récupère les QCM à venir pour l'étudiant (ceux de sa classe non encore tentés).
+     */
+    public function getUpcomingQcms(User $etudiant, int $limit = 3): Collection
+    {
+        if (!$etudiant->classe_id) {
+            return collect();
+        }
 
+        // QCM de sa classe, statut public, non encore tentés par cet étudiant
+        return QCM::where('classe_id', $etudiant->classe_id)
+            ->where('statut', 'public')
+            ->whereDoesntHave('tentatives', function($q) use ($etudiant) {
+                $q->where('etudiant_id', $etudiant->id);
+            })
+            ->with('uniteApprentissage')
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
 }

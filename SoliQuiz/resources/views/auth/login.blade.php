@@ -80,12 +80,8 @@
                 </form>
             </div>
 
-            <div class="bg-slate-50 border-t border-slate-100 p-8 text-center">
-                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                    Pas encore de compte ? 
-                    <a href="{{ route('register') }}" class="text-primary-500 hover:text-primary-600 ml-1 transition-colors">Créer un profil</a>
-                </p>
-            </div>
+            <!-- Removing registration footer as per production requirements (Admin-only) -->
+
         </div>
         
         <p class="mt-10 text-center text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">

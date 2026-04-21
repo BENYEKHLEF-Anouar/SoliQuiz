@@ -52,6 +52,6 @@ class QCM extends Model
     /** Les compétences spécifiques évaluées par ce QCM */
     public function competences(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Competence::class, 'competence_qcm');
+        return $this->belongsToMany(Competence::class, 'competence_qcm', 'qcm_id', 'competence_id');
     }
 }

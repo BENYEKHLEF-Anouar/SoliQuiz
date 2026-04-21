@@ -45,6 +45,18 @@ class PassationService
     {
         DB::transaction(function () use ($tentative, $answers) {
             foreach ($answers as $questionId => $optionIds) {
+                if (!is_array($optionIds)) {
+                    $optionIds = [$optionIds];
+                }
+
+                // Remove empty sentinel values (from unanswered multi-choice questions)
+                $optionIds = array_filter($optionIds, fn($id) => $id !== '' && $id !== null);
+
+                // Skip questions with no actual selection
+                if (empty($optionIds)) {
+                    continue;
+                }
+
                 $reponse = Reponse::updateOrCreate(
                     ['tentative_id' => $tentative->id, 'question_id' => $questionId],
                     ['repondu_a' => now()]
@@ -52,14 +64,10 @@ class PassationService
 
                 $reponse->choixReponses()->delete();
 
-                if (!is_array($optionIds)) {
-                    $optionIds = [$optionIds];
-                }
-
                 foreach ($optionIds as $optId) {
                     ChoixReponse::create([
                         'reponse_id' => $reponse->id,
-                        'option_id' => $optId
+                        'option_id'  => $optId
                     ]);
                 }
             }
@@ -109,11 +117,12 @@ class PassationService
                 }
             }
 
-            $pourcentage = $scoreMax > 0 ? round(($scoreTotal / $scoreMax) * 100, 1) : 0;
-            $reussi = $pourcentage >= $qcm->score_reussite;
+            // Calculate score on 20-point scale
+            $scoreSur20 = $scoreMax > 0 ? round(($scoreTotal / $scoreMax) * 20, 1) : 0;
+            $reussi = $scoreSur20 >= $qcm->score_reussite;
 
             $tentative->update([
-                'score_obtenu' => $pourcentage,
+                'score_obtenu' => $scoreSur20,
                 'statut' => $reussi ? 'reussi' : 'echoue',
                 'date_fin' => now(),
             ]);
@@ -138,8 +147,8 @@ class PassationService
 
             return [
                 'tentative' => $tentative->fresh(),
-                'score_obtenu' => $pourcentage,
-                'score_max' => 100,
+                'score_obtenu' => $scoreSur20,
+                'score_max' => 20,
                 'reussi' => $reussi,
             ];
         });
@@ -153,11 +162,12 @@ class PassationService
         sort($choisies);
         sort($correctes);
 
-        if ($type === 'unique') {
+        // Supports both legacy 'unique' and current 'choix_unique' format
+        if ($type === 'choix_unique' || $type === 'unique') {
             return count($choisies) === 1 && $choisies[0] == $correctes[0];
         }
 
-        // type === 'multiple' : les deux tableaux doivent être identiques
+        // 'choix_multiple' or 'multiple': arrays must be identical
         return $choisies == $correctes;
     }
 
@@ -166,7 +176,7 @@ class PassationService
         return [
             'tentative' => $tentative,
             'score_obtenu' => $tentative->score_obtenu ?? 0,
-            'score_max' => 100,
+            'score_max' => 20,
             'reussi' => $tentative->statut === 'reussi',
         ];
     }

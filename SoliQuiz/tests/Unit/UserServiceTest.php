@@ -27,12 +27,12 @@ class UserServiceTest extends TestCase
 
     public function test_it_can_filter_users_by_search()
     {
-        $result = $this->service->paginate(15, 'Benali');
+        $result = $this->service->paginate(15, 'BENYEKHLEF');
 
         $this->assertEquals(1, $result->total());
 
         $firstUser = collect($result->items())->first();
-        $this->assertStringContainsString('Benali', $firstUser->nom);
+        $this->assertStringContainsString('BENYEKHLEF', $firstUser->nom);
     }
 
     public function test_it_can_filter_users_by_profil()

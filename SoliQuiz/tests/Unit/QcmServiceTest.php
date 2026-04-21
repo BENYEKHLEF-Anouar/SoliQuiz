@@ -61,7 +61,7 @@ class QcmServiceTest extends TestCase
             'titre' => 'New QCM Test',
             'duree_minutes' => 30,
             'score_reussite' => 20,
-            'est_publie' => true,
+            'statut' => 'public',
             'formateur_id' => $formateur->id,
             'unite_apprentissage_id' => $ua->id,
             'questions' => [

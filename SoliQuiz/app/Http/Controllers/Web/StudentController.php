@@ -33,20 +33,31 @@ class StudentController extends Controller
     {
         $student = Auth::user();
         $metrics = $this->etudiantService->getDashboard($student);
+        $upcoming = $this->etudiantService->getUpcomingQcms($student);
         $historique = $this->etudiantService->historique($student, 5); // top 5 recent
+        $lastScores = $this->etudiantService->getLastScores($student, 7);
+        $activeSessions = $this->etudiantService->getActiveSessions($student);
 
-        return view('student.dashboard', compact('metrics', 'historique'));
+        return view('student.dashboard', compact('metrics', 'historique', 'upcoming', 'lastScores', 'activeSessions'));
     }
 
     /**
      * Affiche la bibliothèque de QCM de l'étudiant.
      */
-    public function bibliotheque()
+    public function bibliotheque(Request $request)
     {
         $student = Auth::user();
+        $search = $request->input('search');
         
         // Tous les QCM publiés (avec les infos tentées via le Service Public)
         $qcms = $this->qcmPublicService->getQcmsDisponibles($student);
+
+        // Filtrer par recherche
+        if ($search) {
+            $qcms = $qcms->filter(function($q) use ($search) {
+                return str_contains(strtolower($q->titre), strtolower($search));
+            });
+        }
             
         // Tentatives de l'étudiant complètes pour l'état courant
         $tentatives = Tentative::where('etudiant_id', $student->id)->get();
@@ -70,7 +81,7 @@ class StudentController extends Controller
         $metrics = $this->etudiantService->getDashboard($student);
         $moyenne = $metrics['score_moyen'];
 
-        return view('student.bibliotheque', compact('termines', 'enCours', 'aFaire', 'moyenne'));
+        return view('student.bibliotheque', compact('termines', 'enCours', 'aFaire', 'moyenne', 'search'));
     }
 
     /**
@@ -78,16 +89,42 @@ class StudentController extends Controller
      */
     public function passation(Request $request, $id)
     {
-        $qcm = QCM::with(['uniteApprentissage', 'questions.options'])->findOrFail($id);
+        $student = Auth::user();
+        
+        // Load QCM with all questions including explication feedback
+        $qcm = QCM::where('statut', 'public')
+            ->where(function($query) use ($student) {
+                $query->whereNull('classe_id')
+                      ->orWhere('classe_id', $student->classe_id);
+            })
+            ->with([
+                'uniteApprentissage',
+                'questions' => fn($q) => $q->with([
+                    'options' => fn($o) => $o->select('id', 'question_id', 'texte')
+                ])->select('id', 'qcm_id', 'texte', 'type', 'points', 'explication_feedback')
+            ])
+            ->findOrFail($id);
         
         // Utiliser le service pour démarrer la tentative
-        $tentative = $this->passationService->demarrer(Auth::user(), $qcm->id);
+        $tentative = $this->passationService->demarrer($student, $qcm->id);
         
         if ($tentative->statut !== 'en_cours' && !$request->has('resume')) {
             return redirect()->route('student.bibliotheque')->with('error', 'QCM déjà terminé.');
         }
 
-        return view('student.passation', compact('qcm', 'tentative'));
+        // Calculer le temps restant réel en secondes
+        $debut = $tentative->date_debut;
+        $dureeSecondes = $qcm->duree_minutes * 60;
+        $ecoule = now()->diffInSeconds($debut);
+        $tempsRestant = max(0, $dureeSecondes - $ecoule);
+
+        // Si le temps est écoulé mais le statut est encore en_cours, on soumet automatiquement
+        if ($tempsRestant <= 0 && $tentative->statut === 'en_cours') {
+            $this->passationService->soumettre($tentative);
+            return redirect()->route('student.resultats', $qcm->id)->with('info', 'Temps écoulé ! Votre QCM a été soumis automatiquement.');
+        }
+
+        return view('student.passation', compact('qcm', 'tentative', 'tempsRestant'));
     }
 
     /**
