@@ -40,9 +40,9 @@ class FormateurController extends Controller
             return [
                 'id' => $qcm->id,
                 'title' => $qcm->titre,
-                'status' => $qcm->est_publie ? 'Actif' : 'Brouillon',
+                'status' => $qcm->statut === 'public' ? 'Actif' : ($qcm->statut === 'termine' ? 'Terminé' : 'Brouillon'),
                 'questionsCount' => $qcm->questions_count,
-                'assignedCohort' => $qcm->uniteApprentissage->classe->nom ?? 'Général',
+                'assignedCohort' => $qcm->classe->nom ?? 'Général',
                 'resultsCount' => $qcm->tentatives_count,
             ];
         });

@@ -27,12 +27,18 @@
             <div class="flex items-center justify-between gap-4">
                 <!-- Back & Title -->
                 <div class="flex items-center gap-4 min-w-0 flex-1">
-                    <a href="{{ route('student.bibliotheque') }}" 
-                       class="shrink-0 size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 transition-colors text-slate-500">
+                    <button type="button"
+                            @click="$dispatch('confirm', { 
+                                title: 'Quitter le QCM ?', 
+                                message: 'Votre progression actuelle ne sera pas sauvegardée.', 
+                                onConfirm: () => window.location.href = '{{ route('student.bibliotheque') }}',
+                                type: 'warning'
+                            })"
+                            class="shrink-0 size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 transition-colors text-slate-500">
                         <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path d="m15 18-6-6 6-6"/>
                         </svg>
-                    </a>
+                    </button>
                     <div class="min-w-0">
                         <h1 class="text-lg font-bold text-slate-900 truncate">{{ $qcm->titre }}</h1>
                         <p class="text-xs text-slate-500 truncate">
@@ -258,25 +264,24 @@
     </footer>
 
     <!-- Incomplete Warning Modal -->
-    <div x-show="showWarning" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-        <div class="bg-white rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl" @click.away="showWarning = false">
+    <x-ui.modal name="incomplete-warning" title="Attention" x-model:show="showWarning" maxWidth="md">
+        <div class="text-center">
             <div class="size-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <svg class="size-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
             </div>
-            <h3 class="text-xl font-heading font-black text-slate-900 text-center mb-2">Questions non répondues</h3>
-            <p class="text-slate-500 text-center mb-6">Vous n'avez pas répondu à toutes les questions. Êtes-vous sûr de vouloir soumettre ?</p>
+            <p class="text-slate-500 mb-6">Vous n'avez pas répondu à toutes les questions. Êtes-vous sûr de vouloir soumettre ?</p>
             <div class="flex gap-3">
-                <button @click="showWarning = false" class="flex-1 h-12 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+                <button type="button" @click="showWarning = false" class="flex-1 h-12 rounded-xl border-2 border-slate-100 font-bold text-slate-700 hover:bg-slate-50 transition-colors text-xs uppercase tracking-widest">
                     Continuer
                 </button>
-                <button @click="document.getElementById('qcm-form').submit()" class="flex-1 h-12 rounded-xl bg-slate-900 text-white font-bold hover:bg-primary-500 transition-colors">
-                    Soumettre quand même
+                <button type="button" @click="document.getElementById('qcm-form').submit()" class="flex-1 h-12 rounded-xl bg-slate-900 text-white font-bold hover:bg-primary-500 transition-colors text-xs uppercase tracking-widest">
+                    Terminer
                 </button>
             </div>
         </div>
-    </div>
+    </x-ui.modal>
 
     <script>
         document.addEventListener('alpine:init', () => {

@@ -3,7 +3,7 @@
 @section('title', 'Bibliothèque de Contenus - SoliQuiz')
 
 @section('content')
-<div class="reveal active">
+<div class="reveal active" x-data="{ search: '{{ $search ?? '' }}' }">
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12 pb-8 border-b border-slate-100">
         <div>
             <x-ui.breadcrumb :items="['Espace Formateur' => route('dashboard'), 'Bibliothèque' => null]" />
@@ -12,15 +12,15 @@
             </h1>
             
             <form action="{{ route('formateur.bibliotheque') }}" method="GET" class="mt-8 w-full lg:w-[450px] relative group">
-                <input type="text" name="search" value="{{ $search ?? '' }}" 
+                <input type="text" name="search" x-model="search"
                        placeholder="Filtrer vos QCMs par titre..." 
                        class="w-full bg-white border border-slate-200 rounded-[24px] py-5 pl-14 pr-4 text-sm focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 outline-none transition-all placeholder:text-slate-400 font-medium shadow-sm">
                 <svg class="absolute left-5 top-1/2 -translate-y-1/2 size-6 text-slate-300 group-focus-within:text-primary-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                @if($search)
+                <template x-if="search">
                     <a href="{{ route('formateur.bibliotheque') }}" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-600">
                         <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
                     </a>
-                @endif
+                </template>
             </form>
         </div>
         
@@ -38,15 +38,7 @@
         </div>
     </div>
 
-    <!-- Alert Messages -->
-    @if (session('success'))
-        <div class="glass border-emerald-100 bg-emerald-50/50 p-6 rounded-[24px] flex items-center gap-4 mb-10 animate-in slide-in-from-top duration-500">
-            <div class="size-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
-                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7" /></svg>
-            </div>
-            <p class="text-sm font-bold text-slate-900">{{ session('success') }}</p>
-        </div>
-    @endif
+
 
     <!-- Library Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -139,9 +131,16 @@
                                     Dépublier
                                 </button>
                             </form>
-                            <form action="{{ route('formateur.qcm.close', $qcm->id) }}" method="POST">
+                            <form id="close-qcm-{{ $qcm->id }}" action="{{ route('formateur.qcm.close', $qcm->id) }}" method="POST">
                                 @csrf @method('PATCH')
-                                <button type="submit" onclick="return confirm('Fermer ce QCM ? Les étudiants ne pourront plus y accéder.')" class="h-12 px-4 bg-slate-800 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.15em] hover:bg-slate-900 transition-all flex items-center justify-center">
+                                <button type="button" 
+                                        @click.prevent="$dispatch('confirm', { 
+                                            title: 'Fermer ce QCM ?', 
+                                            message: 'Les étudiants ne pourront plus y accéder.', 
+                                            onConfirm: 'close-qcm-{{ $qcm->id }}',
+                                            type: 'warning'
+                                        })" 
+                                        class="h-12 px-4 bg-slate-800 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.15em] hover:bg-slate-900 transition-all flex items-center justify-center">
                                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                                 </button>
                             </form>
@@ -154,7 +153,12 @@
                                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                             </a>
                         @endif
-                        <button onclick="if(confirm('Supprimer définitivement cet item de la bibliothèque ?')) { document.getElementById('delete-qcm-{{ $qcm->id }}').submit() }"
+                        <button type="button" 
+                                @click.prevent="$dispatch('confirm', { 
+                                    title: 'Supprimer le QCM ?', 
+                                    message: 'Cette action est irréversible et supprimera toutes les tentatives liées.', 
+                                    onConfirm: 'delete-qcm-{{ $qcm->id }}' 
+                                })"
                                 class="size-12 rounded-2xl bg-rose-50 text-rose-400 hover:bg-rose-500 hover:text-white transition-all shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] flex items-center justify-center"
                                 title="Supprimer le QCM">
                             <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>

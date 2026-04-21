@@ -2,31 +2,31 @@
 
 @section('title', 'Espace Formateur - SoliQuiz')
 
+@section('page-title', 'Supervision Pédagogique')
+
 @section('content')
-<div class="space-y-8 reveal active" x-data="{ showSchedule: false }">
-    <!-- Corporate Header -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-200">
+<div class="space-y-8 fade-in" x-data="{ showSchedule: false }">
+    <!-- Quick Stats Summary -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100">
         <div>
-            <x-ui.breadcrumb :items="['Espace Formateur' => null, 'Tableau de bord' => null]" />
-            <h1 class="text-3xl lg:text-4xl font-heading font-black text-slate-900 tracking-tight leading-none">
-                Vue pédagogique <span class="text-primary-600">{{ Auth::user()->nom }}</span>
-            </h1>
+            <p class="text-label mb-1">Espace Formateur</p>
+            <h3 class="text-xl font-bold text-slate-900 tracking-tight italic uppercase">Vue d'ensemble {{ Auth::user()->prenom }}</h3>
         </div>
         
-        <div class="flex items-center gap-3">
-            <div class="hidden lg:flex items-center gap-4 px-4 py-2 bg-slate-100 rounded-xl">
+        <div class="flex items-center gap-4">
+            <div class="hidden lg:flex items-center gap-4 px-5 py-2.5 bg-slate-50 rounded-2xl border border-slate-100">
                 <div class="text-right">
-                    <p class="text-xs font-bold text-slate-600">{{ $metrics['nb_qcms'] }} QCMs créés</p>
-                    <p class="text-[10px] text-slate-500">{{ $metrics['nb_qcms_publies'] }} publiés</p>
+                    <p class="text-xs font-black text-slate-900 italic leading-none mb-1">{{ $metrics['nb_qcms'] }} QCM</p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $metrics['nb_qcms_publies'] }} publiés</p>
                 </div>
-                <div class="w-px h-8 bg-slate-300"></div>
+                <div class="w-px h-8 bg-slate-200"></div>
                 <div class="text-right">
-                    <p class="text-xs font-bold text-slate-600">{{ $metrics['nb_etudiants'] }} Apprenants</p>
-                    <p class="text-[10px] text-slate-500">{{ $metrics['nb_classes'] }} classes</p>
+                    <p class="text-xs font-black text-slate-900 italic leading-none mb-1">{{ $metrics['nb_etudiants'] }} Appr.</p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $metrics['nb_classes'] }} classes</p>
                 </div>
             </div>
-            <a href="{{ route('formateur.qcm.create') }}" class="flex items-center gap-2 px-5 py-3 bg-primary-600 text-white rounded-xl font-bold text-sm hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20">
-                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+            <a href="{{ route('formateur.qcm.create') }}" class="btn-premium px-6 py-3 bg-primary-600 text-white text-[11px] uppercase tracking-widest">
+                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg>
                 Nouveau QCM
             </a>
         </div>
@@ -34,7 +34,7 @@
 
     <!-- Pending Actions Banner -->
     @if($metrics['nb_tentatives_actives'] > 0)
-    <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between animate-in slide-in-from-right duration-700">
+    <div class="bg-linear-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between animate-in slide-in-from-right duration-700">
         <div class="flex items-center gap-3">
             <div class="size-10 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600 animate-pulse">
                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -67,9 +67,9 @@
                 <span class="text-xs text-slate-400">assignées</span>
             </div>
             <div class="mt-3 flex -space-x-1">
-                @foreach([1,2,3] as $i)
-                    <div class="size-6 rounded-full bg-slate-{{ 200 + $i*100 }} border-2 border-white"></div>
-                @endforeach
+                <div class="size-6 rounded-full bg-slate-300 border-2 border-white"></div>
+                <div class="size-6 rounded-full bg-slate-400 border-2 border-white"></div>
+                <div class="size-6 rounded-full bg-slate-500 border-2 border-white"></div>
                 @if($metrics['nb_etudiants'] > 0)
                     <div class="size-6 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[8px] font-bold text-slate-600">+{{ $metrics['nb_etudiants'] }}</div>
                 @endif
@@ -185,7 +185,7 @@
                                 <span class="font-bold text-slate-700">{{ $classe->taux_reussite }}%</span>
                             </div>
                             <div class="w-full bg-slate-100 rounded-full h-2">
-                                <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 h-2 rounded-full" style="width: {{ $classe->taux_reussite }}%"></div>
+                                <div class="bg-linear-to-r from-emerald-500 to-emerald-400 h-2 rounded-full" style="width: {{ $classe->taux_reussite }}%"></div>
                             </div>
                         </div>
 
@@ -194,9 +194,9 @@
                             <a href="{{ route('formateur.resultats') }}" class="flex-1 py-2 px-3 bg-slate-100 text-slate-700 rounded-lg font-bold text-xs text-center hover:bg-slate-200 transition-all">
                                 Résultats
                             </a>
-                            <button class="py-2 px-3 bg-primary-100 text-primary-700 rounded-lg font-bold text-xs hover:bg-primary-200 transition-all">
+                            <!-- <button class="py-2 px-3 bg-primary-100 text-primary-700 rounded-lg font-bold text-xs hover:bg-primary-200 transition-all">
                                 Message
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -234,7 +234,7 @@
                 </div>
                 <span class="font-bold text-sm text-slate-700">Résultats</span>
             </a>
-            <button @click="alert('Fonctionnalité en développement')" class="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200 hover:border-rose-300 hover:shadow-sm transition-all group text-left">
+            <button @click="$dispatch('toast', { message: 'Fonctionnalité en développement', type: 'info' })" class="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200 hover:border-rose-300 hover:shadow-sm transition-all group text-left">
                 <div class="size-10 bg-rose-50 rounded-lg flex items-center justify-center text-rose-600 group-hover:bg-rose-500 group-hover:text-white transition-all">
                     <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>

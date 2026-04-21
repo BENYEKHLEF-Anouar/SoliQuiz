@@ -13,13 +13,21 @@ class EnsureUserHasRole
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         if (! $request->user()) {
             return redirect('login');
         }
 
-        if ($request->user()->type_profil !== $role) {
+        $userRole = $request->user()->type_profil;
+
+        // Admin can access everything
+        if ($userRole === 'admin') {
+            return $next($request);
+        }
+
+        // Check if user has any of the required roles
+        if (! in_array($userRole, $roles)) {
             abort(403, 'Permission non accordée.');
         }
 

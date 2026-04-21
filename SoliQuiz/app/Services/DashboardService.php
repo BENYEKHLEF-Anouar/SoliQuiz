@@ -118,14 +118,53 @@ class DashboardService
     }
 
     /**
-     * Calcule la croissance hebdo des QCMs créés.
+     * Retourne les métriques détaillées pour les classes gérées par un formateur.
      */
-    public function getTrainerWeeklyGrowth(User $formateur): string
+    public function getTrainerClassesMetrics(User $formateur): Collection
     {
-        $count = QCM::where('formateur_id', $formateur->id)
-            ->where('created_at', '>=', now()->subDays(7))
-            ->count();
+        return $formateur->classeGeree()
+            ->withCount('etudiants')
+            ->get()
+            ->map(function($classe) {
+                $tentatives = Tentative::whereIn('etudiant_id', $classe->etudiants->pluck('id'))
+                    ->where('statut', '!=', 'en_cours')
+                    ->get();
+                
+                $classe->moyenne = round($tentatives->avg('score_obtenu') ?? 0, 1);
+                $classe->nb_reussis = $tentatives->where('statut', 'reussi')->count();
+                $classe->taux_reussite = $tentatives->count() > 0 
+                    ? round(($classe->nb_reussis / $tentatives->count()) * 100) 
+                    : 0;
+                
+                return $classe;
+            });
+    }
+
+    /**
+     * Calcule la croissance hebdomadaire de l'engagement (tentatives) pour un formateur.
+     */
+    private function getTrainerWeeklyGrowth(User $formateur): string
+    {
+        $qcmIds = QCM::where('formateur_id', $formateur->id)->pluck('id');
         
-        return $count > 0 ? "+{$count}" : "0";
+        $now = now();
+        $thisWeekStart = $now->copy()->subDays(7);
+        $lastWeekStart = $now->copy()->subDays(14);
+
+        $thisWeekCount = Tentative::whereIn('qcm_id', $qcmIds)
+            ->where('created_at', '>=', $thisWeekStart)
+            ->count();
+
+        $lastWeekCount = Tentative::whereIn('qcm_id', $qcmIds)
+            ->where('created_at', '>=', $lastWeekStart)
+            ->where('created_at', '<', $thisWeekStart)
+            ->count();
+
+        if ($lastWeekCount === 0) {
+            return $thisWeekCount > 0 ? '+100%' : '0%';
+        }
+
+        $growth = round((($thisWeekCount - $lastWeekCount) / $lastWeekCount) * 100);
+        return ($growth >= 0 ? '+' : '') . $growth . '%';
     }
 }

@@ -2,31 +2,22 @@
 
 @section('title', 'Administration - SoliQuiz')
 
+@section('page-title', "Vue d'ensemble Système")
+
 @section('content')
-<div class="space-y-8 reveal active" x-data="{ showQuickActions: false }">
-    <!-- Corporate Header Section -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-200">
+<div class="space-y-8 fade-in" x-data="{ showQuickActions: false }">
+    <!-- Quick Actions Control Bar -->
+    <div class="flex items-center justify-between pb-6 border-b border-slate-100">
         <div>
-            <div class="flex items-center gap-3 mb-2">
-                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Espace Administration</span>
-                <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-[9px] font-black uppercase tracking-wider">En ligne</span>
-            </div>
-            <h1 class="text-3xl lg:text-4xl font-heading font-black text-slate-900 tracking-tight leading-none">
-                Vue d'ensemble <span class="text-primary-600">Système</span>
-            </h1>
+            <p class="text-label mb-1">Supervision Globale</p>
+            <h3 class="text-xl font-bold text-slate-900 tracking-tight italic uppercase">Mesure de Performance</h3>
         </div>
         
-        <div class="flex items-center gap-4">
-            <div class="text-right hidden lg:block">
-                <p class="text-xs font-bold text-slate-500">{{ now()->format('l d F Y') }}</p>
-                <p class="text-[10px] text-slate-400 uppercase tracking-wider">{{ now()->format('H:i') }}</p>
-            </div>
-            <button @click="showQuickActions = !showQuickActions" 
-                    class="flex items-center gap-2 px-5 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20">
-                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
-                Actions Rapides
-            </button>
-        </div>
+        <button @click="showQuickActions = !showQuickActions" 
+                class="btn-premium px-6 py-3 bg-slate-900 text-white text-[11px] uppercase tracking-widest">
+            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg>
+            Actions Rapides
+        </button>
     </div>
 
     <!-- Quick Actions Dropdown -->

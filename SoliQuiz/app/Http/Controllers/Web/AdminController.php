@@ -48,6 +48,13 @@ class AdminController extends Controller
         return view('admin.qcms', compact('qcms', 'search'));
     }
 
+    public function searchQcms(Request $request)
+    {
+        $search = $request->input('search');
+        $qcms = $this->qcmService->paginate(15, $search, null);
+        return response()->json($qcms);
+    }
+
     /**
      * Affiche l'écran d'accueil du tableau de bord Admin
      */
@@ -64,12 +71,32 @@ class AdminController extends Controller
     /**
      * Affiche la liste des utilisateurs.
      */
-    public function gestionUtilisateurs()
+    public function gestionUtilisateurs(Request $request)
     {
-        // On récupère tous les utilisateurs
-        // Dans une app réelle, on utiliserait $this->userService->paginate()
-        $users = User::all();
-        return view('admin.gestion-utilisateurs', compact('users'));
+        $search = $request->input('search');
+        $users = $search
+            ? User::where(function ($q) use ($search) {
+                  $q->where('nom', 'like', "%{$search}%")
+                    ->orWhere('prenom', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('type_profil', 'like', "%{$search}%");
+              })->get()
+            : User::all();
+        return view('admin.gestion-utilisateurs', compact('users', 'search'));
+    }
+
+    public function searchUsers(Request $request)
+    {
+        $search = $request->input('search');
+        $users = $search
+            ? User::where(function ($q) use ($search) {
+                  $q->where('nom', 'like', "%{$search}%")
+                    ->orWhere('prenom', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('type_profil', 'like', "%{$search}%");
+              })->get()
+            : User::all();
+        return response()->json($users);
     }
 
     /**
@@ -293,13 +320,39 @@ class AdminController extends Controller
      * =============== GESTION DES CLASSES ===============
      */
 
-    public function gestionClasses()
+    public function gestionClasses(Request $request)
     {
-        $classes = Classe::with(['formateur', 'etudiants'])->withCount('etudiants')->get();
+        $search = $request->input('search');
+        $classesQuery = Classe::with(['formateur', 'etudiants'])->withCount('etudiants');
+        
+        if ($search) {
+            $classesQuery->where(function ($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('promotion', 'like', "%{$search}%");
+            });
+        }
+        
+        $classes = $classesQuery->get();
         // Utilisation du type_profil pour plus de robustesse par rapport aux rôles Spatie
         $formateurs = User::where('type_profil', 'formateur')->orderBy('nom')->get();
         
-        return view('admin.classes', compact('classes', 'formateurs'));
+        return view('admin.classes', compact('classes', 'formateurs', 'search'));
+    }
+
+    public function searchClasses(Request $request)
+    {
+        $search = $request->input('search');
+        $classesQuery = Classe::with(['formateur', 'etudiants'])->withCount('etudiants');
+        
+        if ($search) {
+            $classesQuery->where(function ($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('promotion', 'like', "%{$search}%");
+            });
+        }
+        
+        $classes = $classesQuery->get();
+        return response()->json($classes);
     }
 
     public function storeClasse(Request $request)

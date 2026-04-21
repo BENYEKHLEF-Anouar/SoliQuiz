@@ -35,6 +35,16 @@ class User extends Authenticatable
         return "{$this->prenom} {$this->nom}";
     }
 
+    public function getRoleAttribute(): string
+    {
+        return $this->type_profil;
+    }
+
+    protected $appends = [
+        'nom_complet',
+        'role',
+    ];
+
     protected $hidden = [
         'password',
         'remember_token',

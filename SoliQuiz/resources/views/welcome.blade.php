@@ -9,6 +9,11 @@
     <!-- Meta SEO -->
     <meta name="description" content="SoliQuiz transforme vos sessions d'évaluation en expériences interactives. Synchronisé en temps réel avec SoliLMS.">
     
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
     <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -27,9 +32,9 @@
     <!-- Header / Nav -->
     <header :class="scrolled ? 'bg-white/90 shadow-lg' : 'bg-white/40'" class="fixed top-0 w-full backdrop-blur-md z-50 border-b border-slate-100 transition-all duration-300">
         <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <a href="{{ route('home') }}" class="flex items-center gap-2 group outline-none">
+            <a href="{{ route('home') }}" class="flex items-center gap-3 group outline-none">
                 <div
-                    class="size-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-110">
+                    class="size-11 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-110">
                     <svg class="text-white size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -37,8 +42,10 @@
                         <path d="m9 15 2 2 4-4" />
                     </svg>
                 </div>
-                <span class="text-2xl font-heading font-black tracking-tight text-slate-900">Soli<span
-                        class="text-primary-500">Quiz</span></span>
+                <div class="flex flex-col">
+                    <span class="text-2xl font-heading font-black tracking-tight text-slate-900 leading-none">Soli<span class="text-primary-500">Quiz</span></span>
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1 italic">Plateforme d'Évaluation</span>
+                </div>
             </a>
 
             <div class="hidden md:flex items-center gap-10">
@@ -47,10 +54,55 @@
                 
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}"
-                            class="py-3 px-8 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 active:scale-95 text-[11px] uppercase tracking-widest">
-                            Mon Tableau de Bord
-                        </a>
+                        <div x-data="{ userOpen: false }" class="relative">
+                            <button @click="userOpen = !userOpen" 
+                                    class="flex items-center gap-3 p-1.5 pr-6 bg-slate-900 text-white rounded-2xl hover:bg-slate-800 transition-all shadow-lg active:scale-95 group">
+                                <img class="size-9 rounded-xl border border-white/20" 
+                                     src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nom_complet) }}&background=17a2b8&color=fff&bold=true" 
+                                     alt="Avatar">
+                                <div class="flex flex-col items-start leading-none">
+                                    <span class="text-[11px] font-black uppercase tracking-widest">{{ Auth::user()->prenom }}</span>
+                                    <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Accès Dashboard</span>
+                                </div>
+                                <svg class="size-4 text-slate-500 group-hover:text-white transition-transform" :class="userOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <path d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown Menu: Premium Glassmorphism -->
+                            <div x-show="userOpen" 
+                                 @click.away="userOpen = false"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+                                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                 x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+                                 class="absolute top-full right-0 mt-4 w-64 bg-white rounded-[2rem] border border-slate-200 shadow-premium p-3 z-[100]"
+                                 x-cloak>
+                                
+                                <a href="{{ route('dashboard') }}" 
+                                    class="flex items-center gap-3 px-5 py-4 rounded-2xl text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-all text-[11px] font-black uppercase tracking-widest italic group/item">
+                                    <div class="size-8 bg-primary-50 text-primary-500 rounded-xl flex items-center justify-center group-hover/item:bg-primary-500 group-hover/item:text-white transition-all shadow-sm">
+                                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                                    </div>
+                                    Tableau de Bord
+                                </a>
+
+                                <div class="h-px bg-slate-100/50 my-2 mx-4"></div>
+
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" 
+                                            class="w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-rose-500 hover:bg-rose-50 transition-all text-[11px] font-black uppercase tracking-widest italic group/item">
+                                        <div class="size-8 bg-rose-50 text-rose-500 rounded-xl flex items-center justify-center group-hover/item:bg-rose-500 group-hover/item:text-white transition-all shadow-sm">
+                                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                                        </div>
+                                        Déconnexion
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     @else
                         <a href="{{ route('login') }}"
                             class="py-3 px-8 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/25 active:scale-95 text-[11px] uppercase tracking-widest">
@@ -102,7 +154,7 @@
                             alt="Innovation Solicode" class="rounded-[3rem] shadow-2xl border-8 border-white/50 backdrop-blur-sm transition-transform duration-700 group-hover:scale-[1.02]">
                         
                         <!-- Floating Glass Card -->
-                        <div class="absolute -bottom-12 -left-12 bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl border border-white/60 hidden sm:block max-w-[240px] animate-bounce-slow">
+                        <!-- <div class="absolute -bottom-12 -left-12 bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl border border-white/60 hidden sm:block max-w-[240px] animate-bounce-slow">
                             <div class="flex items-center gap-4 mb-4">
                                 <div class="size-10 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center">
                                     <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -113,7 +165,7 @@
                             </div>
                             <p class="text-sm font-bold text-slate-900">SoliLMS Connecté</p>
                             <p class="text-[11px] text-slate-500 mt-1">Données sécurisées et synchronisées</p>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

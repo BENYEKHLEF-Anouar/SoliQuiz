@@ -63,7 +63,7 @@ class StudentController extends Controller
         $student = $request->user();
         // Get published QCMs that the student has not attempted (or tentatives not completed)
         $attemptedQcmIds = $student->tentatives()->pluck('qcm_id');
-        $pendingQcms = QCM::where('est_publie', true)
+        $pendingQcms = QCM::where('statut', 'public')
             ->whereNotIn('id', $attemptedQcmIds)
             ->get();
         $evaluations = $pendingQcms->map(function ($qcm) {

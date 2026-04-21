@@ -1,174 +1,180 @@
 @extends('layouts.app')
 
+@section('title', 'Détails Cohorte - ' . $classe->nom)
+
 @section('content')
-<div class="shell-outer min-h-screen">
-    <div class="shell-inner p-8 md:p-12">
+<div class="fade-in space-y-12">
+    <!-- Header Strategy Section -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 pb-10 border-b border-slate-100">
+        <div class="flex-1">
+            <nav class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 italic">
+                <a href="{{ route('admin.classes') }}" class="hover:text-primary-500 transition-colors flex items-center gap-2">
+                    <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M15 19l-7-7 7-7"/></svg>
+                    Répertoire Cohortes
+                </a>
+                <span class="size-1 rounded-full bg-slate-200"></span>
+                <span class="text-slate-900">Intelligence Structurelle</span>
+            </nav>
+            <h1 class="text-4xl lg:text-5xl font-heading font-black text-slate-900 tracking-tight leading-none italic uppercase">
+                {{ $classe->nom }} <span class="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-primary-400">{{ $classe->promotion }}</span>
+            </h1>
+        </div>
         
-        <!-- Header Section -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
-            <div class="flex-1">
-                <nav class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 italic">
-                    <a href="{{ route('admin.classes') }}" class="hover:text-primary-500 transition-colors">Cohortes</a>
-                    <svg class="size-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M9 5l7 7-7 7"/></svg>
-                    <span class="text-slate-900">Détails Classe</span>
-                </nav>
-                <h1 class="text-4xl lg:text-5xl font-heading font-black text-slate-900 tracking-tight leading-none">
-                    {{ $classe->nom }} <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400">{{ $classe->promotion }}</span>
-                </h1>
+        <div class="flex items-center gap-6">
+            <div class="bg-white border border-slate-100 px-8 py-4 rounded-[2rem] shadow-sm flex items-center gap-5">
+                <div class="text-right">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1.5">Expert Référent</p>
+                    <p class="text-sm font-black text-slate-900 italic">
+                        {{ $classe->formateur ? $classe->formateur->nom_complet : 'Non assigné' }}
+                    </p>
+                </div>
+                <div class="size-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg shadow-slate-900/10">
+                    @if($classe->formateur)
+                        <img class="size-full rounded-2xl border-2 border-white/10" src="https://ui-avatars.com/api/?name={{ urlencode($classe->formateur->nom_complet) }}&background=0f172a&color=fff&bold=true" alt="">
+                    @else
+                        <svg class="size-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    @endif
+                </div>
             </div>
-            
-            <div class="flex items-center gap-4">
-                <div class="bg-white border border-slate-100 px-8 py-5 rounded-[2rem] shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)]">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] block mb-2">Responsable Pédagogique</span>
-                    <div class="flex items-center gap-3">
-                        <div class="size-8 rounded-xl bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-xs uppercase">
-                            {{ $classe->formateur ? substr($classe->formateur->prenom, 0, 1) . substr($classe->formateur->nom, 0, 1) : '??' }}
-                        </div>
-                        <span class="text-sm font-black text-slate-900 italic">
-                            @if($classe->formateur)
-                                {{ $classe->formateur->prenom }} {{ $classe->formateur->nom }}
-                            @else
-                                <span class="text-slate-300">Non assigné</span>
-                            @endif
-                        </span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Student List Section -->
+        <div class="lg:col-span-2 space-y-8">
+            <div class="bg-white rounded-[3rem] border border-slate-100 shadow-lg overflow-hidden">
+                <div class="p-10 border-b border-slate-50 flex justify-between items-center bg-slate-50/20">
+                    <div>
+                        <h2 class="text-2xl font-heading font-black text-slate-900 uppercase italic tracking-tight">Agents Apprenants</h2>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 italic">Ressources humaines rattachées à la cohorte</p>
                     </div>
+                    <div class="flex items-center gap-3 px-5 py-2.5 bg-slate-900 rounded-2xl shadow-xl shadow-slate-900/10">
+                        <span class="text-white text-[11px] font-black uppercase tracking-widest italic">{{ $classe->etudiants->count() }} Membres</span>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-slate-50/30">
+                                <th class="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic border-b border-slate-50">Identité</th>
+                                <th class="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic border-b border-slate-50">Email</th>
+                                <th class="px-10 py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic border-b border-slate-50">Contrôle</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            @forelse($classe->etudiants as $etudiant)
+                            <tr class="group hover:bg-slate-50/50 transition-all duration-300">
+                                <td class="px-10 py-6">
+                                    <div class="flex items-center gap-5">
+                                        <div class="relative">
+                                            <img class="size-12 rounded-xl shadow-sm border-2 border-white group-hover:rotate-6 transition-transform duration-500" 
+                                                 src="https://ui-avatars.com/api/?name={{ urlencode($etudiant->nom_complet) }}&background=f1f5f9&color=64748b&bold=true" alt="">
+                                            <div class="absolute -top-1 -right-1 size-4 bg-emerald-500 rounded-full border-2 border-white shadow-sm animate-pulse"></div>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="text-base font-black text-slate-900 italic tracking-tight group-hover:text-primary-600 transition-colors">{{ $etudiant->nom_complet }}</span>
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Actif au répertoire</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-10 py-6">
+                                    <span class="text-sm font-bold text-slate-500 font-mono italic">{{ $etudiant->email }}</span>
+                                </td>
+                                <td class="px-10 py-6 text-right">
+                                    <form action="{{ route('admin.classes.students.remove', [$classe->id, $etudiant->id]) }}" method="POST" class="inline-block">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="size-10 inline-flex items-center justify-center bg-rose-50 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all active:scale-90 shadow-sm" title="Révoquer l'affectation">
+                                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12" /></svg>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="3" class="px-10 py-32 text-center bg-slate-50/10">
+                                    <div class="size-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-slate-300 border border-slate-100">
+                                        <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                    </div>
+                                    <p class="text-slate-400 font-black italic uppercase text-[10px] tracking-[0.2em]">Effectif Vierge</p>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        @if (session('success'))
-            <div class="mb-10 p-6 bg-accent-teal/10 border border-accent-teal/20 rounded-[2rem] text-accent-teal font-black text-sm uppercase tracking-widest flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                <div class="size-10 rounded-2xl bg-accent-teal text-white flex items-center justify-center shadow-lg shadow-accent-teal/30">
-                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="m5 13 4 4L19 7"/></svg>
-                </div>
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <!-- Student List -->
-            <div class="lg:col-span-2 space-y-8">
-                <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)]">
-                    <div class="p-10 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
-                        <div>
-                            <h2 class="text-2xl font-heading font-black text-slate-900 uppercase italic tracking-tight">Liste des Apprenants</h2>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Membres rattachés à cette cohorte</p>
-                        </div>
-                        <span class="bg-primary-500 text-white text-[11px] font-black px-4 py-2 rounded-2xl uppercase tracking-widest shadow-lg shadow-primary-500/20">
-                            {{ $classe->etudiants->count() }} Élèves
-                        </span>
-                    </div>
-                    
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="bg-slate-50/50">
-                                    <th class="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic border-b border-slate-100">Profil</th>
-                                    <th class="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic border-b border-slate-100">Contact</th>
-                                    <th class="px-10 py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic border-b border-slate-100 italic">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-50">
-                                @forelse($classe->etudiants as $etudiant)
-                                <tr class="group hover:bg-slate-50/80 transition-all duration-300">
-                                    <td class="px-10 py-6">
-                                        <div class="flex items-center gap-5">
-                                            <div class="size-14 rounded-2xl bg-neutral-900 text-white flex items-center justify-center font-black text-sm group-hover:scale-105 transition-transform shadow-xl shadow-neutral-900/10">
-                                                {{ substr($etudiant->prenom, 0, 1) }}{{ substr($etudiant->nom, 0, 1) }}
-                                            </div>
-                                            <div class="flex flex-col">
-                                                <span class="text-base font-black text-slate-900 italic tracking-tight">{{ $etudiant->prenom }} {{ $etudiant->nom }}</span>
-                                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] mt-0.5">Apprenant Actif</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-10 py-6">
-                                        <span class="text-sm font-bold text-slate-500">{{ $etudiant->email }}</span>
-                                    </td>
-                                    <td class="px-10 py-6 text-right">
-                                        <form action="{{ route('admin.classes.students.remove', [$classe->id, $etudiant->id]) }}" method="POST" class="inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="group/del size-10 inline-flex items-center justify-center bg-slate-50 text-slate-400 hover:bg-accent-pink/10 hover:text-accent-pink rounded-xl transition-all active:scale-90" title="Retirer de la classe">
-                                                <svg class="size-5 group-hover/del:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12" /></svg>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="3" class="px-10 py-32 text-center">
-                                        <div class="flex flex-col items-center">
-                                            <div class="size-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mb-6">
-                                                <svg class="size-10 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                                            </div>
-                                            <p class="text-slate-400 font-black italic uppercase text-[11px] tracking-[0.2em]">Aucun apprenant assigné</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Add Member Column -->
-            <div class="space-y-8">
-                <div class="bg-neutral-900 rounded-[3rem] p-10 text-white shadow-2xl shadow-neutral-900/40 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 size-48 bg-primary-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                    
-                    <h3 class="text-2xl font-heading font-black uppercase italic tracking-tight mb-8 relative z-10">Ajouter un Membre</h3>
-                    
-                    @if($etudiantsSansClasse->count() > 0)
-                    <form action="{{ route('admin.classes.students.add', $classe->id) }}" method="POST" class="space-y-6 relative z-10">
-                        @csrf
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 italic">Membres disponibles</label>
-                            <select name="user_id" required class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-5 text-sm outline-none focus:border-primary-500 transition-all font-bold appearance-none">
-                                <option value="" class="text-slate-900">-- Sélectionner un élève --</option>
+        <!-- Sidebar Actions Section -->
+        <div class="space-y-8">
+            <!-- Add Member Card -->
+            <div class="bg-slate-900 rounded-[3rem] p-10 text-white shadow-2xl shadow-slate-900/30 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 size-64 bg-primary-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-primary-500/20 transition-colors duration-700"></div>
+                
+                <h3 class="text-2xl font-heading font-black uppercase italic tracking-tight mb-8 relative z-10 flex items-center gap-3">
+                    Inclusion <span class="text-primary-400">Agent</span>
+                </h3>
+                
+                @if($etudiantsSansClasse->count() > 0)
+                <form action="{{ route('admin.classes.students.add', $classe->id) }}" method="POST" class="space-y-8 relative z-10">
+                    @csrf
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 italic leading-none">Candidats sans Affectation</label>
+                        <div class="relative">
+                            <select name="user_id" required class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-sm outline-none focus:border-primary-500 transition-all font-bold appearance-none cursor-pointer uppercase">
+                                <option value="" class="text-slate-900">Sélectionner un profil...</option>
                                 @foreach($etudiantsSansClasse as $student)
-                                    <option value="{{ $student->id }}" class="text-slate-900">{{ $student->prenom }} {{ $student->nom }}</option>
+                                    <option value="{{ $student->id }}" class="text-slate-900">{{ $student->nom_complet }}</option>
                                 @endforeach
                             </select>
+                            <div class="absolute inset-y-0 right-6 flex items-center pointer-events-none">
+                                <svg class="size-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 9l-7 7-7-7"/></svg>
+                            </div>
                         </div>
-                        
-                        <button type="submit" class="w-full py-5 bg-primary-500 text-white rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[11px] hover:bg-primary-600 transition-all shadow-xl shadow-primary-500/30 active:scale-95 flex items-center justify-center gap-3">
-                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
-                            Ajouter à la Classe
-                        </button>
-                    </form>
-                    @else
-                    <div class="bg-white/5 rounded-[2rem] p-8 border border-dashed border-white/10 text-center relative z-10">
-                        <svg class="size-10 text-slate-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <p class="text-[11px] font-black text-slate-500 uppercase tracking-widest leading-relaxed">Tous les apprenants actifs sont déjà affectés.</p>
                     </div>
-                    @endif
-
-                    <div class="mt-12 pt-10 border-t border-white/5 relative z-10">
-                        <span class="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] block mb-4 italic">Note informative</span>
-                        <p class="text-[10px] leading-relaxed text-slate-400 font-bold italic tracking-tight">
-                            Cette liste n'affiche que les utilisateurs avec le profil <span class="text-primary-400">Apprenant</span> qui n'ont actuellement aucune affectation pédagogique.
-                        </p>
-                    </div>
+                    
+                    <button type="submit" class="w-full py-5 bg-white text-slate-900 rounded-[1.5rem] font-black uppercase tracking-widest text-[11px] hover:bg-primary-500 hover:text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-3 italic">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
+                        Intégrer à la Cohorte
+                    </button>
+                </form>
+                @else
+                <div class="bg-white/5 rounded-[2rem] p-10 border border-dashed border-white/10 text-center relative z-10">
+                    <svg class="size-12 text-slate-700 mx-auto mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-relaxed italic">Inventaire Clos : Tous les apprenants sont actuellement affectés.</p>
                 </div>
+                @endif
 
-                <!-- Stats Sidebar Mock -->
-                <div class="bg-accent-yellow/5 rounded-[3rem] p-10 border border-accent-yellow/20">
-                    <h4 class="text-lg font-heading font-black text-slate-900 uppercase italic tracking-tight mb-6">Résumé Cohorte</h4>
-                    <div class="space-y-6">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Capacité</span>
-                            <span class="text-sm font-black text-slate-900 italic">Illimitée</span>
+                <div class="mt-12 pt-10 border-t border-white/5 relative z-10 opacity-60">
+                    <p class="text-[9px] leading-relaxed text-slate-400 font-bold italic tracking-tight uppercase">
+                        Vérification automatique des privilèges et de l'état d'affectation en temps réel.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stats Card -->
+            <div class="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-sm">
+                <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-8 italic">Météo de Cohorte</h4>
+                <div class="space-y-8">
+                    <div class="flex justify-between items-end">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Taux d'engagement</span>
+                            <span class="text-2xl font-black text-slate-900 italic leading-none">84.2%</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Taux d'activité</span>
-                            <span class="text-sm font-black text-accent-teal italic">84%</span>
+                        <div class="size-12 bg-primary-50 rounded-xl flex items-center justify-center text-primary-500">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                         </div>
-                        <div class="flex justify-between items-center pt-6 border-t border-accent-yellow/10">
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rentrée</span>
-                            <span class="text-sm font-black text-slate-900 italic">{{ $classe->created_at?->format('M Y') ?? 'Lancement ' . date('Y') }}</span>
-                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center pt-8 border-t border-slate-50">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Activité Seances</span>
+                        <span class="text-sm font-black text-slate-900 italic">Haut Niveau</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Mise en Service</span>
+                        <span class="text-sm font-black text-slate-900 italic">{{ $classe->created_at?->format('M Y') ?? 'Cycle ' . date('Y') }}</span>
                     </div>
                 </div>
             </div>

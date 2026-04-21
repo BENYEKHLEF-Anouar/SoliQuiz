@@ -87,7 +87,6 @@ class PassationService
             $qcm = $tentative->qcm->load('questions.options');
             $scoreTotal = 0;
             $scoreMax = 0;
-            $corrections = [];
 
             foreach ($qcm->questions as $question) {
                 $scoreMax += $question->points;

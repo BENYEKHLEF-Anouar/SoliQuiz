@@ -2,42 +2,39 @@
 
 @section('title', 'Tableau de Bord - Apprenant')
 
+@section('page-title', 'Espace Personnel Apprenant')
+
 @section('content')
-<div class="space-y-8 reveal active">
-    <!-- Corporate Header -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-200">
+<div class="space-y-8 fade-in">
+    <!-- Performance Summary Bar -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100">
         <div>
-            <x-ui.breadcrumb :items="['Espace Apprenant' => null, 'Tableau de bord' => null]" />
-            <h1 class="text-3xl lg:text-4xl font-heading font-black text-slate-900 tracking-tight leading-none">
-                Bonjour, <span class="text-primary-600">{{ Auth::user()->prenom }}</span>
-            </h1>
-            <p class="text-sm text-slate-500 mt-2 max-w-lg">
-                Continuez votre apprentissage. Voici votre progression et vos prochaines évaluations.
-            </p>
+            <p class="text-label mb-1">Espace Apprenant</p>
+            <h3 class="text-xl font-bold text-slate-900 tracking-tight italic uppercase">Bon retour, {{ Auth::user()->prenom }}</h3>
         </div>
         
         <div class="flex items-center gap-4">
-            <!-- Overall Progress Circle -->
-            <div class="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-                <div class="relative size-14">
-                    <svg class="size-full -rotate-90" viewBox="0 0 56 56">
-                        <circle cx="28" cy="28" r="24" fill="none" stroke="#e2e8f0" stroke-width="4"/>
-                        <circle cx="28" cy="28" r="24" fill="none" stroke="#0ea5e9" stroke-width="4"
-                                stroke-dasharray="150.8" stroke-dashoffset="{{ 150.8 - (150.8 * $metrics['taux_reussite'] / 100) }}"
-                                stroke-linecap="round"/>
-                    </svg>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <span class="text-sm font-black text-slate-900">{{ $metrics['taux_reussite'] }}%</span>
+            <!-- Overall Progress Summary -->
+            <div class="hidden md:flex items-center gap-4 px-5 py-2.5 bg-slate-50 rounded-2xl border border-slate-100">
+                <div class="flex items-center gap-3">
+                    <div class="relative size-10 flex items-center justify-center">
+                        <svg class="absolute inset-0 size-full -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="#e2e8f0" stroke-width="3"/>
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="#17a2b8" stroke-width="3"
+                                    stroke-dasharray="100" stroke-dashoffset="{{ 100 - $metrics['taux_reussite'] }}"
+                                    stroke-linecap="round"/>
+                        </svg>
+                        <span class="text-[9px] font-black text-slate-900">{{ $metrics['taux_reussite'] }}%</span>
                     </div>
-                </div>
-                <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Réussite</p>
-                    <p class="text-xs font-bold text-slate-700">{{ $metrics['nb_reussies'] }}/{{ $metrics['nb_tentatives'] }} tests</p>
+                    <div class="text-right">
+                        <p class="text-xs font-black text-slate-900 italic leading-none mb-1">Réussite</p>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $metrics['nb_reussies'] }}/{{ $metrics['nb_tentatives'] }} tests</p>
+                    </div>
                 </div>
             </div>
 
-            <a href="{{ route('student.bibliotheque') }}" class="flex items-center gap-2 px-5 py-3 bg-primary-600 text-white rounded-xl font-bold text-sm hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20">
-                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            <a href="{{ route('student.bibliotheque') }}" class="btn-premium px-6 py-3 bg-primary-600 text-white text-[11px] uppercase tracking-widest">
+                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 Mes QCMs
             </a>
         </div>
@@ -155,8 +152,9 @@
                     </a>
                 </div>
                 <div class="divide-y divide-slate-100">
-                        @php 
-                            $isSuccess = $tentative->statut === 'reussi'; 
+                    @forelse($historique as $tentative)
+                        @php
+                            $isSuccess = $tentative->statut === 'reussi';
                             $isEnCours = $tentative->statut === 'en_cours';
                         @endphp
                         <div class="p-4 hover:bg-slate-50 transition-all flex items-center justify-between group">

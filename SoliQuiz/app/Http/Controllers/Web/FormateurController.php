@@ -7,6 +7,7 @@ use App\Models\QCM;
 use App\Models\UniteApprentissage;
 use App\Models\Seance;
 use App\Models\Competence;
+use App\Models\Classe;
 use App\Services\QcmService;
 use App\Services\ClasseService;
 use Illuminate\Http\Request;
@@ -18,8 +19,53 @@ class FormateurController extends Controller
     private ClasseService $classeService;
     private \App\Services\DashboardService $dashboardService;
 
+    private function requireClasseForFormateur(?int $classeId): void
+    {
+        if (Auth::user()->isAdmin()) {
+            return;
+        }
+
+        if (!$classeId) {
+            abort(422);
+        }
+    }
+
+    private function assertClasseAccessibleForCurrentUser(?int $classeId): void
+    {
+        if (!$classeId) {
+            return;
+        }
+
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        $isOwned = Classe::where('id', $classeId)
+            ->where('formateur_id', $user->id)
+            ->exists();
+
+        if (!$isOwned) {
+            abort(403);
+        }
+    }
+
+    private function scopeQcmQueryForCurrentUser($query)
+    {
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        $classeIds = $user->classeGeree()->pluck('id');
+
+        return $query->whereIn('classe_id', $classeIds);
+    }
+
     public function __construct(
-        QcmService $qcmService, 
+        QcmService $qcmService,
         ClasseService $classeService,
         \App\Services\DashboardService $dashboardService
     ) {
@@ -34,25 +80,7 @@ class FormateurController extends Controller
     public function dashboard()
     {
         $formateur = Auth::user();
-        
-        // Load classes managed by this formateur with students and simple stats
-        $classes = $formateur->classeGeree()
-            ->withCount('etudiants')
-            ->get()
-            ->map(function($classe) {
-                $tentatives = \App\Models\Tentative::whereIn('etudiant_id', $classe->etudiants->pluck('id'))
-                    ->where('statut', '!=', 'en_cours')
-                    ->get();
-                
-                $classe->moyenne = round($tentatives->avg('score_obtenu') ?? 0, 1);
-                $classe->nb_reussis = $tentatives->where('statut', 'reussi')->count();
-                $classe->taux_reussite = $tentatives->count() > 0 
-                    ? round(($classe->nb_reussis / $tentatives->count()) * 100) 
-                    : 0;
-                
-                return $classe;
-            });
-
+        $classes = $this->dashboardService->getTrainerClassesMetrics($formateur);
         $metrics = $this->dashboardService->getTrainerKpis($formateur);
 
         return view('formateur.dashboard', compact('metrics', 'classes'));
@@ -77,7 +105,9 @@ class FormateurController extends Controller
 
     public function destroySeance($id)
     {
-        $seance = Auth::user()->seances()->findOrFail($id);
+        $seance = Auth::user()->isAdmin()
+            ? Seance::findOrFail($id)
+            : Auth::user()->seances()->findOrFail($id);
         $seance->delete();
         return back()->with('success', 'Session supprimée.');
     }
@@ -89,12 +119,14 @@ class FormateurController extends Controller
             'code' => 'required|string|unique:unites_apprentissage,code',
             'seance_id' => 'required|exists:seances,id'
         ]);
-        
-        $seance = Auth::user()->seances()->findOrFail($request->seance_id);
+
+        $seance = Auth::user()->isAdmin()
+            ? Seance::findOrFail($request->seance_id)
+            : Auth::user()->seances()->findOrFail($request->seance_id);
         $seance->unitesApprentissage()->create([
             'nom' => $request->nom,
             'code' => $request->code,
-            'user_id' => Auth::id()
+            'user_id' => $seance->user_id
         ]);
 
         return back()->with('success', 'Unité d\'apprentissage ajoutée.');
@@ -102,7 +134,9 @@ class FormateurController extends Controller
 
     public function destroyUA($id)
     {
-        $ua = UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $ua = Auth::user()->isAdmin()
+            ? UniteApprentissage::findOrFail($id)
+            : UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $ua->delete();
         return back()->with('success', 'UA supprimée.');
     }
@@ -114,8 +148,10 @@ class FormateurController extends Controller
             'code' => 'required|string|unique:competences,code',
             'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id'
         ]);
-        
-        $ua = UniteApprentissage::where('id', $request->unite_apprentissage_id)->where('user_id', Auth::id())->firstOrFail();
+
+        $ua = Auth::user()->isAdmin()
+            ? UniteApprentissage::findOrFail($request->unite_apprentissage_id)
+            : UniteApprentissage::where('id', $request->unite_apprentissage_id)->where('user_id', Auth::id())->firstOrFail();
         $ua->competences()->create($request->only('nom', 'code'));
 
         return back()->with('success', 'Compétence ajoutée.');
@@ -124,8 +160,8 @@ class FormateurController extends Controller
     public function destroyCompetence($id)
     {
         $competence = Competence::findOrFail($id);
-        // Check privacy through UA
-        if ($competence->uniteApprentissage->user_id !== Auth::id()) abort(403);
+        if (!Auth::user()->isAdmin() && $competence->uniteApprentissage->user_id !== Auth::id())
+            abort(403);
 
         $competence->delete();
         return back()->with('success', 'Compétence supprimée.');
@@ -136,7 +172,9 @@ class FormateurController extends Controller
      */
     public function editSeance($id)
     {
-        $seance = Auth::user()->seances()->findOrFail($id);
+        $seance = Auth::user()->isAdmin()
+            ? Seance::findOrFail($id)
+            : Auth::user()->seances()->findOrFail($id);
         return response()->json($seance);
     }
 
@@ -146,7 +184,9 @@ class FormateurController extends Controller
     public function updateSeance(Request $request, $id)
     {
         $request->validate(['nom' => 'required|string|max:255', 'date' => 'required|date']);
-        $seance = Auth::user()->seances()->findOrFail($id);
+        $seance = Auth::user()->isAdmin()
+            ? Seance::findOrFail($id)
+            : Auth::user()->seances()->findOrFail($id);
         $seance->update($request->only('nom', 'date'));
         return back()->with('success', 'Session mise à jour.');
     }
@@ -156,7 +196,9 @@ class FormateurController extends Controller
      */
     public function editUA($id)
     {
-        $ua = UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $ua = Auth::user()->isAdmin()
+            ? UniteApprentissage::findOrFail($id)
+            : UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         return response()->json($ua);
     }
 
@@ -170,7 +212,9 @@ class FormateurController extends Controller
             'code' => 'required|string|unique:unites_apprentissage,code,' . $id,
         ]);
 
-        $ua = UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $ua = Auth::user()->isAdmin()
+            ? UniteApprentissage::findOrFail($id)
+            : UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $ua->update($request->only('nom', 'code'));
         return back()->with('success', 'Unité d\'apprentissage mise à jour.');
     }
@@ -181,7 +225,8 @@ class FormateurController extends Controller
     public function editCompetence($id)
     {
         $competence = Competence::findOrFail($id);
-        if ($competence->uniteApprentissage->user_id !== Auth::id()) abort(403);
+        if (!Auth::user()->isAdmin() && $competence->uniteApprentissage->user_id !== Auth::id())
+            abort(403);
         return response()->json($competence);
     }
 
@@ -196,7 +241,8 @@ class FormateurController extends Controller
         ]);
 
         $competence = Competence::findOrFail($id);
-        if ($competence->uniteApprentissage->user_id !== Auth::id()) abort(403);
+        if (!Auth::user()->isAdmin() && $competence->uniteApprentissage->user_id !== Auth::id())
+            abort(403);
 
         $competence->update($request->only('nom', 'code'));
         return back()->with('success', 'Compétence mise à jour.');
@@ -208,9 +254,25 @@ class FormateurController extends Controller
     public function bibliotheque(Request $request)
     {
         $search = $request->input('search');
-        $formateurId = Auth::user()->isAdmin() ? null : Auth::id();
-        $qcms = $this->qcmService->paginate(15, $search, $formateurId);
+        $qcms = QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
+            ->withCount(['questions', 'tentatives'])
+            ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
+            ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
+            ->latest()
+            ->paginate(15);
         return view('formateur.bibliotheque', compact('qcms', 'search'));
+    }
+
+    public function searchBibliotheque(Request $request)
+    {
+        $search = $request->input('search');
+        $qcms = QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
+            ->withCount(['questions', 'tentatives'])
+            ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
+            ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
+            ->latest()
+            ->paginate(15);
+        return response()->json($qcms);
     }
 
     /**
@@ -231,7 +293,7 @@ class FormateurController extends Controller
         $request->validate([
             'titre' => 'required|string|max:255',
             'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id',
-            'classe_id' => 'nullable|exists:classes,id',
+            'classe_id' => Auth::user()->isAdmin() ? 'nullable|exists:classes,id' : 'required|exists:classes,id',
             'duree_minutes' => 'required|integer|min:1',
             'score_reussite' => 'required|numeric|min:0|max:20',
             'statut' => 'required|in:brouillon,public,termine',
@@ -250,11 +312,23 @@ class FormateurController extends Controller
 
         $data = $request->all();
         $data['formateur_id'] = Auth::id();
-        
+
+        $classeId = isset($data['classe_id']) ? (int) $data['classe_id'] : null;
+        $this->requireClasseForFormateur($classeId);
+        $this->assertClasseAccessibleForCurrentUser($classeId);
+
         foreach ($data['questions'] as &$question) {
             $question['type'] = $question['type'] === 'choix_unique' ? 'unique' : 'multiple';
             foreach ($question['options'] as &$option) {
                 $option['est_correcte'] = isset($option['est_correcte']) && $option['est_correcte'] === '1';
+            }
+
+            $nbCorrect = collect($question['options'])->where('est_correcte', true)->count();
+            if ($question['type'] === 'unique' && $nbCorrect !== 1) {
+                return back()->withInput()->with('error', 'Chaque question à choix unique doit avoir exactement une seule réponse correcte.');
+            }
+            if ($question['type'] === 'multiple' && $nbCorrect < 1) {
+                return back()->withInput()->with('error', 'Chaque question à choix multiple doit avoir au moins une réponse correcte.');
             }
         }
 
@@ -269,9 +343,9 @@ class FormateurController extends Controller
     public function editQcm($id)
     {
         $qcm = QCM::with(['questions.options', 'competences', 'uniteApprentissage'])
-            ->when(!Auth::user()->isAdmin(), fn($q) => $q->where('formateur_id', Auth::id()))
+            ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
             ->findOrFail($id);
-        
+
         // Admins can see all UAs/Classes, Formateurs see theirs
         if (Auth::user()->isAdmin()) {
             $unites = UniteApprentissage::with('competences')->get();
@@ -280,7 +354,7 @@ class FormateurController extends Controller
             $unites = UniteApprentissage::where('user_id', Auth::id())->with('competences')->get();
             $classes = Auth::user()->classeGeree;
         }
-        
+
         return view('formateur.edit-qcm', compact('qcm', 'unites', 'classes'));
     }
 
@@ -289,14 +363,14 @@ class FormateurController extends Controller
      */
     public function updateQcm(Request $request, $id)
     {
-        $qcm = QCM::when(!Auth::user()->isAdmin(), fn($q) => $q->where('formateur_id', Auth::id()))
+        $qcm = QCM::tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
             ->findOrFail($id);
-        
+
         // Check if QCM is already completed (termine) - prevent editing
         if ($qcm->statut === 'termine' && !Auth::user()->isAdmin()) {
             return back()->with('error', 'Ce QCM est terminé et ne peut plus être modifié.');
         }
-        
+
         $request->validate([
             'titre' => 'required|string|max:255',
             'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id',
@@ -318,11 +392,23 @@ class FormateurController extends Controller
         ]);
 
         $data = $request->all();
-        
+
+        $classeId = isset($data['classe_id']) ? (int) $data['classe_id'] : null;
+        $this->requireClasseForFormateur($classeId);
+        $this->assertClasseAccessibleForCurrentUser($classeId);
+
         foreach ($data['questions'] as &$question) {
             $question['type'] = $question['type'] === 'choix_unique' ? 'unique' : 'multiple';
             foreach ($question['options'] as &$option) {
                 $option['est_correcte'] = isset($option['est_correcte']) && $option['est_correcte'] === '1';
+            }
+
+            $nbCorrect = collect($question['options'])->where('est_correcte', true)->count();
+            if ($question['type'] === 'unique' && $nbCorrect !== 1) {
+                return back()->withInput()->with('error', 'Chaque question à choix unique doit avoir exactement une seule réponse correcte.');
+            }
+            if ($question['type'] === 'multiple' && $nbCorrect < 1) {
+                return back()->withInput()->with('error', 'Chaque question à choix multiple doit avoir au moins une réponse correcte.');
             }
         }
 
@@ -336,10 +422,10 @@ class FormateurController extends Controller
      */
     public function destroyQcm($id)
     {
-        $qcm = QCM::when(!Auth::user()->isAdmin(), fn($q) => $q->where('formateur_id', Auth::id()))
+        $qcm = QCM::tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
             ->findOrFail($id);
         $this->qcmService->delete($qcm);
-        
+
         return redirect()->route('formateur.bibliotheque')->with('success', 'QCM effacé.');
     }
 
@@ -360,14 +446,14 @@ class FormateurController extends Controller
      */
     public function toggleQcmStatus($id)
     {
-        $qcm = QCM::when(!Auth::user()->isAdmin(), fn($q) => $q->where('formateur_id', Auth::id()))
+        $qcm = QCM::tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
             ->findOrFail($id);
-        
+
         $this->qcmService->togglePublication($qcm);
-        
+
         $newStatus = $qcm->fresh()->statut;
         $message = $newStatus === 'public' ? 'QCM publié et visible aux étudiants.' : 'QCM mis en brouillon.';
-        
+
         return back()->with('success', $message);
     }
 
@@ -376,11 +462,11 @@ class FormateurController extends Controller
      */
     public function closeQcm($id)
     {
-        $qcm = QCM::when(!Auth::user()->isAdmin(), fn($q) => $q->where('formateur_id', Auth::id()))
+        $qcm = QCM::tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
             ->findOrFail($id);
-        
+
         $this->qcmService->closeQcm($qcm);
-        
+
         return back()->with('success', 'QCM fermé. Les étudiants ne peuvent plus y accéder.');
     }
 }

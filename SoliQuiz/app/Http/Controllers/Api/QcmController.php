@@ -20,7 +20,7 @@ class QcmController extends Controller
             'durationMinutes' => $qcm->duree_minutes,
             'totalQuestions' => $qcm->questions->count(),
             'successScore' => $qcm->score_reussite,
-            'isPublished' => $qcm->est_publie,
+            'isPublished' => $qcm->statut === 'public',
         ]);
     }
 
@@ -78,8 +78,8 @@ class QcmController extends Controller
             ];
         });
         $score = $tentative->score_obtenu;
-        $percentage = $totalQuestions > 0 ? round(($score / $totalQuestions) * 100) : 0;
-        $objectiveMet = $percentage >= $qcm->score_reussite;
+        $percentage = round(($score / 20) * 100);
+        $objectiveMet = $score >= $qcm->score_reussite;
         return response()->json([
             'qcmId' => $qcm->id,
             'title' => $qcm->titre,

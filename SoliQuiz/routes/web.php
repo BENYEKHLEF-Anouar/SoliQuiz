@@ -19,8 +19,10 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function() {
         Route::get('/dashboard', [\App\Http\Controllers\Web\AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/qcms', [\App\Http\Controllers\Web\AdminController::class, 'indexQcms'])->name('qcms');
+        Route::get('/qcms/search', [\App\Http\Controllers\Web\AdminController::class, 'searchQcms'])->name('qcms.search');
         
         Route::get('/utilisateurs', [\App\Http\Controllers\Web\AdminController::class, 'gestionUtilisateurs'])->name('utilisateurs');
+        Route::get('/utilisateurs/search', [\App\Http\Controllers\Web\AdminController::class, 'searchUsers'])->name('utilisateurs.search');
         Route::post('/utilisateurs', [\App\Http\Controllers\Web\AdminController::class, 'storeUser'])->name('utilisateurs.store');
         Route::put('/utilisateurs/{id}', [\App\Http\Controllers\Web\AdminController::class, 'updateUser'])->name('utilisateurs.update');
         Route::delete('/utilisateurs/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroyUser'])->name('utilisateurs.destroy');
@@ -40,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/pedagogie/competence/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroyCompetence'])->name('pedagogie.competence.destroy');
         
         Route::get('/classes', [\App\Http\Controllers\Web\AdminController::class, 'gestionClasses'])->name('classes');
+        Route::get('/classes/search', [\App\Http\Controllers\Web\AdminController::class, 'searchClasses'])->name('classes.search');
         Route::get('/classes/{id}', [\App\Http\Controllers\Web\AdminController::class, 'showClasse'])->name('classes.show');
         Route::post('/classes', [\App\Http\Controllers\Web\AdminController::class, 'storeClasse'])->name('classes.store');
         Route::delete('/classes/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroyClasse'])->name('classes.destroy');
@@ -48,10 +51,11 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/classes/{id}/etudiants/{userId}', [\App\Http\Controllers\Web\AdminController::class, 'removeStudentFromClasse'])->name('classes.students.remove');
     });
 
-    // Group: Formateur Only
-    Route::middleware(['role:formateur'])->prefix('formateur')->name('formateur.')->group(function() {
+    // Group: Formateur and Admin
+    Route::middleware(['role:formateur,admin'])->prefix('formateur')->name('formateur.')->group(function() {
         Route::get('/dashboard', [\App\Http\Controllers\Web\FormateurController::class, 'dashboard'])->name('dashboard');
         Route::get('/bibliotheque', [\App\Http\Controllers\Web\FormateurController::class, 'bibliotheque'])->name('bibliotheque');
+        Route::get('/bibliotheque/search', [\App\Http\Controllers\Web\FormateurController::class, 'searchBibliotheque'])->name('bibliotheque.search');
         Route::get('/qcm/create', [\App\Http\Controllers\Web\FormateurController::class, 'createQcm'])->name('qcm.create');
         Route::post('/qcm', [\App\Http\Controllers\Web\FormateurController::class, 'storeQcm'])->name('qcm.store');
         Route::get('/qcm/{id}/edit', [\App\Http\Controllers\Web\FormateurController::class, 'editQcm'])->name('qcm.edit');
