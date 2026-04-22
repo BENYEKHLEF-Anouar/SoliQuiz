@@ -20,7 +20,8 @@ class UserService
                 ->orWhere('email', 'like', "%{$search}%"))
             ->when($profil, fn($q) => $q->where('type_profil', $profil))
             ->latest()
-            ->paginate($perPage);
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     /**
@@ -81,5 +82,15 @@ class UserService
     public function getEtudiants(): Collection
     {
         return User::where('type_profil', 'etudiant')->orderBy('nom')->get();
+    }
+
+    /**
+     * Affecte une classe à plusieurs étudiants en masse
+     */
+    public function assignClassToMultipleUsers(array $userIds, int $classeId): void
+    {
+        User::whereIn('id', $userIds)
+            ->where('type_profil', 'etudiant')
+            ->update(['classe_id' => $classeId]);
     }
 }

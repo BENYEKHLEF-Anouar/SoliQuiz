@@ -36,6 +36,26 @@ class DashboardService
     }
 
     /**
+     * Retourne les indicateurs clés pour un formateur spécifique
+     */
+    public function getFormateurKpis(int $formateurId): array
+    {
+        $qcms = QCM::where('formateur_id', $formateurId)->pluck('id');
+        
+        $tentativesStats = Tentative::whereIn('qcm_id', $qcms)
+            ->whereNotNull('score_obtenu')
+            ->selectRaw('COUNT(*) as total, AVG(score_obtenu) as moyenne')
+            ->first();
+
+        return [
+            'nb_qcms' => $qcms->count(),
+            'nb_qcms_actifs' => QCM::where('formateur_id', $formateurId)->where('est_publie', true)->count(),
+            'nb_tentatives' => $tentativesStats->total ?? 0,
+            'score_moyen' => round($tentativesStats->moyenne ?? 0, 1),
+        ];
+    }
+
+    /**
      * Renvoie les QCM les plus actifs (triés par nombre de tentatives)
      */
     public function getTopQcms(int $limit = 5): Collection

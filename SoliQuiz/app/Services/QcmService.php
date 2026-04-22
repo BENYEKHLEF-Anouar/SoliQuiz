@@ -18,10 +18,13 @@ class QcmService
     {
         return QCM::with(['formateur', 'uniteApprentissage'])
             ->withCount('questions')
+            ->withCount('tentatives')
+            ->withAvg('tentatives', 'score_obtenu')
             ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
             ->when($formateurId, fn($q) => $q->where('formateur_id', $formateurId))
             ->latest()
-            ->paginate($perPage);
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     /**
