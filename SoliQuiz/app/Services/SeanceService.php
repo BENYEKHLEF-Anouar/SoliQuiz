@@ -35,7 +35,11 @@ class SeanceService
      */
     public function create(array $data): Seance
     {
-        return Seance::create(['nom' => $data['nom'], 'date' => $data['date']]);
+        return Seance::create([
+            'nom' => $data['nom'],
+            'date' => $data['date'],
+            'user_id' => $data['user_id'] ?? null,
+        ]);
     }
 
     /**
@@ -43,7 +47,10 @@ class SeanceService
      */
     public function update(Seance $seance, array $data): Seance
     {
-        $seance->update(['nom' => $data['nom'], 'date' => $data['date']]);
+        $seance->update([
+            'nom' => $data['nom'],
+            'date' => $data['date'],
+        ]);
         return $seance->fresh();
     }
 

@@ -42,7 +42,8 @@ class ProfileController extends Controller
             return back()->withErrors(['current_password' => 'Le mot de passe actuel est incorrect.']);
         }
 
-        $user->password = Hash::make($request->password);
+        // Don't hash here - User model has 'password' => 'hashed' cast that handles it
+        $user->password = $request->password;
         $user->save();
 
         return redirect()->route('profile.edit')->with('success', 'Mot de passe mis à jour avec succès.');

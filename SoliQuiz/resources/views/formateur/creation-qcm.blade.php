@@ -151,36 +151,53 @@
                             </div>
                         </div>
 
-                        <!-- Options Management -->
+<!-- Options Management -->
                         <div class="space-y-8">
                             <div class="flex items-center justify-between border-b border-slate-50 pb-5">
-                                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Options Stratégiques</h4>
-                                <x-ui.select 
-                                    x-model="question.type" 
-                                    name="questions[${qIndex}][type]" 
-                                    class="!bg-primary-50 !border-transparent !rounded-xl !py-2 !px-4 !w-52 !text-primary-600"
-                                    :options="[
-                                        ['value' => 'choix_unique', 'label' => 'Réponse Unique'],
-                                        ['value' => 'choix_multiple', 'label' => 'Multi-Réponses'],
-                                    ]"
-                                />
+                                <div class="flex items-center gap-3">
+                                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Options Strategiques</h4>
+                                    <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase" 
+                                          :class="question.type === 'choix_unique' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'"
+                                          x-text="question.type === 'choix_unique' ? 'UNIQUE' : 'MULTIPLE'"></span>
+                                </div>
+                                <select x-model="question.type" 
+                                            name="questions[${qIndex}][type]" 
+                                            class="!bg-primary-50 !border-transparent !rounded-xl !py-2 !px-4 !w-52 !text-primary-600 text-xs font-black uppercase">
+                                        <option value="choix_unique">Reponse Unique</option>
+                                        <option value="choix_multiple">Multi-Reponses</option>
+                                    </select>
                             </div>
 
-                            <span class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.25em]" x-text="question.type === 'choix_unique' ? 'Sélectionner la réponse correcte' : 'Sélectionner les réponses correctes'"></span>
+                            <div class="flex items-center gap-3">
+                                <span class="text-[9px] font-black uppercase tracking-[0.25em]" 
+                                      :class="question.type === 'choix_unique' ? 'text-blue-500' : 'text-purple-500'"
+                                      x-text="question.type === 'choix_unique' ? 'Selectionnez la reponse correcte (radio)' : 'Selectionnez TOUTES les reponses correctes (checkbox)'">
+                                </span>
+                                <span x-show="question.type === 'choix_multiple'" class="text-[9px] text-purple-500 font-bold animate-pulse">
+                                    (Plusieurs choix possibles)
+                                </span>
+                            </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <template x-for="(opt, oIndex) in question.options" :key="oIndex">
-                                    <div class="group/opt p-6 bg-slate-50/50 rounded-3xl border border-transparent hover:border-primary-100 hover:bg-white transition-all duration-300 space-y-4 shadow-xs">
+                                    <div class="group/opt p-6 bg-slate-50/50 rounded-3xl border-2 transition-all duration-300 space-y-4 shadow-xs"
+                                         :class="opt.est_correcte ? 'border-emerald-400 bg-emerald-50/50' : 'border-transparent hover:border-primary-100 hover:bg-white'">
                                         <div class="flex items-center gap-4">
-                                            <span x-show="false" x-effect="normalizeCorrectOptions(qIndex)"></span>
-                                            <input type="hidden" :name="`questions[${qIndex}][options][${oIndex}][est_correcte]`" :value="opt.est_correcte ? '1' : '0'">
-                                            <button @click="setCorrectOption(qIndex, oIndex, !opt.est_correcte)" type="button"
-                                                    class="size-7 rounded-lg border-2 flex items-center justify-center shrink-0 transition-all"
-                                                    :class="opt.est_correcte ? 'bg-emerald-500 border-emerald-500 text-white' : 'bg-white border-slate-200 text-transparent'">
-                                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M5 13l4 4L19 7" /></svg>
+                                            <!-- Dynamic correct answer button - changes behavior based on question type -->
+                                            <button @click="toggleCorrectOption(qIndex, oIndex)" type="button"
+                                                    class="shrink-0 transition-all"
+                                                    :class="question.type === 'choix_unique' ? 'w-7 h-7 rounded-full' : 'w-7 h-7 rounded-lg'">
+                                                <div class="w-full h-full flex items-center justify-center transition-all"
+                                                     :class="opt.est_correcte ? 'bg-emerald-500 text-white' : 'bg-white border-2 border-slate-200 text-transparent'">
+                                                    <svg x-show="question.type === 'choix_unique'" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M5 13l4 4L19 7" /></svg>
+                                                    <svg x-show="question.type === 'choix_multiple'" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M5 13l4 4L19 7" /></svg>
+                                                </div>
                                             </button>
+                                            
+                                            <input type="hidden" :name="`questions[${qIndex}][options][${oIndex}][est_correcte]`" :value="opt.est_correcte ? '1' : '0'">
+                                            
                                             <input type="text" required x-model="opt.texte" :name="`questions[${qIndex}][options][${oIndex}][texte]`" 
-                                                   placeholder="Option de réponse..." class="w-full bg-transparent border-none p-0 font-bold text-slate-800 text-base placeholder:text-slate-200 focus:ring-0 outline-none">
+                                                   placeholder="Option de reponse..." class="flex-1 bg-transparent border-none p-0 font-bold text-slate-800 text-base placeholder:text-slate-200 focus:ring-0 outline-none">
                                             
                                             <button @click="removeOption(qIndex, oIndex)" type="button" class="text-slate-200 hover:text-rose-500 transition-colors opacity-0 group-hover/opt:opacity-100">
                                                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12" /></svg>
@@ -195,10 +212,12 @@
                                 <button @click="addOption(qIndex)" type="button" 
                                         class="h-full min-h-[110px] border-2 border-dashed border-slate-100 rounded-3xl flex flex-col items-center justify-center gap-2 text-slate-300 hover:text-primary-500 hover:border-primary-200 hover:bg-primary-50/30 transition-all group">
                                     <svg class="size-6 group-hover:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
-                                    <span class="text-[9px] font-black uppercase tracking-[0.2em]">Insérer Option</span>
+                                    <span class="text-[9px] font-black uppercase tracking-[0.2em]">Inserer Option</span>
                                 </button>
                             </div>
                         </div>
+
+                            
 
                         <!-- Global Question Feedback -->
                         <div class="pt-8 border-t border-slate-50 flex gap-6 items-start">
@@ -281,6 +300,21 @@ document.addEventListener('alpine:init', () => {
         selectedUniteId: '',
         selectedClasseId: '',
         
+        init() {
+            // Watch for question type changes to auto-normalize unique questions
+            this.$watch('questions', (questions) => {
+                questions.forEach((q, idx) => {
+                    // Ensure at least one correct answer for unique questions
+                    if (q.type === 'choix_unique') {
+                        const hasCorrect = q.options.some(o => o.est_correcte);
+                        if (!hasCorrect && q.options.length > 0) {
+                            q.options[0].est_correcte = true;
+                        }
+                    }
+                });
+            });
+        },
+        
         get filteredCompetences() {
             if (!this.selectedUniteId) return [];
             const unite = this.allUnites.find(u => u.id == this.selectedUniteId);
@@ -321,7 +355,7 @@ document.addEventListener('alpine:init', () => {
                 points: 0,
                 explication_feedback: '',
                 options: [
-                    { texte: '', est_correcte: false, feedback_specifique: '' },
+                    { texte: '', est_correcte: true, feedback_specifique: '' },
                     { texte: '', est_correcte: false, feedback_specifique: '' }
                 ]
             });
@@ -346,12 +380,30 @@ document.addEventListener('alpine:init', () => {
         },
 
         setCorrectOption(qIndex, oIndex, isChecked) {
-            if (this.questions[qIndex].type === 'choix_unique') {
-                this.questions[qIndex].options.forEach((opt, idx) => {
+            const q = this.questions[qIndex];
+            if (q.type === 'choix_unique') {
+                // Radio behavior: only one correct answer allowed
+                q.options.forEach((opt, idx) => {
                     opt.est_correcte = (idx === oIndex);
                 });
             } else {
-                this.questions[qIndex].options[oIndex].est_correcte = isChecked;
+                // Checkbox behavior: multiple correct answers allowed
+                q.options[oIndex].est_correcte = isChecked;
+            }
+        },
+
+        toggleCorrectOption(qIndex, oIndex) {
+            const q = this.questions[qIndex];
+            const current = q.options[oIndex].est_correcte;
+            
+            if (q.type === 'choix_unique') {
+                // Radio behavior: set this as the only correct answer
+                q.options.forEach((opt, idx) => {
+                    opt.est_correcte = (idx === oIndex);
+                });
+            } else {
+                // Checkbox behavior: toggle this option
+                q.options[oIndex].est_correcte = !current;
             }
         },
 

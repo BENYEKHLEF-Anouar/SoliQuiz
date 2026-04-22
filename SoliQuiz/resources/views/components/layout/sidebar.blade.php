@@ -125,7 +125,7 @@
                         class="w-full flex items-center justify-between p-2 rounded-2xl hover:bg-white hover:shadow-sm transition-all group active:scale-95 border border-transparent hover:border-slate-100">
                     <div class="flex items-center gap-3">
                         <img class="size-9 rounded-xl shadow-sm border border-white"
-                                src="https://ui-avatars.com/api/?name={{ urlencode($user->nom_complet) }}&background=17a2b8&color=fff&bold=true"
+                                src="https://ui-avatars.com/api/?name={{ urlencode($user->nom_complet ?? 'User') }}&background=17a2b8&color=fff&bold=true"
                                 alt="Avatar">
                         <div class="flex flex-col text-left min-w-0">
                             <span class="text-[11px] font-black text-slate-900 truncate leading-tight uppercase italic">{{ $user->prenom }}</span>

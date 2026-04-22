@@ -14,7 +14,7 @@ class Seance extends Model
     protected $fillable = ['nom', 'date', 'user_id'];
 
     protected $casts = [
-        'date' => 'date',
+        'date' => 'datetime',
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo

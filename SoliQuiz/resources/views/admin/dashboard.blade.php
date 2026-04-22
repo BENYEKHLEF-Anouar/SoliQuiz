@@ -175,18 +175,18 @@
                     </a>
                 </div>
                 <div class="divide-y divide-slate-100">
-                    @forelse($topQcms as $index => $qcm)
+@forelse($topQcms as $index => $qcm)
                         <div class="p-4 hover:bg-slate-50 transition-all flex items-center justify-between group">
                             <div class="flex items-center gap-4">
                                 <span class="size-8 bg-slate-100 rounded-lg flex items-center justify-center text-sm font-black text-slate-500">{{ $index + 1 }}</span>
                                 <div>
                                     <p class="font-bold text-slate-900 text-sm group-hover:text-primary-600 transition-colors">{{ $qcm->titre }}</p>
-                                    <p class="text-xs text-slate-500">Par {{ $qcm->formateur->nom_complet }}</p>
+                                    <p class="text-xs text-slate-500">Par {{ optional($qcm->formateur)->nom_complet ?? 'Inconnu' }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4">
                                 <div class="text-right">
-                                    <p class="text-lg font-black text-slate-900">{{ $qcm->tentatives_count }}</p>
+                                    <p class="text-lg font-black text-slate-900">{{ $qcm->tentatives_count ?? 0 }}</p>
                                     <p class="text-[10px] text-slate-400 uppercase tracking-wider">passations</p>
                                 </div>
                                 <div class="size-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 group-hover:bg-primary-500 group-hover:text-white transition-all">
@@ -199,7 +199,7 @@
                             <div class="size-12 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                                 <svg class="size-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             </div>
-                            <p class="text-sm text-slate-500">Aucun QCM détecté</p>
+                            <p class="text-sm text-slate-500">Aucun QCM detecte</p>
                         </div>
                     @endforelse
                 </div>
@@ -214,12 +214,20 @@
                     </div>
                 </div>
                 <div class="space-y-4">
-                    @forelse($recentTentatives->take(5) as $t)
+@forelse($recentTentatives->take(5) as $t)
                         <div class="flex gap-4">
                             <div class="flex flex-col items-center">
-                                <img class="size-10 rounded-xl border border-slate-200" src="https://ui-avatars.com/api/?name={{ urlencode($t->etudiant->nom_complet) }}&background=f8fafc&color=64748b&bold=true" alt="">
+                                <img class="size-10 rounded-xl border border-slate-200" src="https://ui-avatars.com/api/?name={{ urlencode(optional($t->etudiant)->nom_complet ?? 'Unknown') }}&background=f8fafc&color=64748b&bold=true" alt="">
                                 <div class="w-px flex-1 bg-slate-200 my-2"></div>
                             </div>
+                            <div class="flex-1 pb-4">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <p class="font-bold text-sm text-slate-900">{{ optional($t->etudiant)->nom_complet ?? 'Inconnu' }}</p>
+                                        <p class="text-xs text-slate-500">{{ $t->statut === 'reussi' ? 'A reussi' : ($t->statut === 'echoue' ? 'A echoue' : 'A commence') }} <span class="font-medium text-slate-700">{{ optional($t->qcm)->titre ?? 'QCM' }}</span></p>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400">{{ $t->created_at ? $t->created_at->diffForHumans() : 'Date inconnue' }}</span>
+                                </div>
                             <div class="flex-1 pb-4">
                                 <div class="flex items-start justify-between">
                                     <div>

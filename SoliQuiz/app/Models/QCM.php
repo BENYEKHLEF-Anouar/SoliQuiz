@@ -22,6 +22,7 @@ class QCM extends Model
 
     protected $casts = [
         'statut' => 'string',
+        'score_reussite' => 'decimal:1',
     ];
 
     public function formateur(): BelongsTo

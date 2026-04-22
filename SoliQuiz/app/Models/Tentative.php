@@ -21,7 +21,7 @@ class Tentative extends Model
     protected $casts = [
         'date_debut' => 'datetime',
         'date_fin' => 'datetime',
-        'score_obtenu' => 'integer',
+        'score_obtenu' => 'decimal:1',
     ];
 
     public function isReussi(): bool

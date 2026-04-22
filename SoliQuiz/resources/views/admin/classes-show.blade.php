@@ -30,7 +30,7 @@
                 </div>
                 <div class="size-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg shadow-slate-900/10">
                     @if($classe->formateur)
-                        <img class="size-full rounded-2xl border-2 border-white/10" src="https://ui-avatars.com/api/?name={{ urlencode($classe->formateur->nom_complet) }}&background=0f172a&color=fff&bold=true" alt="">
+                        <img class="size-full rounded-2xl border-2 border-white/10" src="https://ui-avatars.com/api/?name={{ urlencode(optional($classe->formateur)->nom_complet ?? 'Unassigned') }}&background=0f172a&color=fff&bold=true" alt="{{ optional($classe->formateur)->nom_complet ?? 'Unassigned' }}">
                     @else
                         <svg class="size-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                     @endif
@@ -65,16 +65,16 @@
                         <tbody class="divide-y divide-slate-50">
                             @forelse($classe->etudiants as $etudiant)
                             <tr class="group hover:bg-slate-50/50 transition-all duration-300">
-                                <td class="px-10 py-6">
+<td class="px-10 py-6">
                                     <div class="flex items-center gap-5">
                                         <div class="relative">
                                             <img class="size-12 rounded-xl shadow-sm border-2 border-white group-hover:rotate-6 transition-transform duration-500" 
-                                                 src="https://ui-avatars.com/api/?name={{ urlencode($etudiant->nom_complet) }}&background=f1f5f9&color=64748b&bold=true" alt="">
+                                                 src="https://ui-avatars.com/api/?name={{ urlencode($etudiant->nom_complet ?? 'Student') }}&background=f1f5f9&color=64748b&bold=true" alt="">
                                             <div class="absolute -top-1 -right-1 size-4 bg-emerald-500 rounded-full border-2 border-white shadow-sm animate-pulse"></div>
                                         </div>
                                         <div class="flex flex-col">
-                                            <span class="text-base font-black text-slate-900 italic tracking-tight group-hover:text-primary-600 transition-colors">{{ $etudiant->nom_complet }}</span>
-                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Actif au répertoire</span>
+                                            <span class="text-base font-black text-slate-900 italic tracking-tight group-hover:text-primary-600 transition-colors">{{ $etudiant->nom_complet ?? 'Unknown' }}</span>
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Actif au repertoire</span>
                                         </div>
                                     </div>
                                 </td>

@@ -20,8 +20,8 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Student endpoints
-    Route::prefix('student')->group(function () {
+    // Student endpoints - etudiant and admin role can access
+    Route::prefix('student')->middleware('role:etudiant,admin')->group(function () {
         Route::get('/profile', [StudentController::class, 'profile']);
         Route::get('/scores', [StudentController::class, 'scores']);
         Route::get('/evaluations', [StudentController::class, 'evaluations']);
@@ -29,14 +29,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/history', [StudentController::class, 'history']);
     });
 
-    // QCM endpoints
-    Route::prefix('qcm')->group(function () {
+    // QCM endpoints - etudiant and admin role can access
+    Route::prefix('qcm')->middleware('role:etudiant,admin')->group(function () {
         Route::get('/{id}', [QcmController::class, 'show']);
         Route::get('/{id}/questions', [QcmController::class, 'questions']);
         Route::get('/{id}/result', [QcmController::class, 'result']);
     });
 
-    // Formateur endpoints
+    // Formateur endpoints - formulaire role only (admins can also access via their bypass)
     Route::prefix('formateur')->group(function () {
         Route::get('/profile', [FormateurController::class, 'profile']);
         Route::get('/qcms', [FormateurController::class, 'qcms']);

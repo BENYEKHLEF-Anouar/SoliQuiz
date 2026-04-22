@@ -16,6 +16,10 @@ class Question extends Model
         'explication_feedback',
     ];
 
+    protected $casts = [
+        'points' => 'decimal:1',
+    ];
+
     public function qcm(): BelongsTo
     {
         return $this->belongsTo(QCM::class, 'qcm_id');

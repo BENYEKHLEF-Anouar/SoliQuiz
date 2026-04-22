@@ -2,12 +2,11 @@
 
 @section('title', 'Gestion des Utilisateurs - SoliQuiz')
 
-@section('page-title', 'Répertoire des Utilisateurs')
+@section('page-title', 'Repertoire des Utilisateurs')
 
 @section('content')
 <div class="fade-in" x-data="{
     search: '',
-    users: {{ $users->toJson() }},
     loading: false,
     editUser: {},
     editUserRole: '',
@@ -21,7 +20,7 @@
                 credentials: 'same-origin'
             })
             .then(r => r.json())
-            .then(data => { this.users = data; this.loading = false; })
+            .then(data => { this.users = data.data; this.loading = false; })
             .catch(() => { this.loading = false; });
         }, 300);
     }
@@ -36,8 +35,8 @@
         <div class="flex items-center gap-4">
             <div class="hidden sm:flex items-center gap-4 px-5 py-2.5 bg-slate-50 rounded-2xl border border-slate-100">
                 <div class="text-right">
-                    <p class="text-xs font-black text-slate-900 italic leading-none mb-1">{{ $users->count() }}</p>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Actifs</p>
+                    <p class="text-xs font-black text-slate-900 italic leading-none mb-1">{{ $users->total() }}</p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total</p>
                 </div>
             </div>
             <button @click="$dispatch('open-modal', 'add-user-modal')"
@@ -60,7 +59,7 @@
         <input x-model="search"
                @input="performSearch()"
                class="w-full bg-white border border-slate-100 rounded-3xl py-6 ps-16 pe-8 font-bold text-slate-900 placeholder:text-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 outline-none transition-all shadow-sm group-hover:shadow-premium"
-               type="text" placeholder="Filtrer le répertoire par nom, email ou rôle...">
+               type="text" placeholder="Filtrer le repertoire par nom, email ou role...">
     </div>
 
     <!-- Data Table Container -->
@@ -71,8 +70,8 @@
                     <tr class="bg-slate-50/50 border-b border-slate-50">
                         <th class="ps-10 pe-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Profil Utilisateur</th>
                         <th class="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Autorisation</th>
-                        <th class="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Disponibilité</th>
-                        <th class="ps-6 pe-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Contrôle</th>
+                        <th class="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Disponibilite</th>
+                        <th class="ps-6 pe-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Controle</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
@@ -82,42 +81,42 @@
                                 <div class="flex items-center gap-5">
                                     <div class="relative">
                                         <img class="size-14 rounded-2xl shadow-sm border-2 border-white group-hover:scale-110 transition-transform duration-500"
-                                             :src="'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.nom_complet) + '&background=' + (user.role === 'admin' ? '0f172a' : (user.role === 'formateur' ? '0ea5e9' : 'f1f5f9')) + '&color=' + (user.role === 'etudiant' ? '64748b' : 'fff') + '&bold=true'"
+                                             :src="'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.nom + ' ' + user.prenom) + '&background=' + (user.type_profil === 'admin' ? '0f172a' : (user.type_profil === 'formateur' ? '0ea5e9' : 'f1f5f9')) + '&color=' + (user.type_profil === 'etudiant' ? '64748b' : 'fff') + '&bold=true'"
                                              alt="">
-                                        <template x-if="user.role === 'admin'">
+                                        <template x-if="user.type_profil === 'admin'">
                                             <div class="absolute -top-1 -right-1 size-5 bg-amber-400 rounded-full border-2 border-white flex items-center justify-center text-[8px] text-white">
                                                 <svg class="size-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
                                             </div>
                                         </template>
                                     </div>
                                     <div class="flex flex-col">
-                                        <span class="text-sm font-black text-slate-900 group-hover:text-primary-600 transition-colors" x-text="user.nom_complet"></span>
+                                        <span class="text-sm font-black text-slate-900 group-hover:text-primary-600 transition-colors" x-text="user.prenom + ' ' + user.nom"></span>
                                         <span class="text-xs font-bold text-slate-400 font-mono" x-text="user.email"></span>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-6">
-                                <template x-if="user.role === 'admin'">
+                                <template x-if="user.type_profil === 'admin'">
                                     <span class="inline-flex py-1 px-3 rounded-lg bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest">Architecte</span>
                                 </template>
-                                <template x-if="user.role === 'formateur'">
+                                <template x-if="user.type_profil === 'formateur'">
                                     <span class="inline-flex py-1 px-3 rounded-lg bg-primary-50 text-primary-600 text-[9px] font-black uppercase tracking-widest border border-primary-100">Expert / Formateur</span>
                                 </template>
-                                <template x-if="user.role === 'etudiant'">
+                                <template x-if="user.type_profil === 'etudiant'">
                                     <span class="inline-flex py-1 px-3 rounded-lg bg-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest border border-slate-200">Apprenant</span>
                                 </template>
                             </td>
                             <td class="px-6 py-6">
                                 <div class="flex items-center gap-3">
                                     <div class="size-2 rounded-full bg-emerald-500 shadow-sm animate-pulse"></div>
-                                    <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Connecté</span>
+                                    <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Connecte</span>
                                 </div>
                             </td>
                             <td class="ps-6 pe-10 py-6 text-right">
                                 <div class="flex justify-end items-center gap-3 transition-opacity">
-                                    <button @click="editUser = user; editUserRole = user.role === 'admin' ? 'Administrateur' : (user.role === 'formateur' ? 'Formateur' : 'Apprenant'); $dispatch('open-modal', 'edit-user-modal')"
+                                    <button @click="editUser = user; editUserRole = user.type_profil === 'admin' ? 'Administrateur' : (user.type_profil === 'formateur' ? 'Formateur' : 'Apprenant'); $dispatch('open-modal', 'edit-user-modal')"
                                             class="size-11 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:text-primary-500 hover:border-primary-200 transition-all shadow-sm hover:shadow-md flex items-center justify-center">
-                                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                     </button>
                                     
                                     <template x-if="user.id !== {{ Auth::id() }}">
@@ -125,7 +124,7 @@
                                             <button type="button"
                                                     @click.stop="$dispatch('confirm', { 
                                                         title: 'Archiver l\'utilisateur ?', 
-                                                        message: 'L\'utilisateur ne pourra plus se connecter au système.', 
+                                                        message: 'L\'utilisateur ne pourra plus se connecter au systeme.', 
                                                         onConfirm: 'delete-user-' + user.id 
                                                     })"
                                                     class="size-11 rounded-2xl bg-rose-50 text-rose-400 hover:bg-rose-500 hover:text-white transition-all shadow-sm hover:shadow-rose-100 flex items-center justify-center">
@@ -145,14 +144,41 @@
             </table>
         </div>
         
-        <template x-if="users.length === 0">
+        <template x-if="loading">
+            <div class="p-20 text-center">
+                <div class="size-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            </div>
+        </template>
+        
+        <template x-if="!loading && users.length === 0">
             <div class="p-20 text-center">
                 <div class="size-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
                     <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 </div>
-                <p class="text-slate-400 font-black text-xs uppercase tracking-widest italic">Base de données vacante</p>
+                <p class="text-slate-400 font-black text-xs uppercase tracking-widest italic">Aucun utilisateur trouve</p>
             </div>
         </template>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-center">
+        <nav class="flex items-center gap-2">
+            @if($users->previousPageUrl())
+                <a href="{{ $users->previousPageUrl() }}" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+                </a>
+            @endif
+            
+            <span class="px-4 py-2 text-sm font-bold text-slate-500">
+                Page {{ $users->currentPage() }} sur {{ $users->lastPage() }}
+            </span>
+            
+            @if($users->nextPageUrl())
+                <a href="{{ $users->nextPageUrl() }}" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </a>
+            @endif
+        </nav>
     </div>
 
     <!-- Modals Layer -->

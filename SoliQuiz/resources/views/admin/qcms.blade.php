@@ -94,7 +94,7 @@
                 <!-- Footer Actions -->
                 <div class="pt-6 border-t border-slate-50 mt-auto flex items-center justify-between relative z-10">
                     <div class="flex items-center gap-3">
-                        <img class="size-8 rounded-lg bg-slate-100 border border-slate-200" src="https://ui-avatars.com/api/?name={{ urlencode($qcm->formateur->nom_complet) }}&background=f8fafc&color=64748b&bold=true" alt="">
+                        <img class="size-8 rounded-lg bg-slate-100 border border-slate-200" src="https://ui-avatars.com/api/?name={{ urlencode(optional($qcm->formateur)->nom_complet ?? 'Unknown') }}&background=f8fafc&color=64748b&bold=true" alt="">
                         <div class="flex flex-col">
                             <p class="text-[10px] font-black text-slate-900 uppercase italic leading-none truncate max-w-[100px]">{{ $qcm->formateur->prenom }}</p>
                             <p class="text-[8px] font-bold text-slate-400 uppercase tracking-[0.1em] mt-1">Formateur</p>

@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -32,10 +31,9 @@ class UserService
             'nom' => $data['nom'],
             'prenom' => $data['prenom'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => $data['password'], // User model casts to hashed automatically
             'type_profil' => $data['type_profil'],
             'classe_id' => $data['classe_id'] ?? null,
-            'role' => $data['type_profil'] === 'etudiant' ? 'etudiant' : $data['type_profil'], // Spatie role mapping
         ]);
 
         // Assigner le rôle Spatie
@@ -55,9 +53,8 @@ class UserService
      */
     public function update(User $user, array $data): User
     {
-        if (isset($data['password']) && !empty($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        } else {
+        // Remove password if empty (don't update)
+        if (empty($data['password'] ?? '')) {
             unset($data['password']);
         }
 
@@ -67,7 +64,6 @@ class UserService
         if (isset($data['type_profil'])) {
             $spatieRole = $data['type_profil'] === 'etudiant' ? 'etudiant' : $data['type_profil'];
             $user->syncRoles([$spatieRole]);
-            $user->update(['role' => $spatieRole]);
         }
 
         // Si c'est un formateur et qu'une classe est fournie

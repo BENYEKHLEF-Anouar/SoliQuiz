@@ -3,197 +3,291 @@
 @section('title', 'Bibliothèque de Contenus - SoliQuiz')
 
 @section('content')
-<div class="reveal active" x-data="{ search: '{{ $search ?? '' }}' }">
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12 pb-8 border-b border-slate-100">
-        <div>
-            <x-ui.breadcrumb :items="['Espace Formateur' => route('dashboard'), 'Bibliothèque' => null]" />
-            <h1 class="text-4xl lg:text-5xl font-heading font-black text-slate-900 tracking-tight leading-none mb-4 uppercase italic">
-                Content <span class="text-primary-600">Repository</span>
-            </h1>
-            
-            <form action="{{ route('formateur.bibliotheque') }}" method="GET" class="mt-8 w-full lg:w-[450px] relative group">
-                <input type="text" name="search" x-model="search"
-                       placeholder="Filtrer vos QCMs par titre..." 
-                       class="w-full bg-white border border-slate-200 rounded-[24px] py-5 pl-14 pr-4 text-sm focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 outline-none transition-all placeholder:text-slate-400 font-medium shadow-sm">
-                <svg class="absolute left-5 top-1/2 -translate-y-1/2 size-6 text-slate-300 group-focus-within:text-primary-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <template x-if="search">
-                    <a href="{{ route('formateur.bibliotheque') }}" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-600">
+<div class="reveal active" x-data="qcmLibrary({{ Js::from($qcms->items()) }}, {{ Js::from($search ?? '') }}, {{ Js::from($status ?? '') }})">
+    
+    <!-- Header -->
+    <div class="mb-10">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <!-- Search & Filter -->
+            <div class="flex flex-col sm:flex-row gap-3 flex-1">
+                <!-- Search Input -->
+                <div class="flex-1 relative">
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-300 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" x-model="search" @input.debounce.300ms="applyFilters()"
+                           placeholder="Rechercher un QCM..."
+                           class="w-full h-12 bg-white border-2 border-slate-100 rounded-xl pl-12 pr-10 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                    <button type="button" x-show="search" @click="search = ''; applyFilters()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors">
                         <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
-                    </a>
-                </template>
-            </form>
-        </div>
-        
-        <div class="flex flex-col sm:flex-row gap-4">
-            <div class="glass bg-white p-6 rounded-[24px] border border-slate-100 flex flex-col items-center sm:items-end justify-center shadow-sm min-w-[180px]">
-                <span class="text-[9px] font-black tracking-[0.2em] text-slate-400 uppercase mb-1">Passages Cumulés</span>
-                <span class="text-3xl font-black text-slate-900 font-heading leading-none">{{ $qcms->sum('tentatives_count') }}</span>
+                    </button>
+                </div>
+                
+                <!-- Status Filter -->
+                <div x-data="{ open: false }" class="relative w-full sm:w-44">
+                    <button type="button" @click="open = !open" @click.away="open = false"
+                            class="w-full h-12 px-4 bg-white border-2 border-slate-100 rounded-xl flex items-center justify-between text-sm font-bold text-slate-600 hover:border-primary-300 transition-all">
+                        <span x-text="statusLabel"></span>
+                        <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    
+                    <div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                         class="absolute z-50 w-full mt-2 bg-white border-2 border-slate-100 rounded-xl shadow-lg overflow-hidden" style="display: none;">
+                        <button type="button" @click="status = ''; open = false; applyFilters()" 
+                                class="w-full px-4 py-3 text-left text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                            <span>Tous</span>
+                            <span x-show="status === ''" class="size-2 bg-primary-500 rounded-full"></span>
+                        </button>
+                        <button type="button" @click="status = 'public'; open = false; applyFilters()" 
+                                class="w-full px-4 py-3 text-left text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                            <span>Publiés</span>
+                            <span x-show="status === 'public'" class="size-2 bg-primary-500 rounded-full"></span>
+                        </button>
+                        <button type="button" @click="status = 'brouillon'; open = false; applyFilters()" 
+                                class="w-full px-4 py-3 text-left text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                            <span>Brouillons</span>
+                            <span x-show="status === 'brouillon'" class="size-2 bg-primary-500 rounded-full"></span>
+                        </button>
+                        <button type="button" @click="status = 'termine'; open = false; applyFilters()" 
+                                class="w-full px-4 py-3 text-left text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                            <span>Terminés</span>
+                            <span x-show="status === 'termine'" class="size-2 bg-primary-500 rounded-full"></span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Clear Filters -->
+                <button x-show="hasFilters" @click="clearFilters()" 
+                        class="h-12 px-4 bg-rose-50 text-rose-500 rounded-xl font-bold text-xs hover:bg-rose-100 transition-colors flex items-center gap-2">
+                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                    Effacer
+                </button>
             </div>
             
+            <!-- Create Button -->
             <a href="{{ route('formateur.qcm.create') }}"
-                class="group px-8 py-5 bg-slate-900 text-white rounded-[24px] font-black text-xs uppercase tracking-[0.2em] hover:bg-primary-500 shadow-xl shadow-slate-900/10 active:scale-95 transition-all flex items-center justify-center gap-3">
+               class="h-12 px-6 bg-primary-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary-600 shadow-lg shadow-primary-500/20 active:scale-95 transition-all flex items-center justify-center gap-3 shrink-0">
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
-                Générer QCM
+                Nouveau QCM
             </a>
         </div>
     </div>
 
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-4">
+            <div class="size-10 rounded-lg bg-slate-900 flex items-center justify-center">
+                <svg class="size-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0zM19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            </div>
+            <div>
+                <p class="text-xl font-black text-slate-900 leading-none">{{ $qcms->total() }}</p>
+                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">QCMs</p>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-4">
+            <div class="size-10 rounded-lg bg-emerald-500 flex items-center justify-center">
+                <svg class="size-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div>
+                <p class="text-xl font-black text-slate-900 leading-none">{{ $qcms->where('statut', 'public')->count() }}</p>
+                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Publiés</p>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-4">
+            <div class="size-10 rounded-lg bg-amber-500 flex items-center justify-center">
+                <svg class="size-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            </div>
+            <div>
+                <p class="text-xl font-black text-slate-900 leading-none">{{ $qcms->where('statut', 'brouillon')->count() }}</p>
+                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Brouillons</p>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-4">
+            <div class="size-10 rounded-lg bg-primary-500 flex items-center justify-center">
+                <svg class="size-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            </div>
+            <div>
+                <p class="text-xl font-black text-slate-900 leading-none">{{ $qcms->sum('tentatives_count') }}</p>
+                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Passages</p>
+            </div>
+        </div>
+    </div>
 
+    <!-- Results Count -->
+    <div class="mb-4 flex items-center justify-between">
+        <p class="text-sm font-bold text-slate-500">
+            <span x-text="filteredQcms.length"></span> résultat(s)
+        </p>
+    </div>
 
-    <!-- Library Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        @foreach($qcms as $qcm)
-            @php
-                $totalStudents = $qcm->classe ? $qcm->classe->etudiants()->count() : 0;
-                $completedStudents = $qcm->classe ? $qcm->tentatives()->whereIn('statut', ['reussi', 'echoue', 'abandonne'])->distinct('etudiant_id')->count('etudiant_id') : 0;
-                $completionRate = $totalStudents > 0 ? round(($completedStudents / $totalStudents) * 100) : 0;
-                $isFullyCompleted = $completionRate >= 100 && $totalStudents > 0;
-            @endphp
-            <div class="group bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col relative overflow-hidden active:scale-[0.98]">
-                <!-- Status & Stats -->
-                <div class="flex justify-between items-start mb-6 relative z-10">
-                    @if($qcm->statut === 'public')
-                        <div class="flex flex-col gap-1">
-                            <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-[0.2em] border border-emerald-100/50">
-                                <span class="size-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                Live & Actif
-                            </span>
-                            @if($qcm->classe)
-                                <span class="text-[8px] font-bold text-slate-400 uppercase ps-1 tracking-widest">Cible: {{ $qcm->classe->nom }}</span>
-                            @endif
-                        </div>
-                    @elseif($qcm->statut === 'termine')
-                        <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full bg-slate-800 text-white text-[9px] font-black uppercase tracking-[0.2em] border border-slate-700">
+    <!-- QCM List -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <!-- Table Header -->
+        <div class="grid grid-cols-12 gap-3 px-5 py-3 bg-slate-50 border-b border-slate-100 text-[8px] font-black text-slate-400 uppercase tracking-widest">
+            <div class="col-span-4">QCM</div>
+            <div class="col-span-2 text-center">Statut</div>
+            <div class="col-span-2 text-center">Questions</div>
+            <div class="col-span-2 text-center">Passages</div>
+            <div class="col-span-2 text-right">Actions</div>
+        </div>
+        
+        <!-- Table Rows -->
+        <template x-for="qcm in filteredQcms" :key="qcm.id">
+            <div class="grid grid-cols-12 gap-3 px-5 py-4 border-b border-slate-50 hover:bg-slate-50/50 transition-colors items-center">
+                <!-- QCM Info -->
+                <div class="col-span-4 flex items-center gap-3">
+                    <div class="size-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black text-slate-800 uppercase italic" x-text="qcm.titre"></h4>
+                        <p class="text-[9px] font-bold text-slate-400" x-text="qcm.duree_minutes + 'min · Seuil ' + qcm.score_reussite + '/20'"></p>
+                    </div>
+                </div>
+                
+                <!-- Status -->
+                <div class="col-span-2 flex justify-center">
+                    <template x-if="qcm.statut === 'public'">
+                        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase tracking-widest">
+                            <span class="size-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Live
+                        </span>
+                    </template>
+                    <template x-if="qcm.statut === 'termine'">
+                        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-slate-100 text-slate-500 text-[8px] font-black uppercase tracking-widest">
                             <span class="size-1.5 rounded-full bg-slate-400"></span>
                             Terminé
                         </span>
-                    @else
-                        <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full bg-amber-50 text-amber-600 text-[9px] font-black uppercase tracking-[0.2em] border border-amber-100/50">
+                    </template>
+                    <template x-if="qcm.statut === 'brouillon'">
+                        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-amber-50 text-amber-600 text-[8px] font-black uppercase tracking-widest">
                             <span class="size-1.5 rounded-full bg-amber-500"></span>
                             Brouillon
                         </span>
-                    @endif
-
-                    <div class="size-12 bg-slate-50 rounded-[1.25rem] flex flex-col items-center justify-center border border-slate-100 group-hover:bg-primary-500 group-hover:text-white transition-colors shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)]">
-                        <span class="text-xs font-black leading-none">{{ $qcm->tentatives_count }}</span>
-                        <span class="text-[7px] font-black uppercase tracking-wide opacity-60">Passages</span>
-                    </div>
+                    </template>
                 </div>
-
-                <!-- Completion Progress (for public QCMs with class) -->
-                @if($qcm->statut === 'public' && $qcm->classe_id && $totalStudents > 0)
-                    <div class="mb-6 relative z-10">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Progression classe</span>
-                            <span class="text-[10px] font-black {{ $isFullyCompleted ? 'text-emerald-500' : 'text-slate-600' }}">{{ $completedStudents }}/{{ $totalStudents }} ({{ $completionRate }}%)</span>
-                        </div>
-                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                            <div class="h-full {{ $isFullyCompleted ? 'bg-emerald-500' : 'bg-primary-500' }} rounded-full transition-all duration-500" style="width: {{ $completionRate }}%"></div>
-                        </div>
-                        @if($isFullyCompleted)
-                            <p class="text-[9px] font-black text-emerald-500 mt-1 uppercase tracking-widest">Tous les étudiants ont terminé</p>
-                        @endif
-                    </div>
-                @endif
-
-                <!-- Title & Meta -->
-                <div class="relative z-10 mb-6">
-                    <h3 class="text-2xl font-black font-heading text-slate-900 tracking-tight leading-tight mb-3 group-hover:text-primary-600 transition-colors uppercase italic">{{ $qcm->titre }}</h3>
-                    <div class="flex flex-wrap gap-4">
-                        <div class="flex items-center gap-2">
-                            <svg class="size-3.5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2" /></svg>
-                            <span class="text-xs font-bold text-slate-400">{{ $qcm->duree_minutes }} min</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <svg class="size-3.5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4m-2 6v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" /></svg>
-                            <span class="text-xs font-bold text-slate-400">Seuil: {{ $qcm->score_reussite }}/20</span>
-                        </div>
-                    </div>
+                
+                <!-- Questions -->
+                <div class="col-span-2 flex justify-center">
+                    <span class="text-sm font-black text-slate-600" x-text="qcm.questions_count || 0"></span>
                 </div>
-
-                <!-- Footer Actions -->
-                <div class="mt-auto pt-6 border-t border-slate-50 flex flex-col gap-4 relative z-10">
-                    <!-- Status Toggle Buttons -->
-                    <div class="flex gap-2">
-                        @if($qcm->statut === 'brouillon')
-                            <form action="{{ route('formateur.qcm.toggle', $qcm->id) }}" method="POST" class="flex-1">
-                                @csrf @method('PATCH')
-                                <button type="submit" class="w-full h-12 bg-emerald-50 text-emerald-600 rounded-2xl font-black text-[10px] uppercase tracking-[0.15em] hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center gap-2">
-                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7" /></svg>
-                                    Publier
-                                </button>
-                            </form>
-                        @elseif($qcm->statut === 'public')
-                            <form action="{{ route('formateur.qcm.toggle', $qcm->id) }}" method="POST" class="flex-1">
-                                @csrf @method('PATCH')
-                                <button type="submit" class="w-full h-12 bg-amber-50 text-amber-600 rounded-2xl font-black text-[10px] uppercase tracking-[0.15em] hover:bg-amber-500 hover:text-white transition-all flex items-center justify-center gap-2">
-                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12" /></svg>
-                                    Dépublier
-                                </button>
-                            </form>
-                            <form id="close-qcm-{{ $qcm->id }}" action="{{ route('formateur.qcm.close', $qcm->id) }}" method="POST">
-                                @csrf @method('PATCH')
-                                <button type="button" 
-                                        @click.prevent="$dispatch('confirm', { 
-                                            title: 'Fermer ce QCM ?', 
-                                            message: 'Les étudiants ne pourront plus y accéder.', 
-                                            onConfirm: 'close-qcm-{{ $qcm->id }}',
-                                            type: 'warning'
-                                        })" 
-                                        class="h-12 px-4 bg-slate-800 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.15em] hover:bg-slate-900 transition-all flex items-center justify-center">
-                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                                </button>
-                            </form>
-                        @endif
-                        
-                        @if($qcm->statut !== 'termine')
-                            <a href="{{ route('formateur.qcm.edit', $qcm->id) }}"
-                               class="size-12 rounded-2xl bg-primary-50 text-primary-500 hover:bg-primary-500 hover:text-white transition-all shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] flex items-center justify-center"
-                               title="Modifier le QCM">
-                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                            </a>
-                        @endif
-                        <button type="button" 
-                                @click.prevent="$dispatch('confirm', { 
-                                    title: 'Supprimer le QCM ?', 
-                                    message: 'Cette action est irréversible et supprimera toutes les tentatives liées.', 
-                                    onConfirm: 'delete-qcm-{{ $qcm->id }}' 
-                                })"
-                                class="size-12 rounded-2xl bg-rose-50 text-rose-400 hover:bg-rose-500 hover:text-white transition-all shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] flex items-center justify-center"
-                                title="Supprimer le QCM">
-                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        </button>
-                        <form id="delete-qcm-{{ $qcm->id }}" action="{{ route('formateur.qcm.destroy', $qcm->id) }}" method="POST" class="hidden">
-                            @csrf @method('DELETE')
-                        </form>
-                    </div>
+                
+                <!-- Passages -->
+                <div class="col-span-2 flex justify-center">
+                    <span class="text-sm font-black text-slate-600" x-text="qcm.tentatives_count || 0"></span>
+                </div>
+                
+                <!-- Actions -->
+                <div class="col-span-2 flex justify-end gap-2">
+                    <a :href="'/formateur/qcm/' + qcm.id + '/edit'" 
+                       class="size-9 rounded-lg bg-slate-100 text-slate-400 hover:bg-primary-500 hover:text-white transition-all flex items-center justify-center"
+                       title="Modifier">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </a>
                     
-                    <div class="flex justify-between items-center">
-                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Créé {{ $qcm->created_at->format('d M Y') }}</span>
-                        @if($qcm->questions_count)
-                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ $qcm->questions_count }} questions</span>
-                        @endif
-                    </div>
+                    <template x-if="qcm.statut === 'brouillon'">
+                        <form :action="'/formateur/qcm/' + qcm.id + '/toggle'" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="size-9 rounded-lg bg-emerald-50 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center" title="Publier">
+                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                            </button>
+                        </form>
+                    </template>
+                    <template x-if="qcm.statut === 'public'">
+                        <form :action="'/formateur/qcm/' + qcm.id + '/toggle'" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="size-9 rounded-lg bg-amber-50 text-amber-500 hover:bg-amber-500 hover:text-white transition-all flex items-center justify-center" title="Dépublier">
+                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </form>
+                        <form :action="'/formateur/qcm/' + qcm.id + '/close'" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="size-9 rounded-lg bg-slate-100 text-slate-400 hover:bg-slate-800 hover:text-white transition-all flex items-center justify-center" title="Fermer">
+                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            </button>
+                        </form>
+                    </template>
+                    
+                    <template x-if="qcm.statut !== 'termine'">
+                        <button @click="$dispatch('confirm', { title: 'Supprimer le QCM ?', message: 'Cette action est irréversible.', onConfirm: 'delete-qcm-' + qcm.id })" 
+                                class="size-9 rounded-lg bg-rose-50 text-rose-400 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center"
+                                title="Supprimer">
+                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                        <form :id="'delete-qcm-' + qcm.id" :action="'/formateur/qcm/' + qcm.id" method="POST" class="hidden">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                    </template>
                 </div>
-
-                <!-- Decorative Layer -->
-                <div class="absolute -right-16 -bottom-16 size-48 bg-slate-50 rounded-full group-hover:bg-primary-50 transition-colors duration-1000"></div>
             </div>
-        @endforeach
-
-        <!-- Modern CTA Card -->
-        <a href="{{ route('formateur.qcm.create') }}"
-           class="group bg-primary-500 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center shadow-2xl shadow-primary-500/30 hover:-translate-y-2 active:scale-[0.98] transition-all duration-500 min-h-[340px] relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent"></div>
-            <div class="relative z-10">
-                <div class="size-20 rounded-[2rem] bg-white flex items-center justify-center text-primary-500 mb-8 shadow-2xl group-hover:scale-110 transition-transform">
-                    <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
-                </div>
-                <h3 class="text-2xl font-black font-heading text-white tracking-tight uppercase italic mb-2">Ingénierie</h3>
-                <p class="text-primary-100/80 font-bold text-xs uppercase tracking-[0.2em]">Concevoir un nouveau QCM</p>
+        </template>
+        
+        <!-- No Results -->
+        <div x-show="filteredQcms.length === 0" class="p-12 text-center">
+            <div class="size-12 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <svg class="size-6 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.987a2 2 0 01-1.992-2V7.965a2 2 0 011.992-1.996h2.979z"/></svg>
             </div>
-            <div class="absolute -bottom-10 -right-10 size-40 bg-white/5 rounded-full blur-2xl"></div>
-        </a>
+            <h3 class="text-sm font-black text-slate-600 mb-1">Aucun résultat</h3>
+            <p class="text-xs text-slate-400">Essayez avec d'autres filtres</p>
+        </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('qcmLibrary', (qcms, initialSearch, initialStatus) => ({
+        qcms: qcms,
+        search: initialSearch,
+        status: initialStatus,
+        
+        get statusLabel() {
+            if (!this.status) return 'Tous';
+            const labels = { 'public': 'Publiés', 'brouillon': 'Brouillons', 'termine': 'Terminés' };
+            return labels[this.status] || 'Tous';
+        },
+        
+        get hasFilters() {
+            return this.search || this.status;
+        },
+        
+        get filteredQcms() {
+            return this.qcms.filter(qcm => {
+                const matchesSearch = !this.search || 
+                    qcm.titre.toLowerCase().includes(this.search.toLowerCase());
+                const matchesStatus = !this.status || qcm.statut === this.status;
+                return matchesSearch && matchesStatus;
+            });
+        },
+        
+        applyFilters() {
+            const url = new URL(window.location);
+            if (this.search) {
+                url.searchParams.set('q', this.search);
+            } else {
+                url.searchParams.delete('q');
+            }
+            if (this.status) {
+                url.searchParams.set('status', this.status);
+            } else {
+                url.searchParams.delete('status');
+            }
+            history.pushState({}, '', url);
+        },
+        
+        clearFilters() {
+            this.search = '';
+            this.status = '';
+            const url = new URL(window.location);
+            url.searchParams.delete('q');
+            url.searchParams.delete('status');
+            history.pushState({}, '', url);
+        }
+    }));
+});
+</script>
 @endsection

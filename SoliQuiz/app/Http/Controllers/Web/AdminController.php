@@ -74,28 +74,32 @@ class AdminController extends Controller
     public function gestionUtilisateurs(Request $request)
     {
         $search = $request->input('search');
-        $users = $search
-            ? User::where(function ($q) use ($search) {
-                  $q->where('nom', 'like', "%{$search}%")
-                    ->orWhere('prenom', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('type_profil', 'like', "%{$search}%");
-              })->get()
-            : User::all();
+        $users = User::when($search, function ($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('prenom', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('type_profil', 'like', "%{$search}%");
+            })
+            ->orderBy('nom')
+            ->paginate(15)
+            ->appends($request->query());
+        
         return view('admin.gestion-utilisateurs', compact('users', 'search'));
     }
 
     public function searchUsers(Request $request)
     {
         $search = $request->input('search');
-        $users = $search
-            ? User::where(function ($q) use ($search) {
-                  $q->where('nom', 'like', "%{$search}%")
-                    ->orWhere('prenom', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('type_profil', 'like', "%{$search}%");
-              })->get()
-            : User::all();
+        $users = User::when($search, function ($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('prenom', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('type_profil', 'like', "%{$search}%");
+            })
+            ->orderBy('nom')
+            ->paginate(15)
+            ->appends($request->query());
+        
         return response()->json($users);
     }
 
@@ -198,6 +202,7 @@ class AdminController extends Controller
             'nom' => 'required|string|max:255',
             'date' => 'required|date'
         ]);
+        $data['user_id'] = auth()->id();
         $this->seanceService->create($data);
         return redirect()->route('admin.pedagogie')->with('success', 'Séance créée avec succès.');
     }

@@ -3,173 +3,248 @@
 @section('title', 'Supervision des Performances - SoliQuiz')
 
 @section('content')
-<div class="reveal active" x-data="{ selectedClasse: '' }">
-    <!-- Header Hero -->
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12">
-        <div>
-            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
-                <span>Espace Formateur</span>
-                <span class="size-1 rounded-full bg-slate-300"></span>
-                <span class="text-slate-600">Supervision Analytics</span>
-            </nav>
-            <h1 class="text-4xl lg:text-5xl font-heading font-black text-slate-900 tracking-tight leading-none mb-4">
-                Performance <span class="text-primary-500">Monitor</span>
-            </h1>
-            <p class="text-slate-500 font-medium max-w-xl leading-relaxed">
-                Analysez en profondeur les résultats de vos cohortes. Identifiez les points de blocage et célébrez les réussites de vos apprenants.
-            </p>
-        </div>
-        
-        <div class="flex items-center gap-4 bg-white p-3 rounded-[28px] border border-slate-100 shadow-sm pr-6 group">
-            <div class="size-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-focus-within:bg-primary-500 group-focus-within:text-white transition-all">
-                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+<div class="reveal active" x-data="resultsFilter({{ Js::from($qcms->pluck('id', 'titre')->toArray()) }}, {{ Js::from($classes->pluck('nom')->toArray()) }})">
+    
+    <!-- Header -->
+    <div class="mb-10">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div>
+                <h1 class="text-2xl font-black text-slate-900 uppercase italic">Résultats</h1>
+                <p class="text-sm text-slate-400 mt-1">Analysez les performances de vos cohortes</p>
             </div>
-            <div class="flex flex-col">
-                <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">Ciblage</span>
-                <select x-model="selectedClasse" class="bg-transparent border-none p-0 text-sm font-black text-slate-900 outline-none cursor-pointer appearance-none pr-8">
-                    <option value="">Toutes les cohortes</option>
-                    @foreach($classes as $classe)
-                        <option value="{{ $classe->nom }}">{{ $classe->nom }}</option>
-                    @endforeach
-                </select>
+            
+            <!-- Search & Filters -->
+            <div class="flex flex-col sm:flex-row gap-3">
+                <!-- Search -->
+                <div class="relative">
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-300 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" x-model="search" @input.debounce.300ms="applyFilters()"
+                           placeholder="Rechercher un étudiant..."
+                           class="w-full h-12 bg-white border-2 border-slate-100 rounded-xl pl-12 pr-10 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-primary-500 outline-none transition-all">
+                    <button x-show="search" @click="search = ''; applyFilters()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                
+                <!-- QCM Filter -->
+                <div x-data="{ open: false }" class="relative w-full sm:w-48">
+                    <button type="button" @click="open = !open" @click.away="open = false"
+                            class="w-full h-12 px-4 bg-white border-2 border-slate-100 rounded-xl flex items-center justify-between text-sm font-bold text-slate-600 hover:border-primary-300">
+                        <span x-text="selectedQcm || 'Tous les QCM'"></span>
+                        <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div x-show="open" x-transition class="absolute z-50 w-full mt-2 bg-white border-2 border-slate-100 rounded-xl shadow-lg overflow-hidden" style="display: none;">
+                        <button type="button" @click="selectedQcm = ''; open = false; applyFilters()" class="w-full px-4 py-3 text-left text-sm font-bold text-slate-600 hover:bg-slate-50">
+                            Tous les QCM <span x-show="!selectedQcm" class="size-2 bg-primary-500 rounded-full inline-block ml-2"></span>
+                        </button>
+                        <template x-for="(id, titre) in qcmList" :key="id">
+                            <button type="button" @click="selectedQcm = titre; open = false; applyFilters()" class="w-full px-4 py-3 text-left text-sm font-bold text-slate-600 hover:bg-slate-50">
+                                <span x-text="titre"></span>
+                                <span x-show="selectedQcm === titre" class="size-2 bg-primary-500 rounded-full inline-block ml-2"></span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Classe Filter -->
+                <div x-data="{ open: false }" class="relative w-full sm:w-44">
+                    <button type="button" @click="open = !open" @click.away="open = false"
+                            class="w-full h-12 px-4 bg-white border-2 border-slate-100 rounded-xl flex items-center justify-between text-sm font-bold text-slate-600 hover:border-primary-300">
+                        <span x-text="selectedClasse || 'Toutes'"></span>
+                        <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div x-show="open" x-transition class="absolute z-50 w-full mt-2 bg-white border-2 border-slate-100 rounded-xl shadow-lg overflow-hidden" style="display: none;">
+                        <button type="button" @click="selectedClasse = ''; open = false; applyFilters()" class="w-full px-4 py-3 text-left text-sm font-bold text-slate-600 hover:bg-slate-50">
+                            Toutes <span x-show="!selectedClasse" class="size-2 bg-primary-500 rounded-full inline-block ml-2"></span>
+                        </button>
+                        <template x-for="classe in classeList" :key="classe">
+                            <button type="button" @click="selectedClasse = classe; open = false; applyFilters()" class="w-full px-4 py-3 text-left text-sm font-bold text-slate-600 hover:bg-slate-50">
+                                <span x-text="classe"></span>
+                                <span x-show="selectedClasse === classe" class="size-2 bg-primary-500 rounded-full inline-block ml-2"></span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Clear -->
+                <button x-show="hasFilters" @click="clearFilters()" class="h-12 px-4 bg-rose-50 text-rose-500 rounded-xl font-bold text-xs hover:bg-rose-100">
+                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
         </div>
     </div>
 
-    @foreach($qcms as $qcm)
-    @php
-        $tentativesJson = $qcm->tentatives->map(function($t) use ($qcm) {
-            return [
-                'score' => $t->score_obtenu,
-                'classe' => $t->etudiant->classe?->nom ?? 'Hors Cohorte',
-                'reussi' => $t->statut === 'reussi'
-            ];
-        });
-    @endphp
-    <div class="mb-20 animate-in fade-in slide-in-from-bottom-4 duration-700" 
-         x-data="{ 
-            allTentatives: {{ $tentativesJson }},
-            get filteredStats() {
-                let filtered = this.allTentatives.filter(t => !selectedClasse || t.classe === selectedClasse);
-                let scores = filtered.map(t => t.score).filter(s => s !== null);
-                let count = scores.length;
-                let sum = scores.reduce((a, b) => a + b, 0);
-                let avg = count > 0 ? (sum / count).toFixed(1) : 0;
-                let reussis = filtered.filter(t => t.reussi).length;
-                let rate = count > 0 ? Math.round((reussis / count) * 100) : 0;
-                return { avg, rate, count };
-            }
-         }">
-        <!-- QCM Label -->
-        <div class="flex items-center gap-4 mb-8">
-            <div class="h-px flex-1 bg-slate-100"></div>
-            <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.4em] italic">{{ $qcm->titre }}</h2>
-            <div class="h-px flex-1 bg-slate-100"></div>
-        </div>
+    <!-- Results Info -->
+    <div class="mb-6 flex items-center justify-between">
+        <p class="text-sm font-bold text-slate-500">
+            <span x-text="filteredCount"></span> résultat(s)
+        </p>
+    </div>
 
-        <!-- Metrics Bento -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-            <div class="md:col-span-2 bg-slate-900 rounded-[40px] p-8 shadow-xl shadow-slate-900/10 flex flex-col justify-between group overflow-hidden relative">
-                <div class="absolute -right-20 -bottom-20 size-64 bg-primary-500/10 rounded-full blur-3xl animate-pulse"></div>
-                <div class="relative z-10">
-                    <span class="text-[10px] font-black tracking-[0.2em] text-primary-400 uppercase mb-2 block">Moyenne <span x-text="selectedClasse ? 'Cohorte' : 'Globale'"></span></span>
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-6xl font-heading font-black text-white leading-none" x-text="filteredStats.avg">0</span>
-                        <span class="text-2xl font-black text-primary-500">/20</span>
+    <!-- QCM Results (Simplified Display) -->
+    <div class="space-y-8">
+        @forelse($qcms as $qcm)
+        @php
+            $allTentatives = $qcm->tentatives->map(function($t) {
+                return [
+                    'id' => $t->id,
+                    'etudiant_nom' => $t->etudiant?->nom_complet ?? 'Unknown',
+                    'etudiant_classe' => $t->etudiant?->classe?->nom ?? 'Hors cohorte',
+                    'score' => $t->score_obtenu,
+                    'statut' => $t->statut,
+                    'date' => $t->date_debut?->format('d M Y'),
+                ];
+            });
+        @endphp
+        
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden"
+             x-data="{ 
+                 tentatives: {{ Js::from($allTentatives) }},
+                 get filtered() {
+                     return this.tentatives.filter(t => {
+                         const matchesSearch = !search || t.etudiant_nom.toLowerCase().includes(search.toLowerCase());
+                         const matchesClasse = !selectedClasse || t.etudiant_classe === selectedClasse;
+                         return matchesSearch && matchesClasse;
+                     });
+                 },
+                 get stats() {
+                     const scores = this.filtered.map(t => t.score).filter(s => s !== null);
+                     const count = scores.length;
+                     const sum = scores.reduce((a, b) => a + b, 0);
+                     const avg = count > 0 ? (sum / count).toFixed(1) : 0;
+                     const reussis = this.filtered.filter(t => t.statut === 'reussi').length;
+                     const rate = count > 0 ? Math.round((reussis / count) * 100) : 0;
+                     return { avg, rate, count };
+                 }
+             }">
+            
+            <!-- QCM Header -->
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="size-10 rounded-lg bg-slate-200 flex items-center justify-center text-slate-600">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 uppercase italic">{{ $qcm->titre }}</h3>
+                        <p class="text-xs text-slate-400">Seuil: {{ $qcm->score_reussite }}/20</p>
                     </div>
                 </div>
-                <div class="relative z-10 flex items-center gap-3 mt-6">
-                    <div class="flex -space-x-1">
-                        @for($i=0; $i<3; $i++) <div class="size-6 bg-slate-800 rounded-full border border-slate-700"></div> @endfor
+                <div class="flex items-center gap-6">
+                    <div class="text-center">
+                        <p class="text-lg font-black text-slate-800" x-text="stats.avg"></p>
+                        <p class="text-[8px] font-black text-slate-400 uppercase">Moyenne</p>
                     </div>
-                    <span class="text-[10px] font-bold text-slate-500"><span x-text="filteredStats.count">0</span> Interactions pédagogiques</span>
+                    <div class="text-center">
+                        <p class="text-lg font-black text-emerald-600" x-text="stats.rate + '%'"></p>
+                        <p class="text-[8px] font-black text-slate-400 uppercase">Réussite</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-lg font-black text-slate-600" x-text="stats.count"></p>
+                        <p class="text-[8px] font-black text-slate-400 uppercase">Passages</p>
+                    </div>
                 </div>
             </div>
-
-            <div class="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm flex flex-col justify-center">
-                <span class="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-4 block">Success Rate</span>
-                <span class="text-4xl font-black font-heading text-emerald-500"><span x-text="filteredStats.rate">0</span>%</span>
-                <div class="w-full h-1.5 bg-slate-50 rounded-full mt-4 overflow-hidden border border-slate-100">
-                    <div class="h-full bg-emerald-500 rounded-full transition-all duration-1000" :style="'width: ' + filteredStats.rate + '%'"></div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm flex flex-col justify-center group hover:bg-amber-50/50 transition-colors">
-                <span class="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase mb-4 block">Seuil de Validation</span>
-                <span class="text-4xl font-black font-heading text-amber-500">{{ $qcm->score_reussite }}/20</span>
-                <p class="text-[10px] font-bold text-slate-400 mt-4 italic">Note minimum requise pour la certification UA</p>
-            </div>
-        </div>
-
-        <!-- Result Table -->
-        <div class="glass bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
+            
+            <!-- Students Table -->
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left">
                     <thead>
-                        <tr class="bg-slate-50/50 border-b border-slate-50">
-                            <th class="ps-10 pe-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Profil Apprenant</th>
-                            <th class="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Chronologie</th>
-                            <th class="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Qualification</th>
-                            <th class="ps-6 pe-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Score</th>
+                        <tr class="border-b border-slate-100 text-[8px] font-black text-slate-400 uppercase">
+                            <th class="px-6 py-3">Étudiant</th>
+                            <th class="px-6 py-3">Classe</th>
+                            <th class="px-6 py-3">Date</th>
+                            <th class="px-6 py-3 text-center">Statut</th>
+                            <th class="px-6 py-3 text-right">Score</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50">
-                        @forelse($qcm->tentatives as $tentative)
-                        <tr class="group hover:bg-slate-50/80 transition-colors" x-show="!selectedClasse || '{{ $tentative->etudiant->classe?->nom }}' === selectedClasse">
-                            <td class="ps-10 pe-6 py-6">
-                                <div class="flex items-center gap-4">
-                                    <div class="relative">
-                                        <img class="size-12 rounded-2xl shadow-sm border-2 border-white group-hover:scale-110 transition-transform duration-500" 
-                                             src="https://ui-avatars.com/api/?name={{ urlencode($tentative->etudiant->nom_complet) }}&background=f1f5f9&color=64748b&bold=true" alt="Avatar">
-                                        @if($tentative->statut === 'reussi')
-                                            <div class="absolute -bottom-1 -right-1 size-5 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
-                                                <svg class="size-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7" /></svg>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <span class="text-sm font-black text-slate-900">{{ $tentative->etudiant->nom_complet }}</span>
-                                        <span class="text-[9px] font-black text-primary-500 uppercase tracking-[0.2em]">{{ $tentative->etudiant->classe?->nom ?? 'Hors Cohorte' }}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-6">
-                                <div class="flex flex-col">
-                                    <span class="text-xs font-bold text-slate-500 leading-none">{{ $tentative->date_debut->format('d M, Y') }}</span>
-                                    <span class="text-[10px] font-bold text-slate-300">{{ $tentative->date_debut->format('H:i') }}</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-6">
-                                @if($tentative->statut === 'reussi')
-                                    <span class="inline-flex py-1 px-3 rounded-lg bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-widest border border-emerald-100">Compétence Validée</span>
-                                @elseif($tentative->statut === 'echoue')
-                                    <span class="inline-flex py-1 px-3 rounded-lg bg-rose-50 text-rose-500 text-[9px] font-black uppercase tracking-widest border border-rose-100">Échec Critique</span>
-                                @else
-                                    <span class="inline-flex py-1 px-3 rounded-lg bg-amber-50 text-amber-600 text-[9px] font-black uppercase tracking-widest border border-amber-100">Session Active</span>
-                                @endif
-                            </td>
-                            <td class="ps-6 pe-10 py-6 text-right">
-                                <span class="text-xl font-heading font-black {{ $tentative->score_obtenu >= $qcm->score_reussite ? 'text-slate-900' : 'text-slate-300' }}">
-                                    {{ $tentative->score_obtenu !== null ? $tentative->score_obtenu . '/20' : '--' }}
-                                </span>
+                        <template x-for="t in filtered" :key="t.id">
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="text-sm font-bold text-slate-800" x-text="t.etudiant_nom"></p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <p class="text-xs text-slate-500" x-text="t.etudiant_classe"></p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <p class="text-xs text-slate-400" x-text="t.date || '-'"></p>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <template x-if="t.statut === 'reussi'">
+                                        <span class="inline-flex px-2 py-1 rounded-lg bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase">Réussi</span>
+                                    </template>
+                                    <template x-if="t.statut === 'echoue'">
+                                        <span class="inline-flex px-2 py-1 rounded-lg bg-rose-50 text-rose-500 text-[8px] font-black uppercase">Échoué</span>
+                                    </template>
+                                    <template x-if="t.statut === 'abandonne'">
+                                        <span class="inline-flex px-2 py-1 rounded-lg bg-amber-50 text-amber-600 text-[8px] font-black uppercase">Abandonné</span>
+                                    </template>
+                                    <template x-if="!t.statut">
+                                        <span class="inline-flex px-2 py-1 rounded-lg bg-slate-100 text-slate-500 text-[8px] font-black uppercase">En cours</span>
+                                    </template>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <p class="text-sm font-black" :class="t.score >= {{ $qcm->score_reussite }} ? 'text-slate-800' : 'text-slate-300'" x-text="t.score !== null ? t.score + '/20' : '-'"></p>
+                                </td>
+                            </tr>
+                        </template>
+                        <tr x-show="filtered.length === 0">
+                            <td colspan="5" class="px-6 py-8 text-center text-slate-400 text-sm">
+                                Aucun résultat pour cette sélection
                             </td>
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan="4" class="p-20 text-center">
-                                <div class="size-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
-                                    <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                                </div>
-                                <p class="text-slate-400 font-black text-xs uppercase tracking-widest italic">Aucun flux de données entrant</p>
-                            </td>
-                        </tr>
-                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
+        @empty
+        <div class="bg-white rounded-2xl border border-slate-100 p-12 text-center">
+            <p class="text-slate-400 font-bold">Aucun QCM avec des résultats</p>
+        </div>
+        @endforelse
     </div>
-    @endforeach
 </div>
-@endsection
 
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('resultsFilter', (qcmList, classeList) => ({
+        search: '',
+        selectedQcm: '',
+        selectedClasse: '',
+        
+        init() {
+            const params = new URLSearchParams(window.location.search);
+            this.search = params.get('q') || '';
+            this.selectedClasse = params.get('classe') || '';
+        },
+        
+        get hasFilters() {
+            return this.search || this.selectedQcm || this.selectedClasse;
+        },
+        
+        get filteredCount() {
+            return this.search || this.selectedClasse ? '...' : '{{ $qcms->sum(fn($q) => $q->tentatives->count()) }}';
+        },
+        
+        applyFilters() {
+            const url = new URL(window.location);
+            if (this.search) url.searchParams.set('q', this.search);
+            else url.searchParams.delete('q');
+            if (this.selectedClasse) url.searchParams.set('classe', this.selectedClasse);
+            else url.searchParams.delete('classe');
+            history.pushState({}, '', url);
+        },
+        
+        clearFilters() {
+            this.search = '';
+            this.selectedQcm = '';
+            this.selectedClasse = '';
+            const url = new URL(window.location);
+            url.searchParams.delete('q');
+            url.searchParams.delete('classe');
+            history.pushState({}, '', url);
+        }
+    }));
+});
+</script>
+@endsection

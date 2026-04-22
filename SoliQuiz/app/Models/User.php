@@ -22,7 +22,6 @@ class User extends Authenticatable
         'prenom',
         'email',
         'password',
-        'role',
         'matricule',        // Formateur uniquement
         'code_etudiant',    // Etudiant uniquement
         'classe_id',        // Etudiant uniquement
