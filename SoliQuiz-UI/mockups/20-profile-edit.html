@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20 - Modifier Profil - SoliQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }, colors: { primary: { 50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF', 600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e' } } } } }
+    </script>
+</head>
+<body class="bg-white font-sans text-slate-800">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-white border-b border-slate-100 py-4 px-6">
+            <div class="max-w-4xl mx-auto flex items-center justify-between">
+                <a href="#" class="flex items-center gap-2">
+                    <div class="size-8 bg-[#17B0CF] rounded-lg flex items-center justify-center text-white text-xs font-bold">SQ</div>
+                    <span class="font-bold text-slate-900 italic">SoliQuiz</span>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-600 font-bold text-xs">YK</div>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1 p-6">
+            <div class="max-w-2xl mx-auto space-y-8">
+                <div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic mb-1">Paramètres</p>
+                    <h1 class="text-2xl font-black text-slate-900 italic uppercase">Mon Profil</h1>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-8">
+                    <div class="space-y-6">
+                        <div class="text-center pb-6 border-b border-slate-100">
+                            <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold text-slate-600">YK</div>
+                            <button class="text-[#17B0CF] text-sm font-bold hover:underline">Changer la photo</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="block text-xs font-bold text-slate-600 uppercase mb-2">Nom</label><input type="text" value="Youssef" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-[#17B0CF] focus:ring-2 focus:ring-[#17B0CF]/10 outline-none"></div>
+                            <div><label class="block text-xs font-bold text-slate-600 uppercase mb-2">Prénom</label><input type="text" value="Karim" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-[#17B0CF] focus:ring-2 focus:ring-[#17B0CF]/10 outline-none"></div>
+                        </div>
+                        <div><label class="block text-xs font-bold text-slate-600 uppercase mb-2">Email</label><input type="email" value="youssef@solicode.co" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-[#17B0CF] focus:ring-2 focus:ring-[#17B0CF]/10 outline-none"></div>
+                        <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                            <button class="px-6 py-2.5 border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50">Annuler</button>
+                            <button class="px-6 py-2.5 bg-[#17B0CF] text-white rounded-xl font-bold hover:bg-[#14a0bd]">Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

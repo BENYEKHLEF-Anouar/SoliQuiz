@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loader - Molécules</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }, colors: { primary: { 500: '#17B0CF' } } } } }
+    </script>
+</head>
+<body class="bg-slate-50 font-sans p-10 space-y-6">
+    <div>
+        <span class="text-xs font-black text-slate-400 uppercase">Molécules</span>
+        <h1 class="text-2xl font-black text-slate-900">Loader</h1>
+    </div>
+    <div class="flex items-center gap-8">
+        <div class="size-8 border-4 border-slate-200 border-t-[#17B0CF] rounded-full animate-spin"></div>
+        <div class="size-6 bg-[#17B0CF] rounded-full animate-pulse"></div>
+        <div class="flex gap-1">
+            <div class="size-2 bg-[#17B0CF] rounded-full animate-bounce"></div>
+            <div class="size-2 bg-[#17B0CF] rounded-full animate-bounce [animation-delay:0.1s]"></div>
+            <div class="size-2 bg-[#17B0CF] rounded-full animate-bounce [animation-delay:0.2s]"></div>
+        </div>
+    </div>
+    <div class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl shadow-sm">
+        <div class="size-4 border-2 border-slate-200 border-t-[#17B0CF] rounded-full animate-spin"></div>
+        <span class="text-sm font-bold text-slate-600">Chargement...</span>
+    </div>
+</body>
+</html>

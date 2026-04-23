@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>19 - Ingénierie Pédagogique Formateur - SoliQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }, colors: { primary: { 50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF', 600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e' } } } } }
+    </script>
+</head>
+<body class="bg-slate-900 font-sans text-slate-800 h-screen overflow-hidden">
+    <div class="flex h-screen">
+        <aside class="hidden lg:block w-72 h-full p-4 shrink-0">
+            <div class="h-full bg-slate-800 rounded-3xl border border-slate-700 flex flex-col">
+                <div class="p-6 border-b border-slate-700">
+                    <a href="#" class="flex items-center gap-3">
+                        <div class="size-9 bg-[#17B0CF] rounded-xl flex items-center justify-center shadow-lg text-white"><svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg></div>
+                        <div class="flex flex-col"><span class="text-lg font-black text-white uppercase italic">Soli<span class="text-[#17B0CF]">Quiz</span></span><span class="text-[8px] font-black text-slate-400 uppercase">Formateur</span></div>
+                    </a>
+                </div>
+                <nav class="flex-1 px-3 py-6">
+                    <a href="#" class="flex items-center gap-3.5 px-5 py-3 rounded-xl text-slate-400 hover:bg-slate-700 hover:text-white transition-all italic"><svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 20v-6M6 20V10M18 20V4"/></svg><span class="text-[11px] font-bold uppercase">Dashboard</span></a>
+                    <a href="#" class="flex items-center gap-3.5 px-5 py-3 rounded-xl text-slate-400 hover:bg-slate-700 hover:text-white transition-all italic"><svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span class="text-[11px] font-bold uppercase">Mes Classes</span></a>
+                    <a href="#" class="flex items-center gap-3.5 px-5 py-3 rounded-xl bg-[#17B0CF] text-white shadow-lg shadow-[#17B0CF]/20 italic"><svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span class="text-[11px] font-bold uppercase">Ingénierie Péd.</span></a>
+                </nav>
+            </div>
+        </aside>
+        <div class="flex-1 flex flex-col min-w-0">
+            <main class="flex-1 overflow-y-auto p-4 lg:p-10">
+                <div class="max-w-[1400px] mx-auto pt-6 space-y-6">
+                    <div><p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic mb-1">Formateur</p><h3 class="text-2xl font-black text-white italic uppercase">Ingénierie Pédagogique</h3></div>
+                    <div class="grid gap-4">
+                        <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+                            <div class="flex items-center justify-between mb-4">
+                                <div><h4 class="font-bold text-white text-lg">UA1 - HTML & CSS</h4><p class="text-sm text-slate-400">Langages de balisage et styles</p></div>
+                                <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-bold uppercase">Active</span>
+                            </div>
+                            <div class="flex gap-2"><button class="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-600">Créer QCM</button><button class="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-600">Voir QCMs</button></div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+                            <div class="flex items-center justify-between mb-4">
+                                <div><h4 class="font-bold text-white text-lg">UA2 - JavaScript</h4><p class="text-sm text-slate-400">Programmation côté client</p></div>
+                                <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-bold uppercase">Active</span>
+                            </div>
+                            <div class="flex gap-2"><button class="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-600">Créer QCM</button><button class="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-600">Voir QCMs</button></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
