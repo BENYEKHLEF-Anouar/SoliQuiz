@@ -44,10 +44,10 @@ $maxWidth = [
     x-on:keydown.escape.window="show = false"
     x-on:keydown.tab.prevent="$event.shiftKey ? prevFocusable().focus() : nextFocusable().focus()"
     x-show="show"
-    class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-[100]"
+    class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-10"
     x-cloak>
     
-    <!-- Backdrop with Immersive Blur -->
+    <!-- Backdrop without Blur -->
     <div
         x-show="show"
         class="fixed inset-0 transform transition-all"
@@ -59,13 +59,13 @@ $maxWidth = [
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
     >
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md"></div>
+        <div class="absolute inset-0 bg-slate-900/40"></div>
     </div>
 
     <!-- Modal Content: Premium Container -->
     <div
         x-show="show"
-        class="relative z-10 bg-white rounded-[3rem] shadow-2xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto border border-white/40 overflow-hidden"
+        class="relative z-10 bg-white rounded-[3rem] shadow-2xl transform transition-all w-full {{ $maxWidth }} border border-white/40 overflow-hidden max-h-[90vh] flex flex-col"
         x-transition:enter="ease-out duration-300"
         x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
@@ -83,12 +83,12 @@ $maxWidth = [
                     <h3 class="text-3xl font-heading font-black text-slate-900 tracking-tight leading-none uppercase italic">{{ $title }}</h3>
                 </div>
                 <button @click="show = false" class="group size-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all active:scale-90 shadow-sm border border-slate-100">
-                    <svg class="size-6 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <svg class="size-6 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
         @endif
 
-        <div class="px-10 py-8">
+        <div class="px-10 py-8 overflow-y-auto custom-scrollbar">
             <div class="relative">
                 {{ $slot }}
             </div>

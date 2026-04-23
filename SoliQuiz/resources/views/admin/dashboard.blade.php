@@ -63,88 +63,87 @@
     <!-- Enhanced KPI Grid with Trends -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Formateurs Card -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
-            <div class="flex items-center justify-between mb-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+            <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
-                    <div class="size-10 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600">
-                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    <div class="size-9 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600">
+                        <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                     </div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Formateurs</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Formateurs</span>
                 </div>
-                <span class="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">
-                    <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                <span class="flex items-center gap-1 text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">
+                    <svg class="size-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                     {{ $kpis['trend_users'] }}
                 </span>
             </div>
             <div class="flex items-baseline gap-2 mb-2">
-                <span class="text-3xl font-black text-slate-900">{{ $kpis['nb_formateurs'] }}</span>
-                <span class="text-xs text-slate-400">actifs</span>
+                <span class="text-2xl font-black text-slate-900 leading-none">{{ $kpis['nb_formateurs'] }}</span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">Actifs</span>
             </div>
-            <div class="h-10 flex items-end gap-0.5">
+            <div class="h-8 flex items-end gap-0.5">
                 @foreach([40, 55, 45, 60, 50, 65, 70] as $h)
-                    <div class="flex-1 bg-primary-200 rounded-t" style="height: {{ $h }}%"></div>
+                    <div class="flex-1 bg-primary-200 rounded-sm" style="height: {{ $h }}%"></div>
                 @endforeach
             </div>
         </div>
 
         <!-- Apprenants Card -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
-            <div class="flex items-center justify-between mb-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+            <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
-                    <div class="size-10 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
-                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <div class="size-9 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
+                        <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                     </div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Apprenants</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Apprenants</span>
                 </div>
-                <span class="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">
-                    <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                <span class="flex items-center gap-1 text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">
+                    <svg class="size-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                     {{ $kpis['trend_users'] }}
                 </span>
             </div>
             <div class="flex items-baseline gap-2 mb-2">
-                <span class="text-3xl font-black text-slate-900">{{ $kpis['nb_etudiants'] }}</span>
-                <span class="text-xs text-slate-400">inscrits</span>
+                <span class="text-2xl font-black text-slate-900 leading-none">{{ $kpis['nb_etudiants'] }}</span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">Inscrits</span>
             </div>
-            <div class="h-10 flex items-end gap-0.5">
+            <div class="h-8 flex items-end gap-0.5">
                 @foreach([30, 45, 40, 55, 65, 75, 85] as $h)
-                    <div class="flex-1 bg-emerald-200 rounded-t" style="height: {{ $h }}%"></div>
+                    <div class="flex-1 bg-emerald-200 rounded-sm" style="height: {{ $h }}%"></div>
                 @endforeach
             </div>
         </div>
 
         <!-- Classes Card -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
-            <div class="flex items-center justify-between mb-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+            <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
-                    <div class="size-10 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600">
-                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    <div class="size-9 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600">
+                        <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                     </div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Classes</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Classes</span>
                 </div>
-                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-lg">Stable</span>
+                <span class="text-[10px] font-black text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">Stable</span>
             </div>
             <div class="flex items-baseline gap-2 mb-2">
-                <span class="text-3xl font-black text-slate-900">{{ $kpis['nb_classes'] }}</span>
-                <span class="text-xs text-slate-400">actives</span>
+                <span class="text-2xl font-black text-slate-900 leading-none">{{ $kpis['nb_classes'] }}</span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">Actives</span>
             </div>
-            <div class="flex items-center gap-2 text-xs text-slate-500">
+            <div class="flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase italic">
                 <div class="flex -space-x-1">
-                    <div class="size-5 rounded-full bg-slate-300 border border-white"></div>
-                    <div class="size-5 rounded-full bg-slate-400 border border-white"></div>
-                    <div class="size-5 rounded-full bg-slate-500 border border-white"></div>
+                    <div class="size-4.5 rounded-full bg-slate-200 border-2 border-white"></div>
+                    <div class="size-4.5 rounded-full bg-slate-300 border-2 border-white"></div>
                 </div>
-                <span>{{ $kpis['nb_formateurs'] ?? 0 }} formateurs assignés</span>
+                <span>{{ $kpis['nb_formateurs'] ?? 0 }} experts</span>
             </div>
         </div>
 
         <!-- Performance Card -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
-            <div class="flex items-center justify-between mb-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+            <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
-                    <div class="size-10 bg-rose-100 rounded-lg flex items-center justify-center text-rose-600">
-                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    <div class="size-9 bg-rose-100 rounded-lg flex items-center justify-center text-rose-600">
+                        <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                     </div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Moyenne Réseau</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Performance</span>
                 </div>
             </div>
             <div class="flex items-baseline gap-2 mb-3">
@@ -220,37 +219,33 @@
                                 <img class="size-10 rounded-xl border border-slate-200" src="https://ui-avatars.com/api/?name={{ urlencode(optional($t->etudiant)->nom_complet ?? 'Unknown') }}&background=f8fafc&color=64748b&bold=true" alt="">
                                 <div class="w-px flex-1 bg-slate-200 my-2"></div>
                             </div>
-                            <div class="flex-1 pb-4">
-                                <div class="flex items-start justify-between">
+                            <div class="flex-1 pb-8">
+                                <div class="flex items-start justify-between mb-1">
                                     <div>
-                                        <p class="font-bold text-sm text-slate-900">{{ optional($t->etudiant)->nom_complet ?? 'Inconnu' }}</p>
-                                        <p class="text-xs text-slate-500">{{ $t->statut === 'reussi' ? 'A reussi' : ($t->statut === 'echoue' ? 'A echoue' : 'A commence') }} <span class="font-medium text-slate-700">{{ optional($t->qcm)->titre ?? 'QCM' }}</span></p>
+                                        <p class="font-black text-sm text-slate-900 uppercase italic">{{ optional($t->etudiant)->nom_complet ?? 'Anonyme' }}</p>
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                                            {{ $t->statut === 'reussi' ? 'A validé' : ($t->statut === 'echoue' ? 'Échec sur' : 'En cours sur') }} 
+                                            <span class="text-primary-600 italic">{{ optional($t->qcm)->titre ?? 'QCM' }}</span>
+                                        </p>
                                     </div>
-                                    <span class="text-[10px] text-slate-400">{{ $t->created_at ? $t->created_at->diffForHumans() : 'Date inconnue' }}</span>
+                                    <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ $t->created_at ? $t->created_at->diffForHumans() : 'Récemment' }}</span>
                                 </div>
-                            <div class="flex-1 pb-4">
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <p class="font-bold text-sm text-slate-900">{{ $t->etudiant->nom_complet }}</p>
-                                        <p class="text-xs text-slate-500">{{ $t->statut === 'reussi' ? 'A réussi' : ($t->statut === 'echoue' ? 'A échoué' : 'A commencé') }} <span class="font-medium text-slate-700">{{ $t->qcm->titre }}</span></p>
-                                    </div>
-                                    <span class="text-[10px] text-slate-400">{{ $t->created_at ? $t->created_at->diffForHumans() : 'Date inconnue' }}</span>
-                                </div>
+                                
                                 @if($t->statut !== 'en_cours')
-                                    <div class="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold {{ $t->statut === 'reussi' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">
-                                        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider {{ $t->statut === 'reussi' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100' }}">
+                                        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                             @if($t->statut === 'reussi')
                                                 <path d="M5 13l4 4L19 7"/>
                                             @else
                                                 <path d="M6 18L18 6M6 6l12 12"/>
                                             @endif
                                         </svg>
-                                        {{ $t->score_obtenu }}/20
+                                        Performance: {{ $t->score_obtenu }}/20
                                     </div>
                                 @else
-                                    <span class="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-700">
+                                    <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider bg-amber-50 text-amber-600 border border-amber-100">
                                         <span class="size-1.5 bg-amber-500 rounded-full animate-pulse"></span>
-                                        En cours
+                                        Session Active
                                     </span>
                                 @endif
                             </div>

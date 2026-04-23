@@ -52,7 +52,7 @@
     </div>
 
     <!-- Header Control Section -->
-    <div class="relative z-10 mb-10">
+    <div class="relative z-30 mb-10">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-200">
             <div>
                 <div class="flex items-center gap-4 mb-3">
@@ -69,6 +69,56 @@
             </div>
             
             <div class="flex items-center gap-3">
+                {{-- Creator Filter Dropdown --}}
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" type="button"
+                            class="flex items-center gap-2.5 px-4 py-3.5 bg-white border border-slate-200 rounded-xl text-xs font-black text-slate-600 uppercase tracking-wider hover:border-slate-400 hover:text-slate-900 transition-all shadow-sm"
+                            :class="open ? 'border-primary-400 text-primary-600 ring-2 ring-primary-500/10' : ''">
+                        <svg class="size-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
+                        </svg>
+                        @if($creatorFilter && ($selectedCreator = $creators->find($creatorFilter)))
+                            {{ $selectedCreator->prenom }} {{ $selectedCreator->nom }}
+                        @else
+                            Tous les créateurs
+                        @endif
+                        <svg class="size-3 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <div x-show="open"
+                         @click.away="open = false"
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-100"
+                         x-transition:leave-start="opacity-100 scale-100"
+                         x-transition:leave-end="opacity-0 scale-95"
+                         class="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-2xl shadow-slate-200/60 z-50 overflow-hidden"
+                         x-cloak>
+                        <div class="p-2">
+                            <a href="{{ route('admin.pedagogie') }}"
+                               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ !$creatorFilter ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <div class="size-7 rounded-lg {{ !$creatorFilter ? 'bg-white/20' : 'bg-slate-100' }} flex items-center justify-center text-[9px] font-black">ALL</div>
+                                Tous les créateurs
+                            </a>
+                            @foreach($creators as $creator)
+                                <a href="{{ route('admin.pedagogie', ['creator' => $creator->id]) }}"
+                                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ $creatorFilter == $creator->id ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50' }}">
+                                    <img class="size-7 rounded-lg border {{ $creatorFilter == $creator->id ? 'border-white/30' : 'border-slate-100' }}"
+                                         src="https://ui-avatars.com/api/?name={{ urlencode($creator->prenom . ' ' . $creator->nom) }}&background={{ $creator->type_profil === 'admin' ? '0f172a' : '0ea5e9' }}&color=fff&bold=true"
+                                         alt="">
+                                    <div>
+                                        <p class="leading-tight">{{ $creator->prenom }} {{ $creator->nom }}</p>
+                                        <p class="text-[9px] font-black uppercase tracking-widest {{ $creatorFilter == $creator->id ? 'opacity-60' : 'text-slate-400' }}">{{ ucfirst($creator->type_profil) }}</p>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
                 <button @click="openSeanceCreate()" type="button"
                     class="flex items-center gap-2 px-6 py-3.5 bg-slate-900 text-white rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-primary-600 transition-all shadow-lg shadow-slate-900/20">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4" /></svg>
@@ -113,7 +163,7 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+        <!-- <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="size-10 bg-amber-500 rounded-xl flex items-center justify-center">
                     <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -123,7 +173,7 @@
                     <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider ml-1">Jours</span>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <!-- Hierarchy Tree -->
@@ -131,7 +181,7 @@
         @forelse($seances as $seance)
             <div x-data="{ expanded: false }" class="group">
                 <div class="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:border-slate-200 transition-all duration-300 overflow-hidden"
-                     :class="expanded ? 'ring-2 ring-primary-100' : ''">
+                     :class="expanded ? '' : ''">
                     
                     <!-- Top Bar -->
                     <div class="h-1 bg-gradient-to-r from-slate-900 to-slate-700" :style="expanded ? 'width: 100%' : 'width: 0%'"></div>
@@ -153,6 +203,16 @@
                                         <span class="text-[8px] font-medium text-slate-500">{{ $seance->date->format('d M Y') }}</span>
                                     </div>
                                     <h2 class="text-xl font-black text-slate-900 group-hover:text-primary-600 transition-colors">{{ $seance->nom }}</h2>
+                                    {{-- Creator badge --}}
+                                    @if($seance->user)
+                                    <div class="flex items-center gap-2 mt-1.5">
+                                        <!-- <img class="size-5 rounded-md border border-slate-100"
+                                             src="https://ui-avatars.com/api/?name={{ urlencode($seance->user->prenom . ' ' . $seance->user->nom) }}&background={{ $seance->user->type_profil === 'admin' ? '0f172a' : '0ea5e9' }}&color=fff&bold=true&size=32"
+                                             alt=""> -->
+                                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest italic">{{ $seance->user->prenom }} {{ $seance->user->nom }}</span>
+                                        <span class="text-[8px] font-black px-1.5 py-0.5 rounded-md {{ $seance->user->type_profil === 'admin' ? 'bg-slate-900 text-white' : 'bg-primary-50 text-primary-600 border border-primary-100' }} uppercase tracking-widest">{{ ucfirst($seance->user->type_profil) }}</span>
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -315,130 +375,134 @@
     </div>
 
     <!-- Modals -->
-    <x-ui.modal name="seance-modal" maxWidth="md">
-        <template x-if="seanceMode === 'create'">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="size-10 bg-slate-900 rounded-xl flex items-center justify-center">
-                    <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3m-9 4h10a2 2 0 012 2v10a2 2 0 01-2 2H9a2 2 0 01-2-2V9a2 2 0 012-2z" /></svg>
-                </div>
-                <h3 class="text-lg font-black text-slate-800">Créer Séance</h3>
-            </div>
-        </template>
-        <template x-if="seanceMode === 'edit'">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="size-10 bg-amber-500 rounded-xl flex items-center justify-center">
-                    <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                </div>
-                <h3 class="text-lg font-black text-slate-800">Modifier Séance</h3>
-            </div>
-        </template>
-        <form x-bind:action="seanceMode === 'create' ? '{{ route('admin.pedagogie.seance.store') }}' : `{{ url('/admin/pedagogie/seance') }}/${seanceId}`" method="POST" class="space-y-4">
-            @csrf
-            <template x-if="seanceMode === 'edit'"><input type="hidden" name="_method" value="PUT"></template>
-            <div>
-                <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Identifiant</label>
-                <input type="text" name="nom" x-model="seanceNom" required
-                       :placeholder="seanceMode === 'create' ? 'Ex: Fondamentaux Cloud' : ''"
-                       class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-slate-400 focus:ring-0 transition-all text-sm">
-            </div>
-            <div>
-                <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Date Programmée</label>
-                <input type="date" name="date" x-model="seanceDate" required
-                       class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-slate-400 focus:ring-0 transition-all text-sm">
-            </div>
-            <button type="submit" 
-                    class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all"
-                    :class="seanceMode === 'create' ? 'bg-slate-900 text-white hover:bg-primary-500' : 'bg-primary-500 text-white hover:bg-primary-600'"
-                    x-text="seanceMode === 'create' ? 'Consigner l\'Entité' : 'Conserver'"></button>
-        </form>
-    </x-ui.modal>
+    <template x-teleport="body">
+        <div>
+            <x-ui.modal name="seance-modal" maxWidth="md">
+                <template x-if="seanceMode === 'create'">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="size-10 bg-slate-900 rounded-xl flex items-center justify-center">
+                            <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3m-9 4h10a2 2 0 012 2v10a2 2 0 01-2 2H9a2 2 0 01-2-2V9a2 2 0 012-2z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-black text-slate-800">Créer Séance</h3>
+                    </div>
+                </template>
+                <template x-if="seanceMode === 'edit'">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="size-10 bg-amber-500 rounded-xl flex items-center justify-center">
+                            <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-black text-slate-800">Modifier Séance</h3>
+                    </div>
+                </template>
+                <form x-bind:action="seanceMode === 'create' ? '{{ route('admin.pedagogie.seance.store') }}' : `{{ url('/admin/pedagogie/seance') }}/${seanceId}`" method="POST" class="space-y-4">
+                    @csrf
+                    <template x-if="seanceMode === 'edit'"><input type="hidden" name="_method" value="PUT"></template>
+                    <div>
+                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Identifiant</label>
+                        <input type="text" name="nom" x-model="seanceNom" required
+                               :placeholder="seanceMode === 'create' ? 'Ex: Fondamentaux Cloud' : ''"
+                               class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-slate-400 focus:ring-0 transition-all text-sm">
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Date Programmée</label>
+                        <input type="date" name="date" x-model="seanceDate" required
+                               class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-slate-400 focus:ring-0 transition-all text-sm">
+                    </div>
+                    <button type="submit" 
+                            class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95"
+                            :class="seanceMode === 'create' ? 'bg-slate-900 text-white hover:bg-primary-500 shadow-slate-900/10' : 'bg-primary-500 text-white hover:bg-primary-600 shadow-primary-500/10'"
+                            x-text="seanceMode === 'create' ? 'Consigner l\'Entité' : 'Conserver'"></button>
+                </form>
+            </x-ui.modal>
 
-    <x-ui.modal name="ua-modal" maxWidth="md">
-        <template x-if="uaMode === 'create'">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="size-10 bg-primary-100 rounded-xl flex items-center justify-center">
-                    <svg class="size-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                </div>
-                <h3 class="text-lg font-black text-slate-800">Injecter UA</h3>
-            </div>
-        </template>
-        <template x-if="uaMode === 'edit'">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="size-10 bg-amber-500 rounded-xl flex items-center justify-center">
-                    <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                </div>
-                <h3 class="text-lg font-black text-slate-800">Modifier UA</h3>
-            </div>
-        </template>
-        <form x-bind:action="uaMode === 'create' ? `{{ url('/admin/pedagogie/seance') }}/${activeSeanceId}/ua` : `{{ url('/admin/pedagogie/ua') }}/${uaId}`" method="POST" class="space-y-4">
-            @csrf
-            <template x-if="uaMode === 'edit'"><input type="hidden" name="_method" value="PUT"></template>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Code</label>
-                    <input type="text" name="code" x-model="uaCode" required
-                           placeholder="UA-XX"
-                           class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 uppercase focus:bg-white focus:border-primary-400 focus:ring-0 transition-all text-sm">
-                </div>
-                <div>
-                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Libellé</label>
-                    <input type="text" name="nom" x-model="uaNom" required
-                           placeholder="Nom de l'unité"
-                           class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-primary-400 focus:ring-0 transition-all text-sm">
-                </div>
-            </div>
-            <button type="submit" 
-                    class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all"
-                    :class="uaMode === 'create' ? 'bg-slate-900 text-white hover:bg-primary-500' : 'bg-primary-500 text-white hover:bg-primary-600'"
-                    x-text="uaMode === 'create' ? 'Fixer l\'Unité' : 'Mettre à jour'"></button>
-        </form>
-    </x-ui.modal>
+            <x-ui.modal name="ua-modal" maxWidth="md">
+                <template x-if="uaMode === 'create'">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="size-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <svg class="size-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                        </div>
+                        <h3 class="text-lg font-black text-slate-800">Injecter UA</h3>
+                    </div>
+                </template>
+                <template x-if="uaMode === 'edit'">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="size-10 bg-amber-500 rounded-xl flex items-center justify-center">
+                            <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-black text-slate-800">Modifier UA</h3>
+                    </div>
+                </template>
+                <form x-bind:action="uaMode === 'create' ? `{{ url('/admin/pedagogie/seance') }}/${activeSeanceId}/ua` : `{{ url('/admin/pedagogie/ua') }}/${uaId}`" method="POST" class="space-y-4">
+                    @csrf
+                    <template x-if="uaMode === 'edit'"><input type="hidden" name="_method" value="PUT"></template>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Code</label>
+                            <input type="text" name="code" x-model="uaCode" required
+                                   placeholder="UA-XX"
+                                   class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 uppercase focus:bg-white focus:border-primary-400 focus:ring-0 transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Libellé</label>
+                            <input type="text" name="nom" x-model="uaNom" required
+                                   placeholder="Nom de l'unité"
+                                   class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-primary-400 focus:ring-0 transition-all text-sm">
+                        </div>
+                    </div>
+                    <button type="submit" 
+                            class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95"
+                            :class="uaMode === 'create' ? 'bg-slate-900 text-white hover:bg-primary-500 shadow-slate-900/10' : 'bg-primary-500 text-white hover:bg-primary-600 shadow-primary-500/10'"
+                            x-text="uaMode === 'create' ? 'Fixer l\'Unité' : 'Mettre à jour'"></button>
+                </form>
+            </x-ui.modal>
 
-    <x-ui.modal name="comp-modal" maxWidth="md">
-        <template x-if="compMode === 'create'">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="size-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                    <svg class="size-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
-                </div>
-                <h3 class="text-lg font-black text-slate-800">Fixer Compétence</h3>
-            </div>
-        </template>
-        <template x-if="compMode === 'edit'">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="size-10 bg-amber-500 rounded-xl flex items-center justify-center">
-                    <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                </div>
-                <h3 class="text-lg font-black text-slate-800">Modifier Pilier</h3>
-            </div>
-        </template>
-        <form x-bind:action="compMode === 'create' ? `{{ url('/admin/pedagogie/ua') }}/${activeUaId}/competence` : `{{ url('/admin/pedagogie/competence') }}/${compId}`" method="POST" class="space-y-4">
-            @csrf
-            <template x-if="compMode === 'edit'"><input type="hidden" name="_method" value="PUT"></template>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Code</label>
-                    <input type="text" name="code" x-model="compCode" required
-                           placeholder="C-XXX"
-                           class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 uppercase focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all text-sm">
-                </div>
-                <div>
-                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Libellé</label>
-                    <input type="text" name="libelle" x-model="compNom" required
-                           class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all text-sm">
-                </div>
-            </div>
-            <template x-if="compMode === 'create'">
-                <div>
-                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Description</label>
-                    <textarea name="description" rows="2"
-                              class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all text-sm resize-none"></textarea>
-                </div>
-            </template>
-            <button type="submit" 
-                    class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all"
-                    :class="compMode === 'create' ? 'bg-emerald-500 text-white hover:bg-emerald-600' : 'bg-amber-500 text-white hover:bg-amber-600'"
-                    x-text="compMode === 'create' ? 'Fixer le Pilier' : 'Conserver'"></button>
-        </form>
-    </x-ui.modal>
+            <x-ui.modal name="comp-modal" maxWidth="md">
+                <template x-if="compMode === 'create'">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="size-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                            <svg class="size-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00.806 1.946 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-black text-slate-800">Fixer Compétence</h3>
+                    </div>
+                </template>
+                <template x-if="compMode === 'edit'">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="size-10 bg-amber-500 rounded-xl flex items-center justify-center">
+                            <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </div>
+                        <h3 class="text-lg font-black text-slate-800">Modifier Pilier</h3>
+                    </div>
+                </template>
+                <form x-bind:action="compMode === 'create' ? `{{ url('/admin/pedagogie/ua') }}/${activeUaId}/competence` : `{{ url('/admin/pedagogie/competence') }}/${compId}`" method="POST" class="space-y-4">
+                    @csrf
+                    <template x-if="compMode === 'edit'"><input type="hidden" name="_method" value="PUT"></template>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Code</label>
+                            <input type="text" name="code" x-model="compCode" required
+                                   placeholder="C-XXX"
+                                   class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 uppercase focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Libellé</label>
+                            <input type="text" name="libelle" x-model="compNom" required
+                                   class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all text-sm">
+                        </div>
+                    </div>
+                    <template x-if="compMode === 'create'">
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Description</label>
+                            <textarea name="description" rows="2"
+                                      class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all text-sm resize-none"></textarea>
+                        </div>
+                    </template>
+                    <button type="submit" 
+                            class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95"
+                            :class="compMode === 'create' ? 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-emerald-500/10' : 'bg-amber-500 text-white hover:bg-amber-600 shadow-amber-500/10'"
+                            x-text="compMode === 'create' ? 'Fixer le Pilier' : 'Conserver'"></button>
+                </form>
+            </x-ui.modal>
+        </div>
+    </template>
 </div>
 @endsection

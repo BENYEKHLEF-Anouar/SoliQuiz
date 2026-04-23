@@ -14,12 +14,13 @@ class QcmService
     /**
      * Liste paginée des QCM avec filtrage optionnel (recherche, formateur)
      */
-    public function paginate(int $perPage = 15, ?string $search = null, ?int $formateurId = null): LengthAwarePaginator
+    public function paginate(int $perPage = 15, ?string $search = null, ?int $formateurId = null, ?string $statut = null): LengthAwarePaginator
     {
         return QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
             ->withCount(['questions', 'tentatives'])
             ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
             ->when($formateurId, fn($q) => $q->where('formateur_id', $formateurId))
+            ->when($statut, fn($q) => $q->where('statut', $statut))
             ->latest()
             ->paginate($perPage);
     }

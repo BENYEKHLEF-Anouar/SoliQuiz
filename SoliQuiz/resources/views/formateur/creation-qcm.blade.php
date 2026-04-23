@@ -8,113 +8,28 @@
 <div class="fade-in pb-32" x-data="qcmBuilder({{ Js::from($unites) }}, {{ Js::from($classes) }})">
     
     <!-- Action Form -->
-    <form id="qcmForm" action="{{ route('formateur.qcm.store') }}" method="POST" @submit.prevent="handleSubmit">
+    <form id="qcmForm" action="{{ route('formateur.qcm.store') }}" method="POST" @submit.prevent="handleSubmit" class="flex flex-col lg:flex-row gap-6 xl:gap-8 items-start">
         @csrf
         
-        <!-- Header Configuration Section -->
-        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-8 md:p-12 mb-12 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-8 opacity-5">
-                <svg class="size-48" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>
-            </div>
-
-            <div class="relative z-10 space-y-12">
-                <!-- Row 1: Main Title & Status -->
-                <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-10">
-                    <div class="flex-1 space-y-3">
-                        <label class="text-label ml-1">Identité de l'évaluation</label>
-                        <input type="text" name="titre" required x-model="titre" 
-                               class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-5 px-8 text-2xl font-black text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-primary-500 transition-all outline-none uppercase italic" 
-                               placeholder="Saisir le titre du QCM...">
-                    </div>
-                    
-                    <div class="flex items-center gap-4">
-                        <div class="space-y-3">
-                            <label class="text-label ml-1">Disponibilité</label>
-                            <x-ui.select 
-                                name="statut" 
-                                x-model="statut"
-                                class="!bg-slate-50/50 !border-transparent !rounded-2xl !py-4 !px-6 !w-44"
-                                :options="[
-                                    ['value' => 'brouillon', 'label' => 'Brouillon'],
-                                    ['value' => 'public', 'label' => 'Public'],
-                                    ['value' => 'termine', 'label' => 'Terminé'],
-                                ]"
-                            />
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-label ml-1">Total Points</label>
-                            <div class="h-[60px] px-6 bg-slate-900 rounded-2xl flex items-center gap-3 shadow-lg shadow-slate-900/10">
-                                <span class="text-xl font-black text-white italic" x-text="`${totalPoints}/20`"></span>
-                                <div class="w-px h-6 bg-white/20"></div>
-                                <button type="button" @click="equalizePoints()" class="text-[9px] font-black text-primary-400 uppercase tracking-widest hover:text-white transition-colors">Équilibrer</button>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Main Column: Content (Questions) -->
+        <div class="flex-1 w-full space-y-8">
+            <!-- Main Title Box -->
+            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-5">
+                    <svg class="size-32" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>
                 </div>
-
-                <!-- Row 2: Pedagogical Alignment -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-8 border-t border-slate-50">
-                    <div class="space-y-3">
-                        <label class="text-label ml-1">Module UA</label>
-                        <x-ui.select 
-                            name="unite_apprentissage_id" 
-                            x-model="selectedUniteId" 
-                            required 
-                            placeholder="Choisir l'UA"
-                            jsOptions="allUnites.map(u => ({value: u.id, label: u.nom}))"
-                            class="!bg-slate-50/50 !border-transparent !rounded-2xl !py-4 !px-6"
-                        />
-                    </div>
-                    <div class="space-y-3">
-                        <label class="text-label ml-1">Cohorte Cible</label>
-                        <x-ui.select 
-                            name="classe_id" 
-                            x-model="selectedClasseId"
-                            required
-                            placeholder="Choisir une classe"
-                            jsOptions="allClasses.map(c => ({value: c.id, label: c.nom}))"
-                            class="!bg-slate-50/50 !border-transparent !rounded-2xl !py-4 !px-6"
-                        />
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-3">
-                            <label class="text-label ml-1">Durée (min)</label>
-                            <input type="number" name="duree_minutes" required value="30"
-                                   class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-4 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-label ml-1">Seuil Réussite</label>
-                            <input type="number" name="score_reussite" required step="0.5" value="10"
-                                   class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-4 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Row 3: Competences Selection -->
-                <div x-show="selectedUniteId" x-transition class="pt-8 border-t border-slate-50 space-y-6">
-                    <div class="flex items-center justify-between px-1">
-                        <label class="text-label">Piliers de compétences ciblés</label>
-                        <span class="text-[9px] font-black text-slate-300" x-text="`${filteredCompetences.length} disponibles`"></span>
-                    </div>
-                    <div class="flex flex-wrap gap-3">
-                        <template x-for="comp in filteredCompetences" :key="comp.id">
-                            <label class="relative group cursor-pointer">
-                                <input type="checkbox" name="competence_ids[]" :value="comp.id" class="peer hidden">
-                                <div class="px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent peer-checked:border-primary-500 peer-checked:bg-white peer-checked:shadow-md transition-all flex items-center gap-3">
-                                    <div class="size-6 rounded-lg bg-white border border-slate-100 flex items-center justify-center text-[9px] font-black text-slate-400 peer-checked:bg-primary-500 peer-checked:text-white transition-colors" x-text="comp.code"></div>
-                                    <span class="text-xs font-bold text-slate-700 uppercase italic tracking-tight" x-text="comp.libelle"></span>
-                                </div>
-                            </label>
-                        </template>
-                    </div>
+                <div class="relative z-10 space-y-3">
+                    <label class="text-label ml-1">Identité de l'évaluation</label>
+                    <input type="text" name="titre" required x-model="titre" 
+                           class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-4 px-6 text-2xl font-black text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-primary-500 transition-all outline-none uppercase italic" 
+                           placeholder="Saisir le titre du QCM...">
                 </div>
             </div>
-        </div>
 
         <!-- Questions Dynamic Section -->
-        <div class="space-y-12">
+        <div class="space-y-8">
             <template x-for="(question, qIndex) in questions" :key="qIndex">
-                <article class="bg-white rounded-[40px] border border-slate-100 shadow-sm hover:shadow-premium transition-all duration-500 overflow-hidden" 
+                <article class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-premium transition-all duration-500 overflow-hidden" 
                          x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-8">
                     
                     <!-- Question Sub-Header -->
@@ -135,18 +50,18 @@
                         </button>
                     </div>
 
-                    <div class="p-10 md:p-12 space-y-12">
+                    <div class="p-6 md:p-8 space-y-8">
                         <!-- Points & Statement -->
-                        <div class="flex flex-col md:flex-row gap-10">
-                            <div class="w-28 shrink-0 space-y-3">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-24 shrink-0 space-y-3">
                                 <label class="text-label ml-1">Points</label>
                                 <input type="number" x-model.number="question.points" :name="`questions[${qIndex}][points]`" 
-                                       class="w-full py-5 rounded-2xl border-none bg-slate-50 font-black text-2xl text-slate-900 text-center focus:bg-white transition-all outline-none">
+                                       class="w-full py-3 rounded-2xl border-none bg-slate-50 font-black text-xl text-slate-900 text-center focus:bg-white transition-all outline-none">
                             </div>
                             <div class="flex-1 space-y-3">
                                 <label class="text-label ml-1">Énoncé Pédagogique</label>
                                 <textarea x-model="question.texte" :name="`questions[${qIndex}][texte]`" required 
-                                          class="w-full py-5 px-8 rounded-[2rem] bg-slate-50 border-none font-bold text-xl text-slate-900 placeholder:text-slate-200 focus:bg-white focus:ring-8 focus:ring-primary-500/5 transition-all outline-none resize-none" 
+                                          class="w-full py-4 px-6 rounded-2xl bg-slate-50 border-none font-bold text-lg text-slate-900 placeholder:text-slate-200 focus:bg-white focus:ring-4 focus:ring-primary-500/10 transition-all outline-none resize-none" 
                                           rows="2" placeholder="Formuler la question..."></textarea>
                             </div>
                         </div>
@@ -210,7 +125,7 @@
                                 </template>
 
                                 <button @click="addOption(qIndex)" type="button" 
-                                        class="h-full min-h-[110px] border-2 border-dashed border-slate-100 rounded-3xl flex flex-col items-center justify-center gap-2 text-slate-300 hover:text-primary-500 hover:border-primary-200 hover:bg-primary-50/30 transition-all group">
+                                        class="h-full min-h-[80px] border-2 border-dashed border-slate-100 rounded-3xl flex flex-col items-center justify-center gap-2 text-slate-300 hover:text-primary-500 hover:border-primary-200 hover:bg-primary-50/30 transition-all group">
                                     <svg class="size-6 group-hover:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
                                     <span class="text-[9px] font-black uppercase tracking-[0.2em]">Inserer Option</span>
                                 </button>
@@ -236,25 +151,118 @@
             </template>
 
             <!-- Final Actions -->
-            <div class="flex flex-col items-center gap-10 py-16">
+            <div class="flex flex-col items-center gap-10 py-8">
                 <button @click="addQuestion()" type="button" 
-                        class="h-20 px-12 bg-white border border-slate-100 rounded-[2.5rem] font-black text-slate-900 uppercase tracking-[0.3em] italic shadow-lg hover:shadow-xl hover:-translate-y-2 active:scale-95 transition-all flex items-center gap-4">
+                        class="h-20 px-12 bg-white border border-slate-100 rounded-[2.5rem] font-black text-slate-900 uppercase tracking-[0.3em] italic shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all flex items-center gap-4">
                     <svg class="size-6 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
                     Nouvelle Question
                 </button>
             </div>
         </div>
 
-        <!-- Floating Submit Button -->
-        <div class="fixed bottom-10 right-10 z-[100] flex items-center gap-4 animate-in slide-in-from-bottom duration-500">
-            <div class="bg-slate-900 text-white rounded-3xl p-5 shadow-2xl flex items-center gap-8 border border-white/10 backdrop-blur-xl">
-                <div class="flex flex-col">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">État du Barème</span>
-                    <span class="text-xl font-black italic leading-none" :class="totalPoints === 20 ? 'text-emerald-400' : 'text-amber-400'" x-text="`${totalPoints} / 20 PTS`"></span>
+        <!-- Sidebar Column: Configuration -->
+        <div class="w-full lg:w-[320px] xl:w-[380px] shrink-0 space-y-6 sticky top-8">
+            
+            <!-- Settings Card -->
+            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-8">
+                <div class="flex items-center justify-between pb-6 border-b border-slate-50">
+                    <h3 class="text-xs font-black uppercase tracking-widest text-slate-900">Configuration</h3>
                 </div>
-                <div class="w-px h-10 bg-white/10"></div>
-                <button type="submit" class="h-14 px-10 bg-primary-500 text-white rounded-2xl font-black uppercase tracking-widest italic hover:bg-primary-400 shadow-lg shadow-primary-500/20 active:scale-95 transition-all flex items-center gap-3">
-                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7" /></svg>
+
+                <div class="space-y-6">
+                    <div class="space-y-3">
+                        <label class="text-label ml-1">Disponibilité</label>
+                        <x-ui.select 
+                            name="statut" 
+                            x-model="statut"
+                            class="!bg-slate-50/50 !border-transparent !rounded-2xl !py-3 !px-5 w-full"
+                            :options="[
+                                ['value' => 'brouillon', 'label' => 'Brouillon'],
+                                ['value' => 'public', 'label' => 'Public'],
+                                ['value' => 'termine', 'label' => 'Terminé'],
+                            ]"
+                        />
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-label ml-1">Module UA</label>
+                        <x-ui.select 
+                            name="unite_apprentissage_id" 
+                            x-model="selectedUniteId" 
+                            required 
+                            placeholder="Choisir l'UA"
+                            jsOptions="allUnites.map(u => ({value: u.id, label: u.nom}))"
+                            class="!bg-slate-50/50 !border-transparent !rounded-2xl !py-3 !px-5 w-full"
+                        />
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-label ml-1">Cohorte Cible</label>
+                        <x-ui.select 
+                            name="classe_id" 
+                            x-model="selectedClasseId"
+                            required
+                            placeholder="Choisir une classe"
+                            jsOptions="allClasses.map(c => ({value: c.id, label: c.nom}))"
+                            class="!bg-slate-50/50 !border-transparent !rounded-2xl !py-3 !px-5 w-full"
+                        />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-3">
+                            <label class="text-label ml-1">Durée (min)</label>
+                            <input type="number" name="duree_minutes" required value="30"
+                                   class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-label ml-1">Réussite (pts)</label>
+                            <input type="number" name="score_reussite" required step="0.5" value="10"
+                                   class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Competences Card -->
+            <div x-show="selectedUniteId" x-transition class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-4">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-50">
+                    <h3 class="text-xs font-black uppercase tracking-widest text-slate-900">Compétences</h3>
+                    <span class="text-[10px] font-black text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" x-text="`${filteredCompetences.length}`"></span>
+                </div>
+                <div class="flex flex-col gap-2.5 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                    <template x-for="comp in filteredCompetences" :key="comp.id">
+                        <label class="relative group cursor-pointer w-full">
+                            <input type="checkbox" name="competence_ids[]" :value="comp.id" class="peer hidden">
+                            <div class="w-full px-4 py-3 bg-slate-50/80 hover:bg-slate-100 rounded-2xl border border-transparent peer-checked:border-primary-500 peer-checked:bg-primary-50/30 transition-all flex items-start gap-3">
+                                <div class="shrink-0 size-5 mt-0.5 rounded flex items-center justify-center border-2 border-slate-300 peer-checked:border-primary-500 peer-checked:bg-primary-500 transition-colors">
+                                    <svg class="size-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M5 13l4 4L19 7" /></svg>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-black text-slate-400 peer-checked:text-primary-600 transition-colors" x-text="comp.code"></span>
+                                    <span class="text-xs font-bold text-slate-700 leading-snug mt-0.5 group-hover:text-slate-900 transition-colors" x-text="comp.libelle"></span>
+                                </div>
+                            </div>
+                        </label>
+                    </template>
+                    <div x-show="filteredCompetences.length === 0" class="text-center py-6 text-slate-400 text-xs font-bold italic">
+                        Aucune compétence disponible
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Floating Submit Button -->
+        <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-2xl animate-in slide-in-from-bottom duration-500">
+            <div class="bg-slate-900/95 backdrop-blur-xl text-white rounded-[24px] py-3 px-6 shadow-2xl shadow-slate-900/40 flex items-center justify-between border border-white/10">
+                <div class="flex items-center gap-6">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">État du Barème</span>
+                        <span class="text-lg font-black italic leading-none" :class="totalPoints === 20 ? 'text-emerald-400' : 'text-amber-400'" x-text="`${totalPoints} / 20 PTS`"></span>
+                    </div>
+                </div>
+                <button type="submit" class="h-12 px-10 bg-primary-500 text-white rounded-xl font-black uppercase tracking-widest text-sm italic hover:bg-primary-400 shadow-lg shadow-primary-500/20 transition-all flex items-center gap-3">
+                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7" /></svg>
                     Finaliser
                 </button>
             </div>

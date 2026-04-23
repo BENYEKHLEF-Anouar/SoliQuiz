@@ -36,29 +36,29 @@
 
 <!-- Sidebar Container -->
 <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-       class="fixed top-0 left-0 w-80 transition-transform duration-300 ease-out z-70 h-screen shrink-0">
+       class="fixed top-0 left-0 w-72 transition-transform duration-300 ease-out z-70 h-screen shrink-0">
     
-    <div class="h-full p-6"> <!-- Inner wrapper to maintain floating look while container hits the edges -->
+    <div class="h-full p-4"> <!-- Inner wrapper to maintain floating look while container hits the edges -->
         <div class="h-full bg-white rounded-3xl border border-slate-100 shadow-sm flex flex-col overflow-hidden relative">
         <!-- Logo Section -->
-        <div class="p-8 border-b border-slate-50">
+        <div class="p-6 border-b border-slate-50">
             <a class="flex items-center gap-3 transition-transform active:scale-95 outline-none" href="{{ route('dashboard') }}">
-                <div class="size-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 text-white">
-                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 text-white">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                         <path d="m9 15 2 2 4-4" />
                     </svg>
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-xl font-heading font-black text-slate-900 tracking-tight leading-none uppercase italic">Soli<span class="text-primary-500">Quiz</span></span>
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Espace {{ ucfirst($role) }}</span>
+                    <span class="text-lg font-heading font-black text-slate-900 tracking-tight leading-none uppercase italic">Soli<span class="text-primary-500">Quiz</span></span>
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Espace {{ ucfirst($role) }}</span>
                 </div>
             </a>
         </div>
 
         <!-- Navigation Section -->
-        <nav class="flex-1 px-4 py-8 space-y-8 overflow-y-auto custom-scrollbar">
+        <nav class="flex-1 px-3 py-6 space-y-6 overflow-y-auto custom-scrollbar">
             @php
                 $categories = [
                     'admin' => [

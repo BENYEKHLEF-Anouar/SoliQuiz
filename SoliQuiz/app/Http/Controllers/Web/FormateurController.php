@@ -334,7 +334,8 @@ class FormateurController extends Controller
 
         $this->qcmService->create($data);
 
-        return redirect()->route('formateur.bibliotheque')->with('success', 'QCM créé avec succès !');
+        $route = Auth::user()->isAdmin() ? 'admin.qcms' : 'formateur.bibliotheque';
+        return redirect()->route($route)->with('success', 'QCM créé avec succès !');
     }
 
     /**
@@ -414,7 +415,8 @@ class FormateurController extends Controller
 
         $this->qcmService->update($qcm, $data);
 
-        return redirect()->route('formateur.bibliotheque')->with('success', 'QCM mis à jour avec succès !');
+        $route = Auth::user()->isAdmin() ? 'admin.qcms' : 'formateur.bibliotheque';
+        return redirect()->route($route)->with('success', 'QCM mis à jour avec succès !');
     }
 
     /**
@@ -426,7 +428,8 @@ class FormateurController extends Controller
             ->findOrFail($id);
         $this->qcmService->delete($qcm);
 
-        return redirect()->route('formateur.bibliotheque')->with('success', 'QCM effacé.');
+        $route = Auth::user()->isAdmin() ? 'admin.qcms' : 'formateur.bibliotheque';
+        return redirect()->route($route)->with('success', 'QCM effacé.');
     }
 
     /**

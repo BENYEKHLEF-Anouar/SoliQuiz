@@ -35,6 +35,11 @@ body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     color: #1e293b;
     background-color: #f8fafc;
+    background-image: 
+        radial-gradient(at 40% 20%, hsla(190, 80%, 90%, 0.3) 0px, transparent 50%),
+        radial-gradient(at 80% 0%, hsla(190, 80%, 85%, 0.15) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(190, 80%, 95%, 0.2) 0px, transparent 50%);
+    background-attachment: fixed;
     -webkit-font-smoothing: antialiased;
     letter-spacing: -0.015em;
 }
@@ -131,8 +136,6 @@ select {
 
 .btn-premium:hover {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    filter: brightness(1.1);
-    transform: translateY(-2px);
 }
 
 .btn-premium:active {

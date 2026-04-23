@@ -1,7 +1,7 @@
 /* Charte Graphique - SoliQuiz */
 /* Ton: Professionnel, Pédagogique, Apaisant */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
     /* =========================================
@@ -60,26 +60,139 @@
     --color-info-700: hsl(220, 85%, 35%);
 
     /* =========================================
-     Typographie
+     Typographie - Unified with Mobile App
      ========================================= */
-    --font-heading: 'Outfit', sans-serif;
-    --font-body: 'Inter', sans-serif;
+    --font-heading: 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+
+    /* =========================================
+     UI Tokens - Premium & Immersive
+     ========================================= */
+    --radius-card: 40px;
+    --radius-button: 16px;
+    --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.12);
+    --shadow-inner-premium: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 body {
     font-family: var(--font-body);
-    color: var(--color-neutral-800);
-    background-color: var(--color-neutral-50);
+    color: #1e293b;
+    background-color: #f8fafc;
+    background-image:
+        radial-gradient(at 40% 20%, hsla(190, 80%, 90%, 0.3) 0px, transparent 50%),
+        radial-gradient(at 80% 0%, hsla(190, 80%, 85%, 0.15) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(190, 80%, 95%, 0.2) 0px, transparent 50%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.015em;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+.font-heading, h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    color: var(--color-neutral-900);
+    letter-spacing: -0.025em;
+    font-weight: 800;
+}
+
+/* =========================================
+   Glassmorphism - Premium & Immersive
+   ========================================= */
+.glass {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-dark {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* =========================================
+   Custom Scrollbar - Minimalist Premium
+   ========================================= */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* =========================================
+   Premium Utilities
+   ========================================= */
+.shadow-premium {
+    box-shadow: var(--shadow-premium);
+}
+
+.shadow-inner-premium {
+    box-shadow: var(--shadow-inner-premium);
+}
+
+/* Text Label Style */
+.text-label {
+    font-size: 10px;
+    font-weight: 900;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-style: italic;
+}
+
+/* Button Premium Style */
+.btn-premium {
+    position: relative;
+    overflow: hidden;
+    transition: all 300ms ease;
+    border-radius: 20px;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 11px;
+    font-style: italic;
+}
+
+.btn-premium:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-premium:active {
+    transform: scale(0.96);
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 300ms ease forwards;
 }
 
 /* =========================================

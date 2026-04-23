@@ -6,6 +6,7 @@
 
 @section('content')
 <div class="fade-in" x-data="{
+    users: {{ Js::from($users->items()) }},
     search: '',
     loading: false,
     editUser: {},
@@ -49,16 +50,15 @@
 
 
 
-    <!-- Filters & Search -->
     <div class="mb-8 relative group">
         <div class="absolute inset-y-0 inset-s-0 flex items-center pointer-events-none ps-6">
-            <svg class="size-5 text-slate-300 group-focus-within:text-primary-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <svg class="size-4 text-slate-400 group-focus-within:text-primary-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                 <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
             </svg>
         </div>
         <input x-model="search"
                @input="performSearch()"
-               class="w-full bg-white border border-slate-100 rounded-3xl py-6 ps-16 pe-8 font-bold text-slate-900 placeholder:text-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 outline-none transition-all shadow-sm group-hover:shadow-premium"
+               class="w-full bg-white border border-slate-100 rounded-2xl py-3 ps-14 pe-8 font-bold text-sm text-slate-900 placeholder:text-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 outline-none transition-all shadow-sm group-hover:shadow-md"
                type="text" placeholder="Filtrer le repertoire par nom, email ou role...">
     </div>
 
@@ -70,7 +70,7 @@
                     <tr class="bg-slate-50/50 border-b border-slate-50">
                         <th class="ps-10 pe-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Profil Utilisateur</th>
                         <th class="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Autorisation</th>
-                        <th class="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Disponibilite</th>
+                        <th class="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Cohorte / Classe</th>
                         <th class="ps-6 pe-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Controle</th>
                     </tr>
                 </thead>
@@ -97,7 +97,7 @@
                             </td>
                             <td class="px-6 py-6">
                                 <template x-if="user.type_profil === 'admin'">
-                                    <span class="inline-flex py-1 px-3 rounded-lg bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest">Architecte</span>
+                                    <span class="inline-flex py-1 px-3 rounded-lg bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest">Administrateur</span>
                                 </template>
                                 <template x-if="user.type_profil === 'formateur'">
                                     <span class="inline-flex py-1 px-3 rounded-lg bg-primary-50 text-primary-600 text-[9px] font-black uppercase tracking-widest border border-primary-100">Expert / Formateur</span>
@@ -107,16 +107,21 @@
                                 </template>
                             </td>
                             <td class="px-6 py-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="size-2 rounded-full bg-emerald-500 shadow-sm animate-pulse"></div>
-                                    <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Connecte</span>
-                                </div>
+                                <template x-if="user.classe">
+                                    <div class="flex items-center gap-3">
+                                        <div class="size-2 rounded-full bg-primary-500"></div>
+                                        <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest" x-text="user.classe.nom"></span>
+                                    </div>
+                                </template>
+                                <template x-if="!user.classe">
+                                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Indépendant</span>
+                                </template>
                             </td>
                             <td class="ps-6 pe-10 py-6 text-right">
-                                <div class="flex justify-end items-center gap-3 transition-opacity">
+                                <div class="flex justify-end items-center gap-3">
                                     <button @click="editUser = user; editUserRole = user.type_profil === 'admin' ? 'Administrateur' : (user.type_profil === 'formateur' ? 'Formateur' : 'Apprenant'); $dispatch('open-modal', 'edit-user-modal')"
-                                            class="size-11 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:text-primary-500 hover:border-primary-200 transition-all shadow-sm hover:shadow-md flex items-center justify-center">
-                                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                            class="size-11 rounded-xl bg-white border-2 border-slate-100 text-slate-700 hover:text-primary-500 hover:border-primary-500 transition-all shadow-sm hover:shadow-md flex items-center justify-center active:scale-95">
+                                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                     </button>
                                     
                                     <template x-if="user.id !== {{ Auth::id() }}">
@@ -182,127 +187,130 @@
     </div>
 
     <!-- Modals Layer -->
+    <template x-teleport="body">
+        <div>
+            <!-- Modal: Add User -->
+            <x-ui.modal name="add-user-modal" title="Nouvel Agent">
+                <form action="{{ route('admin.utilisateurs.store') }}" method="POST" class="space-y-6" x-data="{ role: 'Apprenant' }">
+                    @csrf
+                    <div class="grid grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Prénom</label>
+                            <input type="text" name="prenom" required placeholder="Prénom"
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Nom de famille</label>
+                            <input type="text" name="nom" required placeholder="Nom"
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                        </div>
+                    </div>
 
-    <!-- Modal: Add User -->
-    <x-ui.modal name="add-user-modal" title="Nouvel Agent">
-        <form action="{{ route('admin.utilisateurs.store') }}" method="POST" class="space-y-6" x-data="{ role: 'Apprenant' }">
-            @csrf
-            <div class="grid grid-cols-2 gap-5">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Prénom</label>
-                    <input type="text" name="prenom" required placeholder="Prénom"
-                           class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Nom de famille</label>
-                    <input type="text" name="nom" required placeholder="Nom"
-                           class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-                </div>
-            </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Courriel Institutionnel</label>
+                        <input type="email" name="email" required placeholder="adresse@soliquiz.fr"
+                               class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                    </div>
 
-            <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Courriel Institutionnel</label>
-                <input type="email" name="email" required placeholder="adresse@soliquiz.fr"
-                       class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-            </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Clef de Sécurité Initial</label>
+                        <input type="password" name="password" required placeholder="••••••••"
+                               class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                    </div>
 
-            <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Clef de Sécurité Initial</label>
-                <input type="password" name="password" required placeholder="••••••••"
-                       class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-            </div>
+                    <div class="grid grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Privilège</label>
+                            <x-ui.select 
+                                name="role" 
+                                required 
+                                x-model="role"
+                                placeholder="Niveau d'Accès"
+                                :options="[
+                                    ['value' => 'Apprenant', 'label' => 'Apprenant'],
+                                    ['value' => 'Formateur', 'label' => 'Formateur'],
+                                    ['value' => 'Administrateur', 'label' => 'Administrateur'],
+                                ]"
+                            />
+                        </div>
+                        <div class="space-y-2" x-show="role === 'Apprenant' || role === 'Formateur'" x-transition>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Cohorte d'ancrage</label>
+                            <x-ui.select 
+                                name="classe_id" 
+                                placeholder="Indépendant"
+                                :options="\App\Models\Classe::all()->map(fn($c) => ['value' => $c->id, 'label' => $c->nom])->toArray()"
+                            />
+                        </div>
+                    </div>
 
-            <div class="grid grid-cols-2 gap-5">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Privilège</label>
-                    <x-ui.select 
-                        name="role" 
-                        required 
-                        x-model="role"
-                        placeholder="Niveau d'Accès"
-                        :options="[
-                            ['value' => 'Apprenant', 'label' => 'Apprenant'],
-                            ['value' => 'Formateur', 'label' => 'Formateur'],
-                            ['value' => 'Administrateur', 'label' => 'Administrateur'],
-                        ]"
-                    />
-                </div>
-                <div class="space-y-2" x-show="role === 'Apprenant' || role === 'Formateur'" x-transition>
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Cohorte d'ancrage</label>
-                    <x-ui.select 
-                        name="classe_id" 
-                        placeholder="Indépendant"
-                        :options="\App\Models\Classe::all()->map(fn($c) => ['value' => $c->id, 'label' => $c->nom])->toArray()"
-                    />
-                </div>
-            </div>
+                    <button type="submit" class="w-full btn-premium py-5 px-8 bg-slate-900 text-white font-black rounded-3xl hover:bg-primary-500 active:scale-95 transition-all uppercase tracking-widest text-sm mt-4 shadow-xl shadow-slate-900/10">
+                        Inscrire dans le Directory
+                    </button>
+                </form>
+            </x-ui.modal>
 
-            <button type="submit" class="w-full btn-premium py-5 px-8 bg-slate-900 text-white font-black rounded-3xl hover:bg-primary-500 active:scale-95 transition-all uppercase tracking-widest text-sm mt-4 shadow-xl shadow-slate-900/10">
-                Inscrire dans le Directory
-            </button>
-        </form>
-    </x-ui.modal>
+            <!-- Modal: Edit User -->
+            <x-ui.modal name="edit-user-modal" title="Mutation Profil">
+                <form x-bind:action="`{{ url('/admin/utilisateurs') }}/${editUser.id}`" method="POST" class="space-y-6">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="grid grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Prénom</label>
+                            <input type="text" name="prenom" x-model="editUser.prenom" required
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Nom</label>
+                            <input type="text" name="nom" x-model="editUser.nom" required
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                        </div>
+                    </div>
 
-    <!-- Modal: Edit User -->
-    <x-ui.modal name="edit-user-modal" title="Mutation Profil">
-        <form x-bind:action="`{{ url('/admin/utilisateurs') }}/${editUser.id}`" method="POST" class="space-y-6">
-            @csrf
-            @method('PUT')
-            
-            <div class="grid grid-cols-2 gap-5">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Prénom</label>
-                    <input type="text" name="prenom" x-model="editUser.prenom" required
-                           class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Nom</label>
-                    <input type="text" name="nom" x-model="editUser.nom" required
-                           class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-                </div>
-            </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Identifiant Mail</label>
+                        <input type="email" name="email" x-model="editUser.email" required
+                               class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                    </div>
 
-            <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Identifiant Mail</label>
-                <input type="email" name="email" x-model="editUser.email" required
-                       class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-            </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Clef de Sécurité <span class="text-slate-300 normal-case">(Optionnel)</span></label>
+                        <input type="password" name="password" placeholder="Régénérer la clef"
+                               class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                    </div>
 
-            <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Clef de Sécurité <span class="text-slate-300 normal-case">(Optionnel)</span></label>
-                <input type="password" name="password" placeholder="Régénérer la clef"
-                       class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-            </div>
+                    <div class="grid grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Niveau d'Accès</label>
+                            <x-ui.select 
+                                name="role" 
+                                required 
+                                x-model="editUserRole"
+                                :options="[
+                                    ['value' => 'Apprenant', 'label' => 'Apprenant'],
+                                    ['value' => 'Formateur', 'label' => 'Formateur'],
+                                    ['value' => 'Administrateur', 'label' => 'Administrateur'],
+                                ]"
+                            />
+                        </div>
+                        <div class="space-y-2" x-show="editUserRole === 'Apprenant' || editUserRole === 'Formateur'">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Mutation Cohorte</label>
+                            <x-ui.select 
+                                name="classe_id" 
+                                x-model="editUser.classe_id"
+                                placeholder="Aucune"
+                                :options="\App\Models\Classe::all()->map(fn($c) => ['value' => $c->id, 'label' => $c->nom])->toArray()"
+                            />
+                        </div>
+                    </div>
 
-            <div class="grid grid-cols-2 gap-5">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Niveau d'Accès</label>
-                    <x-ui.select 
-                        name="role" 
-                        required 
-                        x-model="editUserRole"
-                        :options="[
-                            ['value' => 'Apprenant', 'label' => 'Apprenant'],
-                            ['value' => 'Formateur', 'label' => 'Formateur'],
-                            ['value' => 'Administrateur', 'label' => 'Administrateur'],
-                        ]"
-                    />
-                </div>
-                <div class="space-y-2" x-show="editUserRole === 'Apprenant' || editUserRole === 'Formateur'">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Mutation Cohorte</label>
-                    <x-ui.select 
-                        name="classe_id" 
-                        x-model="editUser.classe_id"
-                        placeholder="Aucune"
-                        :options="\App\Models\Classe::all()->map(fn($c) => ['value' => $c->id, 'label' => $c->nom])->toArray()"
-                    />
-                </div>
-            </div>
-
-            <button type="submit" class="w-full btn-premium py-5 px-8 bg-slate-900 text-white font-black rounded-3xl hover:bg-primary-500 active:scale-95 transition-all uppercase tracking-widest text-sm shadow-xl shadow-slate-900/10 mt-4">
-                Consigner les Changements
-            </button>
-        </form>
-    </x-ui.modal>
+                    <button type="submit" class="w-full btn-premium py-5 px-8 bg-slate-900 text-white font-black rounded-3xl hover:bg-primary-500 active:scale-95 transition-all uppercase tracking-widest text-sm shadow-xl shadow-slate-900/10 mt-4">
+                        Consigner les Changements
+                    </button>
+                </form>
+            </x-ui.modal>
+        </div>
+    </template>
 </div>
 @endsection

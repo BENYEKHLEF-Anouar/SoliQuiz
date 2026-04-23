@@ -29,23 +29,54 @@
     </div>
 
     <!-- Filters & Search -->
-    <div class="flex flex-col md:flex-row gap-6 items-center">
-        <form action="{{ route('admin.qcms') }}" method="GET" class="flex-1 w-full relative group">
-            <label class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary-500 transition-colors pointer-events-none">
-                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </label>
-            <input type="text" name="search" value="{{ $search }}"
-                   placeholder="Rechercher une évaluation, un module ou un auteur..."
-                   class="w-full h-20 pl-16 pr-8 bg-white border border-slate-100 rounded-[32px] font-bold text-slate-900 placeholder:text-slate-300 focus:border-primary-500 focus:ring-8 focus:ring-primary-500/5 transition-all shadow-sm group-hover:shadow-premium outline-none">
+    <div class="flex flex-col md:flex-row gap-4 items-center">
+        <form action="{{ route('admin.qcms') }}" method="GET" class="flex-1 w-full flex flex-col md:flex-row gap-4">
+            <div class="flex-1 relative group">
+                <label class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary-500 transition-colors pointer-events-none">
+                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </label>
+                <input type="text" name="search" value="{{ $search }}"
+                       placeholder="Rechercher une évaluation, un module ou un auteur..."
+                       class="w-full h-11 pl-11 pr-4 bg-white border border-slate-100 rounded-xl font-bold text-slate-900 text-sm placeholder:text-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all shadow-sm group-hover:shadow-md outline-none">
+            </div>
+            
+            <div class="relative flex items-center self-stretch" x-data="{ open: false }">
+                <input type="hidden" name="statut" value="{{ $statut }}">
+                <button type="button" @click="open = !open" 
+                        class="h-11 px-5 bg-white border border-slate-100 rounded-xl {{ $statut ? 'text-primary-600 bg-primary-50/50 border-primary-200' : 'text-slate-400' }} hover:text-primary-600 hover:border-primary-100 transition-all shadow-sm group flex items-center gap-2">
+                    <svg class="size-4 group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                    <span class="text-[10px] font-black uppercase tracking-wider">{{ $statut ? ucfirst($statut) : 'Tous les statuts' }}</span>
+                </button>
+
+                <div x-show="open" @click.away="open = false"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-4"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="absolute top-full right-0 mt-4 w-64 bg-white rounded-[24px] shadow-premium border border-slate-100 p-2 z-50 overflow-hidden"
+                     style="display: none;">
+                    <button type="submit" @click="$event.target.closest('form').querySelector('input[name=statut]').value=''" 
+                            class="w-full text-left px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors {{ !$statut ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50' }}">
+                        Tous les statuts
+                    </button>
+                    <button type="submit" @click="$event.target.closest('form').querySelector('input[name=statut]').value='brouillon'" 
+                            class="w-full text-left px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors {{ $statut === 'brouillon' ? 'bg-amber-100 text-amber-600' : 'text-slate-600 hover:bg-amber-50 hover:text-amber-600' }}">
+                        Brouillon
+                    </button>
+                    <button type="submit" @click="$event.target.closest('form').querySelector('input[name=statut]').value='public'" 
+                            class="w-full text-left px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors {{ $statut === 'public' ? 'bg-emerald-100 text-emerald-600' : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-600' }}">
+                        Public
+                    </button>
+                    <button type="submit" @click="$event.target.closest('form').querySelector('input[name=statut]').value='termine'" 
+                            class="w-full text-left px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors {{ $statut === 'termine' ? 'bg-slate-100 text-slate-500' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-500' }}">
+                        Terminé
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="hidden">Rechercher</button>
         </form>
-        
-        <div class="flex items-center self-stretch gap-3">
-             <button type="button" class="h-20 px-8 bg-white border border-slate-100 rounded-[32px] text-slate-400 hover:text-primary-600 hover:border-primary-100 transition-all shadow-sm group active:scale-95">
-                 <svg class="size-6 group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-             </button>
-        </div>
     </div>
 
     <!-- QCM Grid -->
@@ -103,13 +134,13 @@
 
                     <div class="flex items-center gap-2" x-data="{ options: false }">
                         <a href="{{ route('formateur.qcm.edit', $qcm->id) }}"
-                           class="size-10 bg-slate-900 text-white rounded-xl flex items-center justify-center hover:bg-primary-500 hover:shadow-lg hover:shadow-primary-500/20 transition-all active:scale-95 shadow-sm">
-                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                           class="size-10 bg-slate-900 text-white rounded-xl flex items-center justify-center hover:bg-primary-500 hover:shadow-lg hover:-translate-y-0.5 hover:shadow-primary-500/20 transition-all shadow-sm group">
+                            <svg class="size-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                         </a>
                         
                         <div class="relative">
                             <button @click="options = !options" type="button"
-                                    class="size-10 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center hover:bg-slate-200 hover:text-slate-900 transition-all active:scale-95">
+                                    class="size-10 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center hover:bg-slate-200 hover:text-slate-900 transition-all">
                                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" /></svg>
                             </button>
                             

@@ -43,15 +43,19 @@ class AdminController extends Controller
     public function indexQcms(Request $request)
     {
         $search = $request->input('search');
-        // Pass null as formateurId to get everything
-        $qcms = $this->qcmService->paginate(15, $search, null);
-        return view('admin.qcms', compact('qcms', 'search'));
+        $statut = $request->input('statut');
+        
+        $qcms = $this->qcmService->paginate(15, $search, null, $statut);
+        $qcms->appends($request->query());
+        
+        return view('admin.qcms', compact('qcms', 'search', 'statut'));
     }
 
     public function searchQcms(Request $request)
     {
         $search = $request->input('search');
-        $qcms = $this->qcmService->paginate(15, $search, null);
+        $statut = $request->input('statut');
+        $qcms = $this->qcmService->paginate(15, $search, null, $statut);
         return response()->json($qcms);
     }
 
@@ -74,14 +78,16 @@ class AdminController extends Controller
     public function gestionUtilisateurs(Request $request)
     {
         $search = $request->input('search');
-        $users = User::when($search, function ($q) use ($search) {
+        $users = User::with('classe')
+            ->when($search, function ($q) use ($search) {
                 $q->where('nom', 'like', "%{$search}%")
                   ->orWhere('prenom', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('type_profil', 'like', "%{$search}%");
             })
+            ->orderByRaw("CASE WHEN type_profil = 'admin' THEN 1 WHEN type_profil = 'formateur' THEN 2 ELSE 3 END")
             ->orderBy('nom')
-            ->paginate(15)
+            ->paginate(8)
             ->appends($request->query());
         
         return view('admin.gestion-utilisateurs', compact('users', 'search'));
@@ -90,14 +96,16 @@ class AdminController extends Controller
     public function searchUsers(Request $request)
     {
         $search = $request->input('search');
-        $users = User::when($search, function ($q) use ($search) {
+        $users = User::with('classe')
+            ->when($search, function ($q) use ($search) {
                 $q->where('nom', 'like', "%{$search}%")
                   ->orWhere('prenom', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('type_profil', 'like', "%{$search}%");
             })
+            ->orderByRaw("CASE WHEN type_profil = 'admin' THEN 1 WHEN type_profil = 'formateur' THEN 2 ELSE 3 END")
             ->orderBy('nom')
-            ->paginate(15)
+            ->paginate(8)
             ->appends($request->query());
         
         return response()->json($users);
@@ -189,11 +197,23 @@ class AdminController extends Controller
      * =============== PEDAGOGIE (Seances, UA, Competences) ===============
      */
     
-    public function pedagogie()
+    public function pedagogie(Request $request)
     {
-        // On charge l'arborescence complète pour l'affichage master-detail
-        $seances = Seance::with(['unitesApprentissage.competences'])->orderBy('date', 'desc')->get();
-        return view('admin.pedagogie', compact('seances'));
+        $creatorFilter = $request->input('creator');
+
+        $query = Seance::with(['unitesApprentissage.competences', 'user'])
+            ->orderBy('date', 'desc');
+
+        if ($creatorFilter) {
+            $query->where('user_id', $creatorFilter);
+        }
+
+        $seances = $query->get();
+
+        $creatorIds = Seance::whereNotNull('user_id')->distinct()->pluck('user_id');
+        $creators = User::whereIn('id', $creatorIds)->orderBy('nom')->get();
+
+        return view('admin.pedagogie', compact('seances', 'creators', 'creatorFilter'));
     }
 
     public function storeSeance(Request $request)
