@@ -75,12 +75,64 @@
                                           :class="question.type === 'choix_unique' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'"
                                           x-text="question.type === 'choix_unique' ? 'UNIQUE' : 'MULTIPLE'"></span>
                                 </div>
-                                <select x-model="question.type" 
-                                            name="questions[${qIndex}][type]" 
-                                            class="!bg-primary-50 !border-transparent !rounded-xl !py-2 !px-4 !w-52 !text-primary-600 text-xs font-black uppercase">
-                                        <option value="choix_unique">Reponse Unique</option>
-                                        <option value="choix_multiple">Multi-Reponses</option>
-                                    </select>
+                                <div class="relative" x-data="{ 
+                                        open: false,
+                                        options: [
+                                            { value: 'choix_unique', label: 'Réponse Unique' },
+                                            { value: 'choix_multiple', label: 'Réponses Multiples' }
+                                        ],
+                                        get selectedOption() {
+                                            return this.options.find(opt => opt.value === question.type) || this.options[0];
+                                        },
+                                        select(value) {
+                                            question.type = value;
+                                            open = false;
+                                        }
+                                    }" @click.away="open = false">
+                                    <!-- Hidden input for form submission -->
+                                    <input type="hidden" :name="`questions[${qIndex}][type]`" x-model="question.type">
+                                    
+                                    <!-- Dropdown Trigger -->
+                                    <button @click="open = !open" 
+                                            type="button"
+                                            class="w-52 bg-slate-50 border-2 border-transparent rounded-xl py-2.5 px-4 text-xs font-black uppercase text-slate-700 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all flex items-center justify-between group">
+                                        <span x-text="selectedOption.label"></span>
+                                        <svg class="size-4 text-slate-400 group-hover:text-primary-500 transition-transform duration-300 shrink-0 ml-2" 
+                                             :class="open ? 'rotate-180' : ''" 
+                                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <path d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Dropdown Menu -->
+                                    <div x-show="open" 
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave="transition ease-in duration-150"
+                                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                         class="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-premium overflow-hidden">
+                                        
+                                        <div class="py-2">
+                                            <template x-for="option in options" :key="option.value">
+                                                <button @click="select(option.value)"
+                                                        type="button"
+                                                        class="w-full px-4 py-3 text-left flex items-center gap-3 transition-all"
+                                                        :class="question.type === option.value 
+                                                            ? 'bg-primary-50 text-primary-600 border-l-4 border-primary-500' 
+                                                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'">
+                                                    <span class="text-xs font-black uppercase tracking-wider" x-text="option.label"></span>
+                                                    <svg x-show="question.type === option.value" 
+                                                         class="size-4 text-primary-500 ml-auto" 
+                                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                        <path d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="flex items-center gap-3">
@@ -153,8 +205,8 @@
             <!-- Final Actions -->
             <div class="flex flex-col items-center gap-10 py-8">
                 <button @click="addQuestion()" type="button" 
-                        class="h-20 px-12 bg-white border border-slate-100 rounded-[2.5rem] font-black text-slate-900 uppercase tracking-[0.3em] italic shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all flex items-center gap-4">
-                    <svg class="size-6 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
+                        class="h-14 px-8 bg-white border border-slate-100 rounded-2xl font-black text-slate-900 uppercase tracking-[0.2em] italic shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center gap-3">
+                    <svg class="size-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
                     Nouvelle Question
                 </button>
             </div>

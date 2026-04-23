@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>08 - Inscription - SoliQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
+                            300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF',
+                            600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased text-slate-800">
+    <div class="min-h-screen flex">
+        <!-- Left Panel: Brand -->
+        <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-slate-900 items-center justify-center p-20">
+            <div class="absolute top-0 right-0 size-96 bg-[#17B0CF]/20 rounded-full blur-[120px] -mr-48 -mt-48"></div>
+            <div class="absolute bottom-0 left-0 size-96 bg-[#0ea5e9]/10 rounded-full blur-[120px] -ml-48 -mb-48"></div>
+            
+            <div class="relative z-10 w-full max-w-lg">
+                <div class="mb-12">
+                    <div class="size-16 bg-[#17B0CF] rounded-3xl flex items-center justify-center shadow-2xl shadow-[#17B0CF]/40 mb-8">
+                        <svg class="text-white size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <h2 class="text-5xl font-black text-white leading-tight mb-6">
+                        Rejoignez la <span class="text-[#17B0CF]">communauté</span> SoliQuiz.
+                    </h2>
+                    <p class="text-slate-400 text-lg font-medium leading-relaxed italic">
+                        Créez votre compte pour commencer à évaluer vos compétences dès aujourd'hui.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-[2rem]">
+                        <p class="text-3xl font-black text-white mb-1">50+</p>
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest italic">QCM Disponibles</p>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-[2rem]">
+                        <p class="text-3xl font-black text-white mb-1">100%</p>
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest italic">Gratuit pour les étudiants</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Register Form -->
+        <div class="w-full lg:w-1/2 bg-white flex items-center justify-center p-8 md:p-12 lg:p-20 relative">
+            <div class="absolute top-8 left-8 lg:hidden">
+                <div class="flex items-center gap-3">
+                    <div class="size-10 bg-[#17B0CF] rounded-xl flex items-center justify-center shadow-lg shadow-[#17B0CF]/20">
+                        <svg class="text-white size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-black text-slate-900">SoliQuiz</span>
+                </div>
+            </div>
+
+            <div class="w-full max-w-[440px]">
+                <div class="hidden lg:flex flex-col mb-16">
+                    <div class="flex items-center gap-4">
+                        <div class="size-10 bg-[#17B0CF] rounded-xl flex items-center justify-center shadow-lg shadow-[#17B0CF]/20">
+                            <svg class="text-white size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <path d="m9 15 2 2 4-4" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-black text-slate-900">SoliQuiz</span>
+                    </div>
+                </div>
+
+                <div class="mb-10">
+                    <h1 class="text-3xl font-black text-slate-900 mb-3">Créer un compte</h1>
+                    <p class="text-slate-500 font-medium">Déjà inscrit ? <a href="01-auth-login.html" class="text-[#17B0CF] hover:underline font-bold">Se connecter</a></p>
+                </div>
+
+                <form class="space-y-5">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-800 mb-2">Prénom</label>
+                            <input type="text" class="w-full py-3 px-4 border border-slate-200 rounded-xl text-sm font-medium focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 outline-none transition-all" placeholder="Sarah">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-800 mb-2">Nom</label>
+                            <input type="text" class="w-full py-3 px-4 border border-slate-200 rounded-xl text-sm font-medium focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 outline-none transition-all" placeholder="Alami">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-800 mb-2">Adresse Email</label>
+                        <input type="email" class="w-full py-3 px-4 border border-slate-200 rounded-xl text-sm font-medium focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 outline-none transition-all" placeholder="sarah.alami@solicode.co">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-800 mb-2">Mot de passe</label>
+                        <input type="password" class="w-full py-3 px-4 border border-slate-200 rounded-xl text-sm font-medium focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 outline-none transition-all" placeholder="••••••••">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-800 mb-2">Confirmer le mot de passe</label>
+                        <input type="password" class="w-full py-3 px-4 border border-slate-200 rounded-xl text-sm font-medium focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 outline-none transition-all" placeholder="••••••••">
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" id="terms" class="mt-1 size-4 rounded border-slate-300 text-[#17B0CF] focus:ring-[#17B0CF]">
+                        <label for="terms" class="text-sm text-slate-600 font-medium">J'accepte les <a href="#" class="text-[#17B0CF] hover:underline">conditions d'utilisation</a> et la <a href="#" class="text-[#17B0CF] hover:underline">politique de confidentialité</a></label>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 bg-[#17B0CF] text-white font-bold rounded-xl hover:bg-[#14a0bd] transition-all shadow-lg shadow-[#17B0CF]/20">
+                        Créer mon compte
+                    </button>
+                </form>
+
+                <div class="mt-10 text-center">
+                    <p class="text-xs text-slate-400 font-medium">© 2026 SoliQuiz — Solicode</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

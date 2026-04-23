@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecule: Footer Simple - SoliQuiz UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
+                            300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF',
+                            600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 p-10 font-sans flex justify-center items-end min-h-screen">
+    <div class="max-w-4xl mx-auto space-y-10 w-full">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Molecule</p>
+            <h1 class="text-3xl font-black text-slate-900">Footer Simple</h1>
+            <p class="text-slate-500 mt-2">Pied de page simple</p>
+        </div>
+
+        <section class="space-y-4">
+            <div>
+                <footer class="w-full border-t border-slate-200 py-4 px-6 text-center bg-white rounded-t-2xl">
+                    <p class="text-xs text-slate-400">
+                        En cas de problème de connexion, contactez
+                        <a href="mailto:support@solicode.co" class="text-[#17B0CF] hover:underline font-bold transition-colors" rel="noopener noreferrer">
+                            l'administration
+                        </a>.
+                    </p>
+                    <p class="text-xs text-slate-300 mt-1">© 2026 SoliQuiz — Solicode</p>
+                </footer>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -41,9 +41,14 @@ SoliQuiz-UI/
 │       ├── modal/           # Fenêtres modales
 │       ├── alert-box/       # Alertes inline
 │       └── pagination/      # Navigation paginée
-├── mockups/                # Maquettes de pages complètes
-│   ├── 01-auth-login.html      # Page de connexion
-│   └── 02-student-dashboard.html # Dashboard apprenant
+├── mockups/ (7)            # Maquettes de pages complètes
+│   ├── 01-auth-login.html              # Page de connexion
+│   ├── 02-student-dashboard.html       # Dashboard apprenant
+│   ├── 03-formateur-dashboard.html       # Dashboard formateur
+│   ├── 04-bibliotheque-qcm.html        # Bibliothèque QCM
+│   ├── 05-passation-qcm.html           # Passation interactive ✅
+│   ├── 06-admin-dashboard.html         # Admin avec tabs ✅
+│   └── 07-apprenant-resultats.html     # Résultats détaillés ✅
 └── index.html              # Galerie interactive (viewer)
 
 ## Utilisation

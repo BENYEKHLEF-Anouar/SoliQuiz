@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07 - Résultats Apprenant - SoliQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
+                            300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF',
+                            600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen" x-data="{ activeTab: 'all', selectedResult: null }">
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-[1400px] mx-auto px-4 lg:px-10 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="#" class="flex items-center gap-3">
+                    <div class="size-9 bg-[#17B0CF] rounded-xl flex items-center justify-center shadow-lg shadow-[#17B0CF]/20 text-white">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <span class="text-lg font-black text-slate-900 hidden sm:block">Soli<span class="text-[#17B0CF]">Quiz</span></span>
+                </a>
+            </div>
+            <nav class="flex items-center gap-6">
+                <a href="#" class="text-[11px] font-bold text-slate-500 hover:text-[#17B0CF] uppercase tracking-wider hidden md:block">Dashboard</a>
+                <a href="#" class="text-[11px] font-bold text-[#17B0CF] uppercase tracking-wider">Résultats</a>
+                <a href="#" class="text-[11px] font-bold text-slate-500 hover:text-[#17B0CF] uppercase tracking-wider hidden md:block">Bibliothèque</a>
+                <img class="size-9 rounded-xl shadow-sm border border-white" src="https://ui-avatars.com/api/?name=Sarah+Alami&background=17B0CF&color=fff&bold=true" alt="">
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-[1400px] mx-auto px-4 lg:px-10 py-8">
+        <div class="max-w-4xl mx-auto space-y-8">
+            <!-- Header -->
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic mb-1">Espace Apprenant</p>
+                <h1 class="text-2xl font-bold text-slate-900 italic uppercase">Mes Résultats</h1>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="bg-gradient-to-br from-[#17B0CF] to-[#0284c7] rounded-2xl shadow-xl shadow-[#17B0CF]/20 p-6 text-white">
+                <div class="grid grid-cols-3 gap-6 text-center">
+                    <div>
+                        <p class="text-4xl font-black">14.5</p>
+                        <p class="text-xs text-white/70 uppercase tracking-wider mt-1">Moyenne générale</p>
+                    </div>
+                    <div>
+                        <p class="text-4xl font-black">52</p>
+                        <p class="text-xs text-white/70 uppercase tracking-wider mt-1">Tests complétés</p>
+                    </div>
+                    <div>
+                        <p class="text-4xl font-black">87%</p>
+                        <p class="text-xs text-white/70 uppercase tracking-wider mt-1">Taux de réussite</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex gap-2 p-1 bg-slate-100 rounded-xl">
+                <button @click="activeTab = 'all'" 
+                        class="flex-1 py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all"
+                        :class="activeTab === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'">Tous</button>
+                <button @click="activeTab = 'passed'" 
+                        class="flex-1 py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all"
+                        :class="activeTab === 'passed' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'">Réussis</button>
+                <button @click="activeTab = 'failed'" 
+                        class="flex-1 py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all"
+                        :class="activeTab === 'failed' ? 'bg-rose-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'">Échoués</button>
+            </div>
+
+            <!-- Results List -->
+            <div class="space-y-3">
+                <!-- Result Item 1 -->
+                <div @click="selectedResult = 1" class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group">
+                    <div class="p-5 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="size-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
+                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <div>
+                                <p class="font-bold text-slate-900 group-hover:text-[#17B0CF] transition-colors">JavaScript Avancé ES6+</p>
+                                <p class="text-xs text-slate-500">UA2 - 23 Jan 2026</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="text-right">
+                                <p class="text-2xl font-black text-emerald-600">18<span class="text-sm text-slate-400">/20</span></p>
+                                <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">Excellent</p>
+                            </div>
+                            <svg class="size-5 text-slate-300 group-hover:text-[#17B0CF] transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                    <!-- Expanded Details -->
+                    <div x-show="selectedResult === 1" x-collapse class="border-t border-slate-100 px-5 py-4 bg-slate-50/50">
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div class="p-3 bg-white rounded-lg">
+                                <p class="text-lg font-black text-slate-900">15</p>
+                                <p class="text-[10px] text-slate-400 uppercase">Questions</p>
+                            </div>
+                            <div class="p-3 bg-white rounded-lg">
+                                <p class="text-lg font-black text-emerald-600">90%</p>
+                                <p class="text-[10px] text-slate-400 uppercase">Précision</p>
+                            </div>
+                            <div class="p-3 bg-white rounded-lg">
+                                <p class="text-lg font-black text-slate-900">18m</p>
+                                <p class="text-[10px] text-slate-400 uppercase">Temps</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Item 2 -->
+                <div @click="selectedResult = 2" class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group">
+                    <div class="p-5 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="size-12 bg-rose-100 rounded-xl flex items-center justify-center text-rose-600">
+                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                            </div>
+                            <div>
+                                <p class="font-bold text-slate-900 group-hover:text-[#17B0CF] transition-colors">Base de données SQL</p>
+                                <p class="text-xs text-slate-500">UA5 - 20 Jan 2026</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="text-right">
+                                <p class="text-2xl font-black text-rose-600">8<span class="text-sm text-slate-400">/20</span></p>
+                                <p class="text-[10px] text-rose-600 font-bold uppercase tracking-wider">À revoir</p>
+                            </div>
+                            <svg class="size-5 text-slate-300 group-hover:text-[#17B0CF] transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                    <div x-show="selectedResult === 2" x-collapse class="border-t border-slate-100 px-5 py-4 bg-slate-50/50">
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div class="p-3 bg-white rounded-lg">
+                                <p class="text-lg font-black text-slate-900">20</p>
+                                <p class="text-[10px] text-slate-400 uppercase">Questions</p>
+                            </div>
+                            <div class="p-3 bg-white rounded-lg">
+                                <p class="text-lg font-black text-rose-600">40%</p>
+                                <p class="text-[10px] text-slate-400 uppercase">Précision</p>
+                            </div>
+                            <div class="p-3 bg-white rounded-lg">
+                                <p class="text-lg font-black text-slate-900">25m</p>
+                                <p class="text-[10px] text-slate-400 uppercase">Temps</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-rose-50 border border-rose-200 rounded-lg">
+                            <p class="text-xs text-rose-700"><span class="font-bold">Recommandation:</span> Revoyez le chapitre sur les jointures SQL et les sous-requêtes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Item 3 -->
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center justify-between group opacity-60">
+                    <div class="flex items-center gap-4">
+                        <div class="size-12 bg-[#e0f2fe] rounded-xl flex items-center justify-center text-[#17B0CF] animate-pulse">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900">Laravel Framework</p>
+                            <p class="text-xs text-slate-500">UA4 - En cours...</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-black text-[#17B0CF] uppercase tracking-wider">En attente de correction</span>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-center gap-1 pt-4">
+                <button class="p-2 rounded-xl bg-slate-100 text-slate-400 hover:bg-slate-200 transition-all"><svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M15 19l-7-7 7-7"/></svg></button>
+                <button class="px-4 py-2 rounded-xl bg-[#17B0CF] text-white text-xs font-bold">1</button>
+                <button class="px-4 py-2 rounded-xl bg-white text-slate-600 text-xs font-bold hover:bg-slate-100 transition-all border border-slate-200">2</button>
+                <button class="px-4 py-2 rounded-xl bg-white text-slate-600 text-xs font-bold hover:bg-slate-100 transition-all border border-slate-200">3</button>
+                <button class="p-2 rounded-xl bg-white text-slate-600 hover:bg-slate-100 transition-all border border-slate-200"><svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
