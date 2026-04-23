@@ -86,33 +86,33 @@
                 @csrf
                 
                 <div class="space-y-3">
-                    <label for="email" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-2 italic leading-none">Identifiant de Connexion</label>
+                    <label for="email" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic leading-none">Identifiant de Connexion</label>
                     <div class="relative group">
-                        <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none text-slate-300 group-focus-within:text-primary-500 transition-colors">
-                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-300 group-focus-within:text-primary-500 transition-colors">
+                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                         </div>
                         <input type="email" name="email" id="email" value="{{ old('email') }}"
-                            class="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-5 pl-16 pr-6 font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-8 focus:ring-primary-500/5 outline-none transition-all placeholder:text-slate-300 italic"
+                            class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-12 pr-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-slate-300 italic"
                             placeholder="votre@solicode.co" required autofocus>
                     </div>
                     @error('email')
-                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-4 uppercase tracking-widest italic">{{ $message }}</p>
+                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest italic">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="space-y-3">
-                    <div class="flex justify-between items-center px-2">
+                    <div class="flex justify-between items-center px-1">
                         <label for="password" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] italic leading-none">Clé de Sécurité</label>
                         @if (Route::has('password.request'))
-                            <a class="text-[10px] font-black text-primary-500 hover:text-primary-600 transition-colors uppercase tracking-widest italic" href="{{ route('password.request') }}">Oublié ?</a>
+                            <a class="text-[9px] font-black text-primary-500 hover:text-primary-600 transition-colors uppercase tracking-widest italic" href="{{ route('password.request') }}">Oublié ?</a>
                         @endif
                     </div>
                     <div class="relative group">
-                        <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none text-slate-300 group-focus-within:text-primary-500 transition-colors">
-                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-300 group-focus-within:text-primary-500 transition-colors">
+                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                         </div>
                         <input type="password" name="password" id="password"
-                            class="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-5 pl-16 pr-6 font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-8 focus:ring-primary-500/5 outline-none transition-all placeholder:text-slate-300 italic"
+                            class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-12 pr-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-slate-300 italic"
                             placeholder="············" required>
                     </div>
                 </div>
@@ -129,9 +129,9 @@
                 </div>
 
                 <button type="submit"
-                    class="w-full py-6 px-8 bg-slate-900 text-white font-black rounded-[2rem] hover:bg-primary-500 shadow-2xl shadow-slate-900/10 active:scale-[0.98] transition-all uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 italic group">
+                    class="w-full py-4 px-8 bg-slate-900 text-white font-black rounded-2xl hover:bg-primary-500 shadow-xl shadow-slate-900/10 active:scale-[0.98] transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 italic group mt-4">
                     Initialiser la Session
-                    <svg class="size-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                    <svg class="size-3 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                 </button>
             </form>
 

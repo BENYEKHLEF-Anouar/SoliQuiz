@@ -113,7 +113,7 @@
         @forelse($seances as $index => $seance)
             <div x-data="{ expanded: false }" class="group" :key="{{ $seance->id }}">
                 <div class="relative bg-white/90 backdrop-blur-md rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-primary-500/5 transition-all duration-500 overflow-hidden"
-                     :class="expanded ? 'ring-2 ring-primary-200/50 border-primary-200' : ''">
+                     :class="expanded ? '' : ''">
                     
                     <!-- Progress indicator -->
                     <div class="absolute top-0 left-0 h-1 bg-gradient-to-r from-primary-500 to-emerald-500 transition-all duration-700" 
@@ -411,7 +411,7 @@
                         </div>
                         <div>
                             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">Libellé</label>
-                            <input type="text" name="nom" x-model="compNom" required
+                            <input type="text" name="libelle" x-model="compNom" required
                                    placeholder="Compétence à maîtriser"
                                    class="w-full bg-slate-50 border-2 border-transparent rounded-xl py-4 px-5 font-bold text-slate-800 focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all">
                         </div>

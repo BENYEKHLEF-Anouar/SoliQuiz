@@ -256,20 +256,15 @@ document.addEventListener('alpine:init', () => {
         },
         
         get filteredQcms() {
-            return this.qcms.filter(qcm => {
-                const matchesSearch = !this.search || 
-                    qcm.titre.toLowerCase().includes(this.search.toLowerCase());
-                const matchesStatus = !this.status || qcm.statut === this.status;
-                return matchesSearch && matchesStatus;
-            });
+            return this.qcms;
         },
         
-        applyFilters() {
+        async applyFilters() {
             const url = new URL(window.location);
             if (this.search) {
-                url.searchParams.set('q', this.search);
+                url.searchParams.set('search', this.search);
             } else {
-                url.searchParams.delete('q');
+                url.searchParams.delete('search');
             }
             if (this.status) {
                 url.searchParams.set('status', this.status);
@@ -277,15 +272,22 @@ document.addEventListener('alpine:init', () => {
                 url.searchParams.delete('status');
             }
             history.pushState({}, '', url);
+            
+            try {
+                const response = await fetch('{{ route("formateur.bibliotheque.search") }}?' + url.searchParams.toString(), {
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await response.json();
+                this.qcms = data.data;
+            } catch (error) {
+                console.error('Erreur lors de la recherche:', error);
+            }
         },
         
         clearFilters() {
             this.search = '';
             this.status = '';
-            const url = new URL(window.location);
-            url.searchParams.delete('q');
-            url.searchParams.delete('status');
-            history.pushState({}, '', url);
+            this.applyFilters();
         }
     }));
 });

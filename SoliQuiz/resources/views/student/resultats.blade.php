@@ -100,21 +100,23 @@
                             $isUserCorrect = $option->isSelected && $option->est_correcte;
                             $isUserWrong = $option->isSelected && !$option->est_correcte;
                             $isMissed = !$option->isSelected && $option->est_correcte;
+                            $isJustFalse = !$option->isSelected && !$option->est_correcte;
                             
-                            $cardStyle = "bg-slate-50/50 border-2 border-transparent p-5 rounded-2xl transition-all h-full";
-                            $iconColor = "text-slate-200";
-                            $statusText = "";
+                            $cardStyle = "bg-slate-50/50 border-2 border-transparent p-5 rounded-2xl transition-all h-full opacity-60";
+                            $statusColor = "text-slate-400";
+                            $statusText = "Fausse";
 
                             if ($isUserCorrect) {
                                 $cardStyle = "bg-emerald-50 border-emerald-200 p-5 rounded-2xl shadow-sm transition-all h-full relative overflow-hidden";
-                                $iconColor = "text-emerald-500";
-                                $statusText = "Correcte";
+                                $statusColor = "text-emerald-600";
+                                $statusText = "Ma réponse (Correcte)";
                             } elseif ($isUserWrong) {
                                 $cardStyle = "bg-rose-50 border-rose-200 p-5 rounded-2xl shadow-sm transition-all h-full relative overflow-hidden";
-                                $iconColor = "text-rose-500";
-                                $statusText = "Ma réponse — Fausse";
+                                $statusColor = "text-rose-600";
+                                $statusText = "Ma réponse (Fausse)";
                             } elseif ($isMissed) {
                                 $cardStyle = "bg-emerald-50/50 border-2 border-dashed border-emerald-200 p-5 rounded-2xl transition-all h-full";
+                                $statusColor = "text-emerald-600";
                                 $statusText = "Réponse attendue";
                             }
                         @endphp
@@ -122,11 +124,9 @@
                         <div class="{{ $cardStyle }}">
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-xs font-bold text-slate-800 leading-tight">{{ $option->texte }}</span>
-                                @if($option->isSelected || $option->est_correcte)
-                                    <span class="text-[9px] font-black uppercase tracking-widest {{ ($isUserCorrect || $isMissed) ? 'text-emerald-600' : 'text-rose-600' }}">
-                                        {{ $statusText }}
-                                    </span>
-                                @endif
+                                <span class="text-[9px] font-black uppercase tracking-widest {{ $statusColor }}">
+                                    {{ $statusText }}
+                                </span>
                             </div>
 
                             @if($option->isSelected && $option->feedback_specifique)
@@ -154,14 +154,14 @@
                 Tableau de bord
             </a>
 
-            @if(!$isSuccess)
+            <!-- @if(!$isSuccess)
                 <a href="{{ route('student.passation', $qcm->id) }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-3 px-10 py-4 h-16 bg-primary-600 text-white font-black rounded-2xl hover:bg-primary-700 transition-all shadow-xl shadow-primary-600/20 uppercase tracking-[0.2em] text-xs group active:scale-[0.98]">
                     <svg class="size-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                     Retenter l'évaluation
                 </a>
-            @endif
+            @endif -->
 
             <!-- <button onclick="window.print()" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-white border border-slate-200 text-slate-400 font-black rounded-2xl hover:bg-slate-50 hover:text-slate-900 transition-all uppercase tracking-[0.2em] text-xs active:scale-[0.98]">
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">

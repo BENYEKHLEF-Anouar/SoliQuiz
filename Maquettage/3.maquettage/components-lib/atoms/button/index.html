@@ -13,7 +13,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         primary: {
                             50: 'var(--color-primary-50)', 100: 'var(--color-primary-100)',
@@ -31,7 +31,7 @@
 
     <h2 class="text-xs text-slate-400 font-mono uppercase mb-4">Primary Button (Premium)</h2>
     <button type="button"
-        class="btn-premium bg-primary-600 text-white hover:bg-primary-700 shadow-lg shadow-primary-500/20">
+        class="py-3.5 px-6 inline-flex items-center gap-x-2 text-sm font-bold rounded-xl border border-transparent bg-primary-600 text-white shadow-lg shadow-primary-500/20 hover:bg-primary-700 hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all duration-300 font-heading tracking-wide">
         Valider mes réponses
         <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -42,13 +42,13 @@
 
     <h2 class="text-xs text-slate-400 font-mono uppercase mt-10 mb-4">Outline / Secondary</h2>
     <button type="button"
-        class="py-3 px-6 inline-flex items-center gap-x-2 text-sm font-black italic uppercase tracking-wider rounded-[20px] border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50 hover:border-primary-500 hover:text-primary-600 active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all duration-300">
+        class="py-3 px-6 inline-flex items-center gap-x-2 text-sm font-bold rounded-xl border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50 hover:border-primary-500 hover:text-primary-600 active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all duration-300 font-heading">
         Enregistrer le brouillon
     </button>
 
     <h2 class="text-xs text-slate-400 font-mono uppercase mt-10 mb-4">Soft / Ghost</h2>
     <button type="button"
-        class="py-3 px-6 inline-flex items-center gap-x-2 text-sm font-black italic uppercase tracking-wider rounded-[20px] border border-transparent bg-primary-50 text-primary-700 hover:bg-primary-100 active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all duration-300">
+        class="py-3 px-6 inline-flex items-center gap-x-2 text-sm font-bold rounded-xl border border-transparent bg-primary-50 text-primary-700 hover:bg-primary-100 active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all duration-300 font-heading">
         <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 12H5" />

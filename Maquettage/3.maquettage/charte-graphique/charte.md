@@ -22,17 +22,9 @@ L'objectif est d'éliminer le stress de l'évaluation avec des teintes dominante
 - **Warning** : `hsl(35, 95%, 55%)` (Reste peu de temps, alerte niveau classe)
 - **Info** : `hsl(220, 80%, 55%)` (Indication d'aide formateur)
 
-## 2. Typographie (Unified with Mobile App)
-- **Unified Font** : *Plus Jakarta Sans* (Modern, geometric, highly legible at all weights)
-- **Letter Spacing**: -0.025em for headings, -0.015em for body
-- **Font Weights**: 400 (regular), 500 (medium), 600 (semibold), 700 (bold), 800 (extra bold)
-
-## 3. UI Tokens (Premium & Immersive)
-- **Card Radius**: 40px (`--radius-card`)
-- **Button Radius**: 16px base, 20px for premium buttons
-- **Premium Shadow**: `0 20px 50px -12px rgba(0, 0, 0, 0.12)`
-- **Inner Shadow**: `inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)`
-- **Glassmorphism**: Backdrop blur 12px with semi-transparent white/dark backgrounds
+## 2. Typographie
+- **Titres (Headings)** : *Outfit* (Moderne, géométrique, lisible)
+- **Corps de texte (Body)** : *Inter* (Ergonomie de lecture et clarté des interfaces web)
 
 ## 3. Formes & Composants (Preline UI UI)
 - **Bordures** : Arrondies (`rounded-xl` et `rounded-2xl` prédominants) pour l'aspect amical et non rigide.

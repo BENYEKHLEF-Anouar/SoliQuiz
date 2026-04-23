@@ -144,7 +144,7 @@ class FormateurController extends Controller
     public function storeCompetence(Request $request)
     {
         $request->validate([
-            'nom' => 'required|string|max:255',
+            'libelle' => 'required|string|max:255',
             'code' => 'required|string|unique:competences,code',
             'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id'
         ]);
@@ -152,7 +152,10 @@ class FormateurController extends Controller
         $ua = Auth::user()->isAdmin()
             ? UniteApprentissage::findOrFail($request->unite_apprentissage_id)
             : UniteApprentissage::where('id', $request->unite_apprentissage_id)->where('user_id', Auth::id())->firstOrFail();
-        $ua->competences()->create($request->only('nom', 'code'));
+        $ua->competences()->create([
+            'libelle' => $request->libelle,
+            'code' => $request->code
+        ]);
 
         return back()->with('success', 'Compétence ajoutée.');
     }
@@ -236,7 +239,7 @@ class FormateurController extends Controller
     public function updateCompetence(Request $request, $id)
     {
         $request->validate([
-            'nom' => 'required|string|max:255',
+            'libelle' => 'required|string|max:255',
             'code' => 'required|string|unique:competences,code,' . $id,
         ]);
 
@@ -244,7 +247,10 @@ class FormateurController extends Controller
         if (!Auth::user()->isAdmin() && $competence->uniteApprentissage->user_id !== Auth::id())
             abort(403);
 
-        $competence->update($request->only('nom', 'code'));
+        $competence->update([
+            'libelle' => $request->libelle,
+            'code' => $request->code
+        ]);
         return back()->with('success', 'Compétence mise à jour.');
     }
 
@@ -266,12 +272,14 @@ class FormateurController extends Controller
     public function searchBibliotheque(Request $request)
     {
         $search = $request->input('search');
+        $status = $request->input('status');
         $qcms = QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
             ->withCount(['questions', 'tentatives'])
             ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
+            ->when($status, fn($q) => $q->where('statut', $status))
             ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
             ->latest()
-            ->paginate(15);
+            ->paginate(50); // increased for dynamic view
         return response()->json($qcms);
     }
 

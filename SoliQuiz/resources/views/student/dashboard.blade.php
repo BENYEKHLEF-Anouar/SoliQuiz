@@ -252,7 +252,7 @@
             </div>
 
             <!-- Achievements -->
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+            <!-- <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
                 <h3 class="font-bold text-slate-900 mb-1">Vos accomplissements</h3>
                 <p class="text-xs text-slate-500 mb-4">Badges récemment débloqués</p>
                 <div class="space-y-3">
@@ -290,7 +290,7 @@
                         </div>
                     @endif
                 </div>
-            </div>
+            </div> -->
 
             <!-- Study Tips -->
             <div class="bg-slate-50 rounded-xl border border-slate-200 p-5">

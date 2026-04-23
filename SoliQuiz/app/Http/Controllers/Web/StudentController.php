@@ -101,7 +101,7 @@ class StudentController extends Controller
                 'uniteApprentissage',
                 'questions' => fn($q) => $q->with([
                     'options' => fn($o) => $o->select('id', 'question_id', 'texte')
-                ])->select('id', 'qcm_id', 'texte', 'type', 'points', 'explication_feedback')
+                ])->select('id', 'qcm_id', 'texte', 'type', 'points')
             ])
             ->findOrFail($id);
         
