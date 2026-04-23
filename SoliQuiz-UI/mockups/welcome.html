@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz - L'évaluation interactive par Solicode</title>
+    <meta name="description" content="SoliQuiz transforme vos sessions d'évaluation en expériences interactives.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], heading: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { primary: { 50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF', 600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        .blob { position: absolute; border-radius: 50%; filter: blur(80px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden relative" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)">
+    
+    <!-- Background Blobs -->
+    <div class="blob bg-primary-400 opacity-20 -top-24 -left-24 w-96 h-96"></div>
+    <div class="blob bg-primary-400 opacity-10 top-1/2 right-0 w-[500px] h-[500px]"></div>
+
+    <!-- Header -->
+    <header :class="scrolled ? 'bg-white/90 shadow-lg' : 'bg-white/40'" class="fixed top-0 w-full backdrop-blur-md z-50 border-b border-slate-100 transition-all duration-300">
+        <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="size-11 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-110">
+                    <svg class="text-white size-6" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-2xl font-heading font-black tracking-tight text-slate-900 leading-none">Soli<span class="text-primary-500">Quiz</span></span>
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1 italic">Plateforme d'Évaluation</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-10">
+                <a href="#features" class="text-[11px] font-bold text-slate-500 hover:text-primary-500 transition-colors uppercase tracking-widest">Fonctionnalités</a>
+                <a href="#roles" class="text-[11px] font-bold text-slate-500 hover:text-primary-500 transition-colors uppercase tracking-widest">Utilisation</a>
+                
+                <div class="flex items-center gap-4">
+                    <a href="auth-login.html" class="text-[11px] font-bold text-slate-900 hover:text-primary-500 uppercase tracking-widest">Connexion</a>
+                    <a href="auth-register.html" class="px-6 py-3 bg-primary-500 text-white text-[11px] font-bold uppercase tracking-widest rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20">Commencer</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full mb-8">
+                <span class="size-2 bg-primary-500 rounded-full animate-pulse"></span>
+                <span class="text-[10px] font-bold text-primary-600 uppercase tracking-widest">Synchronisé avec SoliLMS</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-heading font-black text-slate-900 leading-tight mb-6">
+                L'évaluation <span class="text-primary-500">interactive</span><br>par Solicode
+            </h1>
+            
+            <p class="text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Transformez vos sessions d'évaluation en expériences interactives et engageantes. Suivez les performances en temps réel.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="auth-register.html" class="px-8 py-4 bg-slate-900 text-white text-sm font-bold uppercase tracking-widest rounded-2xl hover:bg-primary-500 transition-all shadow-xl shadow-slate-900/10">
+                    Créer un compte
+                </a>
+                <a href="auth-login.html" class="px-8 py-4 bg-white text-slate-700 border border-slate-200 text-sm font-bold uppercase tracking-widest rounded-2xl hover:bg-slate-50 transition-all">
+                    Se connecter
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-20 px-6 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-heading font-black text-slate-900 mb-4">Fonctionnalités clés</h2>
+                <p class="text-slate-500">Tout ce dont vous avez besoin pour évaluer vos apprenants</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="p-8 bg-slate-50 rounded-3xl">
+                    <div class="size-14 bg-primary-100 rounded-2xl flex items-center justify-center text-primary-500 mb-6">
+                        <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Temps Réel</h3>
+                    <p class="text-slate-500">Synchronisation instantanée des résultats et performances.</p>
+                </div>
+                
+                <div class="p-8 bg-slate-50 rounded-3xl">
+                    <div class="size-14 bg-primary-100 rounded-2xl flex items-center justify-center text-primary-500 mb-6">
+                        <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zM17 19v-6a2 2 0 00-2-2h-2a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zM3 11V9a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Statistiques Détaillées</h3>
+                    <p class="text-slate-500">Analysez les performances par étudiant ou par cohorte.</p>
+                </div>
+                
+                <div class="p-8 bg-slate-50 rounded-3xl">
+                    <div class="size-14 bg-primary-100 rounded-2xl flex items-center justify-center text-primary-500 mb-6">
+                        <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Bibliothèque QCM</h3>
+                    <p class="text-slate-500">Créez et gérez vos évaluations facilement.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 py-12 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center gap-3 mb-6">
+                <div class="size-8 bg-primary-500 rounded-lg flex items-center justify-center">
+                    <svg class="text-white size-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>
+                </div>
+                <span class="text-xl font-heading font-black text-white">SoliQuiz</span>
+            </div>
+            <p class="text-slate-400 text-sm">© 2026 SoliQuiz — Powered by Solicode</p>
+        </div>
+    </footer>
+</body>
+</html>

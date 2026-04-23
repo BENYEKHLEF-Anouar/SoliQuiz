@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz - Résultats par Cohorte</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], heading: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { primary: { 50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF', 600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e' } }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans antialiased">
+
+@include('layout-app-sidebar')
+
+<div class="ml-64 min-h-screen">
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="flex items-center justify-between h-16 px-6">
+            <div class="flex items-center gap-4">
+                <button class="lg:hidden size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 text-slate-500">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <h1 class="text-lg font-bold text-slate-900">Résultats des Cohortes</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="size-9 rounded-xl bg-primary-500 flex items-center justify-center text-white font-bold text-sm">MD</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="p-6">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Supervision</p>
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight">Performances par Classe</h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-4">
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-50">
+                        <h4 class="text-lg font-bold text-slate-900">Développement Fullstack</h4>
+                        <p class="text-xs text-slate-400 mt-1">18 apprenants · 4 QCM · 24 tentatives</p>
+                    </div>
+                    <table class="w-full">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-[10px] font-black text-slate-400 uppercase">Apprenant</th>
+                                <th class="px-6 py-3 text-center text-[10px] font-black text-slate-400 uppercase">Score</th>
+                                <th class="px-6 py-3 text-center text-[10px] font-black text-slate-400 uppercase">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            <tr>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img src="https://ui-avatars.com/api/?name=Jean+Dupont&background=f1f5f9&color=64748b" class="size-8 rounded-lg">
+                                        <span class="font-bold text-sm text-slate-900">Jean Dupont</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="font-black text-lg text-emerald-600">16/20</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase">Validé</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img src="https://ui-avatars.com/api/?name=Marie+Martin&background=f1f5f9&color=64748b" class="size-8 rounded-lg">
+                                        <span class="font-bold text-sm text-slate-900">Marie Martin</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="font-black text-lg text-emerald-600">14/20</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase">Validé</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img src="https://ui-avatars.com/api/?name=Pierre+Durant&background=f1f5f9&color=64748b" class="size-8 rounded-lg">
+                                        <span class="font-bold text-sm text-slate-900">Pierre Durant</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="font-black text-lg text-rose-600">8/20</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="px-2 py-1 rounded-full bg-rose-50 text-rose-600 text-[10px] font-bold uppercase">Échoué</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                    <h4 class="text-sm font-black text-slate-900 uppercase tracking-widest mb-4">Statistiques Globales</h4>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-xs text-slate-500">Taux de réussite</span>
+                            <span class="font-bold text-emerald-600">78%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-xs text-slate-500">Score moyen</span>
+                            <span class="font-bold">14.2/20</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-xs text-slate-500">Tentatives</span>
+                            <span class="font-bold">24</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
