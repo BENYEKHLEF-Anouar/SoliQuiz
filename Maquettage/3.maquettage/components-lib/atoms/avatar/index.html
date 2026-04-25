@@ -1,36 +1,99 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atom: Avatar</title>
-    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <title>Atom: Avatar - SoliQuiz UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { theme: { extend: { colors: { primary: { 500: 'var(--color-primary-500)' } } } } };
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 </head>
+<body class="bg-slate-50 p-10 font-sans">
+    <div class="max-w-4xl mx-auto space-y-10">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Atom</p>
+            <h1 class="text-3xl font-black text-slate-900">Avatar</h1>
+            <p class="text-slate-500 mt-2">Représentations utilisateur</p>
+        </div>
 
-<body class="bg-gray-50 p-10 font-sans space-y-6 flex items-start gap-8">
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Avatar Sizes</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-6">
+                    <div class="text-center space-y-2">
+                        <img class="size-6 rounded-lg shadow-sm border border-white" src="https://ui-avatars.com/api/?name=User&background=17B0CF&color=fff&bold=true" alt="XS">
+                        <p class="text-[10px] text-slate-400">XS</p>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <img class="size-8 rounded-xl shadow-sm border border-white" src="https://ui-avatars.com/api/?name=User&background=17B0CF&color=fff&bold=true" alt="SM">
+                        <p class="text-[10px] text-slate-400">SM</p>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <img class="size-10 rounded-xl shadow-sm border border-white" src="https://ui-avatars.com/api/?name=User&background=17B0CF&color=fff&bold=true" alt="MD">
+                        <p class="text-[10px] text-slate-400">MD</p>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <img class="size-12 rounded-2xl shadow-sm border-2 border-white" src="https://ui-avatars.com/api/?name=User&background=17B0CF&color=fff&bold=true&size=128" alt="LG">
+                        <p class="text-[10px] text-slate-400">LG</p>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <img class="size-16 rounded-2xl shadow-md border-2 border-white" src="https://ui-avatars.com/api/?name=User&background=17B0CF&color=fff&bold=true&size=128" alt="XL">
+                        <p class="text-[10px] text-slate-400">XL</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <div>
-        <h2 class="text-xs text-slate-400 font-mono uppercase mb-3">Avatar Image</h2>
-        <!-- Atom : Avatar Image -->
-        <img class="inline-block size-[38px] rounded-full ring-2 ring-white shadow-sm"
-            src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
-            alt="Avatar Apprenant">
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Avatar with Status</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-6">
+                    <div class="relative">
+                        <img class="size-10 rounded-xl shadow-sm border border-white" src="https://ui-avatars.com/api/?name=User&background=17B0CF&color=fff&bold=true" alt="Online">
+                        <span class="absolute -bottom-0.5 -right-0.5 size-3 bg-emerald-500 rounded-full border-2 border-white"></span>
+                    </div>
+                    <div class="relative">
+                        <img class="size-10 rounded-xl shadow-sm border border-white" src="https://ui-avatars.com/api/?name=User&background=94a3b8&color=fff&bold=true" alt="Offline">
+                        <span class="absolute -bottom-0.5 -right-0.5 size-3 bg-slate-400 rounded-full border-2 border-white"></span>
+                    </div>
+                    <div class="relative">
+                        <img class="size-10 rounded-xl shadow-sm border border-white" src="https://ui-avatars.com/api/?name=User&background=f59e0b&color=fff&bold=true" alt="Away">
+                        <span class="absolute -bottom-0.5 -right-0.5 size-3 bg-amber-500 rounded-full border-2 border-white"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Avatar Group</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <div class="flex -space-x-2">
+                    <img class="size-8 rounded-xl border-2 border-white shadow-sm" src="https://ui-avatars.com/api/?name=User+A&background=17B0CF&color=fff&bold=true" alt="">
+                    <img class="size-8 rounded-xl border-2 border-white shadow-sm" src="https://ui-avatars.com/api/?name=User+B&background=10b981&color=fff&bold=true" alt="">
+                    <img class="size-8 rounded-xl border-2 border-white shadow-sm" src="https://ui-avatars.com/api/?name=User+C&background=f59e0b&color=fff&bold=true" alt="">
+                    <div class="size-8 rounded-xl border-2 border-white bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">+5</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Avatar with Info</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-4">
+                <div class="flex items-center gap-3">
+                    <img class="size-10 rounded-xl shadow-sm border border-white" src="https://ui-avatars.com/api/?name=Sarah+Alami&background=17B0CF&color=fff&bold=true" alt="">
+                    <div>
+                        <p class="text-sm font-bold text-slate-900">Sarah Alami</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Apprenante</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <img class="size-12 rounded-2xl shadow-sm border border-white" src="https://ui-avatars.com/api/?name=Jean+Dupont&background=0ea5e9&color=fff&bold=true&size=128" alt="">
+                    <div>
+                        <p class="text-sm font-bold text-slate-900">Jean Dupont</p>
+                        <p class="text-[10px] font-bold text-[#17B0CF] uppercase tracking-widest">Formateur</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-
-    <div>
-        <h2 class="text-xs text-slate-400 font-mono uppercase mb-3">Avatar Initials (Fallback)</h2>
-        <!-- Atom : Avatar Initials -->
-        <span
-            class="inline-flex items-center justify-center size-[38px] rounded-full bg-primary-100 ring-2 ring-white shadow-sm">
-            <span class="text-sm font-medium text-primary-800 leading-none">FA</span>
-        </span>
-    </div>
-
 </body>
-
 </html>

@@ -1,39 +1,83 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
-    <title>Molécule: Section</title>
-    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecule: Section - SoliQuiz UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'], heading: ['Outfit', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)' } } } } };</script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
+                            300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF',
+                            600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-
-<body class="bg-slate-50 p-10 space-y-8">
-
-    <!-- Molecule : Section -->
-    <!-- Wrapper générique : Titre H2 + slot contenu -->
-    <!-- Utilisé dans tous les dashboards -->
-
-    <section class="w-full">
-        <!-- Atom: Title h2 -->
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-heading font-semibold text-slate-800">
-                Vos évaluations en attente
-            </h2>
-            <!-- Action optionnelle (lien "Voir tout") -->
-            <a href="#" class="text-sm text-primary-500 hover:underline font-medium transition-colors">
-                Voir tout
-            </a>
+<body class="bg-slate-50 p-10 font-sans space-y-8">
+    <div class="max-w-4xl mx-auto space-y-10">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Molecule</p>
+            <h1 class="text-3xl font-black text-slate-900">Section</h1>
+            <p class="text-slate-500 mt-2">Wrapper générique : Titre H2 + slot contenu</p>
         </div>
-        <!-- Slot : contenu injecté (card-qcm, list-history, progress-item, etc.) -->
-        <div class="space-y-3">
-            <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm text-slate-400 italic text-center">
-                [ Contenu injecté ici — ex: card-qcm, list-item, alert-box ]
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Section with "Voir tout" link</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <section class="w-full">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-slate-800">Vos évaluations en attente</h3>
+                        <a href="#" class="text-sm text-[#17B0CF] hover:underline font-bold transition-colors">Voir tout</a>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-400 italic text-center">
+                            [ Contenu injecté ici — ex: card-qcm, list-item, alert-box ]
+                        </div>
+                    </div>
+                </section>
             </div>
-        </div>
-    </section>
+        </section>
 
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Section without action</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <section class="w-full">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-slate-800">Activité Récente</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-400 italic text-center">
+                            [ Contenu injecté ici ]
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Usage Code</h2>
+            <div class="bg-slate-900 rounded-xl p-4 overflow-x-auto">
+                <code class="text-xs font-mono text-emerald-400 whitespace-pre">&lt;section class="w-full"&gt;
+    &lt;div class="flex items-center justify-between mb-4"&gt;
+        &lt;h2 class="text-lg font-bold text-slate-800"&gt;Titre Section&lt;/h2&gt;
+        &lt;a href="#" class="text-sm text-[#17B0CF] hover:underline font-bold"&gt;Voir tout&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="space-y-3"&gt;
+        [ Slot: contenu ]
+    &lt;/div&gt;
+&lt;/section&gt;</code>
+            </div>
+        </section>
+    </div>
 </body>
-
 </html>

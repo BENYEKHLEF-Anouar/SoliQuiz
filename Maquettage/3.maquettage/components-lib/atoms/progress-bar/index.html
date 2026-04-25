@@ -1,29 +1,121 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atom: Progress Bar</title>
-    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <title>Atom: Progress Bar - SoliQuiz UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { theme: { extend: { colors: { primary: { 500: 'var(--color-primary-500)', 100: 'var(--color-primary-100)' } } } } };
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 </head>
-
-<body class="bg-white p-10 font-sans space-y-8 max-w-sm w-full">
-
-    <div>
-        <h2 class="text-xs text-slate-400 font-mono uppercase mb-3">Progress Bar (Base)</h2>
-        <!-- Atom : Progress Bar -->
-        <div class="flex w-full h-1.5 bg-slate-100 rounded-full overflow-hidden" role="progressbar" aria-valuenow="75"
-            aria-valuemin="0" aria-valuemax="100">
-            <div class="flex flex-col justify-center rounded-full overflow-hidden bg-primary-500 text-xs text-white text-center whitespace-nowrap transition-all duration-500"
-                style="width: 75%"></div>
+<body class="bg-slate-50 p-10 font-sans">
+    <div class="max-w-4xl mx-auto space-y-10">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Atom</p>
+            <h1 class="text-3xl font-black text-slate-900">Progress Bar</h1>
+            <p class="text-slate-500 mt-2">Indicateurs de progression</p>
         </div>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Linear Progress</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-6">
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-slate-500">Taux de réussite</span>
+                        <span class="font-bold text-slate-700">87%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-[#17B0CF] h-2 rounded-full" style="width: 87%"></div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-slate-500">Progression QCM</span>
+                        <span class="font-bold text-emerald-600">12/20 questions</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-emerald-500 h-2 rounded-full" style="width: 60%"></div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-slate-500">Score requis</span>
+                        <span class="font-bold text-rose-600">10/20 (Échec)</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-rose-500 h-2 rounded-full" style="width: 50%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Circular Progress</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-8">
+                    <div class="relative size-20 flex items-center justify-center">
+                        <svg class="absolute inset-0 size-full -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="#e2e8f0" stroke-width="3"/>
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="#17B0CF" stroke-width="3"
+                                    stroke-dasharray="100" stroke-dashoffset="13" stroke-linecap="round"/>
+                        </svg>
+                        <span class="text-lg font-black text-slate-900">87%</span>
+                    </div>
+                    <div class="relative size-16 flex items-center justify-center">
+                        <svg class="absolute inset-0 size-full -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="#e2e8f0" stroke-width="3"/>
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="#10b981" stroke-width="3"
+                                    stroke-dasharray="100" stroke-dashoffset="40" stroke-linecap="round"/>
+                        </svg>
+                        <span class="text-sm font-black text-emerald-600">60%</span>
+                    </div>
+                    <div class="relative size-12 flex items-center justify-center">
+                        <svg class="absolute inset-0 size-full -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="#e2e8f0" stroke-width="3"/>
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="#f43f5e" stroke-width="3"
+                                    stroke-dasharray="100" stroke-dashoffset="75" stroke-linecap="round"/>
+                        </svg>
+                        <span class="text-xs font-black text-rose-600">25%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Mini Bar Chart (KPI Card)</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <div class="h-8 flex items-end gap-0.5">
+                    <div class="flex-1 bg-[#bae6fd] rounded-sm" style="height: 40%"></div>
+                    <div class="flex-1 bg-[#bae6fd] rounded-sm" style="height: 55%"></div>
+                    <div class="flex-1 bg-[#bae6fd] rounded-sm" style="height: 45%"></div>
+                    <div class="flex-1 bg-[#bae6fd] rounded-sm" style="height: 60%"></div>
+                    <div class="flex-1 bg-[#bae6fd] rounded-sm" style="height: 50%"></div>
+                    <div class="flex-1 bg-[#bae6fd] rounded-sm" style="height: 65%"></div>
+                    <div class="flex-1 bg-[#17B0CF] rounded-sm" style="height: 70%"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Step Progress</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <div class="size-8 bg-[#17B0CF] rounded-lg flex items-center justify-center text-white text-xs font-black">1</div>
+                        <span class="text-xs font-bold text-slate-700">Infos</span>
+                    </div>
+                    <div class="w-8 h-0.5 bg-slate-200"></div>
+                    <div class="flex items-center gap-2">
+                        <div class="size-8 bg-[#17B0CF] rounded-lg flex items-center justify-center text-white text-xs font-black">2</div>
+                        <span class="text-xs font-bold text-slate-700">Questions</span>
+                    </div>
+                    <div class="w-8 h-0.5 bg-slate-200"></div>
+                    <div class="flex items-center gap-2">
+                        <div class="size-8 bg-slate-100 border-2 border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-xs font-black">3</div>
+                        <span class="text-xs font-bold text-slate-400">Révision</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-
 </body>
-
 </html>

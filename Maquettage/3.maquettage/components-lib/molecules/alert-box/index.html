@@ -1,39 +1,91 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
-    <title>Molécule: Alert Box</title>
-    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecule: Alert Box - SoliQuiz UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans'] }, colors: { primary: { 500: 'var(--color-primary-500)', 50: 'var(--color-primary-50)' }, semantic: { errorLight: 'var(--color-error-100)', error: 'var(--color-error-500)', errorDark: 'var(--color-error-700)' } } } } };</script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 </head>
-
-<body class="bg-gray-50 p-10">
-
-    <!-- Molecule : Alert Box (Error variant) -->
-    <div class="bg-semantic-errorLight border border-semantic-error/30 text-sm text-semantic-errorDark rounded-xl p-4 flex items-center justify-between"
-        role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
-        <div class="flex items-center gap-x-3">
-            <!-- Atom : Icon -->
-            <svg class="shrink-0 size-5 text-semantic-error" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" x2="12" y1="8" y2="12" />
-                <line x1="12" x2="12.01" y1="16" y2="16" />
-            </svg>
-            <span id="hs-soft-color-danger-label" class="font-medium">
-                Alerte : 25% d'échec constaté aujourd'hui sur les "Concepts Orientés Objet".
-            </span>
+<body class="bg-slate-50 p-10 font-sans">
+    <div class="max-w-4xl mx-auto space-y-10">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Molecule</p>
+            <h1 class="text-3xl font-black text-slate-900">Alert Box</h1>
+            <p class="text-slate-500 mt-2">Alertes et notifications inline</p>
         </div>
-        <!-- Atom : Button Outline Alert -->
-        <button type="button"
-            class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-semantic-error text-semantic-error hover:bg-white transition-colors bg-wrap">
-            Créer remédiation
-        </button>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Alert Variants</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-4">
+                <div class="bg-[#e0f2fe] border border-[#7dd3fc] rounded-xl p-4 flex items-start gap-3">
+                    <div class="shrink-0 size-8 bg-white/50 rounded-lg flex items-center justify-center text-[#17B0CF]">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-900">Information</p>
+                        <p class="text-xs text-slate-600 mt-1">Ce QCM sera automatiquement fermé après la date d'échéance.</p>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-3">
+                    <div class="shrink-0 size-8 bg-white/50 rounded-lg flex items-center justify-center text-emerald-600">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-900">Succès</p>
+                        <p class="text-xs text-slate-600 mt-1">Le QCM a été créé avec succès et est maintenant visible par les apprenants.</p>
+                    </div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                    <div class="shrink-0 size-8 bg-white/50 rounded-lg flex items-center justify-center text-amber-600">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-900">Attention</p>
+                        <p class="text-xs text-slate-600 mt-1">Vous avez des passations en cours. N'oubliez pas de les surveiller.</p>
+                    </div>
+                </div>
+                <div class="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-start gap-3">
+                    <div class="shrink-0 size-8 bg-white/50 rounded-lg flex items-center justify-center text-rose-600">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-900">Erreur</p>
+                        <p class="text-xs text-slate-600 mt-1">Impossible de sauvegarder le QCM. Veuillez réessayer.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Banner Alert</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="size-10 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600 animate-pulse">
+                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900 uppercase text-[10px] tracking-widest mb-1">Passations en temps réel</p>
+                            <p class="text-xs text-slate-600 font-medium italic">Vous avez <span class="font-black text-amber-600">3</span> apprenant(s) en cours de passation</p>
+                        </div>
+                    </div>
+                    <button class="px-5 py-2.5 bg-amber-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20 active:scale-95">
+                        Superviser
+                    </button>
+                </div>
+            </div>
+        </section>
     </div>
-
 </body>
-
 </html>

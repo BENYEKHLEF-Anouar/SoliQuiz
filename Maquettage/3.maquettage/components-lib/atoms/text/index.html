@@ -1,28 +1,87 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atom: Text</title>
-    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <title>Atom: Text - SoliQuiz UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } };</script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 </head>
+<body class="bg-slate-50 p-10 font-sans">
+    <div class="max-w-4xl mx-auto space-y-10">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Atom</p>
+            <h1 class="text-3xl font-black text-slate-900">Text</h1>
+            <p class="text-slate-500 mt-2">Styles typographiques utilisés dans SoliQuiz</p>
+        </div>
 
-<body class="bg-gray-50 p-10 font-sans space-y-6">
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Échelle Typographique</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-6">
+                <div class="space-y-1">
+                    <p class="text-[8px] font-black uppercase tracking-[0.4em] text-slate-400">text-[8px] - Labels micro</p>
+                    <p class="text-[8px] font-black uppercase tracking-[0.4em] text-[#17B0CF]">BADGE INDICATOR</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-400">text-[9px] - Labels small</p>
+                    <p class="text-[9px] font-black uppercase tracking-widest">DASHBOARD HEADER</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-[10px] font-black uppercase tracking-[0.2em] italic text-slate-400">text-[10px] italic - Labels standard</p>
+                    <p class="text-[10px] font-black uppercase tracking-[0.2em] italic text-[#17B0CF]">ESPACE APPRENANT</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-[11px] font-black uppercase tracking-widest text-slate-400">text-[11px] - Navigation</p>
+                    <p class="text-[11px] font-black uppercase tracking-widest">TABLEAU DE BORD</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-xs text-slate-400">text-xs - Corps secondaire</p>
+                    <p class="text-xs text-slate-600">Ce texte est utilisé pour les descriptions et les informations secondaires dans l'interface.</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-sm text-slate-400">text-sm - Corps standard</p>
+                    <p class="text-sm text-slate-700">Ce texte est utilisé pour le contenu principal et les paragraphes dans les cards et sections.</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-base text-slate-400">text-base - Corps principal</p>
+                    <p class="text-base text-slate-800">Utilisé pour les textes importants et les sous-titres de sections.</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-lg text-slate-400">text-lg - Titres cards</p>
+                    <p class="text-lg font-bold text-slate-900">Titre d'une carte ou d'une section</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-xl text-slate-400">text-xl - Titres sections</p>
+                    <p class="text-xl font-bold text-slate-900">Bon retour, Sarah</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-2xl text-slate-400">text-2xl font-black - Valeurs KPI</p>
+                    <p class="text-2xl font-black text-[#17B0CF]">87%</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-3xl text-slate-400">text-3xl font-black - Titres pages</p>
+                    <p class="text-3xl font-black text-slate-900">Connectez <span class="text-[#17B0CF]">Votre Futur</span></p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-4xl text-slate-400">text-4xl font-black - Hero</p>
+                    <p class="text-4xl font-black text-slate-900 uppercase">L'excellence <span class="text-[#17B0CF]">pédagogique</span></p>
+                </div>
+            </div>
+        </section>
 
-    <h2 class="text-xs text-slate-400 font-mono uppercase">Text Base</h2>
-    <!-- Atom : Text Base -->
-    <p class="text-base text-slate-600 leading-relaxed max-w-2xl">
-        L'objectif est d'éliminer le stress de l'évaluation avec des teintes dominantes aquatiques et un gris doux pour
-        minimiser la fatigue visuelle lors des QCM.
-    </p>
-
-    <h2 class="text-xs text-slate-400 font-mono uppercase mt-6">Text Small Muted</h2>
-    <!-- Atom : Text Small Muted -->
-    <p class="text-sm text-slate-500">Dernière sauvegarde automatique il y a 2 minutes.</p>
-
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Styles Spéciaux</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Label Tag</span>
+                    <span class="text-[#17B0CF] text-[10px] font-black uppercase tracking-[0.3em] italic">Value</span>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-xl">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1 italic">Espace Apprenant</p>
+                    <p class="text-xl font-bold text-slate-900 tracking-tight italic uppercase">Bon retour, Sarah</p>
+                </div>
+            </div>
+        </section>
+    </div>
 </body>
-
 </html>

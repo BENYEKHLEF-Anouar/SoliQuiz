@@ -1,74 +1,56 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atom: Badge</title>
-    <!-- CSS Custom -->
-    <link rel="stylesheet" href="../../../charte-graphique/style.css">
-    <!-- Tailwind Play CDN -->
+    <title>Atom: Badge - SoliQuiz UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
                     colors: {
                         primary: {
-                            100: 'var(--color-primary-100)',
-                            800: 'var(--color-primary-800)',
-                        },
-                        semantic: {
-                            success: 'var(--color-success-500)',
-                            successLight: 'var(--color-success-100)',
-                            error: 'var(--color-error-500)',
-                            errorLight: 'var(--color-error-100)',
-                            warning: 'var(--color-warning-500)',
-                            warningLight: 'var(--color-warning-100)',
+                            50: 'hsl(190, 85%, 96%)',
+                            100: 'hsl(190, 85%, 90%)',
+                            200: 'hsl(190, 85%, 80%)',
+                            300: 'hsl(190, 80%, 70%)',
+                            400: 'hsl(190, 75%, 60%)',
+                            500: 'hsl(190, 80%, 45%)',
+                            600: 'hsl(190, 85%, 35%)',
+                            700: 'hsl(190, 85%, 28%)',
+                            800: 'hsl(190, 80%, 22%)',
+                            900: 'hsl(190, 75%, 15%)',
                         }
                     }
                 }
             }
         }
     </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="../../../charte-graphique/app.css">
 </head>
+<body class="bg-slate-50 p-10 font-sans">
+    <div class="max-w-4xl mx-auto space-y-10">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-label mb-2">Atom</p>
+            <h1 class="text-3xl font-black text-slate-900 uppercase italic">Premium Badge</h1>
+            <p class="text-slate-500 mt-2">Étiquettes de statut haute fidélité.</p>
+        </div>
 
-<body class="bg-white p-10 font-sans space-y-6 flex flex-col items-start">
-
-    <h2 class="text-xs text-slate-400 font-mono uppercase mb-4">Badges Soft Premium</h2>
-    <div class="flex flex-wrap gap-4">
-        <span
-            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-[10px] font-bold bg-primary-50 text-primary-600 uppercase tracking-widest border border-primary-100/50 shadow-sm">
-            Nouveau QCM
-        </span>
-        <span
-            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-[10px] font-bold bg-semantic-successLight/30 text-semantic-success uppercase tracking-widest border border-semantic-successLight shadow-sm">
-            Réussi (100%)
-        </span>
-        <span
-            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-[10px] font-bold bg-semantic-warningLight/30 text-semantic-warning uppercase tracking-widest border border-semantic-warningLight shadow-sm">
-            En attente
-        </span>
-        <span
-            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-[10px] font-bold bg-semantic-errorLight/30 text-semantic-error uppercase tracking-widest border border-semantic-errorLight shadow-sm">
-            Échec (20%)
-        </span>
+        <section class="space-y-4">
+            <h2 class="text-lg font-black text-slate-900 uppercase italic">Statuts</h2>
+            <div class="p-10 bg-white rounded-[2.5rem] border border-slate-100 flex flex-wrap gap-4 items-center">
+                <span class="px-4 py-1.5 bg-primary-50 text-primary-600 rounded-full text-[9px] font-black uppercase tracking-widest italic border border-primary-100/50">Publié</span>
+                <span class="px-4 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest italic border border-emerald-100/50">Réussi</span>
+                <span class="px-4 py-1.5 bg-rose-50 text-rose-600 rounded-full text-[9px] font-black uppercase tracking-widest italic border border-rose-100/50">Échoué</span>
+                <span class="px-4 py-1.5 bg-amber-50 text-amber-600 rounded-full text-[9px] font-black uppercase tracking-widest italic border border-amber-100/50">En cours</span>
+            </div>
+        </section>
     </div>
-
-    <h2 class="text-xs text-slate-400 font-mono uppercase mt-6 mb-4">Badges avec Icônes</h2>
-    <div class="flex flex-wrap gap-4">
-        <span
-            class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-[10px] font-bold bg-semantic-errorLight/20 text-semantic-error uppercase tracking-widest border border-semantic-errorLight/30 shadow-sm">
-            <svg class="size-3 animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-            </svg>
-            03:45
-        </span>
-    </div>
-
 </body>
-
 </html>

@@ -1,27 +1,76 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atom: Label</title>
-    <link rel="stylesheet" href="../../../charte-graphique/style.css">
+    <title>Atom: Label - SoliQuiz UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { theme: { extend: {} } };
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 </head>
+<body class="bg-slate-50 p-10 font-sans">
+    <div class="max-w-4xl mx-auto space-y-10">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Atom</p>
+            <h1 class="text-3xl font-black text-slate-900">Label</h1>
+            <p class="text-slate-500 mt-2">Étiquettes pour formulaires et navigation</p>
+        </div>
 
-<body class="bg-white p-10 font-sans space-y-8 max-w-sm w-full">
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Input Labels</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic leading-none">
+                        Identifiant de Connexion
+                    </label>
+                    <input type="text" placeholder="votre@solicode.co" class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 outline-none transition-all placeholder:text-slate-300 italic">
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center px-1">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] italic leading-none">Clé de Sécurité</label>
+                        <a class="text-[9px] font-black text-[#17B0CF] hover:text-[#0284c7] transition-colors uppercase tracking-widest italic" href="#">Oublié ?</a>
+                    </div>
+                    <input type="password" placeholder="············" class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 outline-none transition-all placeholder:text-slate-300 italic">
+                </div>
+            </div>
+        </section>
 
-    <div>
-        <h2 class="text-xs text-slate-400 font-mono uppercase mb-3">Label Default</h2>
-        <!-- Atom : Label -->
-        <label for="fake-input" class="block text-sm font-medium mb-2 text-slate-800">
-            Intitulé de champ :
-        </label>
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Section Labels</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-4">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Espace Apprenant</p>
+                <p class="text-[10px] font-black text-[#17B0CF] uppercase tracking-[0.3em] italic">Général</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Pédagogie</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Contenu</p>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Category Labels</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <div class="space-y-6">
+                    <div>
+                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-3 px-3">Navigation</span>
+                        <div class="px-3 py-2 text-[11px] font-bold text-slate-500 uppercase tracking-wider italic">Dashboard</div>
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-3 px-3">Dashboards</span>
+                        <div class="px-3 py-2 text-[11px] font-bold text-slate-500 uppercase tracking-wider italic">KPI Cards</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Tag/Status Labels</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200">
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-[10px] font-black uppercase tracking-wider italic text-slate-500">Espace Apprenant</span>
+                    <span class="text-[10px] font-black uppercase tracking-wider italic text-[#17B0CF]">Espace Formateur</span>
+                    <span class="text-[10px] font-black uppercase tracking-wider italic text-emerald-600">En cours</span>
+                    <span class="text-[10px] font-black uppercase tracking-wider italic text-rose-600">Terminé</span>
+                </div>
+            </div>
+        </section>
     </div>
-
 </body>
-
 </html>
