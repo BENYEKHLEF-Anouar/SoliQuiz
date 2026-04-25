@@ -5,23 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Molecule: Navbar Public - SoliQuiz UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
                     colors: {
                         primary: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
-                            300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF',
-                            600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e',
+                            50: 'hsl(190, 85%, 96%)',
+                            100: 'hsl(190, 85%, 90%)',
+                            200: 'hsl(190, 85%, 80%)',
+                            300: 'hsl(190, 80%, 70%)',
+                            400: 'hsl(190, 75%, 60%)',
+                            500: 'hsl(190, 80%, 45%)',
+                            600: 'hsl(190, 85%, 35%)',
+                            700: 'hsl(190, 85%, 28%)',
+                            800: 'hsl(190, 80%, 22%)',
+                            900: 'hsl(190, 75%, 15%)',
                         }
                     }
                 }
             }
         }
     </script>
+    <link rel="stylesheet" href="../../../charte-graphique/app.css">
     <style>[x-cloak] { display: none !important; }</style>
 </head>
 <body class="bg-slate-50 font-sans">
@@ -40,21 +50,21 @@
                     <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
                         <!-- Logo -->
                         <a href="#" class="flex items-center gap-2 group outline-none">
-                            <div class="size-9 bg-[#17B0CF] rounded-xl flex items-center justify-center shadow-lg shadow-[#17B0CF]/20 transition-transform group-hover:scale-110">
+                            <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-110">
                                 <svg class="text-white size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                     <polyline points="14 2 14 8 20 8" />
                                     <path d="m9 15 2 2 4-4" />
                                 </svg>
                             </div>
-                            <span class="text-2xl font-bold tracking-tight text-slate-900">Soli<span class="text-[#17B0CF]">Quiz</span></span>
+                            <span class="text-2xl font-bold tracking-tight text-slate-900">Soli<span class="text-primary-500">Quiz</span></span>
                         </a>
 
                         <!-- Nav Links -->
                         <div class="hidden md:flex items-center gap-8">
-                            <a href="#features" class="text-sm font-bold text-slate-600 hover:text-[#17B0CF] transition-colors uppercase tracking-widest">Fonctionnalités</a>
-                            <a href="#roles" class="text-sm font-bold text-slate-600 hover:text-[#17B0CF] transition-colors uppercase tracking-widest">Utilisation</a>
-                            <a href="#" class="py-3 px-6 bg-[#17B0CF] text-white font-bold rounded-xl hover:bg-[#14a0bd] transition-all shadow-lg shadow-[#17B0CF]/25 active:scale-95 text-sm uppercase tracking-widest">
+                            <a href="#features" class="text-sm font-bold text-slate-600 hover:text-primary-500 transition-colors uppercase tracking-widest">Fonctionnalités</a>
+                            <a href="#roles" class="text-sm font-bold text-slate-600 hover:text-primary-500 transition-colors uppercase tracking-widest">Utilisation</a>
+                            <a href="#" class="py-3 px-6 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/25 active:scale-95 text-sm uppercase tracking-widest">
                                 Se Connecter
                             </a>
                         </div>

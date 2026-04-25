@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+/* Fallback Utility Classes for Tailwind CDN (v3) */
+:root {
+    --color-primary-50: hsl(190, 85%, 96%);
+    --color-primary-100: hsl(190, 85%, 90%);
+    --color-primary-200: hsl(190, 85%, 80%);
+    --color-primary-300: hsl(190, 80%, 70%);
+    --color-primary-400: hsl(190, 75%, 60%);
+    --color-primary-500: hsl(190, 80%, 45%);
+    --color-primary-600: hsl(190, 85%, 35%);
+    --color-primary-700: hsl(190, 85%, 28%);
+    --color-primary-800: hsl(190, 80%, 22%);
+    --color-primary-900: hsl(190, 75%, 15%);
+    
+    --font-heading: 'Plus Jakarta Sans', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Explicit Background & Text Classes to guarantee styling in static mockups */
+.bg-primary-500 { background-color: var(--color-primary-500) !important; }
+.bg-primary-50 { background-color: var(--color-primary-50) !important; }
+.text-primary-500 { color: var(--color-primary-500) !important; }
+.text-primary-600 { color: var(--color-primary-600) !important; }
+.border-primary-500 { border-color: var(--color-primary-500) !important; }
+
+* {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    color: #1e293b;
+    background-color: #f8fafc;
+    background-image: 
+        radial-gradient(at 40% 20%, hsla(190, 80%, 90%, 0.3) 0px, transparent 50%),
+        radial-gradient(at 80% 0%, hsla(190, 80%, 85%, 0.15) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(190, 80%, 95%, 0.2) 0px, transparent 50%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.015em;
+}
+
+.font-heading, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    letter-spacing: -0.025em;
+    font-weight: 800;
+}
+
+/* Glassmorphism */
+.glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+/* UI Tokens */
+.text-label {
+    font-size: 10px;
+    font-weight: 900;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-style: italic;
+}
+
+.btn-premium {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 11px;
+    font-style: italic;
+    transition: all 0.3s ease;
+}
+
+[x-cloak] { display: none !important; }
+
+.card-premium {
+    background: white;
+    border-radius: 40px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+}
+
+/* Ensure Logo Icon is visible */
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary-500);
+    color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.3);
+}

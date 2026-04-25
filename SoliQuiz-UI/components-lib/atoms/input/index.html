@@ -4,112 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atom: Input - SoliQuiz UI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind V4 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
                     colors: {
                         primary: {
-                            50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4',
-                            300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6',
-                            600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a',
+                            50: 'hsl(190, 85%, 96%)',
+                            100: 'hsl(190, 85%, 90%)',
+                            200: 'hsl(190, 85%, 80%)',
+                            300: 'hsl(190, 80%, 70%)',
+                            400: 'hsl(190, 75%, 60%)',
+                            500: 'hsl(190, 80%, 45%)',
+                            600: 'hsl(190, 85%, 35%)',
+                            700: 'hsl(190, 85%, 28%)',
+                            800: 'hsl(190, 80%, 22%)',
+                            900: 'hsl(190, 75%, 15%)',
                         }
                     }
                 }
             }
         }
     </script>
+    <link rel="stylesheet" href="../../../charte-graphique/app.css">
 </head>
-<body class="bg-slate-50 p-10 font-sans">
-    <div class="max-w-4xl mx-auto space-y-10">
+<body class="bg-slate-50 p-10 font-sans uppercase">
+    <div class="max-w-4xl mx-auto space-y-16">
         <!-- Header -->
-        <div class="border-b border-slate-200 pb-4">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Atom</p>
-            <h1 class="text-3xl font-black text-slate-900">Input</h1>
-            <p class="text-slate-500 mt-2">Champs de saisie pour formulaires</p>
+        <div class="border-b border-slate-200 pb-10 italic">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4 italic">Fondations Atomiques</p>
+            <h1 class="text-5xl font-black text-slate-900 italic tracking-tighter uppercase">Champs <span class="text-primary-500">Saisie</span></h1>
+            <p class="text-[11px] font-bold text-slate-400 mt-4 uppercase tracking-widest italic">Contrôleurs d'acquisition de données</p>
         </div>
 
-        <!-- Basic Input -->
-        <section class="space-y-4">
-            <h2 class="text-lg font-bold text-slate-900">Basic Input</h2>
-            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-4">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic">Identifiant de Connexion</label>
-                    <input type="text" placeholder="votre@solicode.co"
-                        class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-slate-300 italic">
+        <!-- Basic & Icon Inputs -->
+        <section class="space-y-8">
+            <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Standard & Contextuel</h2>
+            <div class="p-16 bg-white rounded-[4rem] border border-slate-100 shadow-premium space-y-10 italic">
+                <!-- Text Input -->
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1 italic leading-none">Identifiant Agent</label>
+                    <input type="text" placeholder="agent_01@soliquiz.co" class="h-16 w-full bg-slate-50 border-2 border-transparent rounded-2xl px-8 text-sm font-black text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-8 focus:ring-primary-500/5 outline-none transition-all placeholder:text-slate-200 italic uppercase">
                 </div>
-            </div>
-            <div class="bg-slate-900 rounded-xl p-4 overflow-x-auto">
-                <code class="text-xs font-mono text-emerald-400 whitespace-pre">&lt;input type="text" placeholder="votre@solicode.co"
-    class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 
-           text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 
-           focus:ring-4 focus:ring-primary-500/10 outline-none transition-all"&gt;</code>
-            </div>
-        </section>
 
-        <!-- Input with Icon -->
-        <section class="space-y-4">
-            <h2 class="text-lg font-bold text-slate-900">Input with Icon</h2>
-            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-4">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic">Clé de Sécurité</label>
+                <!-- Password Input with Icon -->
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1 italic leading-none">Clé de Cryptage</label>
                     <div class="relative group">
-                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-300 group-focus-within:text-primary-500 transition-colors">
-                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
+                        <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none text-slate-200 group-focus-within:text-primary-500 transition-colors">
+                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                         </div>
-                        <input type="password" placeholder="············"
-                            class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-12 pr-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-slate-300 italic">
+                        <input type="password" placeholder="••••••••••••" class="h-16 w-full bg-slate-50 border-2 border-transparent rounded-2xl pl-16 pr-8 text-sm font-black text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-8 focus:ring-primary-500/5 outline-none transition-all placeholder:text-slate-200 italic">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Input States -->
-        <section class="space-y-4">
-            <h2 class="text-lg font-bold text-slate-900">States</h2>
-            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-4">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic">Default</label>
-                    <input type="text" placeholder="Placeholder" value=""
-                        class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+        <!-- Status Variants -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <!-- Error State -->
+            <div class="space-y-6 italic">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">État d'Alerte</h3>
+                <div class="p-12 bg-white rounded-[3rem] border border-slate-100 shadow-sm space-y-4">
+                    <input type="text" value="invalid_token" class="h-14 w-full bg-rose-50 border-2 border-rose-500 rounded-2xl px-6 text-sm font-black text-rose-600 outline-none transition-all italic">
+                    <p class="text-[9px] font-black text-rose-500 uppercase tracking-widest italic ml-2">Erreur : Segment corrompu</p>
                 </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic">Filled</label>
-                    <input type="text" value="jean.dupont@solicode.co"
-                        class="w-full bg-white border-2 border-primary-500 rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic">Error</label>
-                    <input type="text" value="invalid-email"
-                        class="w-full bg-rose-50 border-2 border-rose-500 rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 outline-none transition-all">
-                    <p class="text-[9px] font-black text-rose-500 ml-2 uppercase tracking-widest italic">Format email invalide</p>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic">Disabled</label>
-                    <input type="text" value="disabled@example.com" disabled
-                        class="w-full bg-slate-100 border-2 border-transparent rounded-2xl py-3 px-4 text-sm font-bold text-slate-400 cursor-not-allowed">
+            </div>
+
+            <!-- Focus State (Demo) -->
+            <div class="space-y-6 italic">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">État Actif</h3>
+                <div class="p-12 bg-white rounded-[3rem] border border-slate-100 shadow-sm">
+                    <input type="text" value="Saisie en cours..." class="h-14 w-full bg-white border-2 border-primary-500 ring-8 ring-primary-500/5 rounded-2xl px-6 text-sm font-black text-slate-900 outline-none transition-all italic">
                 </div>
             </div>
         </section>
 
-        <!-- Checkbox -->
-        <section class="space-y-4">
-            <h2 class="text-lg font-bold text-slate-900">Checkbox</h2>
-            <div class="p-6 bg-white rounded-2xl border border-slate-200">
-                <label class="flex items-center gap-3 cursor-pointer group">
+        <!-- Functional Controls -->
+        <section class="space-y-8">
+            <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Contrôles Binaires</h2>
+            <div class="p-12 bg-slate-900 rounded-[3rem] flex items-center justify-center italic">
+                <label class="flex items-center gap-6 cursor-pointer group">
                     <div class="relative">
                         <input type="checkbox" class="peer sr-only" checked>
-                        <div class="size-6 bg-slate-100 rounded-lg group-hover:bg-slate-200 peer-checked:bg-primary-500 transition-colors shadow-inner"></div>
-                        <svg class="absolute inset-0 size-6 text-white scale-0 peer-checked:scale-50 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
-                            <path d="M5 13l4 4L19 7" />
-                        </svg>
+                        <div class="size-8 bg-white/10 rounded-xl group-hover:bg-white/20 peer-checked:bg-primary-500 transition-all shadow-inner border border-white/10"></div>
+                        <svg class="absolute inset-0 size-8 text-white scale-0 peer-checked:scale-50 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="5"><path d="M5 13l4 4L19 7" /></svg>
                     </div>
-                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Session Persistante</span>
+                    <div class="text-left">
+                        <span class="text-xs font-black text-white uppercase tracking-widest italic block">Synchronisation Cloud</span>
+                        <span class="text-[8px] font-black text-primary-400 uppercase tracking-widest italic">Activé</span>
+                    </div>
                 </label>
             </div>
         </section>

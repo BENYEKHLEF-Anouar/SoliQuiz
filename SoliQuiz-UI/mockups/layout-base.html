@@ -1,79 +1,30 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth min-h-screen">
-
+<html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="dummy-token">
-
-    <title>SoliQuiz</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base Layout - SoliQuiz UI</title>
+    
+    <!-- Tailwind V4 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
-
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        heading: ['"Plus Jakarta Sans"', 'sans-serif']
-                    },
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#17B0CF',
-                            600: '#0ea5e9',
-                            700: '#0284c7',
-                            800: '#0369a1',
-                            900: '#0c4a6e'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
+    
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
+    
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="../charte-graphique/app.css">
+    
     <style>[x-cloak] { display: none !important; }</style>
 </head>
-
-<body class="font-sans antialiased text-slate-800 bg-slate-50 min-h-screen">
-    <!-- Content Here -->
-    
-    <!-- Toast Component Placeholder -->
-    <div x-data="{ show: false, message: '', type: 'success' }" x-show="show" x-transition class="fixed top-4 right-4 z-50 bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-3 shadow-lg" style="display: none;">
-        <div class="size-8 bg-emerald-50 rounded-full flex items-center justify-center">
-            <svg class="size-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
-        </div>
-        <div class="flex-1"><p class="text-sm font-bold text-slate-900">Succès</p><p class="text-xs text-slate-500">Message</p></div>
-    </div>
-
-    <!-- Confirm Modal Placeholder -->
-    <div x-data="{ show: false }" x-show="show" x-transition class="fixed inset-0 z-50 flex items-center justify-center" style="display: none;">
-        <div class="fixed inset-0 bg-slate-900/50" @click="show = false"></div>
-        <div class="relative bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden max-w-md w-full p-6">
-            <div class="size-12 bg-red-50 rounded-2xl flex items-center justify-center mb-4">
-                <svg class="size-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M7 7h10"/></svg>
-            </div>
-            <h2 class="text-lg font-black text-slate-900 mb-2">Confirmer</h2>
-            <p class="text-sm text-slate-500">Êtes-vous sûr ?</p>
-            <div class="flex justify-end gap-3 mt-6">
-                <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-50">Annuler</button>
-                <button class="px-4 py-2 bg-red-500 text-white rounded-xl text-sm font-bold hover:bg-red-600">Confirmer</button>
-            </div>
-        </div>
+<body class="font-sans antialiased text-slate-800 min-h-screen">
+    <!-- Main Content Area -->
+    <div id="app-root">
+        <!-- Content will be injected here in child mockups -->
     </div>
 </body>
-
 </html>

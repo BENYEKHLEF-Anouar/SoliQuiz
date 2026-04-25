@@ -3,75 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UI Kit Gallery - SoliQuiz UI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>SoliQuiz Design System - Catalog</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind V4 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
-                            300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF',
-                            600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e',
-                        }
-                    },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        heading: ['"Plus Jakarta Sans"', 'sans-serif']
+                        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: 'hsl(190, 85%, 96%)',
+                            100: 'hsl(190, 85%, 90%)',
+                            200: 'hsl(190, 85%, 80%)',
+                            300: 'hsl(190, 80%, 70%)',
+                            400: 'hsl(190, 75%, 60%)',
+                            500: 'hsl(190, 80%, 45%)',
+                            600: 'hsl(190, 85%, 35%)',
+                            700: 'hsl(190, 85%, 28%)',
+                            800: 'hsl(190, 80%, 22%)',
+                            900: 'hsl(190, 75%, 15%)',
+                        }
+                    },
+                    boxShadow: {
+                        'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.08)',
                     }
                 }
             }
         }
     </script>
+    
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        [x-cloak] { display: none !important; }
         .nav-btn {
-            @apply w-full text-left text-[11px] font-bold uppercase tracking-wider px-3 py-2.5 rounded-xl text-slate-500 hover:bg-[#e0f2fe]/50 hover:text-[#17B0CF] transition-all duration-200 italic;
+            display: block;
+            width: 100%;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            padding: 0.875rem 1.25rem;
+            border-radius: 1rem;
+            color: #64748b;
+            font-style: italic;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+        .nav-btn:hover {
+            background-color: hsl(190, 85%, 96%);
+            color: hsl(190, 85%, 35%);
+            transform: translateX(4px);
         }
         .nav-btn.active {
-            @apply bg-[#17B0CF] text-white shadow-lg shadow-[#17B0CF]/20 font-black;
+            background-color: hsl(190, 80%, 45%);
+            color: white;
+            box-shadow: 0 10px 15px -3px hsla(190, 80%, 45%, 0.25);
+            font-weight: 900;
         }
-        #preview-frame {
-            transition: opacity 0.15s ease, width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-slate-50 flex h-[100dvh] overflow-hidden text-slate-800">
+<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-800 font-sans">
+    
     <!-- Sidebar -->
-    <aside class="w-72 bg-white border-r border-slate-100 flex flex-col h-full flex-shrink-0 shadow-xl shadow-slate-200/50 z-20 relative">
-        <!-- Header -->
-        <div class="p-6 border-b border-slate-50">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="size-10 rounded-2xl bg-primary-500 flex items-center justify-center shrink-0 shadow-lg shadow-primary-500/20">
-                    <svg class="text-white size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <path d="m9 15 2 2 4-4" />
-                    </svg>
+    <aside class="w-80 bg-white border-r border-slate-100 flex flex-col h-full flex-shrink-0 shadow-2xl shadow-slate-200/40 z-20 relative">
+        <div class="p-8 border-b border-slate-50">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="size-11 rounded-2xl bg-primary-500 flex items-center justify-center shrink-0 shadow-lg shadow-primary-500/25 text-white">
+                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><path d="m9 15 2 2 4-4" /></svg>
                 </div>
-                <div>
-                    <h1 class="text-xl font-heading font-black text-slate-900 leading-none tracking-tighter">Soli<span class="text-[#17B0CF]">Quiz</span></h1>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1 italic">UI Design System</p>
+                <div class="leading-none text-left">
+                    <h1 class="text-2xl font-black text-slate-900 tracking-tighter italic uppercase">Soli<span class="text-primary-500">Quiz</span></h1>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1.5 italic">Design System v2.0</p>
                 </div>
             </div>
 
-            <!-- Viewport buttons -->
-            <div class="flex bg-slate-100 rounded-xl p-1 text-[10px] font-black uppercase italic tracking-widest" id="vp-controls">
-                <button onclick="resizeIframe('100%', this)" class="vp-btn flex-1 py-2 rounded-lg transition-all text-slate-500 bg-white shadow-sm">Desktop</button>
-                <button onclick="resizeIframe('768px', this)" class="vp-btn flex-1 py-2 rounded-lg hover:text-primary-600 transition-all text-slate-500">Tablet</button>
-                <button onclick="resizeIframe('390px', this)" class="vp-btn flex-1 py-2 rounded-lg hover:text-primary-600 transition-all text-slate-500">Mobile</button>
+            <!-- Viewport controls -->
+            <div class="flex bg-slate-100 rounded-2xl p-1 text-[9px] font-black uppercase italic tracking-widest" id="vp-controls">
+                <button onclick="resizeIframe('100%', this)" class="vp-btn flex-1 py-2.5 rounded-xl transition-all text-slate-800 bg-white shadow-sm">Desktop</button>
+                <button onclick="resizeIframe('1024px', this)" class="vp-btn flex-1 py-2.5 rounded-xl hover:text-primary-600 transition-all text-slate-500">Tablet</button>
+                <button onclick="resizeIframe('414px', this)" class="vp-btn flex-1 py-2.5 rounded-xl hover:text-primary-600 transition-all text-slate-500">Mobile</button>
             </div>
         </div>
 
         <!-- Navigation -->
-        <nav id="sidebar-nav" class="flex-1 overflow-y-auto p-4 space-y-8">
-            <!-- Charte Graphique -->
+        <nav id="sidebar-nav" class="flex-1 overflow-y-auto p-4 space-y-10 custom-scrollbar">
+            <!-- Documentation -->
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2 italic">Fondations</p>
+                <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-4 px-5 italic text-left">Fondations</p>
                 <div class="space-y-1">
-                    <button onclick="loadComponent('charte-graphique/index.html', 'Charte Graphique', this)" class="nav-btn">
+                    <button onclick="loadComponent('charte-graphique/index.html', 'Fondations: Charte Graphique', this)" class="nav-btn">
                         Couleurs & Typo
                     </button>
                 </div>
@@ -79,193 +112,140 @@
 
             <!-- Atoms -->
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2 italic">Atoms (17)</p>
+                <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-4 px-5 italic text-left">Atomes (17)</p>
                 <div class="space-y-1">
-                    <button onclick="loadComponent('components-lib/atoms/logo/index.html', 'Atom: Logo', this)" class="nav-btn">logo</button>
-                    <button onclick="loadComponent('components-lib/atoms/text/index.html', 'Atom: Text', this)" class="nav-btn">text</button>
-                    <button onclick="loadComponent('components-lib/atoms/link/index.html', 'Atom: Link', this)" class="nav-btn">link</button>
-                    <button onclick="loadComponent('components-lib/atoms/button/index.html', 'Atom: Button', this)" class="nav-btn">button</button>
-                    <button onclick="loadComponent('components-lib/atoms/input/index.html', 'Atom: Input', this)" class="nav-btn">input</button>
-                    <button onclick="loadComponent('components-lib/atoms/textarea/index.html', 'Atom: Textarea', this)" class="nav-btn">textarea</button>
-                    <button onclick="loadComponent('components-lib/atoms/select/index.html', 'Atom: Select', this)" class="nav-btn">select</button>
-                    <button onclick="loadComponent('components-lib/atoms/radio-check/index.html', 'Atom: Radio & Check', this)" class="nav-btn">radio-check</button>
-                    <button onclick="loadComponent('components-lib/atoms/label/index.html', 'Atom: Label', this)" class="nav-btn">label</button>
-                    <button onclick="loadComponent('components-lib/atoms/badge/index.html', 'Atom: Badge', this)" class="nav-btn">badge</button>
-                    <button onclick="loadComponent('components-lib/atoms/progress-bar/index.html', 'Atom: Progress Bar', this)" class="nav-btn">progress-bar</button>
-                    <button onclick="loadComponent('components-lib/atoms/avatar/index.html', 'Atom: Avatar', this)" class="nav-btn">avatar</button>
-                    <button onclick="loadComponent('components-lib/atoms/icon/index.html', 'Atom: Icon', this)" class="nav-btn">icon</button>
-                    <button onclick="loadComponent('components-lib/atoms/stat/index.html', 'Atom: Stat', this)" class="nav-btn">stat</button>
-                    <button onclick="loadComponent('components-lib/atoms/toggle/index.html', 'Atom: Toggle', this)" class="nav-btn">toggle</button>
-                    <button onclick="loadComponent('components-lib/atoms/card/index.html', 'Atom: Card', this)" class="nav-btn">card</button>
-                    <button onclick="loadComponent('components-lib/atoms/image/index.html', 'Atom: Image', this)" class="nav-btn">image</button>
+                    <button onclick="loadComponent('components-lib/atoms/logo/index.html', 'Atome: Logo', this)" class="nav-btn">Logo branding</button>
+                    <button onclick="loadComponent('components-lib/atoms/button/index.html', 'Atome: Button', this)" class="nav-btn">Boutons premium</button>
+                    <button onclick="loadComponent('components-lib/atoms/input/index.html', 'Atome: Input', this)" class="nav-btn">Champs de saisie</button>
+                    <button onclick="loadComponent('components-lib/atoms/badge/index.html', 'Atome: Badge', this)" class="nav-btn">Badges de statut</button>
+                    <button onclick="loadComponent('components-lib/atoms/stat/index.html', 'Atome: Stat', this)" class="nav-btn">Indicateurs KPI</button>
+                    <button onclick="loadComponent('components-lib/atoms/avatar/index.html', 'Atome: Avatar', this)" class="nav-btn">Profils utilisateurs</button>
                 </div>
             </div>
 
             <!-- Molecules -->
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2 italic">Molécules (26)</p>
+                <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-4 px-5 italic text-left">Molécules (25)</p>
                 <div class="space-y-1">
-                    <button onclick="loadComponent('components-lib/molecules/navbar/index.html', 'Molecule: Navbar', this)" class="nav-btn">navbar</button>
-                    <button onclick="loadComponent('components-lib/molecules/navbar-apprenant/index.html', 'Molecule: Navbar Apprenant', this)" class="nav-btn">navbar-apprenant</button>
-                    <button onclick="loadComponent('components-lib/molecules/navbar-formateur/index.html', 'Molecule: Navbar Formateur', this)" class="nav-btn">navbar-formateur</button>
-                    <button onclick="loadComponent('components-lib/molecules/navbar-admin/index.html', 'Molecule: Navbar Admin', this)" class="nav-btn">navbar-admin</button>
-                    <button onclick="loadComponent('components-lib/molecules/navbar-public/index.html', 'Molecule: Navbar Public', this)" class="nav-btn">navbar-public</button>
-                    <button onclick="loadComponent('components-lib/molecules/sidebar/index.html', 'Molecule: Sidebar', this)" class="nav-btn">sidebar</button>
-                    <button onclick="loadComponent('components-lib/molecules/breadcrumb/index.html', 'Molecule: Breadcrumb', this)" class="nav-btn">breadcrumb</button>
-                    <button onclick="loadComponent('components-lib/molecules/section/index.html', 'Molecule: Section', this)" class="nav-btn">section</button>
-                    <button onclick="loadComponent('components-lib/molecules/hero-dashboard/index.html', 'Molecule: Hero Dashboard', this)" class="nav-btn">hero-dashboard</button>
-                    <button onclick="loadComponent('components-lib/molecules/footer-simple/index.html', 'Molecule: Footer Simple', this)" class="nav-btn">footer-simple</button>
-                    <button onclick="loadComponent('components-lib/molecules/kpi-card/index.html', 'Molecule: KPI Card', this)" class="nav-btn">kpi-card</button>
-                    <button onclick="loadComponent('components-lib/molecules/data-table/index.html', 'Molecule: Data Table', this)" class="nav-btn">data-table</button>
-                    <button onclick="loadComponent('components-lib/molecules/list-history/index.html', 'Molecule: List History', this)" class="nav-btn">list-history</button>
-                    <button onclick="loadComponent('components-lib/molecules/search-form/index.html', 'Molecule: Search Form', this)" class="nav-btn">search-form</button>
-                    <button onclick="loadComponent('components-lib/molecules/login-form/index.html', 'Molecule: Login Form', this)" class="nav-btn">login-form</button>
-                    <button onclick="loadComponent('components-lib/molecules/list-item/index.html', 'Molecule: List Item', this)" class="nav-btn">list-item</button>
-                    <button onclick="loadComponent('components-lib/molecules/card-qcm/index.html', 'Molecule: Card QCM', this)" class="nav-btn">card-qcm</button>
-                    <button onclick="loadComponent('components-lib/molecules/question-card/index.html', 'Molecule: Question Card', this)" class="nav-btn">question-card</button>
-                    <button onclick="loadComponent('components-lib/molecules/modal/index.html', 'Molecule: Modal', this)" class="nav-btn">modal</button>
-                    <button onclick="loadComponent('components-lib/molecules/alert-box/index.html', 'Molecule: Alert Box', this)" class="nav-btn">alert-box</button>
-                    <button onclick="loadComponent('components-lib/molecules/pagination/index.html', 'Molecule: Pagination', this)" class="nav-btn">pagination</button>
-                    <button onclick="loadComponent('components-lib/molecules/toast/index.html', 'Molecule: Toast', this)" class="nav-btn">toast</button>
-                    <button onclick="loadComponent('components-lib/molecules/confirm-modal/index.html', 'Molecule: Confirm Modal', this)" class="nav-btn">confirm-modal</button>
-                    <button onclick="loadComponent('components-lib/molecules/loader/index.html', 'Molecule: Loader', this)" class="nav-btn">loader</button>
-                    <button onclick="loadComponent('components-lib/molecules/search-filter/index.html', 'Molecule: Search Filter', this)" class="nav-btn">search-filter</button>
+                    <button onclick="loadComponent('components-lib/molecules/sidebar/index.html', 'Molécule: Sidebar', this)" class="nav-btn">Menu Latéral</button>
+                    <button onclick="loadComponent('components-lib/molecules/kpi-card/index.html', 'Molécule: KPI Card', this)" class="nav-btn">Carte de Statistiques</button>
+                    <button onclick="loadComponent('components-lib/molecules/card-qcm/index.html', 'Molécule: QCM Card', this)" class="nav-btn">Carte d'Évaluation</button>
+                    <button onclick="loadComponent('components-lib/molecules/confirm-modal/index.html', 'Molécule: Confirm Modal', this)" class="nav-btn">Modale de Confirmation</button>
+                    <button onclick="loadComponent('components-lib/molecules/modal/index.html', 'Molécule: Modal', this)" class="nav-btn">Modales et Dialogues</button>
+                    <button onclick="loadComponent('components-lib/molecules/search-filter/index.html', 'Molécule: Search Filter', this)" class="nav-btn">Barre de Recherche</button>
                 </div>
             </div>
 
             <!-- Mockups -->
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2 italic">Mockups (22)</p>
-                <div class="space-y-4">
-<div class="space-y-1">
-                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Layouts</span>
-                        <button onclick="loadComponent('mockups/layout-base.html', 'Base Layout', this)" class="nav-btn">layout-base</button>
-                        <button onclick="loadComponent('mockups/layout-guest.html', 'Guest Layout', this)" class="nav-btn">layout-guest</button>
-                        <button onclick="loadComponent('mockups/layout-app.html', 'App Layout', this)" class="nav-btn">layout-app</button>
-                    </div>
-                </div>
-            </div>
+                <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-4 px-5 italic text-left">Vues Applicatives (28)</p>
+                <div class="space-y-6">
                     <div class="space-y-1">
-                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Apprenant</span>
-                        <button onclick="loadComponent('mockups/02-student-dashboard.html', '02. Dashboard Apprenant', this)" class="nav-btn">02-student-dashboard</button>
-                        <button onclick="loadComponent('mockups/08-student-bibliotheque.html', '08. Bibliothèque Apprenant', this)" class="nav-btn">08-student-bibliotheque</button>
-                        <button onclick="loadComponent('mockups/05-passation-qcm.html', '05. Passation QCM', this)" class="nav-btn">05-passation-qcm</button>
-                        <button onclick="loadComponent('mockups/07-apprenant-resultats.html', '07. Résultats Apprenant', this)" class="nav-btn">07-apprenant-resultats</button>
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter block mb-2 px-5 opacity-50 italic text-left">Public & Auth</span>
+                        <button onclick="loadComponent('mockups/14-public-landing.html', 'Landing Page', this)" class="nav-btn">Vitrine SoliQuiz</button>
+                        <button onclick="loadComponent('mockups/01-auth-login.html', 'Connexion', this)" class="nav-btn">Portail Authentification</button>
+                        <button onclick="loadComponent('mockups/08-register.html', 'Inscription', this)" class="nav-btn">Création Compte</button>
+                        <button onclick="loadComponent('mockups/16-auth-password-email.html', 'Récupération', this)" class="nav-btn">Mot de passe oublié</button>
                     </div>
                     <div class="space-y-1">
-                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Formateur</span>
-                        <button onclick="loadComponent('mockups/03-formateur-dashboard.html', '03. Dashboard Formateur', this)" class="nav-btn">03-formateur-dashboard</button>
-                        <button onclick="loadComponent('mockups/09-formateur-bibliotheque.html', '09. Bibliothèque Formateur', this)" class="nav-btn">09-formateur-bibliotheque</button>
-                        <button onclick="loadComponent('mockups/10-formateur-creation-qcm.html', '10. Création QCM', this)" class="nav-btn">10-formateur-creation-qcm</button>
-                        <button onclick="loadComponent('mockups/11-formateur-resultats-cohorte.html', '11. Résultats Cohorte', this)" class="nav-btn">11-formateur-resultats-cohorte</button>
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter block mb-2 px-5 opacity-50 italic text-left">Espace Apprenant</span>
+                        <button onclick="loadComponent('mockups/02-student-dashboard.html', 'Tableau de Bord', this)" class="nav-btn">Dashboard Étudiant</button>
+                        <button onclick="loadComponent('mockups/bibliotheque.html', 'Ma Bibliothèque', this)" class="nav-btn">Catalogue QCM</button>
+                        <button onclick="loadComponent('mockups/15-qcm-passation.html', 'Exam View', this)" class="nav-btn">Session de Test</button>
+                        <button onclick="loadComponent('mockups/16-qcm-resultats.html', 'Score Summary', this)" class="nav-btn">Analyse Résultats</button>
                     </div>
                     <div class="space-y-1">
-                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Admin</span>
-                        <button onclick="loadComponent('mockups/06-admin-dashboard.html', '06. Dashboard Admin', this)" class="nav-btn">06-admin-dashboard</button>
-                        <button onclick="loadComponent('mockups/12-admin-classes.html', '12. Gestion Classes', this)" class="nav-btn">12-admin-classes</button>
-                        <button onclick="loadComponent('mockups/13-admin-gestion-utilisateurs.html', '13. Gestion Utilisateurs', this)" class="nav-btn">13-admin-gestion-utilisateurs</button>
-                        <button onclick="loadComponent('mockups/15-admin-classes-show.html', '15. Détails Classe', this)" class="nav-btn">15-admin-classes-show</button>
-                        <button onclick="loadComponent('mockups/16-admin-pedagogie.html', '16. Pédagogie Admin', this)" class="nav-btn">16-admin-pedagogie</button>
-                        <button onclick="loadComponent('mockups/17-admin-qcms.html', '17. Gestion QCMs', this)" class="nav-btn">17-admin-qcms</button>
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter block mb-2 px-5 opacity-50 italic text-left">Espace Formateur</span>
+                        <button onclick="loadComponent('mockups/03-formateur-dashboard.html', 'Supervision', this)" class="nav-btn">Dashboard Formateur</button>
+                        <button onclick="loadComponent('mockups/03-formateur-bibliotheque.html', 'Gestion QCM', this)" class="nav-btn">Bibliothèque Pédagogique</button>
+                        <button onclick="loadComponent('mockups/09-formateur-creation-qcm.html', 'Studio QCM', this)" class="nav-btn">Créateur de Test</button>
+                        <button onclick="loadComponent('mockups/18-qcm-edit.html', 'Editor', this)" class="nav-btn">Éditeur de Questions</button>
+                        <button onclick="loadComponent('mockups/21-formateur-pedagogie.html', 'Pédagogie', this)" class="nav-btn">Gestion UA/Compétences</button>
+                        <button onclick="loadComponent('mockups/20-formateur-resultats.html', 'Analytics', this)" class="nav-btn">Statistiques Cohortes</button>
                     </div>
                     <div class="space-y-1">
-                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Formateur</span>
-                        <button onclick="loadComponent('mockups/18-formateur-edit-qcm.html', '18. Édition QCM', this)" class="nav-btn">18-formateur-edit-qcm</button>
-                        <button onclick="loadComponent('mockups/19-formateur-pedagogie.html', '19. Pédagogie Formateur', this)" class="nav-btn">19-formateur-pedagogie</button>
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter block mb-2 px-5 opacity-50 italic text-left">Administration</span>
+                        <button onclick="loadComponent('mockups/06-admin-dashboard.html', 'Console Admin', this)" class="nav-btn">Gouvernance Système</button>
+                        <button onclick="loadComponent('mockups/13-admin-gestion-utilisateurs.html', 'Users', this)" class="nav-btn">Annuaire Global</button>
+                        <button onclick="loadComponent('mockups/12-admin-classes.html', 'Cohortes', this)" class="nav-btn">Architecture Classes</button>
+                        <button onclick="loadComponent('mockups/15-admin-classes-show.html', 'Détails Classe', this)" class="nav-btn">Gestion Inscriptions</button>
+                        <button onclick="loadComponent('mockups/19-admin-pedagogie.html', 'Planning', this)" class="nav-btn">Ingénierie Pédagogique</button>
+                        <button onclick="loadComponent('mockups/17-admin-qcms.html', 'Banque QCM', this)" class="nav-btn">Modération Contenus</button>
+                        <button onclick="loadComponent('mockups/04-admin-profile.html', 'Profil', this)" class="nav-btn">Paramètres Compte</button>
                     </div>
                     <div class="space-y-1">
-                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter block mb-2 px-3">Commun</span>
-                        <button onclick="loadComponent('mockups/20-profile-edit.html', '20. Modifier Profil', this)" class="nav-btn">20-profile-edit</button>
-                        <button onclick="loadComponent('mockups/21-error-404.html', '21. Erreur 404', this)" class="nav-btn">21-error-404</button>
-                        <button onclick="loadComponent('mockups/22-error-500.html', '22. Erreur 500', this)" class="nav-btn">22-error-500</button>
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter block mb-2 px-5 opacity-50 italic text-left">Système</span>
+                        <button onclick="loadComponent('mockups/21-error-404.html', '404', this)" class="nav-btn">Erreur 404</button>
+                        <button onclick="loadComponent('mockups/22-error-500.html', '500', this)" class="nav-btn">Erreur 500</button>
                     </div>
                 </div>
             </div>
         </nav>
 
         <!-- Footer -->
-        <div class="p-6 border-t border-slate-50 text-center bg-white">
-            <span class="text-[9px] font-black text-[#17B0CF] uppercase tracking-widest italic">SoliQuiz UI v2.0</span>
+        <div class="p-8 border-t border-slate-50 text-center bg-white">
+            <span class="text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] italic">Full Parity Sync</span>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full bg-slate-50 relative z-10">
+    <main class="flex-1 flex flex-col h-full bg-slate-50 relative z-10 overflow-hidden">
         <!-- Topbar -->
-        <header class="bg-white border-b border-slate-100 px-8 py-4 flex justify-between items-center z-20 shrink-0 h-[70px]">
+        <header class="bg-white border-b border-slate-100 px-10 h-20 flex justify-between items-center z-20 shrink-0">
             <div class="flex items-center gap-4 min-w-0">
-                <div id="status-dot" class="size-2.5 rounded-full bg-primary-500 shadow-lg shadow-primary-500/20"></div>
-                <h2 id="component-title" class="text-xs font-black text-slate-900 uppercase italic tracking-[0.2em] truncate font-heading">
-                    Sélectionnez un composant
+                <div id="status-dot" class="size-2 rounded-full bg-slate-200"></div>
+                <h2 id="component-title" class="text-[11px] font-black text-slate-900 uppercase italic tracking-[0.3em] truncate">
+                    Exploration du Design System
                 </h2>
             </div>
             <a id="open-new-tab" href="#" target="_blank" rel="noopener noreferrer"
-                class="hidden shrink-0 text-[10px] font-black uppercase tracking-widest italic px-6 py-2.5 border-2 border-slate-100 rounded-xl bg-white shadow-sm hover:border-primary-200 hover:text-primary-600 text-slate-500 flex items-center gap-3 transition-all font-heading">
-                Plein Écran
-                <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
+                class="hidden shrink-0 text-[10px] font-black uppercase tracking-widest italic px-8 py-3 bg-slate-900 text-white rounded-xl shadow-lg shadow-slate-900/10 hover:bg-primary-500 hover:shadow-primary-500/20 transition-all flex items-center gap-3 active:scale-95">
+                Ouvrir en Plein Écran
+                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
         </header>
 
         <!-- Preview -->
-        <div class="flex-1 overflow-hidden flex items-stretch justify-center relative p-0"
-            style="background-image: radial-gradient(circle, #e2e8f0 1.5px, transparent 1.5px); background-size: 32px 32px;">
+        <div class="flex-1 flex items-stretch justify-center relative p-10"
+            style="background-image: radial-gradient(circle, #e2e8f0 1.5px, transparent 1.5px); background-size: 40px 40px;">
             
-            <!-- Loading -->
-            <div id="loader" class="absolute inset-0 flex items-center justify-center bg-slate-50/40 backdrop-blur-[2px] z-[5] hidden transition-opacity duration-300">
-                <div class="relative flex items-center justify-center">
-                    <div class="size-12 border-4 border-slate-200 border-t-primary-500 rounded-full animate-spin"></div>
-                    <div class="absolute size-4 bg-primary-500 rounded-full animate-pulse"></div>
-                </div>
-            </div>
-
             <!-- Welcome State -->
-            <div id="welcome-state" class="absolute inset-0 flex flex-col items-center justify-center gap-10 text-center bg-slate-50/90 backdrop-blur-md z-10 px-6">
-                <div class="size-24 rounded-[2rem] bg-primary-500 flex items-center justify-center shadow-2xl shadow-primary-500/30">
-                    <svg class="text-white size-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <path d="m9 15 2 2 4-4" />
-                    </svg>
+            <div id="welcome-state" class="absolute inset-0 flex flex-col items-center justify-center gap-12 text-center bg-slate-50/95 backdrop-blur-xl z-10 px-8">
+                <div class="size-28 rounded-[2.5rem] bg-primary-500 flex items-center justify-center shadow-3xl shadow-primary-500/30 text-white">
+                    <svg class="size-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><path d="m9 15 2 2 4-4" /></svg>
                 </div>
-                <div class="space-y-4">
-                    <h2 class="font-heading font-black text-5xl text-slate-900 tracking-tighter uppercase italic">
-                        Soli<span class="text-[#17B0CF]">Quiz</span> UI
+                <div class="space-y-6">
+                    <h2 class="font-black text-6xl text-slate-900 tracking-tighter uppercase italic leading-none">
+                        Soli<span class="text-primary-500">Quiz</span> UI
                     </h2>
-                    <p class="text-slate-400 text-sm max-w-md mx-auto font-medium uppercase tracking-widest italic leading-relaxed">
-                        Design System complet basé sur les vues Laravel de SoliQuiz.</p>
+                    <p class="text-slate-400 text-[11px] font-black uppercase tracking-[0.4em] italic max-w-lg mx-auto">
+                        Référentiel Design System pour SoliQuiz App
+                    </p>
                 </div>
-
-                <div class="text-center">
-                        <span class="block text-3xl font-black text-slate-900 font-heading">3</span>
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Layouts</span>
-                    </div>
-                    <div class="w-px h-8 bg-slate-200 self-center"></div>
+                <div class="flex items-center gap-10">
                     <div class="text-center">
-                        <span class="block text-3xl font-black text-slate-900 font-heading">17</span>
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Atoms</span>
+                        <p class="text-4xl font-black text-slate-900 italic leading-none">17</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-2 italic">Atomes</p>
                     </div>
-                    <div class="w-px h-8 bg-slate-200 self-center"></div>
+                    <div class="w-px h-10 bg-slate-200"></div>
                     <div class="text-center">
-                        <span class="block text-3xl font-black text-[#17B0CF] font-heading">26</span>
-                        <span class="text-[9px] font-black text-[#17B0CF]/70 uppercase tracking-[0.3em] italic">Molécules</span>
+                        <p class="text-4xl font-black text-slate-900 italic leading-none">25</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-2 italic">Molécules</p>
                     </div>
-                    <div class="w-px h-8 bg-slate-200 self-center"></div>
+                    <div class="w-px h-10 bg-slate-200"></div>
                     <div class="text-center">
-                        <span class="block text-3xl font-black text-slate-900 font-heading">25</span>
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Mockups</span>
+                        <p class="text-4xl font-black text-primary-500 italic leading-none">28</p>
+                        <p class="text-[9px] font-black text-primary-400 uppercase tracking-widest mt-2 italic">Mockups</p>
                     </div>
                 </div>
-
-                <p class="text-[10px] font-black text-[#17B0CF] mt-8 animate-pulse uppercase tracking-[0.4em] italic bg-primary-50 px-6 py-2.5 rounded-full">
+                <p class="text-[10px] font-black text-primary-500 mt-8 animate-pulse uppercase tracking-[0.4em] italic bg-primary-50 px-6 py-2.5 rounded-full">
                     Sélectionnez un élément pour commencer
                 </p>
             </div>
 
-            <!-- Iframe -->
-            <div id="iframe-container" class="h-full w-full flex justify-center items-start transition-all duration-300 ease-in-out">
-                <iframe id="preview-frame" src="" class="w-full h-full border-x border-slate-100 bg-white shadow-2xl opacity-0" title="Preview"></iframe>
+            <!-- Iframe Container -->
+            <div id="iframe-container" class="h-full w-full flex justify-center items-center transition-all duration-500 ease-in-out relative">
+                <iframe id="preview-frame" src="" class="w-full h-full border border-slate-100 bg-white shadow-premium rounded-[3rem] opacity-0 transition-opacity duration-300" title="Preview"></iframe>
             </div>
         </div>
     </main>
@@ -278,23 +258,19 @@
             const titleEl = document.getElementById('component-title');
             const openLink = document.getElementById('open-new-tab');
             const welcomeState = document.getElementById('welcome-state');
-            const loader = document.getElementById('loader');
+            const dot = document.getElementById('status-dot');
 
-            // Active state
             if (currentBtn) currentBtn.classList.remove('active');
             btn.classList.add('active');
             currentBtn = btn;
 
-            // Update Title
             titleEl.textContent = title;
-
-            // Hide welcome
             welcomeState.style.display = 'none';
+            dot.classList.remove('bg-slate-200');
+            dot.classList.add('bg-primary-500', 'shadow-lg', 'shadow-primary-500/30');
 
-            // Show loader
-            loader.classList.remove('hidden');
             frame.classList.add('opacity-0');
-
+            
             setTimeout(() => {
                 frame.src = path;
                 openLink.href = path;
@@ -302,17 +278,15 @@
 
                 frame.onload = () => {
                     frame.classList.remove('opacity-0');
-                    loader.classList.add('hidden');
                 };
-            }, 100);
+            }, 50);
         }
 
         function resizeIframe(width, btn) {
             const frame = document.getElementById('preview-frame');
             const container = document.getElementById('iframe-container');
-
-            // Buttons state
             const btns = document.getElementById('vp-controls').querySelectorAll('button');
+            
             btns.forEach(b => {
                 b.classList.remove('bg-white', 'shadow-sm', 'text-slate-800');
                 b.classList.add('text-slate-500');
@@ -320,15 +294,12 @@
             btn.classList.add('bg-white', 'shadow-sm', 'text-slate-800');
             btn.classList.remove('text-slate-500');
 
-            // Apply resize
             if (width === '100%') {
-                frame.style.width = '100%';
-                frame.classList.remove('rounded-3xl', 'my-8', 'max-h-[90%]');
-                container.classList.remove('p-8');
+                container.style.width = '100%';
+                container.style.padding = '0';
             } else {
-                frame.style.width = width;
-                frame.classList.add('rounded-3xl', 'max-h-[90%]');
-                container.classList.add('p-8');
+                container.style.width = width;
+                container.style.padding = '2rem 0';
             }
         }
     </script>

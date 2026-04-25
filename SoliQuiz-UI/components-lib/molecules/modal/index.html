@@ -43,13 +43,26 @@
                                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic">Titre du QCM</label>
                                 <input type="text" placeholder="Ex: JavaScript Fondamentaux" class="w-full mt-2 bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 outline-none transition-all">
                             </div>
-                            <div>
-                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic">Unité d'apprentissage</label>
-                                <select class="w-full mt-2 bg-slate-50 border-2 border-transparent rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 outline-none transition-all appearance-none">
-                                    <option>Sélectionnez une UA...</option>
-                                    <option>UA1 - Web Basics</option>
-                                    <option>UA2 - JavaScript</option>
-                                </select>
+                            <div x-data="{ open: false, selected: '', options: [{value:'', label:'Sélectionnez une UA...'},{value:'1', label:'UA1 - Web Basics'},{value:'2', label:'UA2 - JavaScript'}], get selectedLabel(){ return this.options.find(o=>o.value===this.selected)?.label || 'Sélectionnez une UA...'; } }">
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-2 italic">Unité d'apprentissage</label>
+                                <div class="relative mt-2">
+                                    <button type="button" @click="open = !open" @click.away="open = false"
+                                        class="w-full h-14 bg-white border-2 border-[#17B0CF] rounded-full px-8 pr-12 text-[10px] font-black uppercase tracking-widest text-slate-900 outline-none focus:ring-8 focus:ring-[#17B0CF]/10 transition-all cursor-pointer italic shadow-sm flex items-center justify-between">
+                                        <span x-text="selectedLabel" class="truncate mr-2"></span>
+                                        <svg class="size-4 text-[#17B0CF] shrink-0 transition-transform duration-300" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
+                                    <div x-show="open"
+                                         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0 scale-100" x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                         class="absolute z-50 w-full mt-3 bg-white border border-slate-100 rounded-[2rem] shadow-premium overflow-hidden p-2" x-cloak>
+                                        <template x-for="opt in options" :key="opt.value">
+                                            <button type="button" @click="selected = opt.value; open = false"
+                                                class="w-full text-left px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest italic transition-all"
+                                                :class="selected === opt.value ? 'bg-[#17B0CF] text-white shadow-lg shadow-[#17B0CF]/20' : 'text-slate-600 hover:bg-primary-50 hover:text-[#17B0CF]'"
+                                                x-text="opt.label"></button>
+                                        </template>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,7 +91,7 @@
                             <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-black text-slate-900 mb-2">Confirmer la suppression</h3>
+                    <h3 class="text-3xl font-heading font-black text-slate-900 tracking-tight leading-none uppercase italic mb-4">Confirmer la suppression</h3>
                     <p class="text-sm text-slate-500 mb-6">Êtes-vous sûr de vouloir supprimer ce QCM ? Cette action est irréversible.</p>
                     <div class="flex gap-3 justify-center">
                         <button @click="deleteOpen = false" class="px-6 py-3 bg-white border-2 border-slate-200 text-slate-700 text-[11px] font-black uppercase tracking-widest rounded-2xl hover:border-slate-300 transition-all">Annuler</button>

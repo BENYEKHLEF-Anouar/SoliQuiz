@@ -5,89 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Molecule: Navbar Admin - SoliQuiz UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
-                            300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF',
-                            600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>[x-cloak] { display: none !important; }</style>
+    <link rel="stylesheet" href="../../../charte-graphique/app.css">
 </head>
-<body class="bg-slate-100 font-sans">
+<body class="bg-slate-50 font-sans">
     <div class="max-w-6xl mx-auto space-y-10 p-10">
         <div class="border-b border-slate-200 pb-4">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Molecule</p>
-            <h1 class="text-3xl font-black text-slate-900">Navbar Admin</h1>
-            <p class="text-slate-500 mt-2">Barre de navigation pour l'espace administrateur</p>
+            <p class="text-label mb-2">Molecule</p>
+            <h1 class="text-3xl font-black text-slate-900 uppercase italic">Admin Navbar</h1>
+            <p class="text-slate-500 mt-2">Barre de navigation horizontale premium pour les espaces de gestion.</p>
         </div>
 
         <section class="space-y-4">
-            <h2 class="text-lg font-bold text-slate-900">Navbar Admin</h2>
-            <div>
-                <!-- Navbar Admin -->
-                <header class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-slate-900 border-b border-slate-700">
-                    <nav class="relative max-w-7xl w-full flex flex-wrap md:grid md:grid-cols-12 basis-full items-center px-4 md:px-6 mx-auto py-3" aria-label="Navigation Admin">
-                        <!-- Logo Admin -->
-                        <div class="md:col-span-4">
-                            <a class="flex items-center gap-2 group outline-none" href="#" aria-label="SoliQuiz Admin">
-                                <div class="size-8 bg-[#17B0CF] rounded-lg flex items-center justify-center shadow-lg shadow-[#17B0CF]/20 transition-transform group-hover:scale-110">
-                                    <svg class="text-white size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                        <polyline points="14 2 14 8 20 8" />
-                                        <path d="m9 15 2 2 4-4" />
-                                    </svg>
-                                </div>
-                                <div class="flex flex-col leading-none">
-                                    <span class="text-xl font-bold text-white tracking-tight">Soli<span class="text-[#17B0CF]">Quiz</span></span>
-                                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] ml-0.5">Admin</span>
-                                </div>
-                            </a>
+            <h2 class="text-lg font-black text-slate-900 uppercase italic">Version Dark (Production Match)</h2>
+            <header class="w-full bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden">
+                <nav class="max-w-7xl mx-auto px-8 h-20 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="size-10 bg-primary-500 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-500/20 text-white">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><path d="m9 15 2 2 4-4" /></svg>
                         </div>
-
-                        <!-- Nav Menu -->
-                        <div class="hidden md:flex md:col-span-5 justify-center items-center gap-x-6">
-                            <a href="#" class="font-bold text-[#7dd3fc] focus:outline-none text-sm" aria-current="page">Vue Centre</a>
-                            <a href="#" class="font-bold text-slate-400 hover:text-white transition-colors focus:outline-none text-sm">Accès</a>
-                            <a href="#" class="font-bold text-slate-400 hover:text-white transition-colors focus:outline-none text-sm">SoliLMS Sync</a>
-                        </div>
-
-                        <!-- User -->
-                        <div class="flex items-center gap-x-3 ms-auto md:col-span-3 justify-end" x-data="{ userOpen: false }">
-                            <button @click="userOpen = !userOpen" class="flex items-center gap-x-2">
-                                <div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs font-bold" aria-label="SuperAdmin">
-                                    FA
-                                </div>
-                                <span class="hidden md:inline-block text-sm font-bold text-slate-300">SuperAdmin Fouad</span>
-                            </button>
-                            <a href="#" class="text-slate-500 hover:text-rose-400 transition-colors ml-1" aria-label="Déconnexion">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
-                                </svg>
-                            </a>
-
-                            <!-- Dropdown -->
-                            <div x-show="userOpen" @click.away="userOpen = false" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="absolute right-0 top-full mt-2 w-48 bg-slate-800 rounded-xl border border-slate-700 shadow-xl p-2 z-50" x-cloak>
-                                <a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-700">Mon Profil</a>
-                                <a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-700">Paramètres</a>
-                                <hr class="my-2 border-slate-700">
-                                <a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-rose-400 hover:bg-slate-700">Déconnexion</a>
-                            </div>
-                        </div>
-                    </nav>
-                </header>
-            </div>
+                        <span class="text-2xl font-heading font-black text-white tracking-tighter italic uppercase">Soli<span class="text-primary-500">Quiz</span></span>
+                    </div>
+                    <div class="flex items-center gap-8">
+                        <a href="#" class="text-[10px] font-black text-slate-400 hover:text-white transition-colors uppercase tracking-[0.2em] italic">Statistiques</a>
+                        <a href="#" class="text-[10px] font-black text-slate-400 hover:text-white transition-colors uppercase tracking-[0.2em] italic">Logs Système</a>
+                        <button class="h-10 px-6 bg-primary-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary-600 transition-all italic">Dashboard</button>
+                    </div>
+                </nav>
+            </header>
         </section>
     </div>
 </body>

@@ -4,157 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atom: Logo - SoliQuiz UI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind V4 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
                     colors: {
                         primary: {
-                            50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4',
-                            300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6',
-                            600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a',
+                            50: 'hsl(190, 85%, 96%)',
+                            100: 'hsl(190, 85%, 90%)',
+                            200: 'hsl(190, 85%, 80%)',
+                            300: 'hsl(190, 80%, 70%)',
+                            400: 'hsl(190, 75%, 60%)',
+                            500: 'hsl(190, 80%, 45%)',
+                            600: 'hsl(190, 85%, 35%)',
+                            700: 'hsl(190, 85%, 28%)',
+                            800: 'hsl(190, 80%, 22%)',
+                            900: 'hsl(190, 75%, 15%)',
                         }
                     }
                 }
             }
         }
     </script>
+    <link rel="stylesheet" href="../../../charte-graphique/app.css">
 </head>
-<body class="bg-slate-50 p-10 font-sans">
-    <div class="max-w-4xl mx-auto space-y-10">
+<body class="bg-slate-50 p-10 font-sans uppercase">
+    <div class="max-w-4xl mx-auto space-y-16">
         <!-- Header -->
-        <div class="border-b border-slate-200 pb-4">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Atom</p>
-            <h1 class="text-3xl font-black text-slate-900">Logo</h1>
-            <p class="text-slate-500 mt-2">Logo et identité visuelle de SoliQuiz</p>
+        <div class="border-b border-slate-200 pb-10 italic">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4 italic">Fondations Atomiques</p>
+            <h1 class="text-5xl font-black text-slate-900 italic tracking-tighter uppercase">Signature <span class="text-primary-500">Logo</span></h1>
+            <p class="text-[11px] font-bold text-slate-400 mt-4 uppercase tracking-widest italic">Identité visuelle et branding institutionnel</p>
         </div>
 
-        <!-- Logo Variants -->
-        <section class="space-y-4">
-            <h2 class="text-lg font-bold text-slate-900">Logo Variants</h2>
-            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-8">
-                <!-- Large Logo -->
-                <div class="flex items-center gap-4">
-                    <div class="size-16 bg-primary-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-primary-500/40">
-                        <svg class="text-white size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="text-3xl font-black tracking-tight text-slate-900 leading-none">Soli<span class="text-primary-500">Quiz</span></span>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1.5 italic">Plateforme d'Évaluation</p>
+        <!-- Master Signature -->
+        <section class="space-y-8">
+            <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Signature Maîtresse</h2>
+            <div class="p-16 bg-white rounded-[4rem] border border-slate-100 shadow-premium flex flex-col items-center justify-center text-center group">
+                <div class="size-28 bg-primary-500 rounded-[2.5rem] flex items-center justify-center shadow-3xl shadow-primary-500/30 mb-10 transition-transform group-hover:rotate-12 duration-500">
+                    <svg class="text-white size-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <path d="m9 15 2 2 4-4" />
+                    </svg>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-6xl font-black tracking-tighter text-slate-900 leading-none italic uppercase">Soli<span class="text-primary-500">Quiz</span></span>
+                    <p class="text-[12px] font-black text-slate-400 uppercase tracking-[0.5em] italic">Plateforme d'Évaluation de Précision</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Variants -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <!-- Sidebar Variant -->
+            <div class="space-y-6 italic">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Intégration Sidebar</h3>
+                <div class="p-10 bg-slate-900 rounded-[3rem] border border-white/5">
+                    <div class="flex items-center gap-4">
+                        <div class="size-11 bg-primary-500 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/20 text-white">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <path d="m9 15 2 2 4-4" />
+                            </svg>
+                        </div>
+                        <div class="flex flex-col text-left">
+                            <span class="text-2xl font-black text-white tracking-tighter leading-none uppercase italic">Soli<span class="text-primary-500">Quiz</span></span>
+                            <span class="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mt-1.5 italic">Espace Certifié</span>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Medium Logo -->
-                <div class="flex items-center gap-3">
-                    <div class="size-11 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20">
-                        <svg class="text-white size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-2xl font-black tracking-tight text-slate-900 leading-none">Soli<span class="text-primary-500">Quiz</span></span>
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1 italic">Plateforme d'Évaluation</span>
-                    </div>
-                </div>
-
-                <!-- Small Logo -->
-                <div class="flex items-center gap-2">
-                    <div class="size-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-md shadow-primary-500/20">
-                        <svg class="text-white size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <span class="text-lg font-black text-slate-900 leading-none">Soli<span class="text-primary-500">Quiz</span></span>
-                </div>
-
-                <!-- Icon Only -->
-                <div class="flex items-center gap-4">
-                    <div class="size-12 bg-primary-500 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/20">
-                        <svg class="text-white size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20">
-                        <svg class="text-white size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div class="size-7 bg-primary-500 rounded-lg flex items-center justify-center shadow-md shadow-primary-500/20">
-                        <svg class="text-white size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
+            <!-- Header Variant -->
+            <div class="space-y-6 italic">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Intégration Header</h3>
+                <div class="p-10 bg-white rounded-[3rem] border border-slate-100 shadow-sm flex items-center justify-center">
+                    <div class="flex items-center gap-3">
+                        <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 text-white">
+                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <path d="m9 15 2 2 4-4" />
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-black text-slate-900 tracking-tighter uppercase italic">Soli<span class="text-primary-500">Quiz</span></span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Sidebar Logo -->
-        <section class="space-y-4">
-            <h2 class="text-lg font-bold text-slate-900">Sidebar Logo</h2>
-            <div class="p-6 bg-white rounded-2xl border border-slate-200">
-                <div class="flex items-center gap-3">
-                    <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 text-white">
-                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-lg font-black text-slate-900 tracking-tight leading-none uppercase italic">Soli<span class="text-primary-500">Quiz</span></span>
-                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Espace Formateur</span>
-                    </div>
+        <!-- Construction Tokens -->
+        <section class="space-y-8">
+            <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Spécifications Techniques</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 italic">
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center">
+                    <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Police</p>
+                    <p class="text-xs font-black text-slate-900">Plus Jakarta Sans</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- White/Dark Variants -->
-        <section class="space-y-4">
-            <h2 class="text-lg font-bold text-slate-900">Dark Mode Variants</h2>
-            <div class="p-6 bg-slate-900 rounded-2xl space-y-6">
-                <!-- White on Dark -->
-                <div class="flex items-center gap-3">
-                    <div class="size-9 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center border border-white/20">
-                        <svg class="text-white size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <span class="text-lg font-black text-white leading-none">Soli<span class="text-primary-400">Quiz</span></span>
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center">
+                    <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Style</p>
+                    <p class="text-xs font-black text-slate-900 italic uppercase">Black Italic</p>
                 </div>
-                
-                <!-- Larger Dark Variant -->
-                <div class="flex items-center gap-4">
-                    <div class="size-16 bg-primary-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-primary-500/30">
-                        <svg class="text-white size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-5xl font-black text-white leading-tight mb-2">
-                            L'excellence <span class="text-primary-400">pédagogique</span>.
-                        </h2>
-                    </div>
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center">
+                    <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Couleur</p>
+                    <p class="text-xs font-black text-primary-500">Ocean Teal</p>
+                </div>
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center">
+                    <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Arrondi</p>
+                    <p class="text-xs font-black text-slate-900">Squircle / 2.5rem</p>
                 </div>
             </div>
         </section>
