@@ -140,7 +140,7 @@ class StudentController extends Controller
         $this->passationService->enregistrerReponses($tentative, $request->input('answers', []));
         $this->passationService->soumettre($tentative);
 
-        return redirect()->route('student.resultats', ['id' => $id]);
+        return redirect()->route('student.resultats', ['id' => $id])->with('success', 'QCM soumis avec succès !');
     }
 
     /**

@@ -31,11 +31,11 @@
      x-transition:leave-start="opacity-100"
      x-transition:leave-end="opacity-0"
      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-60 lg:hidden"
-     @click="sidebarOpen = false"
      x-cloak></div>
 
 <!-- Sidebar Container -->
 <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+       @click.away="sidebarOpen = false"
        class="fixed top-0 left-0 w-72 transition-transform duration-300 ease-out z-70 h-screen shrink-0">
     
     <div class="h-full p-4"> <!-- Inner wrapper to maintain floating look while container hits the edges -->
