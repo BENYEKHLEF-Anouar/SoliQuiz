@@ -147,6 +147,7 @@
                 }
             },
             async fetchProfile() {
+                try {
                     const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/profile`);
                     this.profile = await response.json();
                 } catch (e) {
@@ -154,6 +155,7 @@
                 }
             },
             async fetchScores() {
+                try {
                     const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/scores`);
                     this.scores = await response.json();
                 } catch (e) {
@@ -161,6 +163,7 @@
                 }
             },
             async fetchEvaluations() {
+                try {
                     const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/evaluations`);
                     this.evaluations = await response.json();
                 } catch (e) {
@@ -168,6 +171,7 @@
                 }
             },
             async fetchNotifications() {
+                try {
                     const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/notifications`);
                     this.notifications = await response.json();
                 } catch (e) {

@@ -18,15 +18,45 @@
             </a>
         </div>
 
-        <div class="hs-dropdown relative inline-flex">
-            <button id="hs-dropdown-avatar" class="hs-dropdown-toggle size-[38px] rounded-full ring-2 ring-primary-500/20 border-2 border-slate-950 overflow-hidden active:scale-95 transition-transform">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Avatar">
+        <div class="relative" x-data="{ open: false }" x-init="$store.config.profile || fetchProfile()">
+            <button @click="open = !open" class="size-[38px] rounded-full ring-2 ring-primary-500/20 overflow-hidden active:scale-95 transition-transform bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-primary-500/30">
+                <span x-text="$store.config.getInitials()">FM</span>
             </button>
-            <div class="hs-dropdown-menu transition-[opacity,margin] hs-dropdown-open:opacity-100 opacity-0 hidden min-w-48 bg-white shadow-xl rounded-2xl p-2 mt-2 border border-slate-100" role="menu">
+            <div x-show="open"
+                 @click.away="open = false"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute right-0 top-full z-50 min-w-48 bg-white shadow-xl rounded-2xl p-2 mt-2 border border-slate-100"
+                 role="menu">
+                <div class="px-3 py-2 border-b border-slate-100 mb-1">
+                    <p class="text-sm font-bold text-slate-900" x-text="$store.config.getFullName()"></p>
+                    <p class="text-xs text-slate-500" x-text="$store.config.getEmail()"></p>
+                </div>
                 <a class="flex items-center gap-x-3 py-2 px-3 rounded-xl text-sm text-slate-700 hover:bg-slate-50 font-medium" href="{{ route('formateur.profile') }}">Mon Profil</a>
                 <div class="my-1 border-t border-slate-100"></div>
-                <a class="flex items-center gap-x-3 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 font-bold" href="{{ route('landing') }}">Déconnexion</a>
+                <button @click="$store.config.logout()" class="w-full flex items-center gap-x-3 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 font-bold text-left">Déconnexion</button>
             </div>
         </div>
+
+        <script>
+            async function fetchProfile() {
+                if (Alpine.store('config').profile) return;
+                try {
+                    const response = await Alpine.store('config').authFetch(
+                        `${Alpine.store('config').apiBaseUrl}/formateur/profile`
+                    );
+                    if (response.ok) {
+                        const data = await response.json();
+                        Alpine.store('config').setProfile(data);
+                    }
+                } catch (e) {
+                    console.error('Failed to load profile', e);
+                }
+            }
+        </script>
     </div>
 </header>

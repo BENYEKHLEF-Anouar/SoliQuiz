@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr" class="bg-slate-950 border-x border-white/5 shadow-2xl h-full mx-auto w-full max-w-[430px] scroll-smooth">
+<html lang="fr" class="bg-slate-50 border-x border-white/5 shadow-2xl h-full mx-auto w-full max-w-[430px] scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#f8fafc">
     <title>SoliQuiz Mobile</title>
     
     <!-- Fonts -->

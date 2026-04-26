@@ -78,7 +78,8 @@ class QcmController extends Controller
             ];
         });
         $score = $tentative->score_obtenu;
-        $percentage = round(($score / 20) * 100);
+        $maxScore = $qcm->questions()->sum('points') ?: ($qcm->questions()->count() * 2) ?: 20;
+        $percentage = $maxScore > 0 ? round(($score / $maxScore) * 100) : 0;
         $objectiveMet = $score >= $qcm->score_reussite;
         return response()->json([
             'qcmId' => $qcm->id,

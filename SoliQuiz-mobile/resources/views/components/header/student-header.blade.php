@@ -19,14 +19,45 @@
         </div>
 
         <!-- Profile Dropdown -->
-        <div class="hs-dropdown relative inline-flex">
-            <button id="hs-dropdown-profile" type="button" class="hs-dropdown-toggle w-10 h-10 rounded-full border border-slate-200 bg-white shadow-sm overflow-hidden active:scale-95 transition-transform focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
-                <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80" alt="Avatar">
+        <div class="relative" x-data="{ open: false }" x-init="$store.config.studentProfile || fetchStudentProfile()">
+            <button @click="open = !open" class="size-[38px] rounded-full ring-2 ring-primary-500/20 overflow-hidden active:scale-95 transition-transform bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-primary-500/30">
+                <span x-text="$store.config.getStudentInitials()">ST</span>
             </button>
-            <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-48 bg-white shadow-xl rounded-2xl p-2 mt-2 border border-slate-100 z-50" role="menu">
-                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-slate-800 hover:bg-slate-50 font-medium" href="{{ route('student.profile') }}">Mon Profil</a>
-                <button type="button" @click="Alpine.store('config').logout()" class="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 font-bold">Déconnexion</button>
+            <div x-show="open"
+                 @click.away="open = false"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute right-0 top-full z-50 min-w-48 bg-white shadow-xl rounded-2xl p-2 mt-2 border border-slate-100"
+                 role="menu">
+                <div class="px-3 py-2 border-b border-slate-100 mb-1">
+                    <p class="text-sm font-bold text-slate-900" x-text="$store.config.getStudentFullName()"></p>
+                    <p class="text-xs text-slate-500" x-text="$store.config.getStudentEmail()"></p>
+                </div>
+                <a class="flex items-center gap-x-3 py-2 px-3 rounded-xl text-sm text-slate-700 hover:bg-slate-50 font-medium" href="{{ route('student.profile') }}">Mon Profil</a>
+                <div class="my-1 border-t border-slate-100"></div>
+                <button @click="$store.config.logout()" class="w-full flex items-center gap-x-3 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 font-bold text-left">Déconnexion</button>
             </div>
         </div>
+
+        <script>
+            async function fetchStudentProfile() {
+                if (Alpine.store('config').studentProfile) return;
+                try {
+                    const response = await Alpine.store('config').authFetch(
+                        `${Alpine.store('config').apiBaseUrl}/student/profile`
+                    );
+                    if (response.ok) {
+                        const data = await response.json();
+                        Alpine.store('config').setStudentProfile(data);
+                    }
+                } catch (e) {
+                    console.error('Failed to load student profile', e);
+                }
+            }
+        </script>
     </div>
 </header>

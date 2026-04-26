@@ -32,6 +32,9 @@ Route::prefix('formateur')->group(function () {
     Route::get('/qcms', function () {
         return view('formateur.qcms');
     })->name('formateur.qcms');
+    Route::get('/qcm/{id}/results', function ($id) {
+        return view('formateur.qcm-results', ['qcmId' => $id]);
+    })->name('formateur.qcm-results');
     Route::get('/class-notes', function () {
         return view('formateur.class-notes');
     })->name('formateur.class-notes');

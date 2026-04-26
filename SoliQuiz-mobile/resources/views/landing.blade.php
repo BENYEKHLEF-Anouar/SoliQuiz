@@ -121,7 +121,14 @@
 
             <footer class="mt-20 pt-10 border-t border-slate-100 pb-12">
                 <div class="flex items-center justify-center gap-2 opacity-50 mb-4 transition-opacity hover:opacity-100">
-                    <div class="size-6 bg-slate-900 rounded-lg shadow-lg shadow-slate-900/10"></div>
+                    <div class="size-6 bg-slate-900 rounded-lg flex items-center justify-center shadow-lg shadow-slate-900/10">
+                        <svg class="text-white size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="m9 15 2 2 4-4" />
+                        </svg>
+                    </div>
                     <span class="font-heading font-black text-sm uppercase tracking-widest text-slate-900">SoliQuiz</span>
                 </div>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] leading-loose">

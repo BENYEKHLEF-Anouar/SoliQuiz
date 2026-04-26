@@ -9,25 +9,36 @@
         <div class="flex flex-col gap-4 mb-6">
             <h1 class="text-2xl font-heading font-bold tracking-tight text-slate-900">Notes & Suivi</h1>
             
-            <div class="hs-dropdown relative inline-flex w-full">
-                <button id="hs-dropdown-cohort" type="button"
-                    class="hs-dropdown-toggle w-full flex justify-between items-center bg-white border border-slate-200 text-slate-800 rounded-xl py-3 px-4 text-sm font-bold shadow-sm outline-none">
-                    <span x-text="selectedCohortId ? cohorts.find(c => c.id == selectedCohortId)?.name : 'Sélectionner une classe'"></span>
-                    <svg class="hs-dropdown-open:rotate-180 size-4 transition" xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
+            <!-- Custom Styled Cohort Filter -->
+            <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                <button @click="open = !open" type="button"
+                    class="w-full flex justify-between items-center bg-white border border-slate-200 text-slate-700 rounded-xl py-3.5 px-4 text-sm font-bold shadow-sm outline-none transition-all hover:border-primary-300">
+                    <span class="flex items-center gap-2">
+                        <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <span x-text="selectedCohortId ? cohorts.find(c => c.id == selectedCohortId)?.name : 'Sélectionner une classe'"></span>
+                    </span>
+                    <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="m6 9 6 6 6-6" />
                     </svg>
                 </button>
-                <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-full bg-white shadow-lg rounded-xl p-1 mt-2 border border-slate-200 z-[60]"
-                    role="menu">
+                <!-- Custom Dropdown Menu -->
+                <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
+                    class="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl p-2 z-50 max-h-60 overflow-y-auto">
                     <template x-for="cohort in cohorts" :key="cohort.id">
-                        <a class="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm transition-colors text-start outline-none" 
-                           :class="selectedCohortId == cohort.id ? 'text-primary-600 font-bold bg-primary-50' : 'text-slate-800 hover:bg-slate-100'"
-                           href="#"
-                           @click.prevent="selectedCohortId = cohort.id; fetchStudents()">
+                        <button @click="selectedCohortId = cohort.id; open = false; fetchStudents()"
+                            class="w-full flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-bold transition-colors text-left"
+                            :class="selectedCohortId == cohort.id ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'">
+                            <span class="size-8 rounded-lg flex items-center justify-center text-xs font-black"
+                                :class="selectedCohortId == cohort.id ? 'bg-primary-100 text-primary-600' : 'bg-slate-100 text-slate-500'"
+                                x-text="cohort.name.substring(0, 2).toUpperCase()">
+                            </span>
                             <span x-text="cohort.name"></span>
-                        </a>
+                            <svg x-show="selectedCohortId == cohort.id" class="size-4 ml-auto text-primary-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        </button>
                     </template>
                 </div>
             </div>
@@ -70,10 +81,8 @@
                     :class="student.averageScore < 10 ? 'border-l-4 border-l-semantic-error' : 'border-l-4 border-l-transparent'"
                     @click="showStudentDetail(student)">
                     
-                    <div class="size-12 rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100 shrink-0 transition-colors group-hover:bg-primary-50">
-                        <img class="size-full rounded-2xl object-cover" 
-                            src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=facearea&facepad=2&w=150&h=150&q=80" 
-                            alt="Avatar">
+                    <div class="size-12 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center border border-slate-100 shrink-0 transition-colors group-hover:from-primary-50 group-hover:to-primary-100 group-hover:border-primary-200">
+                        <span class="text-sm font-bold text-slate-500 group-hover:text-primary-600 transition-colors" x-text="getInitials(student.name)">ST</span>
                     </div>
                     
                     <div class="ms-4 flex-1">
@@ -106,12 +115,12 @@
         class="hs-overlay hs-overlay-open:translate-y-0 translate-y-full fixed bottom-0 inset-x-0 transition-all duration-300 transform h-2/3 max-w-[430px] mx-auto w-full z-[80] bg-white border-t border-slate-200 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] hidden"
         role="dialog" tabindex="-1" aria-labelledby="hs-offcanvas-student-label">
         <div class="flex justify-between items-center py-4 px-5 border-b border-slate-100">
-            <div class="flex items-center gap-3">
-                <img class="w-10 h-10 rounded-full border border-slate-200"
-                    src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=facearea&facepad=2&w=150&h=150&q=80"
-                    alt="Avatar">
-                <h3 id="hs-offcanvas-student-label" class="font-bold text-slate-900 text-lg" x-text="selectedStudent?.name"></h3>
-            </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-sm"
+                         x-text="selectedStudent ? getInitials(selectedStudent.name) : 'ST'">
+                    </div>
+                    <h3 id="hs-offcanvas-student-label" class="font-bold text-slate-900 text-lg" x-text="selectedStudent?.name"></h3>
+                </div>
             <button type="button"
                 class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-slate-100 text-slate-800 hover:bg-slate-200 focus:outline-none focus:bg-slate-200"
                 aria-label="Close" data-hs-overlay="#hs-offcanvas-student">
@@ -211,7 +220,7 @@
             async fetchCohorts() {
                 this.loading = true;
                 try {
-                    const response = await fetch(`${Alpine.store('config').apiBaseUrl}/formateur/cohorts`);
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/formateur/cohorts`);
                     this.cohorts = await response.json();
                     if (this.cohorts.length > 0) {
                         this.selectedCohortId = this.cohorts[0].id;
@@ -227,7 +236,7 @@
                 if (!this.selectedCohortId) return;
                 this.loading = true;
                 try {
-                    const response = await fetch(`${Alpine.store('config').apiBaseUrl}/formateur/cohorts/${this.selectedCohortId}/students`);
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/formateur/cohorts/${this.selectedCohortId}/students`);
                     this.students = await response.json();
                 } catch (e) {
                     console.error('Failed to load students', e);
@@ -242,6 +251,13 @@
                     el.classList.remove('hidden');
                     el.classList.add('translate-y-0');
                 }
+            },
+            getInitials(name) {
+                if (!name) return 'ST';
+                const parts = name.split(' ');
+                const first = parts[0]?.charAt(0).toUpperCase() || '';
+                const last = parts[parts.length - 1]?.charAt(0).toUpperCase() || '';
+                return first + last;
             }
         }));
     });

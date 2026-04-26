@@ -42,9 +42,11 @@
             <div class="flex flex-col items-center mb-10">
                 <div class="relative group">
                     <div class="absolute inset-0 bg-primary-500 rounded-full blur-2xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                    <img class="relative inline-block size-28 rounded-full border-4 border-white shadow-xl object-cover transition-transform group-hover:scale-105" 
-                        src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80" 
-                        alt="Avatar">
+                    <!-- Initials Avatar -->
+                    <div class="relative inline-flex items-center justify-center size-28 rounded-full border-4 border-white shadow-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white font-bold text-3xl tracking-tight transition-transform group-hover:scale-105"
+                         x-text="getInitials(profile.prenom, profile.nom)">
+                        ST
+                    </div>
                     <button class="absolute bottom-1 right-1 bg-slate-950 text-white p-2.5 rounded-2xl shadow-xl border-2 border-white active:scale-90 transition-all outline-none">
                         <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -52,7 +54,7 @@
                         </svg>
                     </button>
                 </div>
-                <h2 class="mt-6 text-2xl font-heading font-extrabold text-slate-900 tracking-tight leading-none" x-text="profile.nom + ' ' + (profile.prenom || '')">Chargement...</h2>
+                <h2 class="mt-6 text-2xl font-heading font-extrabold text-slate-900 tracking-tight leading-none" x-text="(profile.prenom || '') + ' ' + (profile.nom || '')">Chargement...</h2>
                 <p class="text-[10px] font-black text-primary-600 mt-2 uppercase tracking-[0.2em]">
                     <span x-text="profile.role || 'Apprenant'"></span> <span class="mx-1 text-slate-200">/</span> <span x-text="profile.cohort || 'Cohorte'"></span>
                 </p>
@@ -90,7 +92,7 @@
                 </div>
 
                 <!-- Logout Button -->
-                <a href="{{ route('landing') }}"
+                <button @click="$store.config.logout()"
                     class="w-full h-16 inline-flex justify-center items-center gap-x-2 text-[10px] font-black uppercase tracking-[0.25em] rounded-2xl border-2 border-slate-100 bg-white text-slate-900 hover:bg-slate-950 hover:text-white hover:border-slate-950 transition-all active:scale-[0.98]">
                     Déconnexion
                     <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -99,7 +101,7 @@
                         <polyline points="16 17 21 12 16 7" />
                         <line x1="21" y1="12" x2="9" y2="12" />
                     </svg>
-                </a>
+                </button>
                 
                 <p class="text-center text-[9px] font-black text-slate-200 uppercase tracking-[0.4em] pt-10 leading-loose">
                     SoliQuiz Mobile v1.0<br/> <span class="text-slate-100">© 2026 Solicode</span>
@@ -120,21 +122,32 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('profile', () => ({
-            profile: {},
             loading: false,
+            get profile() {
+                return Alpine.store('config').studentProfile || {};
+            },
             async init() {
-                await this.fetchProfile();
+                // Use cached profile if available, otherwise fetch
+                if (!Alpine.store('config').studentProfile) {
+                    await this.fetchProfile();
+                }
             },
             async fetchProfile() {
                 this.loading = true;
                 try {
-                    const response = await fetch(`${Alpine.store('config').apiBaseUrl}/student/profile`);
-                    this.profile = await response.json();
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/profile`);
+                    const data = await response.json();
+                    Alpine.store('config').setStudentProfile(data);
                 } catch (e) {
                     console.error('Failed to load profile', e);
                 } finally {
                     this.loading = false;
                 }
+            },
+            getInitials(prenom, nom) {
+                const p = (prenom || '').charAt(0).toUpperCase();
+                const n = (nom || '').charAt(0).toUpperCase();
+                return p + n || 'ST';
             }
         }));
     });

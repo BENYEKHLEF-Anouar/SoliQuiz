@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Formateur endpoints - formulaire role only (admins can also access via their bypass)
-    Route::prefix('formateur')->group(function () {
+    Route::prefix('formateur')->middleware('auth:sanctum')->group(function () {
         Route::get('/profile', [FormateurController::class, 'profile']);
         Route::get('/qcms', [FormateurController::class, 'qcms']);
         Route::get('/qcms/{qcmId}/results', [FormateurController::class, 'qcmResults']);

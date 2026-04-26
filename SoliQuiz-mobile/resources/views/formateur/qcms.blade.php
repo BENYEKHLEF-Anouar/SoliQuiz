@@ -19,24 +19,76 @@
              x-transition:enter="transition ease-out duration-700 delay-300"
              x-transition:enter-start="opacity-0 translate-y-4"
              x-transition:enter-end="opacity-100 translate-y-0">
-            <div class="flex flex-col gap-5 mb-8">
-                <!-- PRELINE SEARCH INPUT -->
-                <div class="relative group">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none transition-colors group-focus-within:text-primary-500">
-                        <svg class="shrink-0 size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8" />
-                            <path d="m21 21-4.3-4.3" />
-                        </svg>
+            <div class="flex flex-col gap-4 mb-6">
+                <!-- Search & Filter Row -->
+                <div class="flex gap-3">
+                    <!-- Search Input -->
+                    <div class="relative group flex-1">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none transition-colors group-focus-within:text-primary-500">
+                            <svg class="shrink-0 size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.3-4.3" />
+                            </svg>
+                        </div>
+                        <input type="text" x-model="search" @input="applyFilters"
+                            class="py-3.5 px-4 pl-11 block w-full border-slate-100 bg-white shadow-sm rounded-2xl text-sm font-medium focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 transition-all outline-none"
+                            placeholder="Rechercher un QCM...">
+                        <button x-show="search" x-cloak @click="search = ''; applyFilters()" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+                            </svg>
+                        </button>
                     </div>
-                    <input type="text" x-model="search"
-                        class="py-3.5 px-4 ps-11 block w-full border-slate-100 bg-white shadow-sm rounded-2xl text-sm font-medium focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 transition-all outline-none"
-                        placeholder="Rechercher un QCM...">
+
+                    <!-- Status Filter Dropdown -->
+                    <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                        <button @click="open = !open" type="button"
+                            class="h-full flex items-center justify-center bg-white border border-slate-200 text-slate-600 rounded-2xl px-4 shadow-sm outline-none transition-all hover:border-primary-300">
+                            <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                            </svg>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute top-full right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl p-2 z-50 w-48">
+                            <button @click="statusFilter = 'all'; open = false; applyFilters()"
+                                class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors text-left"
+                                :class="statusFilter === 'all' ? 'bg-slate-100 text-slate-800' : 'text-slate-600 hover:bg-slate-50'">
+                                <span class="size-2 rounded-full bg-slate-400"></span>
+                                Tous les statuts
+                            </button>
+                            <button @click="statusFilter = 'Actif'; open = false; applyFilters()"
+                                class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors text-left"
+                                :class="statusFilter === 'Actif' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'">
+                                <span class="size-2 rounded-full bg-primary-500 animate-pulse"></span>
+                                Actif
+                            </button>
+                            <button @click="statusFilter = 'Terminé'; open = false; applyFilters()"
+                                class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors text-left"
+                                :class="statusFilter === 'Terminé' ? 'bg-slate-100 text-slate-700' : 'text-slate-600 hover:bg-slate-50'">
+                                <span class="size-2 rounded-full bg-slate-500"></span>
+                                Terminé
+                            </button>
+                            <button @click="statusFilter = 'Brouillon'; open = false; applyFilters()"
+                                class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors text-left"
+                                :class="statusFilter === 'Brouillon' ? 'bg-amber-50 text-amber-600' : 'text-slate-600 hover:bg-slate-50'">
+                                <span class="size-2 rounded-full bg-amber-500"></span>
+                                Brouillon
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                
+
+                <!-- Count & Active Filters -->
                 <div class="flex justify-between items-center px-1">
                     <h2 class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]" x-text="'Mes Créations (' + filteredQcms.length + ')'"></h2>
+                    <button x-show="search || statusFilter !== 'all'" x-cloak @click="resetFilters"
+                        class="text-[10px] font-bold text-primary-600 uppercase tracking-widest hover:text-primary-700 transition-colors flex items-center gap-1">
+                        <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12" /><path d="M3 3v9h9" /></svg>
+                        Réinitialiser
+                    </button>
                 </div>
             </div>
 
@@ -138,6 +190,7 @@
 
     <style>
         .hide-scrollbar::-webkit-scrollbar { display: none; }
+        [x-cloak] { display: none !important; }
     </style>
 </div>
 
@@ -145,29 +198,51 @@
     document.addEventListener('alpine:init', () => {
         Alpine.data('formateurQcms', () => ({
             qcms: [],
+            filteredQcms: [],
             loading: true,
             search: '',
-            get filteredQcms() {
-                if (!this.search) return this.qcms;
-                const term = this.search.toLowerCase();
-                return this.qcms.filter(q => q.title.toLowerCase().includes(term));
-            },
+            statusFilter: 'all',
+
             async init() {
                 this.loading = true;
                 await this.fetchQcms();
             },
+
             async fetchQcms() {
                 try {
-                    const response = await fetch(`${Alpine.store('config').apiBaseUrl}/formateur/qcms`);
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/formateur/qcms`);
                     this.qcms = await response.json();
+                    this.applyFilters();
                 } catch (e) {
                     console.error('Failed to load QCMs', e);
                 } finally {
                     setTimeout(() => { this.loading = false; }, 800);
                 }
+            },
+
+            applyFilters() {
+                let filtered = [...this.qcms];
+
+                // Search filter
+                if (this.search) {
+                    const term = this.search.toLowerCase();
+                    filtered = filtered.filter(q => q.title.toLowerCase().includes(term));
+                }
+
+                // Status filter
+                if (this.statusFilter !== 'all') {
+                    filtered = filtered.filter(q => q.status === this.statusFilter);
+                }
+
+                this.filteredQcms = filtered;
+            },
+
+            resetFilters() {
+                this.search = '';
+                this.statusFilter = 'all';
+                this.applyFilters();
             }
         }));
     });
 </script>
 @endsection
-

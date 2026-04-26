@@ -70,7 +70,7 @@ class StudentController extends Controller
             return [
                 'id' => $qcm->id,
                 'title' => $qcm->titre,
-                'subject' => $qcm->uniteApprentissage->nom ?? 'General',
+                'subject' => optional($qcm->uniteApprentissage)->nom ?? 'General',
                 'dueDate' => null, // Not in schema
                 'urgent' => false,
             ];

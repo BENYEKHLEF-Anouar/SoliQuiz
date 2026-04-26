@@ -131,12 +131,16 @@ class FormateurController extends Controller
             ->orderBy('score_obtenu', 'desc')
             ->get();
 
-        $formatted = $tentatives->map(function ($tentative) use ($qcm) {
+        $totalQuestions = $qcm->questions()->count();
+        $maxScore = $qcm->questions()->sum('points') ?: ($totalQuestions * 2); // Fallback to 2pts per question
+
+        $formatted = $tentatives->map(function ($tentative) use ($totalQuestions, $maxScore) {
             return [
                 'id' => $tentative->id,
                 'studentName' => $tentative->etudiant ? $tentative->etudiant->prenom . ' ' . $tentative->etudiant->nom : 'Étudiant Inconnu',
                 'score' => $tentative->score_obtenu,
-                'totalQuestions' => tap($qcm->questions)->count(),
+                'totalQuestions' => $totalQuestions,
+                'maxScore' => $maxScore,
                 'date' => $tentative->date_fin ? $tentative->date_fin->format('Y-m-d H:i') : null,
             ];
         });

@@ -10,50 +10,180 @@
                     <path d="m15 18-6-6 6-6" />
                 </svg>
             </a>
-            <div>
-                <h1 class="text-lg font-heading font-bold text-white tracking-tight leading-none" x-text="qcmTitle || 'Chargement...'"></h1>
-                <p class="text-[10px] font-black text-slate-400 font-bold uppercase tracking-[0.2em] mt-1">Résultats de passage</p>
+            <div class="flex-1 min-w-0">
+                <h1 class="text-lg font-heading font-bold text-white tracking-tight leading-none truncate" x-text="qcmTitle || 'Chargement...'"></h1>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Résultats de passage</p>
             </div>
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto w-full px-5 py-8 pb-32 hide-scrollbar">
-        <!-- Summary Stats (Optional but premium feel) -->
-        <div x-show="!loading && results.length > 0" class="mb-8 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] group transition-all hover:border-primary-100">
-                <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Passations</p>
-                <div class="flex items-baseline gap-1">
-                    <p class="text-3xl font-heading font-extrabold text-slate-950 leading-none" x-text="results.length"></p>
-                    <p class="text-[10px] font-bold text-slate-300 uppercase italic">Étudiants</p>
+    <main class="flex-1 overflow-y-auto w-full px-5 py-6 pb-32 hide-scrollbar">
+        <!-- Search & Filters Row -->
+        <div class="flex flex-col gap-4 mb-6">
+            <!-- Search Input -->
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none transition-colors group-focus-within:text-primary-500">
+                    <svg class="shrink-0 size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                    </svg>
                 </div>
+                <input type="text" x-model="search" @input="applyFilters"
+                    class="py-3.5 px-4 pl-11 block w-full border-slate-100 bg-white shadow-sm rounded-2xl text-sm font-medium focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 transition-all outline-none"
+                    placeholder="Rechercher un étudiant...">
+                <!-- Clear button -->
+                <button x-show="search" x-cloak @click="search = ''; applyFilters()" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600">
+                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+                    </svg>
+                </button>
             </div>
-            <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] group transition-all hover:border-primary-100">
-                <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Moyenne</p>
-                <div class="flex items-baseline gap-1">
-                    <p class="text-3xl font-heading font-extrabold text-primary-500 leading-none" x-text="calculateAverage()"></p>
-                    <p class="text-[10px] font-bold text-primary-200 uppercase italic">%</p>
-                </div>
-            </div>
-        </div>
 
-        <div class="flex flex-col mb-6">
-            <h2 class="text-lg font-heading font-extrabold text-slate-900 tracking-tight">RÉSULTATS DÉTAILLÉS</h2>
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Suivi individuel par étudiant</p>
-        </div>
-
-        <div class="grid gap-4">
-            <template x-for="res in results" :key="res.id">
-                <div class="flex items-center bg-white border border-slate-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.02)] rounded-[2rem] p-5 transition-all hover:border-slate-200 hover:shadow-md active:scale-[0.98] group">
-                    <div class="size-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 font-black text-xs shrink-0 transition-colors group-hover:bg-primary-50 group-hover:text-primary-500" x-text="res.studentName.split(' ').map(n => n[0]).join('')"></div>
-                    <div class="ms-5 flex-1">
-                        <h4 class="text-base font-extrabold text-slate-950 tracking-tight leading-tight" x-text="res.studentName"></h4>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1" x-text="res.date"></p>
+            <!-- Custom Styled Filters -->
+            <div class="flex gap-3">
+                <!-- Score Filter Dropdown -->
+                <div class="relative flex-1" x-data="{ open: false }" @click.outside="open = false">
+                    <button @click="open = !open" type="button"
+                        class="w-full flex justify-between items-center bg-white border border-slate-200 text-slate-700 rounded-xl py-3 px-4 text-xs font-bold shadow-sm outline-none transition-all hover:border-primary-300">
+                        <span class="flex items-center gap-2">
+                            <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" />
+                            </svg>
+                            <span x-text="scoreFilter === 'all' ? 'Toutes notes' : scoreFilter === 'pass' ? 'Réussi (≥10)' : 'Échec (<10)'"></span>
+                        </span>
+                        <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
+                        class="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl p-2 z-50">
+                        <button @click="scoreFilter = 'all'; open = false; applyFilters()"
+                            class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors"
+                            :class="scoreFilter === 'all' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'">
+                            <span class="size-2 rounded-full bg-slate-400"></span>
+                            Toutes notes
+                        </button>
+                        <button @click="scoreFilter = 'pass'; open = false; applyFilters()"
+                            class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors"
+                            :class="scoreFilter === 'pass' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-600 hover:bg-slate-50'">
+                            <span class="size-2 rounded-full bg-emerald-500"></span>
+                            Réussi (≥10/20)
+                        </button>
+                        <button @click="scoreFilter = 'fail'; open = false; applyFilters()"
+                            class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors"
+                            :class="scoreFilter === 'fail' ? 'bg-red-50 text-red-600' : 'text-slate-600 hover:bg-slate-50'">
+                            <span class="size-2 rounded-full bg-red-500"></span>
+                            Échec (<10/20)
+                        </button>
                     </div>
-                    <div class="text-right">
-                        <div class="px-3 py-1.5 rounded-xl text-xs font-black tracking-tight border shadow-sm" 
-                             :class="res.score >= (res.totalQuestions / 2) ? 'bg-primary-50 text-primary-600 border-primary-100' : 'bg-semantic-error/10 text-semantic-error border-semantic-error/10'">
-                            <span x-text="res.score"></span> <span class="text-[9px] opacity-40">/</span> <span x-text="res.totalQuestions"></span>
+                </div>
+
+                <!-- Sort Dropdown -->
+                <div class="relative flex-1" x-data="{ open: false }" @click.outside="open = false">
+                    <button @click="open = !open" type="button"
+                        class="w-full flex justify-between items-center bg-white border border-slate-200 text-slate-700 rounded-xl py-3 px-4 text-xs font-bold shadow-sm outline-none transition-all hover:border-primary-300">
+                        <span class="flex items-center gap-2">
+                            <svg class="size-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m3 16 4 4 4-4" /><path d="M7 20V4" /><path d="m21 8-4-4-4 4" /><path d="M17 4v16" />
+                            </svg>
+                            <span x-text="sortBy === 'score' ? 'Note' : sortBy === 'name' ? 'Nom' : 'Date'"></span>
+                        </span>
+                        <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
+                        class="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl p-2 z-50">
+                        <button @click="sortBy = 'score'; open = false; applyFilters()"
+                            class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors"
+                            :class="sortBy === 'score' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20" /><path d="m17 7-5-5-5 5" /></svg>
+                            Par note (meilleur)
+                        </button>
+                        <button @click="sortBy = 'name'; open = false; applyFilters()"
+                            class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors"
+                            :class="sortBy === 'name' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4" /><path d="M5 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2" /></svg>
+                            Par nom (A-Z)
+                        </button>
+                        <button @click="sortBy = 'date'; open = false; applyFilters()"
+                            class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors"
+                            :class="sortBy === 'date' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'">
+                            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                            Par date (récent)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Filters Count & Reset -->
+            <div class="flex justify-between items-center">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em]">
+                    <span x-text="filteredResults.length"></span> résultat<span x-show="filteredResults.length !== 1">s</span>
+                </p>
+                <button x-show="search || scoreFilter !== 'all'" x-cloak @click="resetFilters"
+                    class="text-[10px] font-bold text-primary-600 uppercase tracking-widest hover:text-primary-700 transition-colors flex items-center gap-1">
+                    <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12" /><path d="M3 3v9h9" /></svg>
+                    Réinitialiser
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div x-show="!loading" class="mb-6 grid grid-cols-3 gap-3">
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1">Total</p>
+                <p class="text-2xl font-heading font-extrabold text-slate-900" x-text="results.length"></p>
+            </div>
+            <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                <p class="text-[9px] font-black text-emerald-600 uppercase tracking-[0.15em] mb-1">Réussite</p>
+                <p class="text-2xl font-heading font-extrabold text-emerald-600" x-text="passCount"></p>
+            </div>
+            <div class="bg-red-50 p-4 rounded-2xl border border-red-100">
+                <p class="text-[9px] font-black text-red-600 uppercase tracking-[0.15em] mb-1">Échec</p>
+                <p class="text-2xl font-heading font-extrabold text-red-600" x-text="failCount"></p>
+            </div>
+        </div>
+
+        <!-- Results List -->
+        <div class="flex flex-col mb-4">
+            <h2 class="text-sm font-heading font-extrabold text-slate-900 uppercase tracking-tight">DÉTAILS</h2>
+        </div>
+
+        <div class="grid gap-3">
+            <template x-for="res in filteredResults" :key="res.id">
+                <div class="flex items-center bg-white border border-slate-100 shadow-sm rounded-2xl p-4 transition-all hover:border-primary-200 hover:shadow-md active:scale-[0.98] group"
+                    :class="getScoreClass(res)">
+                    <!-- Rank -->
+                    <div class="size-10 rounded-xl flex items-center justify-center text-xs font-black shrink-0 mr-4"
+                        :class="res.rank <= 3 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'">
+                        <span x-text="res.rank"></span>
+                    </div>
+
+                    <!-- Avatar with initials -->
+                    <div class="size-12 rounded-xl flex items-center justify-center text-white font-black text-sm shrink-0 mr-4 transition-transform group-hover:scale-105"
+                        :class="getScoreColorClass(res)"
+                        x-text="getInitials(res.studentName)">
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-extrabold text-slate-900 tracking-tight leading-tight truncate" x-text="res.studentName"></h4>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-0.5" x-text="formatDate(res.date)"></p>
+                    </div>
+
+                    <!-- Score Badge -->
+                    <div class="text-right ml-3">
+                        <div class="px-3 py-1.5 rounded-xl text-sm font-black tracking-tight border shadow-sm"
+                            :class="getScoreBadgeClass(res)">
+                            <span x-text="getPercentage(res)"></span>%
                         </div>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tight mt-1">
+                            <span x-text="res.score ?? 0"></span>/<span x-text="res.maxScore || (res.totalQuestions * 2) || 20"></span>
+                        </p>
                     </div>
                 </div>
             </template>
@@ -66,14 +196,15 @@
         </div>
 
         <!-- Empty state -->
-        <div x-show="!loading && results.length === 0" class="text-center py-24 animate-in fade-in duration-700">
-            <div class="size-20 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 text-slate-200 shadow-inner">
-                <svg class="size-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10 13l2 2 4-4"/>
+        <div x-show="!loading && filteredResults.length === 0" class="text-center py-16 animate-in fade-in duration-500">
+            <div class="size-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-300">
+                <svg class="size-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
                 </svg>
             </div>
-            <p class="text-base font-extrabold text-slate-900 tracking-tight">Aucun passager</p>
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">En attente des premières réponses</p>
+            <p class="text-sm font-extrabold text-slate-700">Aucun résultat</p>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1" x-show="search || scoreFilter !== 'all'">Essayez d'autres filtres</p>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1" x-show="!search && scoreFilter === 'all'">En attente des premières réponses</p>
         </div>
     </main>
 
@@ -82,6 +213,7 @@
 
     <style>
         .hide-scrollbar::-webkit-scrollbar { display: none; }
+        [x-cloak] { display: none !important; }
     </style>
 </div>
 
@@ -91,7 +223,12 @@
             qcmId: null,
             qcmTitle: '',
             results: [],
+            filteredResults: [],
             loading: false,
+            search: '',
+            scoreFilter: 'all',
+            sortBy: 'score',
+
             async init() {
                 const el = document.querySelector('[x-data-qcm-id]');
                 this.qcmId = el?.getAttribute('x-data-qcm-id') || null;
@@ -99,24 +236,115 @@
                     await this.fetchResults();
                 }
             },
+
             async fetchResults() {
                 this.loading = true;
                 try {
-                    const response = await fetch(`${Alpine.store('config').apiBaseUrl}/formateur/qcms/${this.qcmId}/results`);
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/formateur/qcms/${this.qcmId}/results`);
                     const data = await response.json();
                     this.qcmTitle = data.title;
-                    this.results = data.results;
+                    this.results = data.results.map((r, i) => ({ ...r, rank: i + 1 }));
+                    this.applyFilters();
                 } catch (e) {
                     console.error('Failed to load results', e);
                 } finally {
                     this.loading = false;
                 }
             },
-            calculateAverage() {
-                if (this.results.length === 0) return 0;
-                const scores = this.results.map(r => (r.score / r.totalQuestions) * 100);
-                const sum = scores.reduce((a, b) => a + b, 0);
-                return Math.round(sum / this.results.length);
+
+            applyFilters() {
+                let filtered = [...this.results];
+
+                // Search filter
+                if (this.search) {
+                    const term = this.search.toLowerCase();
+                    filtered = filtered.filter(r => r.studentName.toLowerCase().includes(term));
+                }
+
+                // Score filter
+                if (this.scoreFilter === 'pass') {
+                    filtered = filtered.filter(r => {
+                        const maxScore = r.maxScore || (r.totalQuestions * 2) || 20;
+                        return r.score >= (maxScore / 2);
+                    });
+                } else if (this.scoreFilter === 'fail') {
+                    filtered = filtered.filter(r => {
+                        const maxScore = r.maxScore || (r.totalQuestions * 2) || 20;
+                        return r.score < (maxScore / 2);
+                    });
+                }
+
+                // Sort
+                if (this.sortBy === 'score') {
+                    filtered.sort((a, b) => (b.score / b.totalQuestions) - (a.score / a.totalQuestions));
+                } else if (this.sortBy === 'name') {
+                    filtered.sort((a, b) => a.studentName.localeCompare(b.studentName));
+                } else if (this.sortBy === 'date') {
+                    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+                }
+
+                // Reassign ranks after sorting
+                this.filteredResults = filtered.map((r, i) => ({ ...r, rank: i + 1 }));
+            },
+
+            resetFilters() {
+                this.search = '';
+                this.scoreFilter = 'all';
+                this.sortBy = 'score';
+                this.applyFilters();
+            },
+
+            get passCount() {
+                return this.results.filter(r => {
+                    const maxScore = r.maxScore || (r.totalQuestions * 2) || 20;
+                    const passingScore = maxScore / 2;
+                    return r.score >= passingScore;
+                }).length;
+            },
+
+            get failCount() {
+                return this.results.filter(r => {
+                    const maxScore = r.maxScore || (r.totalQuestions * 2) || 20;
+                    const passingScore = maxScore / 2;
+                    return r.score < passingScore;
+                }).length;
+            },
+
+            getInitials(name) {
+                return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            },
+
+            getPercentage(res) {
+                const maxScore = res.maxScore || res.totalQuestions * 2 || 20;
+                if (!maxScore || !res.score) return 0;
+                return Math.round((res.score / maxScore) * 100);
+            },
+
+            formatDate(dateStr) {
+                if (!dateStr) return 'Date inconnue';
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+            },
+
+            getScoreClass(res) {
+                const pct = this.getPercentage(res);
+                if (pct >= 70) return 'border-l-4 border-l-emerald-400';
+                if (pct >= 50) return 'border-l-4 border-l-amber-400';
+                return 'border-l-4 border-l-red-400';
+            },
+
+            getScoreColorClass(res) {
+                const pct = this.getPercentage(res);
+                if (pct >= 70) return 'bg-emerald-500';
+                if (pct >= 50) return 'bg-amber-500';
+                return 'bg-red-500';
+            },
+
+            getScoreBadgeClass(res) {
+                const pct = this.getPercentage(res);
+                if (pct >= 70) return 'bg-emerald-50 text-emerald-600 border-emerald-100';
+                if (pct >= 50) return 'bg-amber-50 text-amber-600 border-amber-100';
+                return 'bg-red-50 text-red-600 border-red-100';
             }
         }));
     });
