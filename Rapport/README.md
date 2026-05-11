@@ -408,30 +408,30 @@ Le diagramme de classes modélise l'architecture relationnelle du système et ga
 - **Moteur d'Évaluation** : `QCM`, `Question`, `Option` (gestion du contenu des questionnaires).
 - **Soumissions et Résultats** : `Tentative`, `Reponse`, `ChoixReponse` (capture sécurisée des choix et calcul des scores finaux).
 
-![Diagramme de classes](images/diagramme-classes.png)
+![Diagramme de classes](images/diagramme-classes-tb(2).png)
 
 ### 7.2 Maquettes (UI/UX)
 
 Les interfaces ont été conçues pour être "mobile-first", offrant une navigation fluide entre la sélection des quiz et le passage des tests.
 
 **Charte Graphique**
-![Charte Graphique](images/charte-graphique.png)
+![Charte Graphique](images/charte-graphique(2).png)
 
 **Interface Publique (Landing Page)**  
-![Public Landing](images/public-landing.png)
+![Public Landing](images/public-landing(2).png)
 
 **Tableau de Bord Administrateur (Fouad)**  
-![Admin Dashboard](images/admin-dashboard.png)
+![Admin Dashboard](images/admin-dashboard(2).png)
 
 **Tableau de Bord Formateur (Youssef & Fatine)**  
-![Formateur Dashboard](images/formateur-dashboard.png)
+![Formateur Dashboard](images/formateur-dashboard(2).png)
 
 **Interface Apprenant (Mehdi & Soufiane)**  
-![Apprenant Dashboard](images/apprenant-dashboard.png)
+![Apprenant Dashboard](images/apprenant-dashboard(2).png)
 
 **Application Mobile**  
 L'application mobile met l'accent sur la clarté et l'immédiateté des résultats.  
-![Mobile Dashboard](images/mobile-dashboard.png)
+![Mobile Dashboard](images/mobile-dashboard(2).png)
 
 
 ---

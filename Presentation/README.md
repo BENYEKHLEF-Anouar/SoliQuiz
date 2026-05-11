@@ -288,7 +288,7 @@ style: |
 
 ## Branche Fonctionnelle : Maquettage (Public Landing)
 
-![h:500 Public Landing](./images/public-landing.png)
+![h:500 Public Landing](./images/public-landing(2).png)
 
 <!-- ---
 
@@ -300,19 +300,19 @@ style: |
 
 ## Branche Fonctionnelle : Maquettage (Formateur Dashboard)
 
-![h:450 Formateur Dashboard](./images/formateur-dashboard.png)
+![h:450 Formateur Dashboard](./images/formateur-dashboard(2).png)
 
 ---
 
 ## Branche Fonctionnelle : Maquettage (Apprenant Dashboard)
 
-![h:450 Apprenant Dashboard](./images/apprenant-dashboard.png)
+![h:450 Apprenant Dashboard](./images/apprenant-dashboard(2).png)
 
 ---
 
 ## Branche Fonctionnelle : Maquettage (Mobile Dashboard)
 
-![h:450 Mobile Dashboard](./images/mobile-dashboard.png)
+![h:450 Mobile Dashboard](./images/mobile-dashboard(2).png)
 
 ---
 
@@ -346,7 +346,7 @@ style: |
 ---
 
 
-![w:1800 h:650 Diagramme de classe](./images/diagramme-classes.png)
+![w:1800 h:650 Diagramme de classe](./images/diagramme-classes-lr(2).png)
 
 ---
 
