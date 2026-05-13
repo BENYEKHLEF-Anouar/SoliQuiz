@@ -4,39 +4,27 @@
 
 @section('content')
 <div class="min-h-screen flex">
-    <!-- Left Panel: Immersive Brand Side -->
-    <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-slate-900 items-center justify-center p-20">
+    <!-- Left Panel: Immersive Brand Side (Fixed) -->
+    <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-slate-900 items-center justify-center p-20 sticky top-0 h-screen">
         <!-- Background mesh/blobs -->
         <div class="absolute top-0 right-0 size-96 bg-primary-500/20 rounded-full blur-[120px] -mr-48 -mt-48"></div>
         <div class="absolute bottom-0 left-0 size-96 bg-primary-600/10 rounded-full blur-[120px] -ml-48 -mb-48"></div>
         
         <div class="relative z-10 w-full max-w-lg reveal active">
-            <div class="mb-12">
-                <div class="size-16 bg-primary-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-primary-500/40 mb-8 rotate-3">
+            <div class="flex flex-col">
+                <div class="size-16 bg-primary-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-primary-500/40 mb-10">
                     <svg class="text-white size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                         <path d="m9 15 2 2 4-4" />
                     </svg>
                 </div>
-                <h2 class="text-5xl font-heading font-black text-white leading-tight mb-6">
+                <h2 class="text-5xl font-heading font-black text-white leading-[1.1] mb-8">
                     L'excellence <span class="text-primary-500">pédagogique</span> commence ici.
                 </h2>
-                <p class="text-slate-400 text-lg font-medium leading-relaxed italic">
+                <p class="text-slate-400 text-xl font-medium leading-relaxed italic opacity-80">
                     Accédez à votre espace sécurisé pour piloter vos évaluations et suivre vos performances académiques.
                 </p>
-            </div>
-
-            <!-- Stats/Indicators -->
-            <div class="grid grid-cols-2 gap-6">
-                <div class="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-[2rem]">
-                    <p class="text-3xl font-black text-white mb-1">98%</p>
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest italic">Satisfaction Apprenants</p>
-                </div>
-                <div class="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-[2rem]">
-                    <p class="text-3xl font-black text-white mb-1">Live</p>
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest italic">Synchronisation Temps Réel</p>
-                </div>
             </div>
         </div>
     </div>
@@ -96,7 +84,14 @@
                             placeholder="votre@solicode.co" required autofocus>
                     </div>
                     @error('email')
-                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest italic">{{ $message }}</p>
+                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest italic flex items-center">
+                            <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            {{ $message }}
+                        </p>
                     @enderror
                 </div>
 
@@ -115,6 +110,16 @@
                             class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-12 pr-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-slate-300 italic"
                             placeholder="············" required>
                     </div>
+                    @error('password')
+                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest italic flex items-center">
+                            <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            {{ $message }}
+                        </p>
+                    @enderror
                 </div>
 
                 <div class="flex items-center justify-between px-2">

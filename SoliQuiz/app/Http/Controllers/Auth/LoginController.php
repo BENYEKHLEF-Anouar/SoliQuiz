@@ -37,4 +37,23 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
     }
+
+    /**
+     * Validate the user login request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function validateLogin(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            $this->username() => 'required|string',
+            'password' => 'required|string',
+        ], [
+            $this->username().'.required' => 'Votre identifiant est requis pour accéder à l\'écosystème.',
+            'password.required' => 'La clé de sécurité est obligatoire pour cette session.',
+        ]);
+    }
 }
