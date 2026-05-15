@@ -15,7 +15,7 @@
         </div>
         <span class="font-heading font-bold text-lg text-slate-900 leading-none tracking-tight">Soli<span class="text-primary-500">Quiz</span></span>
     </div>
-    <button @click="sidebarOpen = !sidebarOpen" type="button" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors active:scale-95">
+    <button @click.stop="sidebarOpen = !sidebarOpen" type="button" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors active:scale-95">
         <svg class="size-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
@@ -121,7 +121,7 @@
         <!-- Profile Section -->
         <div class="p-6 border-t border-slate-50 bg-slate-50/30" x-data="{ userOpen: false }">
             <div class="relative">
-                <button @click="userOpen = !userOpen" type="button"
+                <button @click.stop="userOpen = !userOpen" type="button"
                         class="w-full flex items-center justify-between p-2 rounded-2xl hover:bg-white hover:shadow-sm transition-all group active:scale-95 border border-transparent hover:border-slate-100">
                     <div class="flex items-center gap-3">
                         <img class="size-9 rounded-xl shadow-sm border border-white"

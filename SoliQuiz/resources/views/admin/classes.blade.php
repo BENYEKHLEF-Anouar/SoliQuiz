@@ -34,7 +34,8 @@
                 })
                 .catch(() => { this.loading = false; });
             }, 300);
-        }
+        },
+        submitting: false
     }">
         <!-- Header Strategy Section -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-10 border-b border-slate-100 mb-10">
@@ -243,7 +244,7 @@
                 <!-- Modal: Créer Classe -->
                 <x-ui.modal name="create-classe-modal" title="Architecture Cohorte" maxWidth="md">
                     <!-- pb-32 ensures the select dropdown is never clipped by the modal's overflow-y-auto -->
-                    <form action="{{ route('admin.classes.store') }}" method="POST" class="space-y-6 pb-32">
+                    <form action="{{ route('admin.classes.store') }}" method="POST" class="space-y-6 pb-32" x-on:submit="submitting = true">
                         @csrf
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Identifiant
@@ -266,9 +267,9 @@
                                 class="!rounded-2xl !py-4 !px-5" :options="$formateurs->map(fn($f) => ['value' => $f->id, 'label' => $f->nom_complet])->toArray()" />
                         </div>
 
-                        <button type="submit"
-                            class="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-500 transition-all shadow-xl shadow-slate-900/20 active:scale-95">
-                            Enregistrer la Structure
+                        <button type="submit" :disabled="submitting" class="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-500 transition-all shadow-xl shadow-slate-900/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span x-show="!submitting">Enregistrer la Structure</span>
+                            <span x-show="submitting" x-cloak>Traitement...</span>
                         </button>
                     </form>
                 </x-ui.modal>
@@ -276,7 +277,7 @@
                 <!-- Modal: Modifier Classe -->
                 <x-ui.modal name="edit-classe-modal" title="Modifier Cohorte" maxWidth="md">
                     <form x-bind:action="`{{ url('/admin/classes') }}/${activeClasseId}`" method="POST"
-                        class="space-y-6 pb-32">
+                        class="space-y-6 pb-32" x-on:submit="submitting = true">
                         @csrf
                         @method('PUT')
 
@@ -302,9 +303,9 @@
                                 class="!rounded-2xl !py-4 !px-5" :options="array_merge([['value' => '', 'label' => 'Aucun']], $formateurs->map(fn($f) => ['value' => $f->id, 'label' => $f->nom_complet])->toArray())" />
                         </div>
 
-                        <button type="submit"
-                            class="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-500 transition-all shadow-xl shadow-slate-900/20 active:scale-95">
-                            Consigner les Changements
+                        <button type="submit" :disabled="submitting" class="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-500 transition-all shadow-xl shadow-slate-900/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span x-show="!submitting">Consigner les Changements</span>
+                            <span x-show="submitting" x-cloak>Traitement...</span>
                         </button>
                     </form>
                 </x-ui.modal>
@@ -313,7 +314,7 @@
                 <x-ui.modal name="add-student-modal" title="Inclusion Apprenant" maxWidth="md">
                     <!-- pb-32 prevents dropdown clipping -->
                     <form x-bind:action="`{{ url('/admin/classes') }}/${activeClasseId}/etudiants`" method="POST"
-                        class="space-y-8 pb-32">
+                        class="space-y-8 pb-32" x-on:submit="submitting = true">
                         @csrf
 
                         <div class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 flex items-center gap-4">
@@ -340,9 +341,10 @@
                                 <x-ui.select name="user_id" required placeholder="Sélectionner un étudiant..."
                                     class="!rounded-2xl !py-4 !px-5" :options="$availableStudents->map(fn($s) => ['value' => $s->id, 'label' => $s->nom_complet])->toArray()" />
 
-                                <button type="submit"
-                                    class="w-full py-4 bg-slate-900 text-white font-black rounded-2xl hover:bg-primary-500 transition-all uppercase tracking-widest text-xs shadow-xl shadow-slate-900/20 active:scale-95">
-                                    Intégrer à la Cohorte
+                                <button type="submit" :disabled="submitting"
+                                    class="w-full py-4 bg-slate-900 text-white font-black rounded-2xl hover:bg-primary-500 transition-all uppercase tracking-widest text-xs shadow-xl shadow-slate-900/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span x-show="!submitting">Intégrer à la Cohorte</span>
+                                    <span x-show="submitting" x-cloak>Traitement...</span>
                                 </button>
                             @else
                                 <div class="bg-slate-100/50 rounded-2xl p-6 text-center border border-dashed border-slate-200">

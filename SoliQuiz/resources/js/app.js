@@ -3,8 +3,5 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => Alpine.start());
-} else {
-    Alpine.start();
-}
+// Standard initialization for Vite-loaded scripts (deferred by default)
+Alpine.start();

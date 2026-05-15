@@ -41,7 +41,8 @@
             })
             .catch(() => { this.loading = false; });
         }, 300);
-    }
+    },
+    submitting: false
 }">
     <!-- Header -->
     <div class="relative z-30 mb-10">
@@ -310,7 +311,7 @@
         <div>
             <!-- Modal: Add User -->
             <x-ui.modal name="add-user-modal" title="Nouvel Agent">
-                <form action="{{ route('admin.utilisateurs.store') }}" method="POST" class="space-y-6 pb-32" x-data="{ role: 'Apprenant' }">
+                <form action="{{ route('admin.utilisateurs.store') }}" method="POST" class="space-y-6 pb-32" x-data="{ role: 'Apprenant' }" x-on:submit="submitting = true">
                     @csrf
                     <div class="grid grid-cols-2 gap-5">
                         <div class="space-y-2">
@@ -373,15 +374,16 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full btn-premium py-5 px-8 bg-slate-900 text-white font-black rounded-3xl hover:bg-primary-500 active:scale-95 transition-all uppercase tracking-widest text-sm mt-4 shadow-xl shadow-slate-900/10">
-                        Inscrire dans le Directory
+                    <button type="submit" :disabled="submitting" class="w-full btn-premium py-5 px-8 bg-slate-900 text-white font-black rounded-3xl hover:bg-primary-500 active:scale-95 transition-all uppercase tracking-widest text-sm mt-4 shadow-xl shadow-slate-900/10 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span x-show="!submitting">Inscrire dans le Directory</span>
+                        <span x-show="submitting" x-cloak>Traitement...</span>
                     </button>
                 </form>
             </x-ui.modal>
 
             <!-- Modal: Edit User -->
             <x-ui.modal name="edit-user-modal" title="Mutation Profil">
-                <form x-bind:action="`{{ url('/admin/utilisateurs') }}/${editUser.id}`" method="POST" class="space-y-6 pb-32">
+                <form x-bind:action="`{{ url('/admin/utilisateurs') }}/${editUser.id}`" method="POST" class="space-y-6 pb-32" x-data="{ submitting: false }" x-on:submit="submitting = true">
                     @csrf
                     @method('PUT')
                     
@@ -445,8 +447,9 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full btn-premium py-5 px-8 bg-slate-900 text-white font-black rounded-3xl hover:bg-primary-500 active:scale-95 transition-all uppercase tracking-widest text-sm shadow-xl shadow-slate-900/10 mt-4">
-                        Consigner les Changements
+                    <button type="submit" :disabled="submitting" class="w-full btn-premium py-5 px-8 bg-slate-900 text-white font-black rounded-3xl hover:bg-primary-500 active:scale-95 transition-all uppercase tracking-widest text-sm shadow-xl shadow-slate-900/10 mt-4 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span x-show="!submitting">Consigner les Changements</span>
+                        <span x-show="submitting" x-cloak>Traitement...</span>
                     </button>
                 </form>
             </x-ui.modal>
