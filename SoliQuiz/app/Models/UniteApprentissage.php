@@ -12,7 +12,12 @@ class UniteApprentissage extends Model
 {
     protected $table = 'unites_apprentissage';
 
-    protected $fillable = ['seance_id', 'user_id', 'nom', 'code'];
+    protected $fillable = ['seance_id', 'user_id', 'nom', 'code', 'date_debut', 'date_fin'];
+
+    protected $casts = [
+        'date_debut' => 'date',
+        'date_fin' => 'date',
+    ];
 
     public function user(): BelongsTo
     {

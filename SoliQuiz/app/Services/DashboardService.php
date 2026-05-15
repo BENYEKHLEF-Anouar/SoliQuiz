@@ -53,6 +53,43 @@ class DashboardService
     }
 
     /**
+     * Retourne l'état de santé du système en temps réel
+     */
+    public function getSystemStatus(): array
+    {
+        // 1. État de la Base de Données
+        try {
+            DB::connection()->getPdo();
+            $dbStatus = 'Connectée';
+            $dbColor = 'text-emerald-400';
+        } catch (\Exception $e) {
+            $dbStatus = 'Erreur';
+            $dbColor = 'text-rose-400';
+        }
+
+        // 2. File d'attente (Queues)
+        // On vérifie si la table existe pour éviter une erreur si le driver n'est pas configuré
+        $queueCount = 0;
+        try {
+            $queueCount = DB::table('jobs')->count();
+        } catch (\Exception $e) {
+            // Table non existante, on reste à 0
+        }
+
+        // 3. Dernière sauvegarde
+        // On simule une vérification de backup (on pourrait chercher dans storage/app/backups)
+        $lastBackup = "Planifiée";
+        
+        return [
+            'db_status' => $dbStatus,
+            'db_color' => $dbColor,
+            'queue_count' => $queueCount,
+            'last_backup' => $lastBackup,
+            'is_operational' => $dbStatus === 'Connectée'
+        ];
+    }
+
+    /**
      * Renvoie les QCM les plus actifs (triés par nombre de tentatives)
      */
     public function getTopQcms(int $limit = 5): Collection
@@ -122,11 +159,14 @@ class DashboardService
      */
     public function getTrainerClassesMetrics(User $formateur): Collection
     {
+        $qcmIds = QCM::where('formateur_id', $formateur->id)->pluck('id');
+
         return $formateur->classeGeree()
             ->withCount('etudiants')
             ->get()
-            ->map(function($classe) {
+            ->map(function($classe) use ($qcmIds) {
                 $tentatives = Tentative::whereIn('etudiant_id', $classe->etudiants->pluck('id'))
+                    ->whereIn('qcm_id', $qcmIds)
                     ->where('statut', '!=', 'en_cours')
                     ->get();
                 

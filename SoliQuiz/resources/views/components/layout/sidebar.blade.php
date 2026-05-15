@@ -71,7 +71,7 @@
                         ],
                         'Contenu' => [
                             ['name' => 'Banque de QCM', 'route' => 'admin.qcms', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                            ['name' => 'Ingénierie Péd.', 'route' => 'admin.pedagogie', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'],
+                            ['name' => 'Structure PÉD.', 'route' => 'admin.pedagogie', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'],
                         ]
                     ],
                     'formateur' => [
@@ -79,11 +79,11 @@
                             ['name' => 'Supervision', 'route' => 'formateur.dashboard', 'icon' => 'M12 20v-6M6 20V10M18 20V4'],
                         ],
                         'Pédagogie' => [
-                            ['name' => 'Mes Classes', 'route' => 'formateur.resultats', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'],
-                            ['name' => 'Ingénierie Péd.', 'route' => 'formateur.pedagogie', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'],
+                            ['name' => 'Résultats', 'route' => 'formateur.resultats', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'],
+                            ['name' => 'Structure PÉD.', 'route' => 'formateur.pedagogie', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'],
                         ],
                         'Contenu' => [
-                            ['name' => 'Bibliothèque', 'route' => 'formateur.bibliotheque', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
+                            ['name' => 'Bibliothèque QCM', 'route' => 'formateur.bibliotheque', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
                         ]
                     ],
                     'etudiant' => [
@@ -128,7 +128,7 @@
                                 src="https://ui-avatars.com/api/?name={{ urlencode($user->nom_complet ?? 'User') }}&background=17a2b8&color=fff&bold=true"
                                 alt="Avatar">
                         <div class="flex flex-col text-left min-w-0">
-                            <span class="text-[11px] font-black text-slate-900 truncate leading-tight uppercase italic">{{ $user->prenom }}</span>
+                            <span class="text-[11px] font-black text-slate-900 truncate leading-tight uppercase italic">{{ $user->nom_complet }}</span>
                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $role }}</span>
                         </div>
                     </div>

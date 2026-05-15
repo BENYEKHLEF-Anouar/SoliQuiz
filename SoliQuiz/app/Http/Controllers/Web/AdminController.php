@@ -68,8 +68,9 @@ class AdminController extends Controller
         $topQcms = $this->dashboardService->getTopQcms(5);
         $recentTentatives = $this->dashboardService->getRecentTentatives(10);
         $topPerformers = $this->dashboardService->getTopPerformers(3);
+        $systemStatus = $this->dashboardService->getSystemStatus();
         
-        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers'));
+        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus'));
     }
 
     /**
@@ -78,30 +79,42 @@ class AdminController extends Controller
     public function gestionUtilisateurs(Request $request)
     {
         $search = $request->input('search');
-        $users = User::with('classe')
+        $role = $request->input('role');
+
+        $users = User::with(['classe', 'classeGeree'])
             ->when($search, function ($q) use ($search) {
-                $q->where('nom', 'like', "%{$search}%")
-                  ->orWhere('prenom', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('type_profil', 'like', "%{$search}%");
+                $q->where(function($sq) use ($search) {
+                    $sq->where('nom', 'like', "%{$search}%")
+                      ->orWhere('prenom', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->when($role, function ($q) use ($role) {
+                $q->where('type_profil', $role);
             })
             ->orderByRaw("CASE WHEN type_profil = 'admin' THEN 1 WHEN type_profil = 'formateur' THEN 2 ELSE 3 END")
             ->orderBy('nom')
             ->paginate(8)
             ->appends($request->query());
         
-        return view('admin.gestion-utilisateurs', compact('users', 'search'));
+        return view('admin.gestion-utilisateurs', compact('users', 'search', 'role'));
     }
 
     public function searchUsers(Request $request)
     {
         $search = $request->input('search');
-        $users = User::with('classe')
+        $role = $request->input('role');
+
+        $users = User::with(['classe', 'classeGeree'])
             ->when($search, function ($q) use ($search) {
-                $q->where('nom', 'like', "%{$search}%")
-                  ->orWhere('prenom', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('type_profil', 'like', "%{$search}%");
+                $q->where(function($sq) use ($search) {
+                    $sq->where('nom', 'like', "%{$search}%")
+                      ->orWhere('prenom', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->when($role, function ($q) use ($role) {
+                $q->where('type_profil', $role);
             })
             ->orderByRaw("CASE WHEN type_profil = 'admin' THEN 1 WHEN type_profil = 'formateur' THEN 2 ELSE 3 END")
             ->orderBy('nom')
@@ -202,7 +215,7 @@ class AdminController extends Controller
         $creatorFilter = $request->input('creator');
 
         $query = Seance::with(['unitesApprentissage.competences', 'user'])
-            ->orderBy('date', 'desc');
+            ->orderBy('date_debut', 'desc');
 
         if ($creatorFilter) {
             $query->where('user_id', $creatorFilter);
@@ -212,17 +225,22 @@ class AdminController extends Controller
 
         $creatorIds = Seance::whereNotNull('user_id')->distinct()->pluck('user_id');
         $creators = User::whereIn('id', $creatorIds)->orderBy('nom')->get();
+        
+        // Liste de tous les formateurs pour l'assignation
+        $formateurs = User::where('type_profil', 'formateur')->orderBy('nom')->get();
 
-        return view('admin.pedagogie', compact('seances', 'creators', 'creatorFilter'));
+        return view('admin.pedagogie', compact('seances', 'creators', 'creatorFilter', 'formateurs'));
     }
 
     public function storeSeance(Request $request)
     {
         $data = $request->validate([
             'nom' => 'required|string|max:255',
-            'date' => 'required|date'
+            'user_id' => 'required|exists:users,id',
+            'date_debut' => 'nullable|date',
+            'date_fin' => 'nullable|date',
         ]);
-        $data['user_id'] = auth()->id();
+        
         $this->seanceService->create($data);
         return redirect()->route('admin.pedagogie')->with('success', 'Séance créée avec succès.');
     }
@@ -239,7 +257,10 @@ class AdminController extends Controller
         $seance = Seance::findOrFail($seanceId);
         $data = $request->validate([
             'nom' => 'required|string|max:255',
-            'code' => 'required|string|max:50'
+            'code' => 'required|string|max:50',
+            'user_id' => 'required|exists:users,id',
+            'date_debut' => 'nullable|date',
+            'date_fin' => 'nullable|date',
         ]);
         $this->seanceService->addUniteApprentissage($seance, $data);
         return redirect()->route('admin.pedagogie')->with('success', 'Unité d\'apprentissage ajoutée.');
@@ -288,7 +309,9 @@ class AdminController extends Controller
         $seance = Seance::findOrFail($id);
         $data = $request->validate([
             'nom' => 'required|string|max:255',
-            'date' => 'required|date'
+            'user_id' => 'required|exists:users,id',
+            'date_debut' => 'nullable|date',
+            'date_fin' => 'nullable|date',
         ]);
         $seance->update($data);
         return redirect()->route('admin.pedagogie')->with('success', 'Séance mise à jour.');
@@ -312,6 +335,9 @@ class AdminController extends Controller
         $data = $request->validate([
             'nom' => 'required|string|max:255',
             'code' => 'required|string|max:50|unique:unites_apprentissage,code,' . $id,
+            'user_id' => 'required|exists:users,id',
+            'date_debut' => 'nullable|date',
+            'date_fin' => 'nullable|date',
         ]);
         $ua->update($data);
         return redirect()->route('admin.pedagogie')->with('success', 'Unité d\'apprentissage mise à jour.');
@@ -342,105 +368,7 @@ class AdminController extends Controller
     }
 
     /**
-     * =============== GESTION DES CLASSES ===============
+     * =============== GESTION DES CLASSES (MIGRÉ VERS ClasseController) ===============
      */
-
-    public function gestionClasses(Request $request)
-    {
-        $search = $request->input('search');
-        $classesQuery = Classe::with(['formateur', 'etudiants'])->withCount('etudiants');
-        
-        if ($search) {
-            $classesQuery->where(function ($q) use ($search) {
-                $q->where('nom', 'like', "%{$search}%")
-                  ->orWhere('promotion', 'like', "%{$search}%");
-            });
-        }
-        
-        $classes = $classesQuery->get();
-        // Utilisation du type_profil pour plus de robustesse par rapport aux rôles Spatie
-        $formateurs = User::where('type_profil', 'formateur')->orderBy('nom')->get();
-        
-        return view('admin.classes', compact('classes', 'formateurs', 'search'));
-    }
-
-    public function searchClasses(Request $request)
-    {
-        $search = $request->input('search');
-        $classesQuery = Classe::with(['formateur', 'etudiants'])->withCount('etudiants');
-        
-        if ($search) {
-            $classesQuery->where(function ($q) use ($search) {
-                $q->where('nom', 'like', "%{$search}%")
-                  ->orWhere('promotion', 'like', "%{$search}%");
-            });
-        }
-        
-        $classes = $classesQuery->get();
-        return response()->json($classes);
-    }
-
-    public function storeClasse(Request $request)
-    {
-        $data = $request->validate([
-            'nom' => 'required|string|max:255',
-            'promotion' => 'nullable|string|max:50'
-        ]);
-        $this->classeService->create($data);
-        return redirect()->route('admin.classes')->with('success', 'Classe créée avec succès.');
-    }
-
-    public function destroyClasse($id)
-    {
-        $classe = Classe::findOrFail($id);
-        $this->classeService->delete($classe);
-        return redirect()->route('admin.classes')->with('success', 'Classe supprimée.');
-    }
-
-    public function assignFormateur(Request $request, $id)
-    {
-        $classe = Classe::findOrFail($id);
-        $request->validate([
-            'formateur_id' => 'required|exists:users,id'
-        ]);
-        $this->classeService->assignFormateur($classe, $request->formateur_id);
-        return redirect()->route('admin.classes')->with('success', 'Formateur assigné avec succès à la classe.');
-    }
-    /**
-     * Affiche le détail d'une classe et ses membres.
-     */
-    public function showClasse($id)
-    {
-        $classe = Classe::with(['formateur', 'etudiants'])->findOrFail($id);
-        // On récupère les étudiants qui n'ont pas encore de classe pour pouvoir les ajouter
-        // On utilise type_profil 'etudiant' pour correspondre au modèle User
-        $etudiantsSansClasse = User::where('type_profil', 'etudiant')
-            ->whereNull('classe_id')
-            ->orderBy('nom')
-            ->get();
-        
-        return view('admin.classes-show', compact('classe', 'etudiantsSansClasse'));
-    }
-
-    /**
-     * Ajoute un étudiant à une classe.
-     */
-    public function addStudentToClasse(Request $request, $id)
-    {
-        $classe = Classe::findOrFail($id);
-        $request->validate(['user_id' => 'required|exists:users,id']);
-        
-        $this->classeService->addStudent($classe, $request->user_id);
-        return redirect()->route('admin.classes.show', $id)->with('success', 'Étudiant ajouté à la classe.');
-    }
-
-    /**
-     * Retire un étudiant d'une classe.
-     */
-    public function removeStudentFromClasse($id, $userId)
-    {
-        $this->classeService->removeStudent($userId);
-        return redirect()->route('admin.classes.show', $id)->with('success', 'Étudiant retiré de la classe.');
-    }
 }
 

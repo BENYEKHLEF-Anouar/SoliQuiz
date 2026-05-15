@@ -80,7 +80,7 @@ $maxWidth = [
             <div class="px-10 pt-10 pb-2 flex items-start justify-between">
                 <div>
                     <p class="text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] mb-1 leading-none italic">Configuration</p>
-                    <h3 class="text-3xl font-heading font-black text-slate-900 tracking-tight leading-none uppercase italic">{{ $title }}</h3>
+                    <h3 class="text-3xl font-heading font-black text-slate-900 tracking-tight leading-none uppercase italic">{!! $title !!}</h3>
                 </div>
                 <button @click="show = false" class="group size-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all active:scale-90 shadow-sm border border-slate-100">
                     <svg class="size-6 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -88,8 +88,8 @@ $maxWidth = [
             </div>
         @endif
 
-        <div class="px-10 py-8 overflow-y-auto custom-scrollbar">
-            <div class="relative">
+        <div class="flex-1 overflow-y-auto custom-scrollbar">
+            <div class="px-10 py-8 relative">
                 {{ $slot }}
             </div>
         </div>

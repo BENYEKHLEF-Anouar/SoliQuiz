@@ -27,7 +27,7 @@ class SeanceService
      */
     public function all(): Collection
     {
-        return Seance::orderBy('date', 'desc')->get();
+        return Seance::orderBy('date_debut', 'desc')->get();
     }
 
     /**
@@ -37,7 +37,8 @@ class SeanceService
     {
         return Seance::create([
             'nom' => $data['nom'],
-            'date' => $data['date'],
+            'date_debut' => $data['date_debut'] ?? null,
+            'date_fin' => $data['date_fin'] ?? null,
             'user_id' => $data['user_id'] ?? null,
         ]);
     }
@@ -49,7 +50,8 @@ class SeanceService
     {
         $seance->update([
             'nom' => $data['nom'],
-            'date' => $data['date'],
+            'date_debut' => $data['date_debut'] ?? null,
+            'date_fin' => $data['date_fin'] ?? null,
         ]);
         return $seance->fresh();
     }
@@ -78,6 +80,9 @@ class SeanceService
         return $seance->unitesApprentissage()->create([
             'nom' => $data['nom'],
             'code' => $data['code'],
+            'user_id' => $data['user_id'] ?? null,
+            'date_debut' => $data['date_debut'] ?? null,
+            'date_fin' => $data['date_fin'] ?? null,
         ]);
     }
     /**

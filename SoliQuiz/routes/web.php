@@ -41,14 +41,14 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/pedagogie/competence/{id}', [\App\Http\Controllers\Web\AdminController::class, 'updateCompetence'])->name('pedagogie.competence.update');
         Route::delete('/pedagogie/competence/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroyCompetence'])->name('pedagogie.competence.destroy');
         
-        Route::get('/classes', [\App\Http\Controllers\Web\AdminController::class, 'gestionClasses'])->name('classes');
-        Route::get('/classes/search', [\App\Http\Controllers\Web\AdminController::class, 'searchClasses'])->name('classes.search');
-        Route::get('/classes/{id}', [\App\Http\Controllers\Web\AdminController::class, 'showClasse'])->name('classes.show');
-        Route::post('/classes', [\App\Http\Controllers\Web\AdminController::class, 'storeClasse'])->name('classes.store');
-        Route::delete('/classes/{id}', [\App\Http\Controllers\Web\AdminController::class, 'destroyClasse'])->name('classes.destroy');
-        Route::post('/classes/{id}/formateur', [\App\Http\Controllers\Web\AdminController::class, 'assignFormateur'])->name('classes.assign');
-        Route::post('/classes/{id}/etudiants', [\App\Http\Controllers\Web\AdminController::class, 'addStudentToClasse'])->name('classes.students.add');
-        Route::delete('/classes/{id}/etudiants/{userId}', [\App\Http\Controllers\Web\AdminController::class, 'removeStudentFromClasse'])->name('classes.students.remove');
+        Route::get('/classes', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'index'])->name('classes');
+        Route::get('/classes/search', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'search'])->name('classes.search');
+        Route::get('/classes/{id}', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'show'])->name('classes.show');
+        Route::post('/classes', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'store'])->name('classes.store');
+        Route::delete('/classes/{classe}', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'destroy'])->name('classes.destroy');
+        Route::post('/classes/{id}/formateur', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'assignFormateur'])->name('classes.assign');
+        Route::post('/classes/{classe}/etudiants', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'addStudent'])->name('classes.students.add');
+        Route::delete('/classes/{id}/etudiants/{userId}', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'removeStudent'])->name('classes.students.remove');
     });
 
     // Group: Formateur and Admin
@@ -63,18 +63,21 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/qcm/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'destroyQcm'])->name('qcm.destroy');
         Route::patch('/qcm/{id}/toggle', [\App\Http\Controllers\Web\FormateurController::class, 'toggleQcmStatus'])->name('qcm.toggle');
         Route::patch('/qcm/{id}/close', [\App\Http\Controllers\Web\FormateurController::class, 'closeQcm'])->name('qcm.close');
+        Route::post('/qcm/{id}/duplicate', [\App\Http\Controllers\Web\FormateurController::class, 'duplicateQcm'])->name('qcm.duplicate');
         Route::get('/resultats', [\App\Http\Controllers\Web\FormateurController::class, 'resultatsCohorte'])->name('resultats');
+        Route::get('/resultats/export', [\App\Http\Controllers\Web\FormateurController::class, 'exportResultats'])->name('resultats.export');
+        Route::get('/resultats/tentative/{id}/export', [\App\Http\Controllers\Web\FormateurController::class, 'exportTentative'])->name('resultats.tentative.export');
         
         Route::get('/pedagogie', [\App\Http\Controllers\Web\FormateurController::class, 'pedagogie'])->name('pedagogie');
         Route::post('/pedagogie/seance', [\App\Http\Controllers\Web\FormateurController::class, 'storeSeance'])->name('pedagogie.seance.store');
         Route::get('/pedagogie/seance/{id}/edit', [\App\Http\Controllers\Web\FormateurController::class, 'editSeance'])->name('pedagogie.seance.edit');
         Route::put('/pedagogie/seance/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'updateSeance'])->name('pedagogie.seance.update');
         Route::delete('/pedagogie/seance/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'destroySeance'])->name('pedagogie.seance.destroy');
-        Route::post('/pedagogie/ua', [\App\Http\Controllers\Web\FormateurController::class, 'storeUA'])->name('pedagogie.ua.store');
+        Route::post('/pedagogie/seance/{id}/ua', [\App\Http\Controllers\Web\FormateurController::class, 'storeUA'])->name('pedagogie.ua.store');
         Route::get('/pedagogie/ua/{id}/edit', [\App\Http\Controllers\Web\FormateurController::class, 'editUA'])->name('pedagogie.ua.edit');
         Route::put('/pedagogie/ua/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'updateUA'])->name('pedagogie.ua.update');
         Route::delete('/pedagogie/ua/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'destroyUA'])->name('pedagogie.ua.destroy');
-        Route::post('/pedagogie/competence', [\App\Http\Controllers\Web\FormateurController::class, 'storeCompetence'])->name('pedagogie.competence.store');
+        Route::post('/pedagogie/ua/{id}/competence', [\App\Http\Controllers\Web\FormateurController::class, 'storeCompetence'])->name('pedagogie.competence.store');
         Route::get('/pedagogie/competence/{id}/edit', [\App\Http\Controllers\Web\FormateurController::class, 'editCompetence'])->name('pedagogie.competence.edit');
         Route::put('/pedagogie/competence/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'updateCompetence'])->name('pedagogie.competence.update');
         Route::delete('/pedagogie/competence/{id}', [\App\Http\Controllers\Web\FormateurController::class, 'destroyCompetence'])->name('pedagogie.competence.destroy');
@@ -84,9 +87,12 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:etudiant'])->prefix('student')->name('student.')->group(function() {
         Route::get('/dashboard', [\App\Http\Controllers\Web\StudentController::class, 'dashboard'])->name('dashboard');
         Route::get('/bibliotheque', [\App\Http\Controllers\Web\StudentController::class, 'bibliotheque'])->name('bibliotheque');
+        Route::get('/bibliotheque/search', [\App\Http\Controllers\Web\StudentController::class, 'bibliothequeSearch'])->name('bibliotheque.search');
         Route::get('/qcm/{id}', [\App\Http\Controllers\Web\StudentController::class, 'passation'])->name('passation');
         Route::post('/qcm/{id}', [\App\Http\Controllers\Web\StudentController::class, 'submitQcm'])->name('qcm.submit');
+        Route::post('/qcm/{id}/save', [\App\Http\Controllers\Web\StudentController::class, 'saveProgress'])->name('qcm.save');
         Route::get('/qcm/{id}/resultats', [\App\Http\Controllers\Web\StudentController::class, 'resultats'])->name('resultats');
+        Route::get('/qcm/{id}/export', [\App\Http\Controllers\Web\StudentController::class, 'exportResultat'])->name('resultats.export');
     });
 
     // Shared Profile Routes

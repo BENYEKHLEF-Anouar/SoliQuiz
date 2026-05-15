@@ -56,4 +56,20 @@ class LoginController extends Controller
             'password.required' => 'La clé de sécurité est obligatoire pour cette session.',
         ]);
     }
+
+    /**
+     * Surcharge de la méthode authenticated pour forcer la redirection
+     * vers le bon tableau de bord selon le rôle, en ignorant l'URL 'intended'
+     * qui cause souvent des confusions dans le navigateur.
+     */
+    protected function authenticated(\Illuminate\Http\Request $request, $user)
+    {
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->isFormateur()) {
+            return redirect()->route('formateur.dashboard');
+        }
+        
+        return redirect()->route('student.dashboard');
+    }
 }

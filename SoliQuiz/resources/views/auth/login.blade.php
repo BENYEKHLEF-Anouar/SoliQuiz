@@ -80,7 +80,7 @@
                             <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                         </div>
                         <input type="email" name="email" id="email" value="{{ old('email') }}"
-                            class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-12 pr-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-slate-300 italic"
+                            class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-12 pr-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-slate-300"
                             placeholder="votre@solicode.co" required autofocus>
                     </div>
                     @error('email')
@@ -95,20 +95,30 @@
                     @enderror
                 </div>
 
-                <div class="space-y-3">
+                <div class="space-y-3" x-data="{ show: false }">
                     <div class="flex justify-between items-center px-1">
                         <label for="password" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] italic leading-none">Clé de Sécurité</label>
                         @if (Route::has('password.request'))
-                            <a class="text-[9px] font-black text-primary-500 hover:text-primary-600 transition-colors uppercase tracking-widest italic" href="{{ route('password.request') }}">Oublié ?</a>
+                            <!-- <a class="text-[9px] font-black text-primary-500 hover:text-primary-600 transition-colors uppercase tracking-widest italic" href="{{ route('password.request') }}">Oublié ?</a> -->
                         @endif
                     </div>
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-300 group-focus-within:text-primary-500 transition-colors">
                             <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                         </div>
-                        <input type="password" name="password" id="password"
-                            class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-12 pr-4 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-slate-300 italic"
+                        <input :type="show ? 'text' : 'password'" name="password" id="password"
+                            class="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3 pl-12 pr-12 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-slate-300"
                             placeholder="············" required>
+                        <button type="button" @click="show = !show" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-600 transition-colors">
+                            <!-- Eye Icon (Show) -->
+                            <svg x-show="!show" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <!-- Eye Off Icon (Hide) -->
+                            <svg x-show="show" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="display: none;">
+                                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/>
+                            </svg>
+                        </button>
                     </div>
                     @error('password')
                         <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest italic flex items-center">
