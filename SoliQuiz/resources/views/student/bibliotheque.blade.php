@@ -22,6 +22,10 @@
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Mon Espace</span>
                     <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Bibliothèque</span>
+                    @if($formateur)
+                        <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-primary-600 italic">Formateur : {{ $formateur->nom_complet }}</span>
+                    @endif
                 </div>
                 <h3 class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
                     Catalogue des <span>évaluations</span>

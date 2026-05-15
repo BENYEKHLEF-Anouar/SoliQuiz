@@ -32,14 +32,15 @@ class StudentController extends Controller
      */
     public function dashboard()
     {
-        $student = Auth::user();
+        $student = Auth::user()->load('classe.formateur');
+        $formateur = $student->classe ? $student->classe->formateur : null;
         $metrics = $this->etudiantService->getDashboard($student);
         $upcoming = $this->etudiantService->getUpcomingQcms($student);
         $historique = $this->etudiantService->historique($student, 5); // top 5 recent
         $lastScores = $this->etudiantService->getLastScores($student, 7);
         $activeSessions = $this->etudiantService->getActiveSessions($student);
 
-        return view('student.dashboard', compact('metrics', 'historique', 'upcoming', 'lastScores', 'activeSessions'));
+        return view('student.dashboard', compact('metrics', 'historique', 'upcoming', 'lastScores', 'activeSessions', 'formateur'));
     }
 
     /**
@@ -47,7 +48,8 @@ class StudentController extends Controller
      */
     public function bibliotheque(Request $request)
     {
-        $student = Auth::user();
+        $student = Auth::user()->load('classe.formateur');
+        $formateur = $student->classe ? $student->classe->formateur : null;
         $search = $request->input('search');
         
         // On récupère les QCM publics accessibles OU ceux que l'étudiant a déjà tenté
@@ -108,7 +110,7 @@ class StudentController extends Controller
             }
         }
 
-        return view('student.bibliotheque', compact('termines', 'enCours', 'aFaire', 'moyenne', 'search', 'unites'));
+        return view('student.bibliotheque', compact('termines', 'enCours', 'aFaire', 'moyenne', 'search', 'unites', 'formateur'));
     }
 
     /**

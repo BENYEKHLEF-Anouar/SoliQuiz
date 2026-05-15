@@ -134,7 +134,7 @@ class AdminController extends Controller
             'prenom' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'role' => 'required|in:Apprenant,Formateur,Administrateur',
-            'password' => 'required|string|min:8',
+            'password' => 'nullable|string|min:8',
             'classe_id' => 'nullable|exists:classes,id',
         ]);
 
@@ -148,7 +148,7 @@ class AdminController extends Controller
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => $request->password ?: 'password',
             'type_profil' => $roleMapping[$request->role],
             'classe_id' => $request->classe_id,
         ]);

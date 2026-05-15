@@ -149,6 +149,16 @@
                      class="absolute bottom-full left-0 w-full mb-4 bg-white rounded-[2rem] border border-slate-200 shadow-premium p-3 z-90 overflow-hidden"
                      x-cloak>
                     
+                    <a href="{{ url('/') }}" 
+                        class="flex items-center gap-3 px-5 py-4 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all text-[11px] font-black uppercase tracking-widest italic group/item">
+                        <div class="size-8 bg-slate-100 text-slate-500 rounded-xl flex items-center justify-center group-hover/item:bg-slate-900 group-hover/item:text-white transition-all shadow-sm">
+                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                        </div>
+                        Page d'accueil
+                    </a>
+
+                    <div class="h-px bg-slate-100/50 my-2 mx-4"></div>
+
                     <a href="{{ route('profile.edit') }}" 
                         class="flex items-center gap-3 px-5 py-4 rounded-2xl text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-all text-[11px] font-black uppercase tracking-widest italic group/item">
                         <div class="size-8 bg-primary-50 text-primary-500 rounded-xl flex items-center justify-center group-hover/item:bg-primary-500 group-hover/item:text-white transition-all shadow-sm">

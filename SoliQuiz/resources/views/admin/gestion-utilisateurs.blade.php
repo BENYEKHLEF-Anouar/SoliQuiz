@@ -331,10 +331,20 @@
                                class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Clef de Sécurité Initial</label>
-                        <input type="password" name="password" required placeholder="••••••••"
-                               class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                    <div class="space-y-2" x-data="{ showPw: false }">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Clef de Sécurité <span class="text-slate-300 normal-case">(Par défaut : "password")</span></label>
+                        <div class="relative">
+                            <input :type="showPw ? 'text' : 'password'" name="password" placeholder="••••••••"
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 pe-14 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            <button type="button" @click="showPw = !showPw" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-600 transition-colors">
+                                <svg x-show="!showPw" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <svg x-show="showPw" x-cloak class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="display: none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-5">
@@ -394,10 +404,20 @@
                                class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
                     </div>
 
-                    <div class="space-y-2">
+                    <div class="space-y-2" x-data="{ showPw: false }">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Clef de Sécurité <span class="text-slate-300 normal-case">(Optionnel)</span></label>
-                        <input type="password" name="password" placeholder="Régénérer la clef"
-                               class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                        <div class="relative">
+                            <input :type="showPw ? 'text' : 'password'" name="password" placeholder="Régénérer la clef"
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 pe-14 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            <button type="button" @click="showPw = !showPw" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-600 transition-colors">
+                                <svg x-show="!showPw" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <svg x-show="showPw" x-cloak class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="display: none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-5">
