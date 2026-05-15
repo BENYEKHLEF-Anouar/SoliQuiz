@@ -50,8 +50,23 @@ class StudentController extends Controller
         $student = Auth::user();
         $search = $request->input('search');
         
-        // Tous les QCM publiés (avec les infos tentées via le Service Public)
-        $qcms = $this->qcmPublicService->getQcmsDisponibles($student);
+        // On récupère les QCM publics accessibles OU ceux que l'étudiant a déjà tenté
+        $publicQcmIds = QCM::where('statut', 'public')
+            ->where(function($query) use ($student) {
+                $query->whereNull('classe_id')
+                      ->orWhere('classe_id', $student->classe_id);
+            })
+            ->pluck('id');
+
+        $tentativeQcmIds = Tentative::where('etudiant_id', $student->id)->pluck('qcm_id');
+        $allIds = $publicQcmIds->merge($tentativeQcmIds)->unique();
+
+        $qcms = QCM::whereIn('id', $allIds)
+            ->with(['formateur', 'uniteApprentissage'])
+            ->withCount('questions')
+            ->withCount(['tentatives as mes_tentatives_count' => fn($q) => $q->where('etudiant_id', $student->id)])
+            ->orderByDesc('created_at')
+            ->get();
 
         // Filtrer par recherche
         if ($search) {
@@ -69,7 +84,10 @@ class StudentController extends Controller
             $qcm->etat = $tentative ? $tentative->statut : 'a_faire';
             $qcm->score = $tentative ? $tentative->score_obtenu : null;
             $qcm->tentative_id = $tentative ? $tentative->id : null;
-            $qcm->date_fin = $tentative ? $tentative->date_fin : null;
+            $qcm->date_fin = $tentative ? ($tentative->date_fin ? $tentative->date_fin->format('d M Y') : null) : null;
+            $qcm->unite_nom = $qcm->uniteApprentissage ? $qcm->uniteApprentissage->nom : 'Évaluation transverse';
+            $qcm->url_passation = route('student.passation', $qcm->id);
+            $qcm->url_resultats = $qcm->tentative_id ? route('student.resultats', $qcm->id) : '#';
             return $qcm;
         });
 
@@ -103,7 +121,22 @@ class StudentController extends Controller
         $statut = $request->input('statut'); // 'reussi', 'echoue', 'a_faire', 'en_cours'
         $uaId = $request->input('ua_id');
         
-        $qcms = $this->qcmPublicService->getQcmsDisponibles($student);
+        $publicQcmIds = QCM::where('statut', 'public')
+            ->where(function($query) use ($student) {
+                $query->whereNull('classe_id')
+                      ->orWhere('classe_id', $student->classe_id);
+            })
+            ->pluck('id');
+
+        $tentativeQcmIds = Tentative::where('etudiant_id', $student->id)->pluck('qcm_id');
+        $allIds = $publicQcmIds->merge($tentativeQcmIds)->unique();
+
+        $qcms = QCM::whereIn('id', $allIds)
+            ->with(['formateur', 'uniteApprentissage'])
+            ->withCount('questions')
+            ->withCount(['tentatives as mes_tentatives_count' => fn($q) => $q->where('etudiant_id', $student->id)])
+            ->orderByDesc('created_at')
+            ->get();
 
         if ($search) {
             $qcms = $qcms->filter(fn($q) => str_contains(strtolower($q->titre), strtolower($search)));

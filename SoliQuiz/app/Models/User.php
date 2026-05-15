@@ -36,7 +36,7 @@ class User extends Authenticatable
 
     public function getRoleAttribute(): string
     {
-        return $this->type_profil;
+        return $this->type_profil ?? '';
     }
 
     protected $appends = [

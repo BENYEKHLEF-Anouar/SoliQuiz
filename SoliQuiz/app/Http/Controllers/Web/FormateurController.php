@@ -560,17 +560,27 @@ class FormateurController extends Controller
                 'Étudiant',
                 'Classe',
                 'QCM',
+                'Durée',
                 'Score',
                 'Seuil Réussite',
                 'Statut'
             ], ';');
 
             foreach ($results as $result) {
+                $duree = '-';
+                if ($result->date_debut && $result->date_fin) {
+                    $diff = $result->date_debut->diff($result->date_fin);
+                    $m = ($diff->h * 60) + $diff->i;
+                    $s = $diff->s;
+                    $duree = ($m > 0 ? $m . 'm ' : '') . $s . 's';
+                }
+
                 fputcsv($file, [
                     $result->date_debut?->format('d/m/Y H:i') ?? '-',
                     $result->etudiant?->nom_complet ?? 'Inconnu',
                     $result->etudiant?->classe?->nom ?? '-',
                     $result->qcm?->titre ?? '-',
+                    $duree,
                     $result->score_obtenu !== null ? $result->score_obtenu . '/20' : '-',
                     ($result->qcm?->score_reussite ?? '10') . '/20',
                     ucfirst($result->statut)

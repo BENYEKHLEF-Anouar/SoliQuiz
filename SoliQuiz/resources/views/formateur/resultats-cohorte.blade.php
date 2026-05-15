@@ -5,6 +5,16 @@
 @section('content')
 <div class="reveal active" x-data="resultsFilter({{ Js::from($qcms->map(fn($q) => ['id' => $q->id, 'titre' => $q->titre])->toArray()) }}, {{ Js::from($classes->pluck('nom')->toArray()) }}, {{ Js::from($etudiants) }})">
     
+    <!-- Navigation -->
+    <div class="mb-6">
+        <a href="javascript:history.back()" 
+           class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
+            <div class="size-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:border-primary-200 group-hover:bg-primary-50 transition-all shadow-sm">
+                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            </div>
+            <span class="text-[10px] font-black uppercase tracking-widest">Retour</span>
+        </a>
+    </div>
     <!-- Header Section -->
     <div class="relative z-30 mb-10">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-200">

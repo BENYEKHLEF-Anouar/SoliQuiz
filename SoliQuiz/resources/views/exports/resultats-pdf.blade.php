@@ -332,11 +332,12 @@
             <table class="results-table">
                 <thead>
                     <tr>
-                        <th width="15%">Date &amp; Heure</th>
-                        <th width="33%">Candidat</th>
-                        <th width="20%">Test</th>
+                        <th width="12%">Date &amp; Heure</th>
+                        <th width="28%">Candidat</th>
+                        <th width="18%">Test</th>
+                        <th width="14%">Durée</th>
                         <th width="14%">Note Finale</th>
-                        <th width="18%">Validation</th>
+                        <th width="14%">Validation</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -352,6 +353,18 @@
                             </td>
                             <td>
                                 <div class="test-title">{{ $result->qcm?->titre ?? '-' }}</div>
+                            </td>
+                            <td>
+                                @if($result->date_debut && $result->date_fin)
+                                    @php
+                                        $duration = $result->date_debut->diff($result->date_fin);
+                                        $m = ($duration->h * 60) + $duration->i;
+                                        $s = $duration->s;
+                                    @endphp
+                                    <div class="col-date">{{ $m > 0 ? $m.'m ' : '' }}{{ $s }}s</div>
+                                @else
+                                    <div class="col-date-time">-</div>
+                                @endif
                             </td>
                             <td>
                                 @if($result->score_obtenu !== null)

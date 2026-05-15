@@ -5,15 +5,15 @@
     <main class="max-w-4xl mx-auto px-4 py-12">
         
         <!-- Navigation -->
-        <!-- <div class="mb-8">
-            <a href="{{ route('student.bibliotheque') }}" 
+        <div class="mb-8">
+            <a href="javascript:history.back()" 
                class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
                 <div class="size-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:border-primary-200 group-hover:bg-primary-50 transition-all shadow-sm">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 </div>
-                <span class="text-[10px] font-black uppercase tracking-widest">Retour à la bibliothèque</span>
+                <span class="text-[10px] font-black uppercase tracking-widest">Retour</span>
             </a>
-        </div> -->
+        </div>
 
         @php
             $isSuccess = ($tentative->score_obtenu ?? 0) >= $qcm->score_reussite;
