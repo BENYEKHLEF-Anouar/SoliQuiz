@@ -10,6 +10,7 @@ use App\Models\Competence;
 use App\Models\Classe;
 use App\Services\QcmService;
 use App\Services\ClasseService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -59,9 +60,7 @@ class FormateurController extends Controller
             return $query;
         }
 
-        $classeIds = $user->classeGeree()->pluck('id');
-
-        return $query->whereIn('classe_id', $classeIds);
+        return $query->where('formateur_id', $user->id);
     }
 
     public function __construct(
@@ -92,14 +91,19 @@ class FormateurController extends Controller
     public function pedagogie()
     {
         $formateur = Auth::user();
-        $seances = $formateur->seances()->with('unitesApprentissage.competences')->latest()->get();
+        $seances = $formateur->seances()->with('unitesApprentissage.competences')->orderBy('date_debut', 'desc')->get();
         return view('formateur.pedagogie', compact('seances'));
     }
 
     public function storeSeance(Request $request)
     {
-        $request->validate(['nom' => 'required|string|max:255', 'date' => 'required|date']);
-        Auth::user()->seances()->create($request->only('nom', 'date'));
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'date_debut' => 'nullable|date',
+            'date_fin' => 'nullable|date',
+        ]);
+
+        Auth::user()->seances()->create($request->only('nom', 'date_debut', 'date_fin'));
         return back()->with('success', 'Session créée.');
     }
 
@@ -112,21 +116,25 @@ class FormateurController extends Controller
         return back()->with('success', 'Session supprimée.');
     }
 
-    public function storeUA(Request $request)
+    public function storeUA(Request $request, $seanceId)
     {
         $request->validate([
             'nom' => 'required|string|max:255',
             'code' => 'required|string|unique:unites_apprentissage,code',
-            'seance_id' => 'required|exists:seances,id'
+            'date_debut' => 'nullable|date',
+            'date_fin' => 'nullable|date',
         ]);
 
         $seance = Auth::user()->isAdmin()
-            ? Seance::findOrFail($request->seance_id)
-            : Auth::user()->seances()->findOrFail($request->seance_id);
+            ? Seance::findOrFail($seanceId)
+            : Auth::user()->seances()->findOrFail($seanceId);
         $seance->unitesApprentissage()->create([
             'nom' => $request->nom,
             'code' => $request->code,
-            'user_id' => $seance->user_id
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
+            'user_id' => $seance->user_id,
+            'seance_id' => $seance->id
         ]);
 
         return back()->with('success', 'Unité d\'apprentissage ajoutée.');
@@ -141,17 +149,16 @@ class FormateurController extends Controller
         return back()->with('success', 'UA supprimée.');
     }
 
-    public function storeCompetence(Request $request)
+    public function storeCompetence(Request $request, $uaId)
     {
         $request->validate([
             'libelle' => 'required|string|max:255',
             'code' => 'required|string|unique:competences,code',
-            'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id'
         ]);
 
         $ua = Auth::user()->isAdmin()
-            ? UniteApprentissage::findOrFail($request->unite_apprentissage_id)
-            : UniteApprentissage::where('id', $request->unite_apprentissage_id)->where('user_id', Auth::id())->firstOrFail();
+            ? UniteApprentissage::findOrFail($uaId)
+            : UniteApprentissage::where('id', $uaId)->where('user_id', Auth::id())->firstOrFail();
         $ua->competences()->create([
             'libelle' => $request->libelle,
             'code' => $request->code
@@ -186,11 +193,15 @@ class FormateurController extends Controller
      */
     public function updateSeance(Request $request, $id)
     {
-        $request->validate(['nom' => 'required|string|max:255', 'date' => 'required|date']);
+        $request->validate([
+            'nom' => 'required|string|max:255', 
+            'date_debut' => 'nullable|date',
+            'date_fin' => 'nullable|date',
+        ]);
         $seance = Auth::user()->isAdmin()
             ? Seance::findOrFail($id)
             : Auth::user()->seances()->findOrFail($id);
-        $seance->update($request->only('nom', 'date'));
+        $seance->update($request->only('nom', 'date_debut', 'date_fin'));
         return back()->with('success', 'Session mise à jour.');
     }
 
@@ -213,12 +224,14 @@ class FormateurController extends Controller
         $request->validate([
             'nom' => 'required|string|max:255',
             'code' => 'required|string|unique:unites_apprentissage,code,' . $id,
+            'date_debut' => 'nullable|date',
+            'date_fin' => 'nullable|date',
         ]);
 
         $ua = Auth::user()->isAdmin()
             ? UniteApprentissage::findOrFail($id)
             : UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
-        $ua->update($request->only('nom', 'code'));
+        $ua->update($request->only('nom', 'code', 'date_debut', 'date_fin'));
         return back()->with('success', 'Unité d\'apprentissage mise à jour.');
     }
 
@@ -266,17 +279,23 @@ class FormateurController extends Controller
             ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
             ->latest()
             ->paginate(15);
-        return view('formateur.bibliotheque', compact('qcms', 'search'));
+            
+        $unites = UniteApprentissage::where('user_id', Auth::id())->get();
+            
+        return view('formateur.bibliotheque', compact('qcms', 'search', 'unites'));
     }
 
     public function searchBibliotheque(Request $request)
     {
         $search = $request->input('search');
         $status = $request->input('status');
+        $uaId = $request->input('ua_id');
+
         $qcms = QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
             ->withCount(['questions', 'tentatives'])
             ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
             ->when($status, fn($q) => $q->where('statut', $status))
+            ->when($uaId, fn($q) => $q->where('unite_apprentissage_id', $uaId))
             ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
             ->latest()
             ->paginate(50); // increased for dynamic view
@@ -391,7 +410,7 @@ class FormateurController extends Controller
             'competence_ids.*' => 'exists:competences,id',
             'questions' => 'required|array|min:1',
             'questions.*.texte' => 'required|string',
-            'questions.*.points' => 'required|integer|min:0',
+            'questions.*.points' => 'required|numeric|min:0',
             'questions.*.type' => 'required|in:choix_unique,choix_multiple',
             'questions.*.explication_feedback' => 'nullable|string',
             'questions.*.options' => 'required|array|min:2',
@@ -441,6 +460,19 @@ class FormateurController extends Controller
     }
 
     /**
+     * Duplique un QCM existant
+     */
+    public function duplicateQcm($id)
+    {
+        $qcm = QCM::tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
+            ->findOrFail($id);
+
+        $newQcm = $this->qcmService->duplicate($qcm);
+
+        return back()->with('success', "Le QCM a été dupliqué avec succès sous le nom '{$newQcm->titre}'.");
+    }
+
+    /**
      * Affiche les résultats des étudiants pour une cohorte
      */
     public function resultatsCohorte()
@@ -448,8 +480,117 @@ class FormateurController extends Controller
         $data = $this->qcmService->getResultsForFormateur(Auth::id());
         $classes = $data['classes'];
         $qcms = $data['qcms'];
+        
+        // Liste des étudiants issus de ses classes gérées
+        $etudiantsClasses = $classes->flatMap->etudiants
+            ->map(fn($e) => $e->prenom . ' ' . $e->nom);
+            
+        // Liste des étudiants ayant réellement passé ses QCM (même s'ils ne sont pas dans ses classes)
+        $etudiantsTentatives = $qcms->flatMap->tentatives
+            ->map(fn($t) => $t->etudiant?->prenom . ' ' . $t->etudiant?->nom)
+            ->filter();
 
-        return view('formateur.resultats-cohorte', compact('classes', 'qcms'));
+        $etudiants = $etudiantsClasses->concat($etudiantsTentatives)
+            ->unique()
+            ->sort()
+            ->values();
+
+        return view('formateur.resultats-cohorte', compact('classes', 'qcms', 'etudiants'));
+    }
+
+    /**
+     * Exporte les résultats au format CSV ou PDF
+     */
+    public function exportResultats(Request $request)
+    {
+        $formateurId = Auth::id();
+        $qcmId = $request->input('qcm');
+        $classeName = $request->input('classe');
+        $format = $request->input('format', 'csv');
+
+        $query = \App\Models\Tentative::with(['etudiant.classe', 'qcm'])
+            ->whereHas('qcm', function($q) use ($formateurId) {
+                $q->where('formateur_id', $formateurId);
+            });
+
+        $suffix = '';
+        $prefix = 'resultats_soliquiz';
+
+        if ($classeName) {
+            $query->whereHas('etudiant.classe', function($q) use ($classeName) {
+                $q->where('nom', $classeName);
+            });
+            $prefix = 'resultats_' . \Illuminate\Support\Str::slug($classeName);
+        }
+
+        $qcmName = null;
+        if ($qcmId) {
+            $query->where('qcm_id', $qcmId);
+            $qcm = \App\Models\QCM::find($qcmId);
+            $qcmName = $qcm->titre ?? 'qcm';
+            $suffix = '_' . \Illuminate\Support\Str::slug($qcmName);
+        }
+
+        $results = $query->latest()->get();
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('exports.resultats-pdf', [
+                'results' => $results,
+                'qcmName' => $qcmName,
+                'classeName' => $classeName
+            ]);
+            return $pdf->download($prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.pdf');
+        }
+
+        $fileName = $prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.csv';
+        $headers = [
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $callback = function() use($results) {
+            $file = fopen('php://output', 'w');
+            fputs($file, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
+            
+            fputcsv($file, [
+                'Date',
+                'Étudiant',
+                'Classe',
+                'QCM',
+                'Durée',
+                'Score',
+                'Seuil Réussite',
+                'Statut'
+            ], ';');
+
+            foreach ($results as $result) {
+                $duree = '-';
+                if ($result->date_debut && $result->date_fin) {
+                    $diff = $result->date_debut->diff($result->date_fin);
+                    $m = ($diff->h * 60) + $diff->i;
+                    $s = $diff->s;
+                    $duree = ($m > 0 ? $m . 'm ' : '') . $s . 's';
+                }
+
+                fputcsv($file, [
+                    $result->date_debut?->format('d/m/Y H:i') ?? '-',
+                    $result->etudiant?->nom_complet ?? 'Inconnu',
+                    $result->etudiant?->classe?->nom ?? '-',
+                    $result->qcm?->titre ?? '-',
+                    $duree,
+                    $result->score_obtenu !== null ? $result->score_obtenu . '/20' : '-',
+                    ($result->qcm?->score_reussite ?? '10') . '/20',
+                    ucfirst($result->statut)
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**
@@ -479,5 +620,44 @@ class FormateurController extends Controller
         $this->qcmService->closeQcm($qcm);
 
         return back()->with('success', 'QCM fermé. Les étudiants ne peuvent plus y accéder.');
+    }
+    /**
+     * Exporte un bilan individuel d'un étudiant au format PDF (pour le formateur)
+     */
+    public function exportTentative($id)
+    {
+        $tentative = \App\Models\Tentative::with(['etudiant.classe', 'qcm'])->findOrFail($id);
+        
+        // Vérifier l'autorisation (le formateur doit posséder le QCM)
+        if (!Auth::user()->isAdmin() && $tentative->qcm->formateur_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $qcm = $tentative->qcm;
+        $questions = $qcm->questions()->with(['options', 'reponses' => function($q) use ($tentative) {
+            $q->where('tentative_id', $tentative->id);
+        }])->get();
+
+        $questionDetails = $questions->map(function ($question) {
+            $userReponse = $question->reponses->first();
+            $selectedOptions = $userReponse ? $userReponse->choixReponses->pluck('option_id')->toArray() : [];
+            $correctOptions = $question->options->where('est_correcte', true)->pluck('id')->toArray();
+            
+            $isCorrect = (count($correctOptions) === count($selectedOptions)) && empty(array_diff($correctOptions, $selectedOptions));
+
+            return (object) [
+                'texte' => $question->texte,
+                'points' => $question->points,
+                'explication' => $question->explication_feedback,
+                'isCorrect' => $isCorrect,
+                'options' => $question->options->map(function($opt) use ($selectedOptions) {
+                    $opt->isSelected = in_array($opt->id, $selectedOptions);
+                    return $opt;
+                })
+            ];
+        });
+
+        $pdf = Pdf::loadView('exports.tentative-pdf', compact('qcm', 'tentative', 'questionDetails'));
+        return $pdf->download('Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.pdf');
     }
 }

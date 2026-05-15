@@ -6,19 +6,30 @@
 
 @section('content')
 <div class="space-y-8 fade-in" x-data="{ showQuickActions: false }">
-    <!-- Quick Actions Control Bar -->
-    <div class="flex items-center justify-between pb-6 border-b border-slate-100">
-        <div>
-            <p class="text-label mb-1">Supervision Globale</p>
-            <h3 class="text-xl font-bold text-slate-900 tracking-tight italic uppercase">Mesure de Performance</h3>
+    <!-- Header -->
+    <div class="relative z-30 mb-10">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-200">
+            <div>
+                <div class="flex items-center gap-4 mb-3">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Espace Admin</span>
+                    <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Dashboard</span>
+                </div>
+                <h3 class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
+                    Supervision Globale
+                </h3>
+                <p class="mt-2 text-sm text-slate-500 max-w-xl">
+                    Vue d'ensemble de la plateforme : utilisateurs, QCMs, cohortes et performances.
+                </p>
+            </div>
+            <!-- <button @click="showQuickActions = !showQuickActions"
+                    class="h-14 px-8 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] italic shadow-2xl shadow-slate-900/20 hover:bg-primary-500 hover:-translate-y-1 transition-all flex items-center gap-3 shrink-0">
+                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg>
+                Actions Rapides
+            </button> -->
         </div>
-        
-        <button @click="showQuickActions = !showQuickActions" 
-                class="btn-premium px-6 py-3 bg-slate-900 text-white text-[11px] uppercase tracking-widest">
-            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg>
-            Actions Rapides
-        </button>
     </div>
+
 
     <!-- Quick Actions Dropdown -->
     <div x-show="showQuickActions" 
@@ -188,9 +199,9 @@
                                     <p class="text-lg font-black text-slate-900">{{ $qcm->tentatives_count ?? 0 }}</p>
                                     <p class="text-[10px] text-slate-400 uppercase tracking-wider">passations</p>
                                 </div>
-                                <div class="size-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 group-hover:bg-primary-500 group-hover:text-white transition-all">
+                                <!-- <div class="size-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 group-hover:bg-primary-500 group-hover:text-white transition-all">
                                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     @empty
@@ -268,24 +279,26 @@
             <div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-lg p-5 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-bold">Santé Système</h3>
-                    <span class="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded-lg text-xs font-bold">
-                        <span class="size-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                        Opérationnel
+                    <span class="flex items-center gap-1.5 px-2 py-1 {{ $systemStatus['is_operational'] ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400' }} rounded-lg text-xs font-bold">
+                        <span class="size-1.5 {{ $systemStatus['is_operational'] ? 'bg-emerald-400' : 'bg-rose-400' }} rounded-full {{ $systemStatus['is_operational'] ? 'animate-pulse' : '' }}"></span>
+                        {{ $systemStatus['is_operational'] ? 'Opérationnel' : 'Alerte' }}
                     </span>
                 </div>
                 <div class="space-y-3">
                     <div class="flex items-center justify-between py-2 border-b border-slate-800">
                         <span class="text-sm text-slate-400">Base de données</span>
-                        <span class="text-sm font-bold text-emerald-400">Connectée</span>
+                        <span class="text-sm font-bold {{ $systemStatus['db_color'] }}">{{ $systemStatus['db_status'] }}</span>
                     </div>
-                    <div class="flex items-center justify-between py-2 border-b border-slate-800">
+                    <!-- <div class="flex items-center justify-between py-2 border-b border-slate-800">
                         <span class="text-sm text-slate-400">File d'attente</span>
-                        <span class="text-sm font-bold text-emerald-400">Vide</span>
-                    </div>
-                    <div class="flex items-center justify-between py-2">
+                        <span class="text-sm font-bold {{ $systemStatus['queue_count'] > 0 ? 'text-amber-400' : 'text-slate-300' }}">
+                            {{ $systemStatus['queue_count'] > 0 ? $systemStatus['queue_count'] . ' tâches' : 'Vide' }}
+                        </span>
+                    </div> -->
+                    <!-- <div class="flex items-center justify-between py-2">
                         <span class="text-sm text-slate-400">Dernière sauvegarde</span>
-                        <span class="text-sm font-bold text-slate-300">Il y a 2h</span>
-                    </div>
+                        <span class="text-sm font-bold text-slate-300">{{ $systemStatus['last_backup'] }}</span>
+                    </div> -->
                 </div>
             </div>
 

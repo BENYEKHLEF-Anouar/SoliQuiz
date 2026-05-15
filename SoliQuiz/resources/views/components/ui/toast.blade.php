@@ -12,9 +12,10 @@
     }"
     x-on:toast.window="add($event.detail.message, $event.detail.type)"
     x-init="
-        @if(session('success')) add('{{ session('success') }}', 'success'); @endif
-        @if(session('error')) add('{{ session('error') }}', 'error'); @endif
-        @if(session('info')) add('{{ session('info') }}', 'info'); @endif
+        @if(session('success')) add('{{ addslashes(session('success')) }}', 'success'); @endif
+        @if(session('error')) add('{{ addslashes(session('error')) }}', 'error'); @endif
+        @if(session('info')) add('{{ addslashes(session('info')) }}', 'info'); @endif
+        @if($errors->any()) add('{{ addslashes($errors->first()) }}', 'error'); @endif
     "
     class="fixed bottom-10 right-10 z-[200] flex flex-col gap-4 pointer-events-none"
 >
@@ -32,9 +33,9 @@
             <!-- Icon Mapping -->
             <div class="flex-shrink-0 size-14 rounded-2xl flex items-center justify-center shadow-lg relative overflow-hidden"
                  :class="{
-                    'bg-emerald-50 text-emerald-500 shadow-emerald-500/10': msg.type === 'success',
-                    'bg-rose-50 text-rose-500 shadow-rose-500/10': msg.type === 'error',
-                    'bg-sky-50 text-sky-500 shadow-sky-500/10': msg.type === 'info',
+                    'bg-emerald-50 text-emerald-500': msg.type === 'success',
+                    'bg-rose-50 text-rose-500': msg.type === 'error',
+                    'bg-sky-50 text-sky-500': msg.type === 'info',
                  }">
                 <div class="absolute inset-0 border-2 border-white opacity-40 rounded-2xl"></div>
                 <!-- Success -->

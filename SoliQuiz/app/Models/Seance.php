@@ -11,10 +11,11 @@ class Seance extends Model
 {
     protected $table = 'seances';
 
-    protected $fillable = ['nom', 'date', 'user_id'];
+    protected $fillable = ['nom', 'user_id', 'date_debut', 'date_fin'];
 
     protected $casts = [
-        'date' => 'datetime',
+        'date_debut' => 'date',
+        'date_fin' => 'date',
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo

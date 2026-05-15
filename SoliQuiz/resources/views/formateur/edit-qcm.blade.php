@@ -7,36 +7,73 @@
 @section('content')
 <div class="fade-in pb-32" x-data="qcmBuilder({{ Js::from($unites) }}, {{ Js::from($classes) }}, {{ Js::from($qcm) }})">
     
+    <!-- Header: Navigation & Breadcrumbs -->
+    <div class="mb-8 space-y-6">
+        <x-ui.breadcrumb :items="[
+            'Bibliothèque' => (auth()->user()->isAdmin() ? route('admin.qcms') : route('formateur.bibliotheque')), 
+            'Modification QCM' => '#'
+        ]" />
+
+        <a href="{{ auth()->user()->isAdmin() ? route('admin.qcms') : route('formateur.bibliotheque') }}" 
+           class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
+            <div class="size-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:border-primary-200 group-hover:bg-primary-50 transition-all">
+                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            </div>
+            <span class="text-[10px] font-black uppercase tracking-widest">Retour</span>
+        </a>
+    </div>
+
     <!-- Action Form -->
     <form id="qcmForm" action="{{ route('formateur.qcm.update', $qcm->id) }}" method="POST" @submit.prevent="handleSubmit" class="flex flex-col lg:flex-row gap-6 xl:gap-8 items-start">
         @csrf
         @method('PUT')
         
+        @if($errors->any())
+        <div class="fixed top-24 left-1/2 -translate-x-1/2 z-[110] w-[90%] max-w-2xl animate-in fade-in slide-in-from-top-4 duration-500">
+            <div class="bg-rose-50 border-2 border-rose-100 rounded-2xl p-4 flex items-start gap-3 shadow-xl">
+                <svg class="size-5 text-rose-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="flex-1">
+                    <h4 class="text-xs font-black text-rose-900 uppercase tracking-widest mb-1">Erreurs de validation</h4>
+                    <ul class="text-[10px] font-bold text-rose-600 space-y-1 list-disc list-inside">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <button type="button" @click="$el.closest('.fixed').remove()" class="text-rose-400 hover:text-rose-600 p-1">
+                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        @endif
+        
         <!-- Main Column: Content (Questions) -->
         <div class="flex-1 w-full space-y-8">
             <!-- Main Title Box -->
-            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-8 relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-8 opacity-5">
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 md:p-8 relative overflow-hidden">
+                <div class="-top-6 absolute right-0 p-8 opacity-5">
                     <svg class="size-32" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>
                 </div>
                 <div class="relative z-10 space-y-3">
                     <label class="text-label ml-1">Identité de l'évaluation</label>
                     <input type="text" name="titre" required x-model="titre" 
-                           class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-4 px-6 text-2xl font-black text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-primary-500 transition-all outline-none uppercase italic" 
+                           class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 text-xl font-black text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-primary-500 transition-all outline-none uppercase italic" 
                            placeholder="Saisir le titre du QCM...">
                 </div>
             </div>
 
         <!-- Questions Dynamic Section -->
-        <div class="space-y-8">
+        <div class="space-y-5">
             <template x-for="(question, qIndex) in questions" :key="qIndex">
-                <article class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-premium transition-all duration-500 overflow-hidden" 
+                <article class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-premium transition-all duration-500 overflow-hidden" 
                          x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-8">
                     
                     <!-- Question Sub-Header -->
-                    <div class="px-10 py-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/20">
+                    <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between bg-slate-50/20">
                         <div class="flex items-center gap-6">
-                            <div class="size-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-lg font-black italic shadow-xl shadow-slate-900/10" x-text="qIndex + 1"></div>
+                            <div class="size-8 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm font-black italic" x-text="qIndex + 1"></div>
                             <div class="flex flex-col">
                                 <span class="text-label">Configuration de l'item</span>
                                 <div class="flex items-center gap-3 mt-1">
@@ -51,25 +88,25 @@
                         </button>
                     </div>
 
-                    <div class="p-6 md:p-8 space-y-8">
+                    <div class="p-4 md:p-6 space-y-5">
                         <!-- Points & Statement -->
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-24 shrink-0 space-y-3">
                                 <label class="text-label ml-1">Points</label>
-                                <input type="number" x-model.number="question.points" :name="`questions[${qIndex}][points]`" 
+                                <input type="number" x-model.number="question.points" :name="'questions[' + qIndex + '][points]'" 
                                        class="w-full py-3 rounded-2xl border-none bg-slate-50 font-black text-xl text-slate-900 text-center focus:bg-white transition-all outline-none">
                             </div>
                             <div class="flex-1 space-y-3">
                                 <label class="text-label ml-1">Énoncé Pédagogique</label>
-                                <textarea x-model="question.texte" :name="`questions[${qIndex}][texte]`" required 
-                                          class="w-full py-4 px-6 rounded-2xl bg-slate-50 border-none font-bold text-lg text-slate-900 placeholder:text-slate-200 focus:bg-white focus:ring-4 focus:ring-primary-500/10 transition-all outline-none resize-none" 
+                                <textarea x-model="question.texte" :name="'questions[' + qIndex + '][texte]'" required 
+                                          class="w-full py-2.5 px-4 rounded-xl bg-slate-50 border-none font-bold text-sm text-slate-900 placeholder:text-slate-200 focus:bg-white focus:ring-4 focus:ring-primary-500/10 transition-all outline-none resize-none" 
                                           rows="2" placeholder="Formuler la question..."></textarea>
                             </div>
                         </div>
 
 <!-- Options Management -->
-                        <div class="space-y-8">
-                            <div class="flex items-center justify-between border-b border-slate-50 pb-5">
+                        <div class="space-y-5">
+                            <div class="flex items-center justify-between border-b border-slate-50 pb-3">
                                 <div class="flex items-center gap-3">
                                     <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Options Strategiques</h4>
                                     <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase" 
@@ -77,7 +114,7 @@
                                           x-text="question.type === 'choix_unique' ? 'UNIQUE' : 'MULTIPLE'"></span>
                                 </div>
                                 <select x-model="question.type" 
-                                            name="questions[${qIndex}][type]" 
+                                            :name="'questions[' + qIndex + '][type]'" 
                                             class="!bg-primary-50 !border-transparent !rounded-xl !py-2 !px-4 !w-52 !text-primary-600 text-xs font-black uppercase">
                                         <option value="choix_unique">Reponse Unique</option>
                                         <option value="choix_multiple">Multi-Reponses</option>
@@ -94,9 +131,9 @@
                                 </span>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <template x-for="(opt, oIndex) in question.options" :key="oIndex">
-                                    <div class="group/opt p-6 bg-slate-50/50 rounded-3xl border-2 transition-all duration-300 space-y-4 shadow-xs"
+                                    <div class="group/opt p-6 bg-slate-50/50 rounded-2xl border-2 transition-all duration-300 space-y-4 shadow-xs"
                                          :class="opt.est_correcte ? 'border-emerald-400 bg-emerald-50/50' : 'border-transparent hover:border-primary-100 hover:bg-white'">
                                         <div class="flex items-center gap-4">
                                             <!-- Dynamic correct answer button - changes behavior based on question type -->
@@ -109,23 +146,23 @@
                                                 </div>
                                             </button>
                                             
-                                            <input type="hidden" :name="`questions[${qIndex}][options][${oIndex}][est_correcte]`" :value="opt.est_correcte ? '1' : '0'">
+                                            <input type="hidden" :name="'questions[' + qIndex + '][options][' + oIndex + '][est_correcte]'" :value="opt.est_correcte ? '1' : '0'">
                                             
-                                            <input type="text" required x-model="opt.texte" :name="`questions[${qIndex}][options][${oIndex}][texte]`" 
+                                            <input type="text" required x-model="opt.texte" :name="'questions[' + qIndex + '][options][' + oIndex + '][texte]'" 
                                                    placeholder="Option de reponse..." class="flex-1 bg-transparent border-none p-0 font-bold text-slate-800 text-base placeholder:text-slate-200 focus:ring-0 outline-none">
                                             
                                             <button @click="removeOption(qIndex, oIndex)" type="button" class="text-slate-200 hover:text-rose-500 transition-colors opacity-0 group-hover/opt:opacity-100">
                                                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12" /></svg>
                                             </button>
                                         </div>
-                                        <input type="text" x-model="opt.feedback_specifique" :name="`questions[${qIndex}][options][${oIndex}][feedback_specifique]`" 
+                                        <input type="text" x-model="opt.feedback_specifique" :name="'questions[' + qIndex + '][options][' + oIndex + '][feedback_specifique]'" 
                                                placeholder="Feedback correctif (optionnel)..." 
                                                class="w-full bg-white/50 border border-slate-100 rounded-xl py-2 px-4 text-[10px] font-bold text-slate-500 italic placeholder:text-slate-200 focus:bg-white transition-all outline-none">
                                     </div>
                                 </template>
 
                                 <button @click="addOption(qIndex)" type="button" 
-                                        class="h-full min-h-[80px] border-2 border-dashed border-slate-100 rounded-3xl flex flex-col items-center justify-center gap-2 text-slate-300 hover:text-primary-500 hover:border-primary-200 hover:bg-primary-50/30 transition-all group">
+                                        class="h-full min-h-[80px] border-2 border-dashed border-slate-100 rounded-2xl flex flex-col items-center justify-center gap-2 text-slate-300 hover:text-primary-500 hover:border-primary-200 hover:bg-primary-50/30 transition-all group">
                                     <svg class="size-6 group-hover:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
                                     <span class="text-[9px] font-black uppercase tracking-[0.2em]">Inserer Option</span>
                                 </button>
@@ -141,7 +178,7 @@
                             </div>
                             <div class="flex-1 space-y-3">
                                 <label class="text-label ml-1">Analyse Post-Passation</label>
-                                <textarea x-model="question.explication_feedback" :name="`questions[${qIndex}][explication_feedback]`" 
+                                <textarea x-model="question.explication_feedback" :name="'questions[' + qIndex + '][explication_feedback]'" 
                                           class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-xs font-bold text-slate-600 focus:bg-white transition-all outline-none resize-none" 
                                           rows="2" placeholder="Expliquer le raisonnement correct..."></textarea>
                             </div>
@@ -164,7 +201,7 @@
         <div class="w-full lg:w-[320px] xl:w-[380px] shrink-0 space-y-6 sticky top-8">
             
             <!-- Settings Card -->
-            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-8">
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-8">
                 <div class="flex items-center justify-between pb-6 border-b border-slate-50">
                     <h3 class="text-xs font-black uppercase tracking-widest text-slate-900">Configuration</h3>
                 </div>
@@ -175,6 +212,7 @@
                         <x-ui.select 
                             name="statut" 
                             x-model="statut"
+                            :selected="$qcm->statut"
                             class="!bg-slate-50/50 !border-transparent !rounded-2xl !py-3 !px-5 w-full"
                             :options="[
                                 ['value' => 'brouillon', 'label' => 'Brouillon'],
@@ -189,6 +227,7 @@
                         <x-ui.select 
                             name="unite_apprentissage_id" 
                             x-model="selectedUniteId" 
+                            :selected="$qcm->unite_apprentissage_id"
                             required 
                             placeholder="Choisir l'UA"
                             jsOptions="allUnites.map(u => ({value: u.id, label: u.nom}))"
@@ -201,6 +240,7 @@
                         <x-ui.select 
                             name="classe_id" 
                             x-model="selectedClasseId"
+                            :selected="$qcm->classe_id"
                             required
                             placeholder="Choisir une classe"
                             jsOptions="allClasses.map(c => ({value: c.id, label: c.nom}))"
@@ -224,7 +264,7 @@
             </div>
 
             <!-- Competences Card -->
-            <div x-show="selectedUniteId" x-transition class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-4">
+            <div x-show="selectedUniteId" x-transition class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
                 <div class="flex items-center justify-between pb-4 border-b border-slate-50">
                     <h3 class="text-xs font-black uppercase tracking-widest text-slate-900">Compétences</h3>
                     <span class="text-[10px] font-black text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" x-text="`${filteredCompetences.length}`"></span>
@@ -274,7 +314,7 @@
     <!-- Points Warning Modal -->
     <x-ui.modal name="points-warning" x-model:show="showPointsWarning" maxWidth="md">
         <div class="text-center p-8">
-            <div class="size-20 bg-rose-50 rounded-3xl flex items-center justify-center mx-auto mb-8">
+            <div class="size-20 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto mb-8">
                 <svg class="size-10 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -290,7 +330,7 @@
                         class="h-16 rounded-2xl bg-slate-900 text-white font-black uppercase tracking-widest text-xs hover:bg-primary-600 transition-all">
                     Équilibrer Automatiquement
                 </button>
-                <button @click="showPointsWarning = false; $nextTick(() => document.getElementById('qcmForm').submit())" type="button"
+                <button @click="isSubmitting = true; window.onbeforeunload = null; showPointsWarning = false; $nextTick(() => document.getElementById('qcmForm').submit())" type="button"
                         class="h-14 rounded-2xl bg-white border border-slate-100 font-black text-rose-500 uppercase tracking-widest text-[10px] hover:bg-rose-50 transition-all">
                     Ignorer et Enregistrer
                 </button>
@@ -440,14 +480,79 @@ document.addEventListener('alpine:init', () => {
             });
         },
 
+        isSubmitting: false,
+
+        isDirty() {
+            // Création d'un instantané de l'état actuel (Titre, Nb Questions, Textes, Points)
+            const currentSnapshot = JSON.stringify({
+                t: this.titre.trim(),
+                c: this.questions.length,
+                tx: this.questions.map(q => q.texte.trim()),
+                p: this.questions.map(q => q.points)
+            });
+
+            // Création de l'instantané d'origine
+            const initialSnapshot = JSON.stringify({
+                t: (initialQcm?.titre || '').trim(),
+                c: (initialQcm?.questions?.length || 0),
+                tx: (initialQcm?.questions?.map(q => q.texte.trim()) || []),
+                p: (initialQcm?.questions?.map(q => q.points) || [])
+            });
+
+            return currentSnapshot !== initialSnapshot;
+        },
+
         handleSubmit() {
             if (this.totalPoints !== 20) {
                 this.showPointsWarning = true;
             } else {
-                document.getElementById('qcmForm').submit();
+                this.isSubmitting = true;
+                window.onbeforeunload = null;
+                this.$nextTick(() => {
+                    document.getElementById('qcmForm').submit();
+                });
             }
         }
     }));
+    // Interception de la fermeture de l'onglet/rechargement
+    window.onbeforeunload = function(e) {
+        const builder = Alpine.evaluate(document.querySelector('[x-data^=qcmBuilder]'), 'isDirty()');
+        const isSubmitting = Alpine.evaluate(document.querySelector('[x-data^=qcmBuilder]'), 'isSubmitting');
+        
+        if (builder && !isSubmitting) {
+            e.preventDefault();
+            return "Voulez-vous vraiment quitter ? Vos modifications ne seront pas enregistrées.";
+        }
+    };
+
+    // Interception des clics sur les liens internes pour éviter de perdre le travail
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (!link) return;
+        
+        // On ignore les liens qui ouvrent dans un nouvel onglet ou les ancres
+        if (link.target === '_blank' || link.getAttribute('href').startsWith('#')) return;
+        
+        const builder = Alpine.evaluate(document.querySelector('[x-data^=qcmBuilder]'), 'isDirty()');
+        const isSubmitting = Alpine.evaluate(document.querySelector('[x-data^=qcmBuilder]'), 'isSubmitting');
+
+        if (builder && !isSubmitting) {
+            e.preventDefault();
+            window.dispatchEvent(new CustomEvent('confirm', {
+                detail: {
+                    title: 'Quitter l\'édition ?',
+                    message: 'Vous avez des modifications non enregistrées. Voulez-vous vraiment abandonner vos changements ?',
+                    type: 'warning',
+                    confirmText: 'Abandonner les changements',
+                    cancelText: 'Continuer l\'édition',
+                    onConfirm: () => {
+                        window.onbeforeunload = null;
+                        window.location.href = link.href;
+                    }
+                }
+            }));
+        }
+    });
 });
 </script>
 @endsection

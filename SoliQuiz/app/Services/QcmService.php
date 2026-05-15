@@ -81,9 +81,8 @@ class QcmService
                 $this->syncQuestions($qcm, $data['questions']);
             }
 
-            if (isset($data['competence_ids'])) {
-                $qcm->competences()->sync($data['competence_ids']);
-            }
+            // Correction : synchroniser même si vide pour permettre la désélection totale
+            $qcm->competences()->sync($data['competence_ids'] ?? []);
 
             return $qcm->fresh(['questions.options', 'competences']);
         });
@@ -105,6 +104,36 @@ class QcmService
     public function delete(QCM $qcm): void
     {
         DB::transaction(fn() => $qcm->delete());
+    }
+
+    /**
+     * Duplique un QCM (deep copy) avec un nouveau titre
+     */
+    public function duplicate(QCM $qcm): QCM
+    {
+        return DB::transaction(function () use ($qcm) {
+            // Dupliquer l'objet QCM de base
+            $newQcm = $qcm->replicate();
+            $newQcm->titre = "COPIE: " . $qcm->titre;
+            $newQcm->statut = 'brouillon'; // Toujours en brouillon pour permettre l'édition
+            $newQcm->save();
+
+            // Dupliquer les associations de compétences
+            $newQcm->competences()->sync($qcm->competences->pluck('id'));
+
+            // Dupliquer les questions et leurs options respectives
+            foreach ($qcm->load('questions.options')->questions as $question) {
+                $newQuestion = $question->replicate();
+                $newQcm->questions()->save($newQuestion);
+
+                foreach ($question->options as $option) {
+                    $newOption = $option->replicate();
+                    $newQuestion->options()->save($newOption);
+                }
+            }
+
+            return $newQcm->load(['questions.options', 'competences']);
+        });
     }
 
     /**

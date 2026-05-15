@@ -15,7 +15,7 @@
         </div>
         <span class="font-heading font-bold text-lg text-slate-900 leading-none tracking-tight">Soli<span class="text-primary-500">Quiz</span></span>
     </div>
-    <button @click="sidebarOpen = !sidebarOpen" type="button" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors active:scale-95">
+    <button @click.stop="sidebarOpen = !sidebarOpen" type="button" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors active:scale-95">
         <svg class="size-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
@@ -71,7 +71,7 @@
                         ],
                         'Contenu' => [
                             ['name' => 'Banque de QCM', 'route' => 'admin.qcms', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                            ['name' => 'Ingénierie Péd.', 'route' => 'admin.pedagogie', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'],
+                            ['name' => 'Structure PÉD.', 'route' => 'admin.pedagogie', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'],
                         ]
                     ],
                     'formateur' => [
@@ -79,11 +79,11 @@
                             ['name' => 'Supervision', 'route' => 'formateur.dashboard', 'icon' => 'M12 20v-6M6 20V10M18 20V4'],
                         ],
                         'Pédagogie' => [
-                            ['name' => 'Mes Classes', 'route' => 'formateur.resultats', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'],
-                            ['name' => 'Ingénierie Péd.', 'route' => 'formateur.pedagogie', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'],
+                            ['name' => 'Résultats', 'route' => 'formateur.resultats', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'],
+                            ['name' => 'Structure PÉD.', 'route' => 'formateur.pedagogie', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'],
                         ],
                         'Contenu' => [
-                            ['name' => 'Bibliothèque', 'route' => 'formateur.bibliotheque', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
+                            ['name' => 'Bibliothèque QCM', 'route' => 'formateur.bibliotheque', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
                         ]
                     ],
                     'etudiant' => [
@@ -121,14 +121,14 @@
         <!-- Profile Section -->
         <div class="p-6 border-t border-slate-50 bg-slate-50/30" x-data="{ userOpen: false }">
             <div class="relative">
-                <button @click="userOpen = !userOpen" type="button"
+                <button @click.stop="userOpen = !userOpen" type="button"
                         class="w-full flex items-center justify-between p-2 rounded-2xl hover:bg-white hover:shadow-sm transition-all group active:scale-95 border border-transparent hover:border-slate-100">
                     <div class="flex items-center gap-3">
                         <img class="size-9 rounded-xl shadow-sm border border-white"
                                 src="https://ui-avatars.com/api/?name={{ urlencode($user->nom_complet ?? 'User') }}&background=17a2b8&color=fff&bold=true"
                                 alt="Avatar">
                         <div class="flex flex-col text-left min-w-0">
-                            <span class="text-[11px] font-black text-slate-900 truncate leading-tight uppercase italic">{{ $user->prenom }}</span>
+                            <span class="text-[11px] font-black text-slate-900 truncate leading-tight uppercase italic">{{ $user->nom_complet }}</span>
                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $role }}</span>
                         </div>
                     </div>
@@ -149,6 +149,16 @@
                      class="absolute bottom-full left-0 w-full mb-4 bg-white rounded-[2rem] border border-slate-200 shadow-premium p-3 z-90 overflow-hidden"
                      x-cloak>
                     
+                    <a href="{{ url('/') }}" 
+                        class="flex items-center gap-3 px-5 py-4 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all text-[11px] font-black uppercase tracking-widest italic group/item">
+                        <div class="size-8 bg-slate-100 text-slate-500 rounded-xl flex items-center justify-center group-hover/item:bg-slate-900 group-hover/item:text-white transition-all shadow-sm">
+                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                        </div>
+                        Page d'accueil
+                    </a>
+
+                    <div class="h-px bg-slate-100/50 my-2 mx-4"></div>
+
                     <a href="{{ route('profile.edit') }}" 
                         class="flex items-center gap-3 px-5 py-4 rounded-2xl text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-all text-[11px] font-black uppercase tracking-widest italic group/item">
                         <div class="size-8 bg-primary-50 text-primary-500 rounded-xl flex items-center justify-center group-hover/item:bg-primary-500 group-hover/item:text-white transition-all shadow-sm">

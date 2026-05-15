@@ -6,31 +6,30 @@
 
 @section('content')
 <div class="space-y-8 fade-in" x-data="{ showSchedule: false }">
-    <!-- Quick Stats Summary -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100">
-        <div>
-            <p class="text-label mb-1">Espace Formateur</p>
-            <h3 class="text-xl font-bold text-slate-900 tracking-tight italic uppercase">Vue d'ensemble {{ Auth::user()->prenom }}</h3>
-        </div>
-        
-        <div class="flex items-center gap-4">
-            <div class="hidden lg:flex items-center gap-4 px-5 py-2.5 bg-slate-50 rounded-2xl border border-slate-100">
-                <div class="text-right">
-                    <p class="text-xs font-black text-slate-900 italic leading-none mb-1">{{ $metrics['nb_qcms'] }} QCM</p>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $metrics['nb_qcms_publies'] }} publiés</p>
+    <!-- Header -->
+    <div class="relative z-30 mb-10">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-200">
+            <div>
+                <div class="flex items-center gap-4 mb-3">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Espace Formateur</span>
+                    <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Dashboard</span>
                 </div>
-                <div class="w-px h-8 bg-slate-200"></div>
-                <div class="text-right">
-                    <p class="text-xs font-black text-slate-900 italic leading-none mb-1">{{ $metrics['nb_etudiants'] }} Appr.</p>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $metrics['nb_classes'] }} classes</p>
-                </div>
+                <h3 class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
+                    Bon retour, {{ Auth::user()->prenom }}
+                </h3>
+                <p class="mt-2 text-sm text-slate-500 max-w-xl">
+                    Supervise tes cohortes, publie tes QCMs et suis les performances en temps réel.
+                </p>
             </div>
-            <a href="{{ route('formateur.qcm.create') }}" class="btn-premium px-6 py-3 bg-primary-600 text-white text-[11px] uppercase tracking-widest">
-                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg>
+            <a href="{{ route('formateur.qcm.create') }}"
+               class="h-14 px-8 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] italic shadow-2xl shadow-slate-900/20 hover:bg-primary-500 hover:-translate-y-1 transition-all flex items-center gap-3 shrink-0">
+                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
                 Nouveau QCM
             </a>
         </div>
     </div>
+
 
     <!-- Pending Actions Banner -->
     @if($metrics['nb_tentatives_actives'] > 0)

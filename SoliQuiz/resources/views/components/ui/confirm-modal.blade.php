@@ -86,7 +86,7 @@
             </button>
             <button @click="confirm" 
                     type="button" 
-                    class="px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-xl shadow-rose-500/10"
+                    class="px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95"
                     :class="type === 'danger' ? 'bg-rose-500 text-white hover:bg-rose-600' : 'bg-slate-900 text-white hover:bg-slate-800'"
                     x-text="confirmText">
             </button>

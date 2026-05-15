@@ -19,9 +19,6 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    
-    <!-- Alpine.js -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden relative" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)">
@@ -75,6 +72,7 @@
                             <!-- Dropdown Menu: Premium Glassmorphism -->
                             <div x-show="userOpen" 
                                  @click.away="userOpen = false"
+                                 x-cloak
                                  x-transition:enter="transition ease-out duration-200"
                                  x-transition:enter-start="opacity-0 translate-y-4 scale-95"
                                  x-transition:enter-end="opacity-100 translate-y-0 scale-100"

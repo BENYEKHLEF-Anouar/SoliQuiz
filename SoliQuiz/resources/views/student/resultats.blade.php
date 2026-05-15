@@ -1,8 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-slate-50 min-h-screen pb-16">
+<div class="bg-transparent min-h-screen pb-16">
     <main class="max-w-4xl mx-auto px-4 py-12">
+        
+        <!-- Navigation -->
+        <div class="mb-8">
+            <a href="javascript:history.back()" 
+               class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
+                <div class="size-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:border-primary-200 group-hover:bg-primary-50 transition-all shadow-sm">
+                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest">Retour</span>
+            </a>
+        </div>
+
         @php
             $isSuccess = ($tentative->score_obtenu ?? 0) >= $qcm->score_reussite;
         @endphp
@@ -40,8 +52,15 @@
                             <span class="text-sm font-bold text-slate-800">{{ $tentative->date_fin->format('d M Y à H:i') }}</span>
                         </div>
                         <div class="bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100 flex flex-col">
-                            <span class="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Durée approx.</span>
-                            <span class="text-sm font-bold text-slate-800">{{ max(1, $tentative->date_fin->diffInMinutes($tentative->date_debut)) }} min</span>
+                            <span class="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Temps Passé</span>
+                            <span class="text-sm font-bold text-slate-800">
+                                @php
+                                    $diffSeconds = $tentative->date_fin->diffInSeconds($tentative->date_debut);
+                                    $min = floor($diffSeconds / 60);
+                                    $sec = $diffSeconds % 60;
+                                @endphp
+                                {{ $min > 0 ? $min . ' min ' : '' }}{{ $sec }}s
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -71,24 +90,36 @@
                         <h3 class="text-lg font-bold text-slate-800 leading-snug">{{ $question->texte }}</h3>
                     </div>
 
+                </div>
+                
+                <div class="absolute top-8 right-8" x-data="{ showExplication: false }">
                     @if($question->explication)
-                    <div x-data="{ open: false }" class="relative z-20">
-                        <button @mouseenter="open = true" @mouseleave="open = false" 
-                                class="size-10 bg-primary-50 text-primary-500 rounded-[1.25rem] flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)]">
+                    <div class="relative">
+                        <button @mouseenter="showExplication = true" @mouseleave="showExplication = false" 
+                                class="size-10 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-primary-600 hover:text-white hover: transition-all duration-300 border border-slate-100 shadow-sm">
                             <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                 <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </button>
-                        <!-- Creative Popover -->
-                        <div x-show="open" 
-                             x-cloak
+                        
+                        <div x-show="showExplication" 
                              x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-2"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             class="absolute right-0 mt-3 w-72 bg-slate-900 text-white p-5 rounded-2xl shadow-2xl z-[60] text-xs font-medium leading-relaxed border border-white/10">
-                            <div class="absolute -top-1.5 right-4 size-3 bg-slate-900 rotate-45 border-t border-l border-white/10"></div>
-                            <p class="font-bold text-primary-300 uppercase tracking-widest text-[9px] mb-2 font-heading">L'expertise du formateur</p>
-                            {{ $question->explication }}
+                             x-transition:enter-start="opacity-0 translate-y-2 scale-98"
+                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                             class="absolute right-0 top-full mt-3 w-[400px] max-w-[calc(100vw-4rem)] bg-white border border-slate-200 rounded-3xl shadow-2xl z-[110] overflow-hidden">
+                            <div class="p-6">
+                                <div class="flex items-center gap-3 mb-4 pb-4 border-b border-slate-50">
+                                    <div class="size-8 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
+                                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-xs font-bold text-slate-900 tracking-tight">Analyse Pédagogique</h4>
+                                </div>
+                                <p class="text-[13px] text-slate-600 leading-relaxed break-words whitespace-normal font-medium">
+                                    {{ $question->explication }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                     @endif
@@ -129,9 +160,11 @@
                                 </span>
                             </div>
 
-                            @if($option->isSelected && $option->feedback_specifique)
-                                <div class="mt-3 pt-3 border-t border-slate-900/5 items-center flex gap-2">
-                                    <span class="size-1 rounded-full {{ $isUserCorrect ? 'bg-emerald-400' : 'bg-rose-400' }}"></span>
+                            @if($option->feedback_specifique && ($option->isSelected || $option->est_correcte))
+                                <div class="mt-3 pt-3 border-t border-slate-900/5 flex gap-2">
+                                    <svg class="size-3 mt-0.5 shrink-0 {{ $option->est_correcte ? 'text-emerald-500' : 'text-rose-500' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
                                     <p class="text-[10px] font-bold text-slate-500 italic leading-snug">
                                         {{ $option->feedback_specifique }}
                                     </p>
@@ -163,12 +196,12 @@
                 </a>
             @endif -->
 
-            <!-- <button onclick="window.print()" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-white border border-slate-200 text-slate-400 font-black rounded-2xl hover:bg-slate-50 hover:text-slate-900 transition-all uppercase tracking-[0.2em] text-xs active:scale-[0.98]">
+            <a href="{{ route('student.resultats.export', $qcm->id) }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-white border border-slate-200 text-slate-400 font-black rounded-2xl hover:bg-slate-50 hover:text-slate-900 transition-all uppercase tracking-[0.2em] text-xs active:scale-[0.98]">
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" />
                 </svg>
-                Imprimer mon bilan
-            </button> -->
+                Télécharger mon bilan PDF
+            </a>
         </footer>
     </main>
 </div>
