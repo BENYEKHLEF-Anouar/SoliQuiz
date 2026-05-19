@@ -52,6 +52,12 @@
                         Format CSV (.csv)
                     </button>
 
+                    <button @click="exportData('excel')"
+                       class="w-full px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-teal-50 hover:text-teal-600 transition-colors flex items-center gap-3">
+                        <div class="size-8 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center font-mono">XLS</div>
+                        Format Excel (.xls)
+                    </button>
+
                     <button @click="exportData('pdf')"
                        class="w-full px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-colors flex items-center gap-3">
                         <div class="size-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-mono">PDF</div>
@@ -174,7 +180,7 @@
                      });
                  },
                  get stats() {
-                     const scores = this.filtered.map(t => t.score).filter(s => s !== null);
+                     const scores = this.filtered.map(t => parseFloat(t.score)).filter(s => !isNaN(s) && s !== null);
                      const count = scores.length;
                      const sum = scores.reduce((a, b) => a + b, 0);
                      const avg = count > 0 ? (sum / count).toFixed(1) : 0;
@@ -191,7 +197,7 @@
                         <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                     </div>
                     <div>
-                        <h3 class="text-base font-black text-slate-900 uppercase italic tracking-tight leading-none">{{ $qcm->titre }}</h3>
+                        <h3 class="text-base font-black text-slate-900 uppercase tracking-tight leading-none">{{ $qcm->titre }}</h3>
                         <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2">Seuil de réussite: {{ $qcm->score_reussite }}/20</p>
                     </div>
                 </div>
@@ -231,6 +237,12 @@
                                class="w-full px-4 py-3 text-left text-[9px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-2">
                                 <div class="size-5 rounded bg-emerald-100 text-emerald-600 flex items-center justify-center text-[7px] font-mono">CSV</div>
                                 CSV
+                            </button>
+
+                            <button @click="window.location.href = '{{ route('formateur.resultats.export', ['qcm' => $qcm->id, 'format' => 'excel']) }}'" 
+                               class="w-full px-4 py-3 text-left text-[9px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-2">
+                                <div class="size-5 rounded bg-teal-100 text-teal-600 flex items-center justify-center text-[7px] font-mono">XLS</div>
+                                Excel
                             </button>
 
                             <button @click="window.location.href = '{{ route('formateur.resultats.export', ['qcm' => $qcm->id, 'format' => 'pdf']) }}'" 
@@ -285,15 +297,41 @@
                                 <td class="px-8 py-5 text-right">
                                     <p class="text-sm font-black" :class="t.score >= {{ $qcm->score_reussite }} ? 'text-slate-900' : 'text-slate-300'" x-text="t.score !== null ? t.score + '/20' : '-'"></p>
                                 </td>
-                                <td class="px-8 py-5 text-right">
-                                    <template x-if="t.score !== null">
-                                        <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export'" 
-                                           class="inline-flex size-8 rounded-lg bg-slate-50 text-slate-400 items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-sm"
-                                           title="Télécharger le bilan PDF">
-                                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                        </button>
-                                    </template>
-                                </td>
+                                 <td class="px-8 py-5 text-right relative">
+                                     <template x-if="t.score !== null">
+                                         <div x-data="{ open: false }" class="inline-block relative">
+                                             <button @click="open = !open" @click.away="open = false"
+                                                class="inline-flex size-8 rounded-lg bg-slate-50 text-slate-400 items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-sm"
+                                                title="Exporter le bilan">
+                                                 <svg class="size-4 transition-transform duration-300" :class="open ? 'rotate-180 text-primary-500' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                             </button>
+
+                                             <!-- Beautiful Horizontal Popout Menu -->
+                                             <div x-show="open" 
+                                                  x-transition:enter="transition ease-out duration-200"
+                                                  x-transition:enter-start="opacity-0 -translate-x-4 scale-95"
+                                                  x-transition:enter-end="opacity-100 translate-x-0 scale-100"
+                                                  class="absolute right-full top-1/2 -translate-y-1/2 mr-3 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 p-1.5 flex items-center gap-1"
+                                                  style="display: none;">
+                                                 
+                                                 <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=pdf'" 
+                                                    class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-rose-600 bg-rose-50/50 hover:bg-rose-500 hover:text-white rounded-md transition-all">
+                                                     PDF
+                                                 </button>
+
+                                                 <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=excel'" 
+                                                    class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-teal-600 bg-teal-50/50 hover:bg-teal-500 hover:text-white rounded-md transition-all">
+                                                     XLS
+                                                 </button>
+
+                                                 <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=csv'" 
+                                                    class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50/50 hover:bg-emerald-500 hover:text-white rounded-md transition-all">
+                                                     CSV
+                                                 </button>
+                                             </div>
+                                         </div>
+                                     </template>
+                                 </td>
                             </tr>
                         </template>
                         <tr x-show="filtered.length === 0">

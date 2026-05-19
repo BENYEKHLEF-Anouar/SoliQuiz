@@ -47,7 +47,7 @@
         <div class="flex-1 w-full space-y-8">
             <!-- Main Title Box -->
             <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6 relative overflow-hidden">
-                <div class="-top-6 absolute right-0 p-8 opacity-5">
+                <div class="-top-8 absolute right-0 p-8 opacity-5">
                     <svg class="size-32" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>
                 </div>
                 <div class="relative z-10 space-y-3">

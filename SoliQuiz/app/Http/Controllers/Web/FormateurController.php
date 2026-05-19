@@ -10,6 +10,7 @@ use App\Models\Competence;
 use App\Models\Classe;
 use App\Services\QcmService;
 use App\Services\ClasseService;
+use App\Services\ResultatService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,7 @@ class FormateurController extends Controller
     private QcmService $qcmService;
     private ClasseService $classeService;
     private \App\Services\DashboardService $dashboardService;
+    private ResultatService $resultatService;
 
     private function requireClasseForFormateur(?int $classeId): void
     {
@@ -66,11 +68,13 @@ class FormateurController extends Controller
     public function __construct(
         QcmService $qcmService,
         ClasseService $classeService,
-        \App\Services\DashboardService $dashboardService
+        \App\Services\DashboardService $dashboardService,
+        ResultatService $resultatService
     ) {
         $this->qcmService = $qcmService;
         $this->classeService = $classeService;
         $this->dashboardService = $dashboardService;
+        $this->resultatService = $resultatService;
     }
 
     /**
@@ -503,35 +507,28 @@ class FormateurController extends Controller
      */
     public function exportResultats(Request $request)
     {
-        $formateurId = Auth::id();
         $qcmId = $request->input('qcm');
         $classeName = $request->input('classe');
         $format = $request->input('format', 'csv');
-
-        $query = \App\Models\Tentative::with(['etudiant.classe', 'qcm'])
-            ->whereHas('qcm', function($q) use ($formateurId) {
-                $q->where('formateur_id', $formateurId);
-            });
 
         $suffix = '';
         $prefix = 'resultats_soliquiz';
 
         if ($classeName) {
-            $query->whereHas('etudiant.classe', function($q) use ($classeName) {
-                $q->where('nom', $classeName);
-            });
             $prefix = 'resultats_' . \Illuminate\Support\Str::slug($classeName);
         }
 
         $qcmName = null;
         if ($qcmId) {
-            $query->where('qcm_id', $qcmId);
             $qcm = \App\Models\QCM::find($qcmId);
             $qcmName = $qcm->titre ?? 'qcm';
             $suffix = '_' . \Illuminate\Support\Str::slug($qcmName);
         }
 
-        $results = $query->latest()->get();
+        $results = $this->resultatService->getCohorteResults([
+            'classe' => $classeName,
+            'qcm_id' => $qcmId
+        ]);
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('exports.resultats-pdf', [
@@ -540,6 +537,49 @@ class FormateurController extends Controller
                 'classeName' => $classeName
             ]);
             return $pdf->download($prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.pdf');
+        }
+
+        if ($format === 'excel' || $format === 'xls') {
+            $fileName = $prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.xls';
+            
+            $html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+            $html .= '<head><meta http-equiv="Content-type" content="text/html;charset=utf-8" /></head>';
+            $html .= '<body>';
+            $html .= '<table border="1">';
+            $html .= '<tr style="background-color: #4F46E5; color: #FFFFFF; font-weight: bold;">';
+            $html .= '<th>Date</th><th>Étudiant</th><th>Classe</th><th>QCM</th><th>Durée</th><th>Score</th><th>Seuil Réussite</th><th>Statut</th>';
+            $html .= '</tr>';
+            
+            foreach ($results as $result) {
+                $duree = '-';
+                if ($result->date_debut && $result->date_fin) {
+                    $diff = $result->date_debut->diff($result->date_fin);
+                    $m = ($diff->h * 60) + $diff->i;
+                    $s = $diff->s;
+                    $duree = ($m > 0 ? $m . 'm ' : '') . $s . 's';
+                }
+                
+                $html .= '<tr>';
+                $html .= '<td>' . ($result->date_debut?->format('d/m/Y H:i') ?? '-') . '</td>';
+                $html .= '<td>' . htmlspecialchars($result->etudiant?->nom_complet ?? 'Inconnu') . '</td>';
+                $html .= '<td>' . htmlspecialchars($result->etudiant?->classe?->nom ?? '-') . '</td>';
+                $html .= '<td>' . htmlspecialchars($result->qcm?->titre ?? '-') . '</td>';
+                $html .= '<td>' . $duree . '</td>';
+                $html .= '<td>' . ($result->score_obtenu !== null ? $result->score_obtenu . '/20' : '-') . '</td>';
+                $html .= '<td>' . ($result->qcm?->score_reussite ?? '10') . '/20' . '</td>';
+                $html .= '<td>' . ucfirst($result->statut) . '</td>';
+                $html .= '</tr>';
+            }
+            
+            $html .= '</table></body></html>';
+            
+            return response($html, 200, [
+                'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                'Pragma' => 'no-cache',
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires' => '0',
+            ]);
         }
 
         $fileName = $prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.csv';
@@ -621,10 +661,11 @@ class FormateurController extends Controller
 
         return back()->with('success', 'QCM fermé. Les étudiants ne peuvent plus y accéder.');
     }
+
     /**
-     * Exporte un bilan individuel d'un étudiant au format PDF (pour le formateur)
+     * Exporte un bilan individuel d'un étudiant au format PDF, Excel, ou CSV (pour le formateur)
      */
-    public function exportTentative($id)
+    public function exportTentative(Request $request, $id)
     {
         $tentative = \App\Models\Tentative::with(['etudiant.classe', 'qcm'])->findOrFail($id);
         
@@ -633,29 +674,102 @@ class FormateurController extends Controller
             abort(403);
         }
 
-        $qcm = $tentative->qcm;
-        $questions = $qcm->questions()->with(['options', 'reponses' => function($q) use ($tentative) {
-            $q->where('tentative_id', $tentative->id);
-        }])->get();
+        $details = $this->resultatService->getTentativeDetails($tentative);
+        $qcm = $details['qcm'];
+        $questionDetails = $details['questionDetails'];
 
-        $questionDetails = $questions->map(function ($question) {
-            $userReponse = $question->reponses->first();
-            $selectedOptions = $userReponse ? $userReponse->choixReponses->pluck('option_id')->toArray() : [];
-            $correctOptions = $question->options->where('est_correcte', true)->pluck('id')->toArray();
+        $format = $request->input('format', 'pdf');
+
+        if ($format === 'excel' || $format === 'xls') {
+            $fileName = 'Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.xls';
             
-            $isCorrect = (count($correctOptions) === count($selectedOptions)) && empty(array_diff($correctOptions, $selectedOptions));
+            $html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+            $html .= '<head><meta http-equiv="Content-type" content="text/html;charset=utf-8" /></head>';
+            $html .= '<body>';
+            
+            $html .= '<h2>Bilan Individuel - SoliQuiz</h2>';
+            $html .= '<table>';
+            $html .= '<tr><td><b>Étudiant :</b></td><td>' . htmlspecialchars($tentative->etudiant?->nom_complet) . '</td></tr>';
+            $html .= '<tr><td><b>Classe :</b></td><td>' . htmlspecialchars($tentative->etudiant?->classe?->nom ?? '-') . '</td></tr>';
+            $html .= '<tr><td><b>QCM :</b></td><td>' . htmlspecialchars($qcm->titre) . '</td></tr>';
+            $html .= '<tr><td><b>Score :</b></td><td><b>' . $tentative->score_obtenu . '/20</b></td></tr>';
+            $html .= '<tr><td><b>Seuil Réussite :</b></td><td>' . $qcm->score_reussite . '/20</td></tr>';
+            $html .= '<tr><td><b>Statut :</b></td><td>' . ucfirst($tentative->statut) . '</td></tr>';
+            $html .= '</table><br/><br/>';
+            
+            $html .= '<table border="1">';
+            $html .= '<tr style="background-color: #4F46E5; color: #FFFFFF; font-weight: bold;">';
+            $html .= '<th>N°</th><th>Question</th><th>Points</th><th>Résultat</th><th>Explication</th>';
+            $html .= '</tr>';
+            
+            foreach ($questionDetails as $idx => $qd) {
+                $html .= '<tr>';
+                $html .= '<td>' . ($idx + 1) . '</td>';
+                $html .= '<td>' . htmlspecialchars($qd->texte) . '</td>';
+                $html .= '<td>' . $qd->points . '</td>';
+                $html .= '<td>' . ($qd->isCorrect ? 'Correct' : 'Incorrect') . '</td>';
+                $html .= '<td>' . htmlspecialchars($qd->explication ?? '-') . '</td>';
+                $html .= '</tr>';
+            }
+            
+            $html .= '</table></body></html>';
+            
+            return response($html, 200, [
+                'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                'Pragma' => 'no-cache',
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires' => '0',
+            ]);
+        }
 
-            return (object) [
-                'texte' => $question->texte,
-                'points' => $question->points,
-                'explication' => $question->explication_feedback,
-                'isCorrect' => $isCorrect,
-                'options' => $question->options->map(function($opt) use ($selectedOptions) {
-                    $opt->isSelected = in_array($opt->id, $selectedOptions);
-                    return $opt;
-                })
+        if ($format === 'csv') {
+            $fileName = 'Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.csv';
+            
+            $headers = [
+                "Content-type"        => "text/csv; charset=UTF-8",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
             ];
-        });
+            
+            $callback = function() use($tentative, $qcm, $questionDetails) {
+                $file = fopen('php://output', 'w');
+                fputs($file, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
+                
+                fputcsv($file, ['Bilan Individuel - SoliQuiz'], ';');
+                fputcsv($file, ['Étudiant', $tentative->etudiant?->nom_complet], ';');
+                fputcsv($file, ['Classe', $tentative->etudiant?->classe?->nom ?? '-'], ';');
+                fputcsv($file, ['QCM', $qcm->titre], ';');
+                fputcsv($file, ['Score', $tentative->score_obtenu . '/20'], ';');
+                fputcsv($file, ['Seuil Réussite', $qcm->score_reussite . '/20'], ';');
+                fputcsv($file, ['Statut', ucfirst($tentative->statut)], ';');
+                fputcsv($file, [], ';');
+                
+                fputcsv($file, [
+                    'N°',
+                    'Question',
+                    'Points',
+                    'Résultat',
+                    'Explication'
+                ], ';');
+                
+                foreach ($questionDetails as $idx => $qd) {
+                    fputcsv($file, [
+                        $idx + 1,
+                        $qd->texte,
+                        $qd->points,
+                        $qd->isCorrect ? 'Correct' : 'Incorrect',
+                        $qd->explication ?? '-'
+                    ], ';');
+                }
+                
+                fclose($file);
+            };
+            
+            return response()->stream($callback, 200, $headers);
+        }
 
         $pdf = Pdf::loadView('exports.tentative-pdf', compact('qcm', 'tentative', 'questionDetails'));
         return $pdf->download('Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.pdf');

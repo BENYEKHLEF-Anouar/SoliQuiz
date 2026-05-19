@@ -1,6 +1,6 @@
-id,nom,date
-1,Séance 1 - Introduction au Développement Web,2026-02-03
-2,Séance 2 - HTML & CSS Fondamentaux,2026-02-10
-3,Séance 3 - JavaScript Fondamentaux,2026-02-17
-4,Séance 4 - PHP & Programmation Backend,2026-02-24
-5,Séance 5 - Bases de Données & SQL,2026-03-03
+id,nom,date_debut,date_fin,user_id
+1,Séance 1 - Introduction au Développement Web,2026-02-03,2026-02-09,2
+2,Séance 2 - HTML & CSS Fondamentaux,2026-02-10,2026-02-16,2
+3,Séance 3 - JavaScript Fondamentaux,2026-02-17,2026-02-23,2
+4,Séance 4 - PHP & Programmation Backend,2026-02-24,2026-03-02,2
+5,Séance 5 - Bases de Données & SQL,2026-03-03,2026-03-09,2
