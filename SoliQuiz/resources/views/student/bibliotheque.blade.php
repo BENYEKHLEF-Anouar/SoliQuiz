@@ -209,7 +209,35 @@
                                         <div class="flex flex-wrap items-center gap-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                                             <span class="truncate max-w-[200px] sm:max-w-none" x-text="qcm.unite_nom"></span>
                                             <span class="size-1 rounded-full bg-slate-300"></span>
-                                            <span class="flex items-center gap-1"><svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> <span x-text="qcm.duree_minutes"></span> min</span>
+
+                                            <!-- Dynamic countdown for en_cours, static for a_faire -->
+                                            <template x-if="qcm.etat === 'en_cours' && qcm.timer_expires_at">
+                                                <span x-data="{
+                                                    remaining: '',
+                                                    urgent: false,
+                                                    tick() {
+                                                        const diff = Math.max(0, Math.floor((new Date(qcm.timer_expires_at) - Date.now()) / 1000));
+                                                        if (diff <= 0) { this.remaining = 'Expiré'; this.urgent = true; return; }
+                                                        const m = Math.floor(diff / 60);
+                                                        const s = diff % 60;
+                                                        this.remaining = m + ':' + String(s).padStart(2, '0');
+                                                        this.urgent = diff <= 60;
+                                                    },
+                                                    init() { this.tick(); setInterval(() => this.tick(), 1000); }
+                                                }"
+                                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-black text-[10px] transition-colors"
+                                                :class="urgent ? 'bg-rose-50 text-rose-600 animate-pulse' : 'bg-amber-50 text-amber-600'">
+                                                    <svg class="size-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                                    <span x-text="remaining"></span>
+                                                </span>
+                                            </template>
+                                            <template x-if="!(qcm.etat === 'en_cours' && qcm.timer_expires_at)">
+                                                <span class="flex items-center gap-1">
+                                                    <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                                    <span x-text="qcm.duree_minutes > 0 ? qcm.duree_minutes + ' min' : 'Illimité'"></span>
+                                                </span>
+                                            </template>
+
                                             <span class="size-1 rounded-full bg-slate-300"></span>
                                             <span class="flex items-center gap-1"><svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg> <span x-text="qcm.questions_count"></span> Qst</span>
                                         </div>

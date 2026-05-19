@@ -13,18 +13,25 @@ use App\Services\QcmPublicService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ResultatService;
 
 class StudentController extends Controller
 {
     private PassationService $passationService;
     private EtudiantService $etudiantService;
     private QcmPublicService $qcmPublicService;
+    private ResultatService $resultatService;
 
-    public function __construct(PassationService $passationService, EtudiantService $etudiantService, QcmPublicService $qcmPublicService)
-    {
+    public function __construct(
+        PassationService $passationService,
+        EtudiantService $etudiantService,
+        QcmPublicService $qcmPublicService,
+        ResultatService $resultatService
+    ) {
         $this->passationService = $passationService;
         $this->etudiantService = $etudiantService;
         $this->qcmPublicService = $qcmPublicService;
+        $this->resultatService = $resultatService;
     }
 
     /**
@@ -90,6 +97,12 @@ class StudentController extends Controller
             $qcm->unite_nom = $qcm->uniteApprentissage ? $qcm->uniteApprentissage->nom : 'Évaluation transverse';
             $qcm->url_passation = route('student.passation', $qcm->id);
             $qcm->url_resultats = $qcm->tentative_id ? route('student.resultats', $qcm->id) : '#';
+            // Timer: compute expiry timestamp for countdown
+            if ($tentative && $tentative->date_debut && $qcm->duree_minutes > 0) {
+                $qcm->timer_expires_at = $tentative->date_debut->addMinutes($qcm->duree_minutes)->toIso8601String();
+            } else {
+                $qcm->timer_expires_at = null;
+            }
             return $qcm;
         });
 
@@ -159,6 +172,11 @@ class StudentController extends Controller
             $qcm->unite_nom = $qcm->uniteApprentissage ? $qcm->uniteApprentissage->nom : 'Évaluation transverse';
             $qcm->url_passation = route('student.passation', $qcm->id);
             $qcm->url_resultats = $qcm->tentative_id ? route('student.resultats', $qcm->id) : '#';
+            if ($tentative && $tentative->date_debut && $qcm->duree_minutes > 0) {
+                $qcm->timer_expires_at = $tentative->date_debut->addMinutes($qcm->duree_minutes)->toIso8601String();
+            } else {
+                $qcm->timer_expires_at = null;
+            }
             return $qcm;
         });
 
@@ -205,13 +223,17 @@ class StudentController extends Controller
         // CALCUL DU TEMPS RESTANT : Heure de fin prévue - Maintenant
         // On utilise la date_debut de la tentative qui est persistée en DB
         $debut = $tentative->date_debut;
-        $finPrevue = $debut->copy()->addMinutes($qcm->duree_minutes);
-        $tempsRestant = (int) now()->diffInSeconds($finPrevue, false);
+        if ($qcm->duree_minutes > 0) {
+            $finPrevue = $debut->copy()->addMinutes($qcm->duree_minutes);
+            $tempsRestant = (int) now()->diffInSeconds($finPrevue, false);
 
-        // Si le temps est écoulé (négatif ou zéro), on soumet automatiquement
-        if ($tempsRestant <= 0) {
-            $this->passationService->soumettre($tentative);
-            return redirect()->route('student.resultats', $qcm->id)->with('info', 'Le temps est écoulé.');
+            // Si le temps est écoulé (négatif ou zéro), on soumet automatiquement
+            if ($tempsRestant <= 0) {
+                $this->passationService->soumettre($tentative);
+                return redirect()->route('student.resultats', $qcm->id)->with('info', 'Le temps est écoulé.');
+            }
+        } else {
+            $tempsRestant = -1;
         }
         
         // Récupérer les réponses déjà enregistrées pour cette tentative
@@ -268,29 +290,8 @@ class StudentController extends Controller
             ->latest('date_fin')
             ->firstOrFail();
 
-        $questions = $qcm->questions()->with(['options', 'reponses' => function($q) use ($tentative) {
-            $q->where('tentative_id', $tentative->id);
-        }])->get();
-
-        $questionDetails = $questions->map(function ($question) {
-            $userReponse = $question->reponses->first();
-            $selectedOptions = $userReponse ? $userReponse->choixReponses->pluck('option_id')->toArray() : [];
-            $correctOptions = $question->options->where('est_correcte', true)->pluck('id')->toArray();
-            
-            $isCorrect = (count($correctOptions) === count($selectedOptions)) && empty(array_diff($correctOptions, $selectedOptions));
-
-            return (object) [
-                'texte' => $question->texte,
-                'points' => $question->points,
-                'explication' => $question->explication_feedback,
-                'isCorrect' => $isCorrect,
-                'options' => $question->options->map(function($opt) use ($selectedOptions) {
-                    $opt->isSelected = in_array($opt->id, $selectedOptions);
-                    return $opt;
-                })
-            ];
-        });
-
+        $details = $this->resultatService->getTentativeDetails($tentative);
+        $questionDetails = $details['questionDetails'];
         $totalQuestions = $qcm->questions->count();
 
         return view('student.resultats', compact('qcm', 'tentative', 'questionDetails', 'totalQuestions'));
@@ -307,28 +308,8 @@ class StudentController extends Controller
             ->latest('date_fin')
             ->firstOrFail();
 
-        $questions = $qcm->questions()->with(['options', 'reponses' => function($q) use ($tentative) {
-            $q->where('tentative_id', $tentative->id);
-        }])->get();
-
-        $questionDetails = $questions->map(function ($question) {
-            $userReponse = $question->reponses->first();
-            $selectedOptions = $userReponse ? $userReponse->choixReponses->pluck('option_id')->toArray() : [];
-            $correctOptions = $question->options->where('est_correcte', true)->pluck('id')->toArray();
-            
-            $isCorrect = (count($correctOptions) === count($selectedOptions)) && empty(array_diff($correctOptions, $selectedOptions));
-
-            return (object) [
-                'texte' => $question->texte,
-                'points' => $question->points,
-                'explication' => $question->explication_feedback,
-                'isCorrect' => $isCorrect,
-                'options' => $question->options->map(function($opt) use ($selectedOptions) {
-                    $opt->isSelected = in_array($opt->id, $selectedOptions);
-                    return $opt;
-                })
-            ];
-        });
+        $details = $this->resultatService->getTentativeDetails($tentative);
+        $questionDetails = $details['questionDetails'];
 
         $pdf = Pdf::loadView('exports.tentative-pdf', compact('qcm', 'tentative', 'questionDetails'));
         return $pdf->download('Bilan_' . \Illuminate\Support\Str::slug($qcm->titre) . '_' . now()->format('Y-m-d') . '.pdf');

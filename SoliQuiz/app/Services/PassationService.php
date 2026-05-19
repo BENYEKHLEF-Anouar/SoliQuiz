@@ -21,7 +21,6 @@ class PassationService
     {
         $existante = Tentative::where('etudiant_id', $etudiant->id)
             ->where('qcm_id', $qcmId)
-            ->where('statut', 'en_cours')
             ->first();
 
         if ($existante) {

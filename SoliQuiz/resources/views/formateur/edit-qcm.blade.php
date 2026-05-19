@@ -113,12 +113,65 @@
                                           :class="question.type === 'choix_unique' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'"
                                           x-text="question.type === 'choix_unique' ? 'UNIQUE' : 'MULTIPLE'"></span>
                                 </div>
-                                <select x-model="question.type" 
-                                            :name="'questions[' + qIndex + '][type]'" 
-                                            class="!bg-primary-50 !border-transparent !rounded-xl !py-2 !px-4 !w-52 !text-primary-600 text-xs font-black uppercase">
-                                        <option value="choix_unique">Reponse Unique</option>
-                                        <option value="choix_multiple">Multi-Reponses</option>
-                                    </select>
+                                <div class="relative" x-data="{ 
+                                        open: false,
+                                        options: [
+                                            { value: 'choix_unique', label: 'Réponse Unique' },
+                                            { value: 'choix_multiple', label: 'Réponses Multiples' }
+                                        ],
+                                        get selectedOption() {
+                                            return this.options.find(opt => opt.value === question.type) || this.options[0];
+                                        },
+                                        select(value) {
+                                            question.type = value;
+                                            open = false;
+                                        }
+                                    }" @click.away="open = false">
+                                    <!-- Hidden input for form submission -->
+                                    <input type="hidden" :name="'questions[' + qIndex + '][type]'" x-model="question.type">
+                                    
+                                    <!-- Dropdown Trigger -->
+                                    <button @click="open = !open" 
+                                            type="button"
+                                            :class="open ? 'border-primary-500 bg-white ring-4 ring-primary-500/10 text-primary-600' : 'border-slate-100 bg-slate-50/50 text-slate-700'"
+                                            class="w-56 border-2 rounded-xl py-3 px-5 text-[11px] font-black uppercase tracking-wider outline-none active:scale-98 transition-all flex items-center justify-between group hover:bg-slate-50 hover:border-slate-200 shadow-sm">
+                                        <span x-text="selectedOption.label"></span>
+                                        <svg class="size-4 text-slate-400 group-hover:text-primary-500 transition-transform duration-300 shrink-0 ml-2" 
+                                             :class="open ? 'rotate-180 text-primary-500' : ''" 
+                                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <path d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Dropdown Menu -->
+                                    <div x-show="open" 
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave="transition ease-in duration-150"
+                                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                         class="absolute z-50 w-56 mt-2 bg-white border border-slate-100/80 rounded-2xl shadow-2xl shadow-slate-200/60 overflow-hidden py-1.5">
+                                        
+                                        <div>
+                                            <template x-for="option in options" :key="option.value">
+                                                <button @click.stop="question.type = option.value; open = false"
+                                                        type="button"
+                                                        class="w-full px-4 py-3 text-left flex items-center gap-3 transition-colors text-[11px] font-bold tracking-wider uppercase"
+                                                        :class="question.type === option.value 
+                                                            ? 'bg-primary-50/80 text-primary-600 font-black' 
+                                                            : 'text-slate-600 hover:bg-slate-50/80 hover:text-slate-900'">
+                                                    <span x-text="option.label"></span>
+                                                    <svg x-show="question.type === option.value" 
+                                                         class="size-4 text-primary-500 ml-auto animate-in zoom-in duration-300" 
+                                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                        <path d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="flex items-center gap-3">
@@ -248,16 +301,34 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-3">
-                            <label class="text-label ml-1">Durée (min)</label>
-                            <input type="number" name="duree_minutes" x-model="dureeMinutes" required 
-                                   class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-label ml-1">Réussite (pts)</label>
-                            <input type="number" name="score_reussite" x-model="scoreReussite" required step="0.5"
-                                   class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
+                    <div class="space-y-4">
+                        <label class="relative group cursor-pointer w-full flex items-center gap-3 bg-slate-50/50 hover:bg-slate-100/50 p-4 rounded-2xl border border-transparent transition-all">
+                            <input type="checkbox" x-model="hasTimer" class="hidden">
+                            <div :class="hasTimer ? 'border-primary-600 bg-primary-600' : 'border-slate-300 bg-white'"
+                                 class="shrink-0 size-5 rounded flex items-center justify-center border-2 transition-all duration-300">
+                                <svg :class="hasTimer ? 'opacity-100 scale-100' : 'opacity-0 scale-75'"
+                                     class="size-3 text-white transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                    <path d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-700 leading-snug">Limite de temps</span>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider mt-0.5" x-text="hasTimer ? 'Activée' : 'Désactivée (Temps Illimité)'"></span>
+                            </div>
+                        </label>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                                <label class="text-label ml-1">Durée (min)</label>
+                                <input type="hidden" name="duree_minutes" :value="hasTimer ? dureeMinutes : 0">
+                                <input type="number" x-model="dureeMinutes" :disabled="!hasTimer"
+                                       class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 disabled:opacity-50 transition-all outline-none">
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-label ml-1">Réussite (pts)</label>
+                                <input type="number" name="score_reussite" x-model="scoreReussite" required step="0.5"
+                                       class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -274,13 +345,20 @@
                         <label class="relative group cursor-pointer w-full">
                             <input type="checkbox" name="competence_ids[]" :value="comp.id" 
                                    :checked="selectedCompetences.includes(comp.id)"
-                                   class="peer hidden">
-                            <div class="w-full px-4 py-3 bg-slate-50/80 hover:bg-slate-100 rounded-2xl border border-transparent peer-checked:border-primary-500 peer-checked:bg-primary-50/30 transition-all flex items-start gap-3">
-                                <div class="shrink-0 size-5 mt-0.5 rounded flex items-center justify-center border-2 border-slate-300 peer-checked:border-primary-500 peer-checked:bg-primary-500 transition-colors">
-                                    <svg class="size-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M5 13l4 4L19 7" /></svg>
+                                   @click="if (selectedCompetences.includes(comp.id)) { selectedCompetences = selectedCompetences.filter(id => id != comp.id) } else { selectedCompetences.push(comp.id) }"
+                                   class="hidden">
+                            <div :class="selectedCompetences.includes(comp.id) ? 'border-primary-500 bg-primary-50/30' : 'border-transparent bg-slate-50/80'"
+                                 class="w-full px-4 py-3 hover:bg-slate-100 rounded-2xl border transition-all flex items-start gap-3">
+                                <div :class="selectedCompetences.includes(comp.id) ? 'border-primary-500 bg-primary-500' : 'border-slate-300 bg-white'"
+                                     class="shrink-0 size-5 mt-0.5 rounded flex items-center justify-center border-2 transition-colors">
+                                    <svg :class="selectedCompetences.includes(comp.id) ? 'opacity-100 scale-100' : 'opacity-0 scale-75'"
+                                         class="size-3 text-white transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                        <path d="M5 13l4 4L19 7" />
+                                    </svg>
                                 </div>
                                 <div class="flex flex-col">
-                                    <span class="text-[10px] font-black text-slate-400 peer-checked:text-primary-600 transition-colors" x-text="comp.code"></span>
+                                    <span :class="selectedCompetences.includes(comp.id) ? 'text-primary-600' : 'text-slate-400'"
+                                          class="text-[10px] font-black transition-colors" x-text="comp.code"></span>
                                     <span class="text-xs font-bold text-slate-700 leading-snug mt-0.5 group-hover:text-slate-900 transition-colors" x-text="comp.libelle"></span>
                                 </div>
                             </div>
@@ -345,7 +423,8 @@ document.addEventListener('alpine:init', () => {
         titre: initialQcm?.titre || '',
         statut: initialQcm?.statut || 'brouillon',
         showPointsWarning: false,
-        dureeMinutes: initialQcm?.duree_minutes || 30,
+        hasTimer: initialQcm ? (initialQcm.duree_minutes > 0) : true,
+        dureeMinutes: (initialQcm?.duree_minutes > 0) ? initialQcm.duree_minutes : 30,
         scoreReussite: initialQcm?.score_reussite || 10,
         allUnites: initialUnites,
         allClasses: initialClasses,

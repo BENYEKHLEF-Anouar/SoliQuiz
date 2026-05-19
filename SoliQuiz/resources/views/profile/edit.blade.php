@@ -32,7 +32,7 @@
                 <div class="text-center mb-6">
                     <img class="w-20 h-20 rounded-2xl shadow-lg mx-auto mb-4" 
                          src="https://ui-avatars.com/api/?name={{ urlencode($user->nom_complet) }}&background=0f172a&color=fff&size=200&bold=true" alt="">
-                    <h2 class="text-lg font-black text-slate-900 uppercase italic">{{ $user->prenom }} {{ $user->nom }}</h2>
+                    <h2 class="text-lg font-black text-slate-900 uppercase">{{ $user->prenom }} {{ $user->nom }}</h2>
                     <p class="text-[10px] font-black text-primary-500 uppercase tracking-widest mt-1">{{ $user->type_profil }}</p>
                 </div>
                 

@@ -128,7 +128,7 @@
                                 src="https://ui-avatars.com/api/?name={{ urlencode($user->nom_complet ?? 'User') }}&background=17a2b8&color=fff&bold=true"
                                 alt="Avatar">
                         <div class="flex flex-col text-left min-w-0">
-                            <span class="text-[11px] font-black text-slate-900 truncate leading-tight uppercase italic">{{ $user->nom_complet }}</span>
+                            <span class="text-[11px] font-black text-slate-900 truncate leading-tight uppercase">{{ $user->nom_complet }}</span>
                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $role }}</span>
                         </div>
                     </div>

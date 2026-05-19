@@ -198,7 +198,7 @@ class FormateurController extends Controller
     public function updateSeance(Request $request, $id)
     {
         $request->validate([
-            'nom' => 'required|string|max:255', 
+            'nom' => 'required|string|max:255',
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
@@ -283,9 +283,9 @@ class FormateurController extends Controller
             ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
             ->latest()
             ->paginate(15);
-            
+
         $unites = UniteApprentissage::where('user_id', Auth::id())->get();
-            
+
         return view('formateur.bibliotheque', compact('qcms', 'search', 'unites'));
     }
 
@@ -325,7 +325,7 @@ class FormateurController extends Controller
             'titre' => 'required|string|max:255',
             'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id',
             'classe_id' => Auth::user()->isAdmin() ? 'nullable|exists:classes,id' : 'required|exists:classes,id',
-            'duree_minutes' => 'required|integer|min:1',
+            'duree_minutes' => 'required|integer|min:0',
             'score_reussite' => 'required|numeric|min:0|max:20',
             'statut' => 'required|in:brouillon,public,termine',
             'competence_ids' => 'nullable|array',
@@ -407,7 +407,7 @@ class FormateurController extends Controller
             'titre' => 'required|string|max:255',
             'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id',
             'classe_id' => 'nullable|exists:classes,id',
-            'duree_minutes' => 'required|integer|min:1',
+            'duree_minutes' => 'required|integer|min:0',
             'score_reussite' => 'required|numeric|min:0|max:20',
             'statut' => 'required|in:brouillon,public,termine',
             'competence_ids' => 'nullable|array',
@@ -484,11 +484,11 @@ class FormateurController extends Controller
         $data = $this->qcmService->getResultsForFormateur(Auth::id());
         $classes = $data['classes'];
         $qcms = $data['qcms'];
-        
+
         // Liste des étudiants issus de ses classes gérées
         $etudiantsClasses = $classes->flatMap->etudiants
             ->map(fn($e) => $e->prenom . ' ' . $e->nom);
-            
+
         // Liste des étudiants ayant réellement passé ses QCM (même s'ils ne sont pas dans ses classes)
         $etudiantsTentatives = $qcms->flatMap->tentatives
             ->map(fn($t) => $t->etudiant?->prenom . ' ' . $t->etudiant?->nom)
@@ -541,7 +541,7 @@ class FormateurController extends Controller
 
         if ($format === 'excel' || $format === 'xls') {
             $fileName = $prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.xls';
-            
+
             $html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
             $html .= '<head><meta http-equiv="Content-type" content="text/html;charset=utf-8" /></head>';
             $html .= '<body>';
@@ -549,7 +549,7 @@ class FormateurController extends Controller
             $html .= '<tr style="background-color: #4F46E5; color: #FFFFFF; font-weight: bold;">';
             $html .= '<th>Date</th><th>Étudiant</th><th>Classe</th><th>QCM</th><th>Durée</th><th>Score</th><th>Seuil Réussite</th><th>Statut</th>';
             $html .= '</tr>';
-            
+
             foreach ($results as $result) {
                 $duree = '-';
                 if ($result->date_debut && $result->date_fin) {
@@ -558,7 +558,7 @@ class FormateurController extends Controller
                     $s = $diff->s;
                     $duree = ($m > 0 ? $m . 'm ' : '') . $s . 's';
                 }
-                
+
                 $html .= '<tr>';
                 $html .= '<td>' . ($result->date_debut?->format('d/m/Y H:i') ?? '-') . '</td>';
                 $html .= '<td>' . htmlspecialchars($result->etudiant?->nom_complet ?? 'Inconnu') . '</td>';
@@ -570,9 +570,9 @@ class FormateurController extends Controller
                 $html .= '<td>' . ucfirst($result->statut) . '</td>';
                 $html .= '</tr>';
             }
-            
+
             $html .= '</table></body></html>';
-            
+
             return response($html, 200, [
                 'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
                 'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
@@ -584,17 +584,17 @@ class FormateurController extends Controller
 
         $fileName = $prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.csv';
         $headers = [
-            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-type" => "text/csv; charset=UTF-8",
             "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
         ];
 
-        $callback = function() use($results) {
+        $callback = function () use ($results) {
             $file = fopen('php://output', 'w');
-            fputs($file, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
-            
+            fputs($file, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+
             fputcsv($file, [
                 'Date',
                 'Étudiant',
@@ -668,7 +668,7 @@ class FormateurController extends Controller
     public function exportTentative(Request $request, $id)
     {
         $tentative = \App\Models\Tentative::with(['etudiant.classe', 'qcm'])->findOrFail($id);
-        
+
         // Vérifier l'autorisation (le formateur doit posséder le QCM)
         if (!Auth::user()->isAdmin() && $tentative->qcm->formateur_id !== Auth::id()) {
             abort(403);
@@ -682,11 +682,11 @@ class FormateurController extends Controller
 
         if ($format === 'excel' || $format === 'xls') {
             $fileName = 'Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.xls';
-            
+
             $html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
             $html .= '<head><meta http-equiv="Content-type" content="text/html;charset=utf-8" /></head>';
             $html .= '<body>';
-            
+
             $html .= '<h2>Bilan Individuel - SoliQuiz</h2>';
             $html .= '<table>';
             $html .= '<tr><td><b>Étudiant :</b></td><td>' . htmlspecialchars($tentative->etudiant?->nom_complet) . '</td></tr>';
@@ -696,12 +696,12 @@ class FormateurController extends Controller
             $html .= '<tr><td><b>Seuil Réussite :</b></td><td>' . $qcm->score_reussite . '/20</td></tr>';
             $html .= '<tr><td><b>Statut :</b></td><td>' . ucfirst($tentative->statut) . '</td></tr>';
             $html .= '</table><br/><br/>';
-            
+
             $html .= '<table border="1">';
             $html .= '<tr style="background-color: #4F46E5; color: #FFFFFF; font-weight: bold;">';
             $html .= '<th>N°</th><th>Question</th><th>Points</th><th>Résultat</th><th>Explication</th>';
             $html .= '</tr>';
-            
+
             foreach ($questionDetails as $idx => $qd) {
                 $html .= '<tr>';
                 $html .= '<td>' . ($idx + 1) . '</td>';
@@ -711,9 +711,9 @@ class FormateurController extends Controller
                 $html .= '<td>' . htmlspecialchars($qd->explication ?? '-') . '</td>';
                 $html .= '</tr>';
             }
-            
+
             $html .= '</table></body></html>';
-            
+
             return response($html, 200, [
                 'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
                 'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
@@ -725,19 +725,19 @@ class FormateurController extends Controller
 
         if ($format === 'csv') {
             $fileName = 'Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.csv';
-            
+
             $headers = [
-                "Content-type"        => "text/csv; charset=UTF-8",
+                "Content-type" => "text/csv; charset=UTF-8",
                 "Content-Disposition" => "attachment; filename=$fileName",
-                "Pragma"              => "no-cache",
-                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-                "Expires"             => "0"
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
             ];
-            
-            $callback = function() use($tentative, $qcm, $questionDetails) {
+
+            $callback = function () use ($tentative, $qcm, $questionDetails) {
                 $file = fopen('php://output', 'w');
-                fputs($file, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
-                
+                fputs($file, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+
                 fputcsv($file, ['Bilan Individuel - SoliQuiz'], ';');
                 fputcsv($file, ['Étudiant', $tentative->etudiant?->nom_complet], ';');
                 fputcsv($file, ['Classe', $tentative->etudiant?->classe?->nom ?? '-'], ';');
@@ -746,7 +746,7 @@ class FormateurController extends Controller
                 fputcsv($file, ['Seuil Réussite', $qcm->score_reussite . '/20'], ';');
                 fputcsv($file, ['Statut', ucfirst($tentative->statut)], ';');
                 fputcsv($file, [], ';');
-                
+
                 fputcsv($file, [
                     'N°',
                     'Question',
@@ -754,7 +754,7 @@ class FormateurController extends Controller
                     'Résultat',
                     'Explication'
                 ], ';');
-                
+
                 foreach ($questionDetails as $idx => $qd) {
                     fputcsv($file, [
                         $idx + 1,
@@ -764,10 +764,10 @@ class FormateurController extends Controller
                         $qd->explication ?? '-'
                     ], ';');
                 }
-                
+
                 fclose($file);
             };
-            
+
             return response()->stream($callback, 200, $headers);
         }
 

@@ -336,13 +336,11 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Date Début</label>
-                            <input type="date" name="date_debut" x-model="seanceDateDebut"
-                                   class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-slate-400 focus:ring-0 transition-all text-sm">
+                            <x-ui.date-picker name="date_debut" x-model="seanceDateDebut" />
                         </div>
                         <div>
                             <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Date Fin</label>
-                            <input type="date" name="date_fin" x-model="seanceDateFin"
-                                   class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-slate-400 focus:ring-0 transition-all text-sm">
+                            <x-ui.date-picker name="date_fin" x-model="seanceDateFin" />
                         </div>
                     </div>
                     <button type="submit" 
@@ -391,13 +389,11 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Date Début</label>
-                            <input type="date" name="date_debut" x-model="uaDateDebut"
-                                   class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-slate-400 focus:ring-0 transition-all text-sm">
+                            <x-ui.date-picker name="date_debut" x-model="uaDateDebut" />
                         </div>
                         <div>
                             <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Date Fin</label>
-                            <input type="date" name="date_fin" x-model="uaDateFin"
-                                   class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-slate-400 focus:ring-0 transition-all text-sm">
+                            <x-ui.date-picker name="date_fin" x-model="uaDateFin" />
                         </div>
                     </div>
                     <button type="submit" 
