@@ -229,7 +229,7 @@ class StudentController extends Controller
         $tentative = $this->passationService->demarrer($student, $qcm->id);
 
         if ($tentative->statut !== 'en_cours') {
-            return redirect()->route('student.bibliotheque')->with('error', 'QCM déjà terminé.');
+            return redirect()->route('student.bibliotheque');
         }
 
         // CALCUL DU TEMPS RESTANT : Heure de fin prévue - Maintenant
