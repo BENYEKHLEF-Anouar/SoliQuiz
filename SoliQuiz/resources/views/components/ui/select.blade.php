@@ -23,10 +23,10 @@
     select(value) {
         this.selected = value;
         this.open = false;
-        $dispatch('input', value);
     }
 }" 
 x-modelable="selected"
+{{ $attributes->only(['x-model', 'x-model.defer']) }}
 class="relative w-full">
     <!-- Hidden Input for Form Submission -->
     <input type="hidden" :name="`{{ $name }}`" :value="selected" {{ $required ? 'required' : '' }} id="{{ $id ?? $name }}">
@@ -35,8 +35,8 @@ class="relative w-full">
     <button type="button" 
             @click="open = !open" 
             @click.away="open = false"
-            {{ $attributes->merge(['class' => 'w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 px-6 font-bold text-slate-900 flex items-center justify-between hover:bg-slate-100 focus:bg-white focus:border-primary-500 transition-all outline-none group']) }}>
-        <span :class="!selected ? 'text-slate-400' : 'text-slate-900'" class="uppercase italic text-xs tracking-widest truncate mr-2" x-text="selectedLabel"></span>
+            {{ $attributes->except(['x-model', 'x-model.defer'])->merge(['class' => 'w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 px-6 font-bold text-slate-900 flex items-center justify-between hover:bg-slate-100 focus:bg-white focus:border-primary-500 transition-all outline-none group']) }}>
+        <span :class="!selected ? 'text-slate-400' : 'text-slate-900'" class="uppercase text-xs tracking-widest truncate mr-2" x-text="selectedLabel"></span>
         <svg class="size-4 text-slate-400 group-hover:text-primary-500 transition-transform duration-300 shrink-0" 
              :class="open ? 'rotate-180' : ''" 
              fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
@@ -59,7 +59,7 @@ class="relative w-full">
             <template x-for="option in options" :key="option.value">
                 <button type="button" 
                         @click="select(option.value)"
-                        class="w-full text-left px-5 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest italic transition-all"
+                        class="w-full text-left px-5 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all"
                         :class="selected == option.value ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20' : 'text-slate-600 hover:bg-primary-50 hover:text-primary-600'">
                     <span x-text="option.label"></span>
                 </button>

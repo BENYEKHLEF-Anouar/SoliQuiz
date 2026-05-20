@@ -18,7 +18,7 @@ class SeanceService
     {
         return Seance::withCount('unitesApprentissage')
             ->when($search, fn($q) => $q->where('nom', 'like', "%{$search}%"))
-            ->latest('date')
+            ->latest('date_debut')
             ->paginate($perPage);
     }
 

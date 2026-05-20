@@ -11,10 +11,12 @@ use Illuminate\Http\Request;
 class ClasseController extends Controller
 {
     protected $classeService;
+    protected $userService;
 
-    public function __construct(ClasseService $classeService)
+    public function __construct(ClasseService $classeService, \App\Services\UserService $userService)
     {
         $this->classeService = $classeService;
+        $this->userService = $userService;
     }
 
     public function index(Request $request)
@@ -117,6 +119,123 @@ class ClasseController extends Controller
     {
         $this->classeService->removeStudent($userId);
         return back()->with('success', 'L\'étudiant a été retiré de la classe.');
+    }
+
+    /**
+     * Ajoute plusieurs étudiants à une classe
+     */
+    public function bulkAddStudents(Request $request, Classe $classe)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'exists:users,id',
+        ]);
+
+        foreach ($request->user_ids as $userId) {
+            $this->classeService->addStudent($classe, $userId);
+        }
+
+        return back()->with('success', count($request->user_ids) . ' étudiants ont été ajoutés à la classe.');
+    }
+
+    /**
+     * Importation en masse d'étudiants (création / affectation)
+     */
+    public function importStudents(Request $request, Classe $classe)
+    {
+        $request->validate([
+            'import_data' => 'required|string',
+        ]);
+
+        $lines = explode("\n", $request->import_data);
+        $addedCount = 0;
+        $createdCount = 0;
+        $errors = [];
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+
+            // Parse formats: email OR firstname;lastname;email OR email;firstname;lastname
+            $parts = preg_split('/[;,]/', $line);
+            $parts = array_map('trim', $parts);
+
+            $email = null;
+            $nom = 'Étudiant';
+            $prenom = 'Nouvel';
+
+            if (count($parts) === 1) {
+                $email = $parts[0];
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $prefix = explode('@', $email)[0];
+                    $nameParts = explode('.', $prefix);
+                    if (count($nameParts) >= 2) {
+                        $prenom = ucfirst($nameParts[0]);
+                        $nom = ucfirst($nameParts[1]);
+                    } else {
+                        $nom = ucfirst($prefix);
+                        $prenom = 'Apprenant';
+                    }
+                }
+            } elseif (count($parts) >= 3) {
+                if (filter_var($parts[2], FILTER_VALIDATE_EMAIL)) {
+                    $prenom = $parts[0];
+                    $nom = $parts[1];
+                    $email = $parts[2];
+                } elseif (filter_var($parts[0], FILTER_VALIDATE_EMAIL)) {
+                    $email = $parts[0];
+                    $prenom = $parts[1];
+                    $nom = $parts[2];
+                }
+            } elseif (count($parts) === 2) {
+                if (filter_var($parts[1], FILTER_VALIDATE_EMAIL)) {
+                    $email = $parts[1];
+                    $nom = $parts[0];
+                } elseif (filter_var($parts[0], FILTER_VALIDATE_EMAIL)) {
+                    $email = $parts[0];
+                    $nom = $parts[1];
+                }
+            }
+
+            if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = "Ligne invalide ou email incorrect : " . htmlspecialchars($line);
+                continue;
+            }
+
+            $user = User::where('email', $email)->first();
+
+            if ($user) {
+                if ($user->type_profil === 'etudiant') {
+                    $user->update(['classe_id' => $classe->id]);
+                    $addedCount++;
+                } else {
+                    $errors[] = "L'utilisateur avec l'email {$email} existe déjà et n'est pas un étudiant (rôle: {$user->type_profil}).";
+                }
+            } else {
+                $this->userService->create([
+                    'nom' => $nom,
+                    'prenom' => $prenom,
+                    'email' => $email,
+                    'password' => 'password',
+                    'type_profil' => 'etudiant',
+                    'classe_id' => $classe->id,
+                ]);
+                $createdCount++;
+            }
+        }
+
+        $message = "Importation terminée.";
+        if ($createdCount > 0 || $addedCount > 0) {
+            $message .= " {$createdCount} nouveaux étudiants créés et {$addedCount} étudiants existants affectés.";
+        }
+
+        if (count($errors) > 0) {
+            return back()->with('success', $message)->withErrors($errors);
+        }
+
+        return back()->with('success', $message);
     }
 
     /**

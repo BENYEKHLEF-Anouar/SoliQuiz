@@ -4,190 +4,138 @@
     <meta charset="utf-8">
     <title>Rapport de Résultats - SoliQuiz</title>
     <style>
-        @font-face {
-            font-family: 'Plus Jakarta Sans';
-            src: url('{{ public_path('fonts/PlusJakartaSans-Black.ttf') }}') format('truetype');
-            font-weight: 900;
-            font-style: normal;
-        }
-
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            font-weight: 900;
+            font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; 
             font-size: 10px;
-            line-height: 15px;
+            line-height: 1.4;
             color: #1e293b; 
             margin: 0; 
             padding: 0;
             background: #fff;
         }
 
-        .page { padding: 48px 52px; }
+        .page { padding: 30px; }
 
-        /* ── Header ───────────────────────────────────────── */
-        .header {
-            margin-bottom: 40px;
-            padding-bottom: 28px;
-            border-bottom: 1.5px solid #e2e8f0;
-            position: relative;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
+        /* ── Header Table ── */
+        .header-table {
+            width: 100%;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
-
-        .header-left { display: flex; align-items: center; gap: 14px; }
-
-        .logo-box {
-            width: 52px;
-            height: 52px;
-            flex-shrink: 0;
-            border-radius: 14px;
-            overflow: hidden;
-            /* box-shadow: 0 2px 10px rgba(22, 155, 182, 0.18); */
-        }
-        .logo-img { width: 100%; height: 100%; display: block; }
 
         .brand-name {
-            font-size: 28px;
-            font-weight: 900;
+            font-size: 24px;
+            font-weight: bold;
             color: #0f172a;
             text-transform: uppercase;
-            letter-spacing: -1.5px;
-            /* font-style: italic; */
-            line-height: 1;
         }
         .brand-name span { color: #169BB6; }
 
         .brand-tagline {
+            font-size: 9px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 3px;
+        }
+
+        .doc-meta { text-align: right; }
+        .doc-label {
             font-size: 8px;
             color: #94a3b8;
             text-transform: uppercase;
-            letter-spacing: 2.5px;
-            margin-top: 5px;
-            font-style: normal;
-        }
-
-        .doc-meta { text-align: right; padding-top: 4px; }
-        .doc-label {
-            font-size: 7.5px;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 2.5px;
-            margin-bottom: 5px;
+            letter-spacing: 2px;
+            margin-bottom: 3px;
         }
         .doc-id {
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: bold;
             color: #169BB6;
-            letter-spacing: 1px;
         }
         .doc-date {
-            font-size: 8.5px;
+            font-size: 9px;
             color: #64748b;
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
-        /* ── Summary Card ──────────────────────────────────── */
+        /* ── Summary Card ── */
         .summary-card {
-            background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 60%, #ecfdf5 100%);
-            border-radius: 22px;
-            padding: 28px 32px;
-            border: 1.5px solid #e0f2fe;
-            margin-bottom: 36px;
-            position: relative;
-            overflow: hidden;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 25px;
         }
 
-        /* subtle decorative accent in the corner */
-        .summary-card::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: rgba(22, 155, 182, 0.07);
-        }
-        .summary-card::after {
-            content: '';
-            position: absolute;
-            bottom: -30px;
-            left: 40%;
-            width: 160px;
-            height: 80px;
-            border-radius: 50%;
-            background: rgba(5, 150, 105, 0.04);
-        }
-
-        .summary-grid { width: 100%; border-collapse: collapse; position: relative; z-index: 1; }
+        .summary-grid { width: 100%; border-collapse: collapse; }
         .summary-grid td {
-            padding: 10px 16px 10px 0;
+            padding: 8px 12px;
             vertical-align: top;
         }
-        .summary-grid tr:first-child td { padding-bottom: 14px; }
-        .summary-grid tr:last-child td { padding-top: 14px; border-top: 1px solid #e2e8f0; }
+        .summary-grid tr:first-child td { padding-bottom: 12px; }
+        .summary-grid tr:last-child td { padding-top: 12px; border-top: 1px solid #e2e8f0; }
 
         .stat-label {
-            font-size: 7.5px;
+            font-size: 8px;
             color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
-        .stat-value { font-size: 13px; color: #0f172a; line-height: 1.2; }
+        .stat-value { font-size: 12px; font-weight: bold; color: #0f172a; }
         .stat-highlight { color: #169BB6; }
 
         .hash-value {
-            font-size: 8.5px;
+            font-size: 8px;
             color: #94a3b8;
             letter-spacing: 0.5px;
             word-break: break-all;
         }
 
-        /* ── Section Title ─────────────────────────────────── */
+        /* ── Section Title ── */
         .section-title {
-            font-size: 8px;
-            color: #94a3b8;
+            font-size: 9px;
+            color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-            padding-left: 4px;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-left: 3px solid #169BB6;
+            padding-left: 8px;
         }
 
-        /* ── Results Table ─────────────────────────────────── */
+        /* ── Results Table ── */
         .table-wrapper {
-            border-radius: 18px;
+            border-radius: 12px;
             overflow: hidden;
-            border: 1.5px solid #e2e8f0;
+            border: 1px solid #e2e8f0;
         }
 
         .results-table { width: 100%; border-collapse: collapse; }
 
         .results-table thead tr {
-            background: #f1f5f9;
+            background-color: #f1f5f9;
         }
 
         .results-table th { 
             text-align: left; 
-            padding: 13px 20px; 
+            padding: 10px 14px; 
             color: #64748b; 
-            font-size: 7.5px; 
+            font-size: 8px; 
             text-transform: uppercase; 
-            letter-spacing: 1.5px;
-            border-bottom: 1.5px solid #e2e8f0;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #e2e8f0;
             white-space: nowrap;
         }
 
-        .results-table tbody tr {
-            transition: background 0.15s;
-        }
         .results-table tbody tr:nth-child(even) {
-            background: #fafbfc;
+            background-color: #fafbfc;
         }
 
         .results-table td { 
-            padding: 16px 20px; 
+            padding: 12px 14px; 
             border-bottom: 1px solid #f1f5f9; 
             font-size: 10px;
             vertical-align: middle;
@@ -198,27 +146,27 @@
 
         /* date column */
         .col-date {
-            font-size: 9px;
-            color: #64748b;
-            line-height: 1.5;
+            font-size: 9.5px;
+            color: #334155;
+            font-weight: bold;
         }
         .col-date-time {
-            font-size: 8px;
+            font-size: 8.5px;
             color: #94a3b8;
         }
 
         /* candidate column */
-        .student-name { color: #0f172a; font-size: 11px; line-height: 1.3; }
-        .sub-text { color: #94a3b8; font-size: 8.5px; font-style: italic; margin-top: 2px; }
+        .student-name { color: #0f172a; font-size: 10.5px; font-weight: bold; }
+        .sub-text { color: #94a3b8; font-size: 8.5px;  margin-top: 1px; }
 
         /* test column */
-        .test-title { font-size: 10px; color: #334155; }
+        .test-title { font-size: 10px; color: #334155; font-weight: bold; }
 
         /* score column */
         .score-value {
-            font-size: 15px;
+            font-size: 14px;
             color: #0f172a;
-            line-height: 1;
+            font-weight: bold;
         }
         .score-denom {
             font-size: 9px;
@@ -228,66 +176,61 @@
         /* badges */
         .badge { 
             display: inline-block; 
-            padding: 5px 11px; 
-            border-radius: 100px; 
-            font-size: 7.5px; 
+            padding: 3px 10px; 
+            border-radius: 20px; 
+            font-size: 8px; 
+            font-weight: bold;
             text-transform: uppercase; 
-            letter-spacing: 1px;
-            white-space: nowrap;
+            letter-spacing: 0.5px;
         }
-        .badge-valid  { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
-        .badge-error  { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-        .badge-neutral{ background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
+        .badge-valid  { background-color: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+        .badge-error  { background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .badge-neutral{ background-color: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
 
-        /* ── Footer ───────────────────────────────────────── */
+        /* ── Footer ── */
         .footer {
             position: fixed;
-            bottom: 28px;
-            left: 0;
-            width: 100%;
-            padding: 0 52px;
+            bottom: 20px;
+            left: 30px;
+            right: 30px;
+            height: 30px;
         }
-        .footer-inner {
+        .footer-table {
+            width: 100%;
             border-top: 1px solid #e2e8f0;
-            padding-top: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding-top: 8px;
         }
         .footer-brand {
             font-size: 8px;
             color: #94a3b8;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
         }
         .footer-brand span { color: #169BB6; }
         .footer-copy {
             font-size: 8px;
             color: #cbd5e1;
+            text-align: right;
         }
     </style>
 </head>
 <body>
     <div class="page">
 
-        <!-- ── Header ── -->
-        <div class="header">
-            <div class="header-left">
-                <div class="logo-box">
-                    <img src="{{ public_path('favicon.png') }}" class="logo-img" alt="SoliQuiz">
-                </div>
-                <div>
+        <!-- ── Header Table ── -->
+        <table class="header-table">
+            <tr>
+                <td>
                     <div class="brand-name">Soli<span>Quiz</span></div>
                     <div class="brand-tagline">Intelligence Pédagogique</div>
-                </div>
-            </div>
-
-            <div class="doc-meta">
-                <div class="doc-label">Certificat de Résultats</div>
-                <div class="doc-id">#{{ strtoupper(substr(uniqid(), -8)) }}</div>
-                <div class="doc-date">{{ now()->format('d/m/Y') }}</div>
-            </div>
-        </div>
+                </td>
+                <td class="doc-meta">
+                    <div class="doc-label">Certificat de Résultats</div>
+                    <div class="doc-id">#{{ strtoupper(substr(uniqid(), -8)) }}</div>
+                    <div class="doc-date">{{ now()->format('d/m/Y') }}</div>
+                </td>
+            </tr>
+        </table>
 
         <!-- ── Summary Card ── -->
         <div class="summary-card">
@@ -389,10 +332,16 @@
 
         <!-- ── Footer ── -->
         <div class="footer">
-            <div class="footer-inner">
-                <div class="footer-brand"><span>Soli</span>Quiz Platform &bull; Intelligence Pédagogique Certifiée</div>
-                <div class="footer-copy">Document généré automatiquement &copy; {{ date('Y') }}</div>
-            </div>
+            <table class="footer-table">
+                <tr>
+                    <td class="footer-brand">
+                        <span>Soli</span>Quiz Platform &bull; Intelligence Pédagogique Certifiée
+                    </td>
+                    <td class="footer-copy">
+                        Document généré automatiquement &copy; {{ date('Y') }}
+                    </td>
+                </tr>
+            </table>
         </div>
 
     </div>

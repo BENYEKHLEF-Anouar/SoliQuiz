@@ -24,7 +24,7 @@
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Bibliothèque</span>
                     @if($formateur)
                         <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-primary-600 italic">Formateur : {{ $formateur->nom_complet }}</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-primary-600">Formateur : {{ $formateur->nom_complet }}</span>
                     @endif
                 </div>
                 <h3 class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
@@ -176,7 +176,7 @@
                         <svg class="size-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round"/></svg>
                     </div>
                     <h4 class="text-xl font-heading font-black text-slate-900 mb-2">Catalogue vide</h4>
-                    <p class="text-slate-400 font-medium italic text-sm">Aucune évaluation ne correspond à votre recherche.</p>
+                    <p class="text-slate-400 font-medium text-sm">Aucune évaluation ne correspond à votre recherche.</p>
                 </div>
 
                 {{-- Priority Items: En Cours / À Faire --}}

@@ -8,34 +8,42 @@
     <div class="fade-in space-y-12 pb-20" x-data="adminQcmBank({
             initialQcms: {{ Js::from($qcms->items()) }},
             initialSearch: '{{ $search }}',
-            initialStatut: '{{ $statut }}'
+            initialStatut: '{{ $statut }}',
+            initialFormateurId: '{{ $formateurId ?? '' }}',
+            formateurs: {{ Js::from($formateurs->map(fn($f) => ['id' => $f->id, 'nom_complet' => $f->nom_complet])->toArray()) }}
          })">
 
-        <!-- Header Strategy Section -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-10 border-b border-slate-100 mb-10">
-            <div>
-                <p class="text-label mb-1">Ressources Pédagogiques</p>
-                <h1 class="text-3xl font-heading font-black text-slate-900 tracking-tight leading-none italic uppercase">
-                    Global <span
-                        class="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-primary-400">Library</span>
-                </h1>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 italic">Gestion centralisée des
-                    actifs d'évaluation</p>
-            </div>
+        <!-- Header -->
+        <div class="relative z-30 mb-10">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-200">
+                <div>
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Espace Admin</span>
+                        <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Banque de QCM</span>
+                    </div>
+                    <h3 class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
+                        Banque de QCM
+                    </h3>
+                    <p class="mt-2 text-sm text-slate-500 max-w-xl">
+                        Gérez de manière centralisée les ressources pédagogiques et les actifs d'évaluation.
+                    </p>
+                </div>
 
-            <div class="flex items-center gap-4">
-                <div class="hidden sm:flex items-center gap-4 px-5 py-2.5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <div class="text-right">
-                        <p class="text-xs font-black text-slate-900 italic leading-none mb-1" x-text="totalCount">
-                            {{ $qcms->total() }}</p>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total QCM</p>
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex items-center gap-4 px-5 py-2.5 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="text-right">
+                            <p class="text-xs font-black text-slate-900 leading-none mb-1" x-text="totalCount">
+                                {{ $qcms->total() }}</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total QCM</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Filters & Search -->
-        <div class="flex flex-col md:flex-row gap-4 items-center">
+        <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div class="flex-1 w-full flex flex-col md:flex-row gap-4">
                 <div class="flex-1 relative group">
                     <label
@@ -46,7 +54,7 @@
                     </label>
                     <input type="text" x-model="search" @input.debounce.300ms="applyFilters()"
                         placeholder="Rechercher une évaluation, un module ou un auteur..."
-                        class="w-full h-11 pl-11 pr-11 bg-white border border-slate-100 rounded-xl font-bold text-slate-900 text-sm placeholder:text-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all shadow-sm group-hover:shadow-md outline-none">
+                        class="w-full h-[52px] pl-11 pr-11 bg-white border-2 border-slate-100 rounded-2xl font-bold text-slate-900 text-sm placeholder:text-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all shadow-sm group-hover:shadow-md outline-none">
                     
                     <!-- Live Search Loader -->
                     <div x-show="loading" 
@@ -59,9 +67,10 @@
                     </div>
                 </div>
 
+                <!-- Status Filter -->
                 <div class="relative flex items-center self-stretch" x-data="{ open: false }">
                     <button type="button" @click="open = !open"
-                        class="h-11 px-5 bg-white border border-slate-100 rounded-xl transition-all shadow-sm group flex items-center gap-2"
+                        class="h-[52px] px-5 bg-white border-2 border-slate-100 rounded-2xl transition-all shadow-sm group flex items-center gap-2 text-sm font-bold text-slate-650"
                         :class="statut ? 'text-primary-600 bg-primary-50/50 border-primary-200' : 'text-slate-400'">
                         <svg class="size-4 group-hover:rotate-180 transition-transform duration-500" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -99,6 +108,57 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Formateur Filter -->
+                <div class="relative flex items-center self-stretch" x-data="{ open: false }">
+                    <button type="button" @click="open = !open"
+                        class="h-[52px] px-5 bg-white border-2 border-slate-100 rounded-2xl transition-all shadow-sm group flex items-center gap-2 text-sm font-bold text-slate-650"
+                        :class="formateurId ? 'text-primary-600 bg-primary-50/50 border-primary-200' : 'text-slate-400'">
+                        <svg class="size-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span class="text-[10px] font-black uppercase tracking-wider" x-text="formateurLabel">Tous les formateurs</span>
+                    </button>
+
+                    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-4"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        class="absolute top-full right-0 mt-4 w-64 bg-white rounded-[24px] shadow-premium border border-slate-100 p-2 z-50 max-h-60 overflow-y-auto custom-scrollbar"
+                        style="display: none;">
+                        <button @click="formateurId = ''; open = false; applyFilters()"
+                            class="w-full text-left px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors"
+                            :class="!formateurId ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'">
+                            Tous les formateurs
+                        </button>
+                        <template x-for="f in formateurs" :key="f.id">
+                            <button @click="formateurId = f.id; open = false; applyFilters()"
+                                class="w-full text-left px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors truncate"
+                                :class="formateurId == f.id ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'"
+                                x-text="f.nom_complet">
+                            </button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Mode Switcher -->
+            <div class="flex bg-white p-1 rounded-2xl border-2 border-slate-100 shrink-0 shadow-sm gap-1 h-[52px] items-center">
+                <button type="button" @click="setViewMode('cards')" 
+                        :class="viewMode === 'cards' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'"
+                        class="p-2.5 rounded-xl transition-all duration-200 flex items-center justify-center"
+                        title="Affichage en Cartes">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                </button>
+                <button type="button" @click="setViewMode('table')" 
+                        :class="viewMode === 'table' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'"
+                        class="p-2.5 rounded-xl transition-all duration-200 flex items-center justify-center"
+                        title="Affichage en Tableau">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
             </div>
         </div>
 
@@ -121,7 +181,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-8"
+            <!-- Cards View Mode -->
+            <div x-show="viewMode === 'cards'" class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-8"
                 :class="loading ? 'opacity-50 pointer-events-none' : ''">
                 <template x-for="qcm in qcms" :key="qcm.id">
                     <div x-data="{ options: false }"
@@ -135,7 +196,7 @@
 
                         <!-- Status Badge -->
                         <div class="flex items-center justify-between mb-8 relative z-20">
-                            <span class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest italic"
+                            <span class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest"
                                 :class="qcm.statut === 'public' ? 'bg-emerald-100 text-emerald-600' : (qcm.statut === 'termine' ? 'bg-slate-100 text-slate-500' : 'bg-amber-100 text-amber-600')"
                                 x-text="qcm.statut">
                             </span>
@@ -173,7 +234,7 @@
                                         <p
                                             class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">
                                             Durée</p>
-                                        <p class="text-lg font-black text-slate-900 italic leading-none"><span
+                                        <p class="text-lg font-black text-slate-900 leading-none"><span
                                                 x-text="qcm.duree_minutes"></span><span
                                                 class="text-[10px] uppercase ml-1">min</span></p>
                                     </div>
@@ -182,7 +243,7 @@
                                         <p
                                             class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">
                                             Questions</p>
-                                        <p class="text-lg font-black text-slate-900 italic leading-none"
+                                        <p class="text-lg font-black text-slate-900 leading-none"
                                             x-text="qcm.questions_count"></p>
                                     </div>
                                 </div>
@@ -196,8 +257,8 @@
                                     :src="'https://ui-avatars.com/api/?name=' + encodeURIComponent(qcm.formateur ? qcm.formateur.nom_complet : 'Unknown') + '&background=f8fafc&color=64748b&bold=true'"
                                     alt="">
                                 <div class="flex flex-col">
-                                    <p class="text-[10px] font-black text-slate-900 uppercase italic leading-none truncate max-w-[100px]"
-                                        x-text="qcm.formateur ? qcm.formateur.prenom : '?'"></p>
+                                    <p class="text-[10px] font-black text-slate-900 uppercase leading-none truncate max-w-[150px]"
+                                        x-text="qcm.formateur ? qcm.formateur.nom_complet : '?'"></p>
                                     <p class="text-[8px] font-bold text-slate-400 uppercase tracking-[0.1em] mt-1">Formateur
                                     </p>
                                 </div>
@@ -258,6 +319,125 @@
                 </template>
             </div>
 
+            <!-- Table View Mode -->
+            <div x-show="viewMode === 'table'" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-visible" x-cloak
+                :class="loading ? 'opacity-50 pointer-events-none transition-opacity duration-300' : 'transition-opacity duration-300'">
+                <!-- Table Header -->
+                <div class="grid grid-cols-12 gap-3 px-5 py-3 bg-slate-50 rounded-t-2xl border-b border-slate-100 text-[8px] font-black text-slate-400 uppercase tracking-widest">
+                    <div class="col-span-4">QCM</div>
+                    <div class="col-span-2">Auteur</div>
+                    <div class="col-span-2 text-center">Statut</div>
+                    <div class="col-span-2 text-center">Questions</div>
+                    <div class="col-span-2 text-right">Actions</div>
+                </div>
+                
+                <!-- Table Rows -->
+                <div class="divide-y divide-slate-50">
+                    <template x-for="qcm in qcms" :key="qcm.id">
+                        <div class="grid grid-cols-12 gap-3 px-5 py-4 border-b border-slate-50 hover:bg-slate-50/50 transition-colors items-center">
+                            <!-- QCM Info -->
+                            <div class="col-span-4 flex items-center gap-3">
+                                <div class="size-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">
+                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                </div>
+                                <div class="min-w-0 relative group/title">
+                                    <h4 class="text-sm font-black text-slate-800 uppercase truncate cursor-help" x-text="qcm.titre"></h4>
+                                    <div class="absolute bottom-full left-0 mb-2 hidden group-hover/title:block bg-slate-950 text-white text-[9px] font-black tracking-widest px-3 py-2 rounded-xl shadow-premium z-50 max-w-xs whitespace-normal uppercase pointer-events-none">
+                                        <span x-text="qcm.titre"></span>
+                                        <div class="absolute top-full left-4 -mt-1 border-4 border-transparent border-t-slate-950"></div>
+                                    </div>
+                                    <p class="text-[9px] font-bold text-slate-400 truncate mt-0.5" 
+                                        x-text="'QCM-' + String(qcm.id).padStart(4, '0') + ' · ' + (qcm.duree_minutes > 0 ? qcm.duree_minutes + 'min' : 'Illimité') + ' · ' + (qcm.unite_apprentissage ? qcm.unite_apprentissage.nom : 'Module Transversal')"></p>
+                                </div>
+                            </div>
+                            
+                            <!-- Auteur -->
+                            <div class="col-span-2 flex items-center gap-2">
+                                <img class="size-6 rounded-md shadow-sm border border-white"
+                                    :src="'https://ui-avatars.com/api/?name=' + encodeURIComponent(qcm.formateur ? qcm.formateur.nom_complet : 'Unknown') + '&background=f8fafc&color=64748b&bold=true'"
+                                    alt="">
+                                <span class="text-[10px] font-black text-slate-900 uppercase truncate" x-text="qcm.formateur ? qcm.formateur.nom_complet : '?'"></span>
+                            </div>
+                            
+                            <!-- Statut -->
+                            <div class="col-span-2 flex justify-center">
+                                <template x-if="qcm.statut === 'public'">
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase tracking-widest">
+                                        <span class="size-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        Live
+                                    </span>
+                                </template>
+                                <template x-if="qcm.statut === 'termine'">
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-slate-100 text-slate-500 text-[8px] font-black uppercase tracking-widest">
+                                        <span class="size-1.5 rounded-full bg-slate-400"></span>
+                                        Terminé
+                                    </span>
+                                </template>
+                                <template x-if="qcm.statut === 'brouillon'">
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-amber-50 text-amber-600 text-[8px] font-black uppercase tracking-widest">
+                                        <span class="size-1.5 rounded-full bg-amber-500"></span>
+                                        Brouillon
+                                    </span>
+                                </template>
+                            </div>
+                            
+                            <!-- Questions -->
+                            <div class="col-span-2 flex justify-center">
+                                <span class="text-sm font-black text-slate-600" x-text="qcm.questions_count || 0"></span>
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="col-span-2 flex justify-end gap-2" x-data="{ menuOpen: false }">
+                                <button type="button" @click="window.location.href = '/formateur/qcm/' + qcm.id + '/edit'"
+                                    class="size-9 rounded-lg bg-slate-100 text-slate-400 hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center"
+                                    title="Modifier">
+                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </button>
+                                
+                                <div class="relative">
+                                    <button type="button" @click.stop="menuOpen = !menuOpen" @click.away="menuOpen = false"
+                                        class="size-9 rounded-lg bg-slate-50 text-slate-400 hover:bg-slate-200 transition-all flex items-center justify-center">
+                                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                                        </svg>
+                                    </button>
+                                    
+                                    <div x-show="menuOpen" 
+                                        x-transition:enter="transition ease-out duration-100"
+                                        x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                        class="absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 py-2 overflow-hidden text-left"
+                                        style="display: none;">
+                                        
+                                        <!-- Toggle Status -->
+                                        <button @click="toggleStatus(qcm); menuOpen = false" 
+                                            class="w-full px-4 py-2.5 text-left text-[10px] font-black uppercase transition-colors flex items-center gap-3"
+                                            :class="qcm.statut === 'public' ? 'text-amber-600 hover:bg-amber-50' : 'text-emerald-600 hover:bg-emerald-50'">
+                                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                            <span x-text="qcm.statut === 'public' ? 'Dépublier' : 'Publier'"></span>
+                                        </button>
+                                        
+                                        <!-- Delete -->
+                                        <button type="button" @click="deleteQcm(qcm.id); menuOpen = false"
+                                            class="w-full px-4 py-2.5 text-left text-[10px] font-black uppercase text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-3 border-t border-slate-50">
+                                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                            Supprimer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
             <!-- Empty State -->
             <div x-show="qcms.length === 0 && !loading"
                 class="col-span-full glass p-20 text-center rounded-[50px] border-2 border-dashed border-slate-100"
@@ -270,7 +450,7 @@
                     </svg>
                 </div>
                 <h3 class="text-2xl font-heading font-black text-slate-900 mb-2">Banque Vide</h3>
-                <p class="text-slate-400 font-medium italic">Aucun actif d'évaluation ne correspond à votre recherche.</p>
+                <p class="text-slate-400 font-medium">Aucun actif d'évaluation ne correspond à votre recherche.</p>
             </div>
         </div>
 
@@ -288,12 +468,25 @@
                     qcms: config.initialQcms,
                     search: config.initialSearch,
                     statut: config.initialStatut,
+                    formateurId: config.initialFormateurId,
+                    formateurs: config.formateurs,
                     loading: false,
                     totalCount: {{ $qcms->total() }},
+                    viewMode: localStorage.getItem('qcms_view_mode') || 'cards',
+                    setViewMode(mode) {
+                        this.viewMode = mode;
+                        localStorage.setItem('qcms_view_mode', mode);
+                    },
 
                     get statutLabel() {
                         if (!this.statut) return 'Tous les statuts';
                         return this.statut.charAt(0).toUpperCase() + this.statut.slice(1);
+                    },
+
+                    get formateurLabel() {
+                        if (!this.formateurId) return 'Tous les formateurs';
+                        const f = this.formateurs.find(x => x.id == this.formateurId);
+                        return f ? f.nom_complet : 'Tous les formateurs';
                     },
 
                     async applyFilters() {
@@ -301,6 +494,7 @@
                         const url = new URL('{{ route('admin.qcms.search') }}');
                         if (this.search) url.searchParams.set('search', this.search);
                         if (this.statut) url.searchParams.set('statut', this.statut);
+                        if (this.formateurId) url.searchParams.set('formateur_id', this.formateurId);
 
                         try {
                             const response = await fetch(url);
@@ -312,6 +506,7 @@
                             const browserUrl = new URL(window.location);
                             if (this.search) browserUrl.searchParams.set('search', this.search); else browserUrl.searchParams.delete('search');
                             if (this.statut) browserUrl.searchParams.set('statut', this.statut); else browserUrl.searchParams.delete('statut');
+                            if (this.formateurId) browserUrl.searchParams.set('formateur_id', this.formateurId); else browserUrl.searchParams.delete('formateur_id');
                             history.pushState({}, '', browserUrl);
                         } catch (error) {
                             console.error('Erreur de recherche:', error);
@@ -332,7 +527,7 @@
                             if (response.ok) {
                                 const data = await response.json();
                                 qcm.statut = data.statut;
-                                window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Statut mis à jour', type: 'success' } }));
+                                window.dispatchEvent(new CustomEvent('toast', { detail: { message: data.message || 'Statut mis à jour', type: 'success' } }));
                             }
                         } catch (error) {
                             window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Erreur lors de la mise à jour', type: 'error' } }));

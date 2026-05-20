@@ -107,4 +107,35 @@ class EtudiantService
             ->limit($limit)
             ->get();
     }
+
+    /**
+     * Récupère la progression de l'étudiant par unité d'apprentissage (objectif).
+     */
+    public function getProgressByUa(User $etudiant): Collection
+    {
+        return Tentative::where('etudiant_id', $etudiant->id)
+            ->whereIn('statut', ['reussi', 'echoue'])
+            ->with(['qcm.uniteApprentissage.seance'])
+            ->get()
+            ->groupBy(function ($tentative) {
+                return $tentative->qcm->unite_apprentissage_id ?? 0;
+            })
+            ->map(function ($group) {
+                $first = $group->first();
+                $ua = $first->qcm->uniteApprentissage;
+                $uaNom = $ua?->nom ?? 'Indépendant';
+                $sessionNom = $ua?->seance?->nom;
+
+                $avg = $group->avg('score_obtenu');
+                $total = $group->count();
+                $reussis = $group->where('statut', 'reussi')->count();
+                return [
+                    'ua_nom' => $uaNom,
+                    'session_nom' => $sessionNom,
+                    'score_moyen' => round($avg, 1),
+                    'total_tentatives' => $total,
+                    'taux_reussite' => $total > 0 ? round(($reussis / $total) * 100, 1) : 0,
+                ];
+            });
+    }
 }

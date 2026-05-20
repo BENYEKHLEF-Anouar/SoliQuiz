@@ -44,18 +44,22 @@ class AdminController extends Controller
     {
         $search = $request->input('search');
         $statut = $request->input('statut');
+        $formateurId = $request->input('formateur_id');
         
-        $qcms = $this->qcmService->paginate(15, $search, null, $statut);
+        $qcms = $this->qcmService->paginate(15, $search, $formateurId ? (int)$formateurId : null, $statut);
         $qcms->appends($request->query());
         
-        return view('admin.qcms', compact('qcms', 'search', 'statut'));
+        $formateurs = User::where('type_profil', 'formateur')->orderBy('nom')->get();
+        
+        return view('admin.qcms', compact('qcms', 'search', 'statut', 'formateurId', 'formateurs'));
     }
 
     public function searchQcms(Request $request)
     {
         $search = $request->input('search');
         $statut = $request->input('statut');
-        $qcms = $this->qcmService->paginate(15, $search, null, $statut);
+        $formateurId = $request->input('formateur_id');
+        $qcms = $this->qcmService->paginate(15, $search, $formateurId ? (int)$formateurId : null, $statut);
         return response()->json($qcms);
     }
 
@@ -69,8 +73,9 @@ class AdminController extends Controller
         $recentTentatives = $this->dashboardService->getRecentTentatives(10);
         $topPerformers = $this->dashboardService->getTopPerformers(3);
         $systemStatus = $this->dashboardService->getSystemStatus();
+        $classes = $this->dashboardService->getAllClassesMetrics();
         
-        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus'));
+        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus', 'classes'));
     }
 
     /**
@@ -96,8 +101,12 @@ class AdminController extends Controller
             ->orderBy('nom')
             ->paginate(8)
             ->appends($request->query());
+
+        $totalEtudiants = User::where('type_profil', 'etudiant')->count();
+        $totalFormateurs = User::where('type_profil', 'formateur')->count();
+        $totalAdmins = User::where('type_profil', 'admin')->count();
         
-        return view('admin.gestion-utilisateurs', compact('users', 'search', 'role'));
+        return view('admin.gestion-utilisateurs', compact('users', 'search', 'role', 'totalEtudiants', 'totalFormateurs', 'totalAdmins'));
     }
 
     public function searchUsers(Request $request)
@@ -262,8 +271,16 @@ class AdminController extends Controller
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
+        
+        $codeExists = UniteApprentissage::where('code', $data['code'])->exists();
+        
         $this->seanceService->addUniteApprentissage($seance, $data);
-        return redirect()->route('admin.pedagogie')->with('success', 'Unité d\'apprentissage ajoutée.');
+        
+        $redirect = redirect()->route('admin.pedagogie')->with('success', 'Unité d\'apprentissage ajoutée.');
+        if ($codeExists) {
+            $redirect->with('code_warning', 'Attention : Le code de l\'UA est déjà utilisé.');
+        }
+        return $redirect;
     }
 
     public function destroyUA($id)
@@ -281,8 +298,16 @@ class AdminController extends Controller
             'libelle' => 'required|string|max:255',
             'description' => 'nullable|string'
         ]);
+        
+        $codeExists = Competence::where('code', $data['code'])->exists();
+        
         $this->seanceService->addCompetence($ua, $data);
-        return redirect()->route('admin.pedagogie')->with('success', 'Compétence ajoutée.');
+        
+        $redirect = redirect()->route('admin.pedagogie')->with('success', 'Compétence ajoutée.');
+        if ($codeExists) {
+            $redirect->with('code_warning', 'Attention : Le code de la compétence est déjà utilisé.');
+        }
+        return $redirect;
     }
 
     public function destroyCompetence($id)
@@ -334,7 +359,7 @@ class AdminController extends Controller
         $ua = UniteApprentissage::findOrFail($id);
         $data = $request->validate([
             'nom' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:unites_apprentissage,code,' . $id,
+            'code' => 'required|string|max:50',
             'user_id' => 'required|exists:users,id',
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
@@ -359,7 +384,7 @@ class AdminController extends Controller
     {
         $competence = Competence::findOrFail($id);
         $data = $request->validate([
-            'code' => 'required|string|max:50|unique:competences,code,' . $id,
+            'code' => 'required|string|max:50',
             'libelle' => 'required|string|max:255',
             'description' => 'nullable|string'
         ]);

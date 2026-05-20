@@ -7,13 +7,13 @@
     
     <!-- Navigation -->
     <div class="mb-6">
-        <a href="javascript:history.back()" 
+        <!-- <a href="javascript:history.back()" 
            class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
             <div class="size-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:border-primary-200 group-hover:bg-primary-50 transition-all shadow-sm">
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             </div>
             <span class="text-[10px] font-black uppercase tracking-widest">Retour</span>
-        </a>
+        </a> -->
     </div>
     <!-- Header Section -->
     <div class="relative z-30 mb-10">
@@ -35,7 +35,7 @@
             <!-- Export Actions Dropdown -->
             <div x-data="{ open: false }" class="relative">
                 <button @click="open = !open" @click.away="open = false"
-                        class="h-14 px-8 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] italic shadow-2xl shadow-emerald-600/20 hover:bg-emerald-500 transition-all flex items-center gap-3 group">
+                        class="h-14 px-8 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-emerald-600/20 hover:bg-emerald-500 transition-all flex items-center gap-3 group">
                     <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     Exporter
                     <svg class="size-4 text-emerald-200 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 9l-7 7-7-7"/></svg>
@@ -98,7 +98,7 @@
                 <div x-show="open" @click.away="open = false" x-transition class="absolute z-60 w-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden" style="display: none;">
                     <div class="max-h-60 overflow-y-auto custom-scrollbar">
                         <template x-for="name in studentList.filter(n => !search || n.toLowerCase().includes(search.toLowerCase()))" :key="name">
-                            <button type="button" @click="search = name; open = false; applyFilters()" class="w-full px-5 py-4 text-left text-[11px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 italic flex items-center justify-between">
+                            <button type="button" @click="search = name; open = false; applyFilters()" class="w-full px-5 py-4 text-left text-[11px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 flex items-center justify-between">
                                 <span x-text="name"></span>
                                 <span x-show="search === name" class="size-2 bg-primary-500 rounded-full"></span>
                             </button>
@@ -275,7 +275,7 @@
                                     <p class="text-sm font-bold text-slate-800" x-text="t.etudiant_nom"></p>
                                 </td>
                                 <td class="px-8 py-5">
-                                    <p class="text-xs font-medium text-slate-500 italic" x-text="t.etudiant_classe"></p>
+                                    <p class="text-xs font-medium text-slate-500" x-text="t.etudiant_classe"></p>
                                 </td>
                                 <td class="px-8 py-5">
                                     <p class="text-xs text-slate-400 font-bold" x-text="t.date || '-'"></p>
@@ -291,51 +291,61 @@
                                         <span class="inline-flex px-3 py-1 rounded-full bg-amber-50 text-amber-600 text-[9px] font-black uppercase tracking-widest">Abandon</span>
                                     </template>
                                     <template x-if="!t.statut || t.statut === 'en_cours'">
-                                        <span class="inline-flex px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest italic">En cours</span>
+                                        <span class="inline-flex px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest">En cours</span>
                                     </template>
                                 </td>
                                 <td class="px-8 py-5 text-right">
                                     <p class="text-sm font-black" :class="t.score >= {{ $qcm->score_reussite }} ? 'text-slate-900' : 'text-slate-300'" x-text="t.score !== null ? t.score + '/20' : '-'"></p>
                                 </td>
-                                 <td class="px-8 py-5 text-right relative">
-                                     <template x-if="t.score !== null">
-                                         <div x-data="{ open: false }" class="inline-block relative">
-                                             <button @click="open = !open" @click.away="open = false"
-                                                class="inline-flex size-8 rounded-lg bg-slate-50 text-slate-400 items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-sm"
-                                                title="Exporter le bilan">
-                                                 <svg class="size-4 transition-transform duration-300" :class="open ? 'rotate-180 text-primary-500' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                             </button>
+                                <td class="px-8 py-5 text-right">
+                                    <div class="inline-flex items-center gap-2 justify-end">
+                                        <template x-if="t.score !== null">
+                                            <button @click="$dispatch('open-student-chart', { studentNom: t.etudiant_nom })"
+                                                class="inline-flex size-8 rounded-lg bg-indigo-50 text-indigo-500 items-center justify-center hover:bg-indigo-500 hover:text-white transition-all shadow-sm"
+                                                title="Graphique de progression">
+                                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                                            </button>
+                                        </template>
 
-                                             <!-- Beautiful Horizontal Popout Menu -->
-                                             <div x-show="open" 
-                                                  x-transition:enter="transition ease-out duration-200"
-                                                  x-transition:enter-start="opacity-0 -translate-x-4 scale-95"
-                                                  x-transition:enter-end="opacity-100 translate-x-0 scale-100"
-                                                  class="absolute right-full top-1/2 -translate-y-1/2 mr-3 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 p-1.5 flex items-center gap-1"
-                                                  style="display: none;">
-                                                 
-                                                 <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=pdf'" 
-                                                    class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-rose-600 bg-rose-50/50 hover:bg-rose-500 hover:text-white rounded-md transition-all">
-                                                     PDF
-                                                 </button>
+                                        <template x-if="t.score !== null">
+                                            <div x-data="{ open: false }" class="inline-block relative">
+                                                <button @click="open = !open" @click.away="open = false"
+                                                    class="inline-flex size-8 rounded-lg bg-slate-50 text-slate-400 items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-sm"
+                                                    title="Exporter le bilan">
+                                                    <svg class="size-4 transition-transform duration-300" :class="open ? 'rotate-180 text-primary-500' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                                </button>
+                                                
+                                                <!-- Beautiful Horizontal Popout Menu -->
+                                                <div x-show="open" 
+                                                        x-transition:enter="transition ease-out duration-200"
+                                                        x-transition:enter-start="opacity-0 -translate-x-4 scale-95"
+                                                        x-transition:enter-end="opacity-100 translate-x-0 scale-100"
+                                                        class="absolute right-full top-1/2 -translate-y-1/2 mr-3 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 p-1.5 flex items-center gap-1"
+                                                        style="display: none;">
+                                                    
+                                                    <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=pdf'" 
+                                                        class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-rose-600 bg-rose-50/50 hover:bg-rose-500 hover:text-white rounded-md transition-all">
+                                                        PDF
+                                                    </button>
 
-                                                 <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=excel'" 
-                                                    class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-teal-600 bg-teal-50/50 hover:bg-teal-500 hover:text-white rounded-md transition-all">
-                                                     XLS
-                                                 </button>
+                                                    <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=excel'" 
+                                                        class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-teal-600 bg-teal-50/50 hover:bg-teal-500 hover:text-white rounded-md transition-all">
+                                                        XLS
+                                                    </button>
 
-                                                 <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=csv'" 
-                                                    class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50/50 hover:bg-emerald-500 hover:text-white rounded-md transition-all">
-                                                     CSV
-                                                 </button>
-                                             </div>
-                                         </div>
-                                     </template>
-                                 </td>
+                                                    <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=csv'" 
+                                                        class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50/50 hover:bg-emerald-500 hover:text-white rounded-md transition-all">
+                                                        CSV
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </td>
                             </tr>
                         </template>
                         <tr x-show="filtered.length === 0">
-                            <td colspan="6" class="px-8 py-12 text-center text-slate-400 text-xs italic font-bold">
+                            <td colspan="6" class="px-8 py-12 text-center text-slate-400 text-xs font-bold">
                                 Aucun matching pour cette sélection
                             </td>
                         </tr>
@@ -348,13 +358,53 @@
             <div class="size-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-200">
                 <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             </div>
-            <p class="text-slate-400 font-black uppercase tracking-widest italic">Aucun résultat consolidé</p>
+            <p class="text-slate-400 font-black uppercase tracking-widest">Aucun résultat consolidé</p>
         </div>
         @endforelse
+        <!-- Student Progress Modal -->
+        <div x-data="studentChartData()" @open-student-chart.window="openChart($event.detail)">
+            <template x-teleport="body">
+                <x-ui.modal name="student-progress-modal" maxWidth="2xl">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                            <div>
+                                <h3 class="text-base font-black text-slate-800 uppercase tracking-tight" x-text="'Progression de ' + studentNom"></h3>
+                                <p class="text-xs text-slate-400 font-bold mt-1">Historique des notes par QCM et Unité d'Apprentissage</p>
+                            </div>
+                            <button @click="$dispatch('close-modal', 'student-progress-modal')" class="text-slate-400 hover:text-slate-600">
+                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="relative w-full h-[320px] flex items-center justify-center mb-6">
+                            <canvas id="studentProgressChart"></canvas>
+                        </div>
+
+                        <div class="overflow-y-auto max-h-40 divide-y divide-slate-50 border border-slate-100 rounded-xl bg-slate-50/50">
+                            <template x-for="attempt in studentAttempts" :key="attempt.id">
+                                <div class="p-4 flex items-center justify-between hover:bg-white transition-colors">
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-700" x-text="attempt.qcm_titre"></p>
+                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider mt-0.5" x-text="'UA: ' + attempt.ua_nom"></p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-sm font-black text-indigo-600" x-text="attempt.score + '/20'"></span>
+                                        <p class="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-0.5" x-text="attempt.date"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </x-ui.modal>
+            </template>
+        </div>
+
     </div>
 </div>
 </div>
 
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.data('resultsFilter', (qcmList, classeList, studentList) => ({
@@ -420,8 +470,121 @@ document.addEventListener('alpine:init', () => {
             window.location.href = `${baseUrl}?${params.toString()}`;
         }
     }));
+
+    Alpine.data('studentChartData', () => ({
+        studentNom: '',
+        studentAttempts: [],
+        chartInstance: null,
+
+        openChart(detail) {
+            this.studentNom = detail.studentNom;
+            
+            // Get all attempts for this student across all QCMs
+            const rawAttempts = [];
+            @foreach($qcms as $qcm)
+                @foreach($qcm->tentatives as $t)
+                    if ("{{ $t->etudiant?->nom_complet }}" === this.studentNom && {{ $t->score_obtenu ?? 'null' }} !== null) {
+                        rawAttempts.push({
+                            id: {{ $t->id }},
+                            qcm_titre: "{{ $qcm->titre }}",
+                            ua_nom: "{{ $qcm->uniteApprentissage?->nom ?? 'Indépendant' }}",
+                            score: parseFloat("{{ $t->score_obtenu }}"),
+                            date: "{{ $t->date_debut?->format('d/m/Y') }}"
+                        });
+                    }
+                @endforeach
+            @endforeach
+
+            // Sort attempts chronologically if possible or by ID
+            this.studentAttempts = rawAttempts.sort((a, b) => a.id - b.id);
+
+            // Open the modal
+            this.$dispatch('open-modal', 'student-progress-modal');
+
+            // Render/Update the chart after the DOM elements are updated and visible
+            this.$nextTick(() => {
+                const ctx = document.getElementById('studentProgressChart');
+                if (!ctx) return;
+
+                if (this.chartInstance) {
+                    this.chartInstance.destroy();
+                }
+
+                const labels = this.studentAttempts.map(a => a.qcm_titre + ' (UA: ' + a.ua_nom + ')');
+                const data = this.studentAttempts.map(a => a.score);
+
+                this.chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Note obtenue (/20)',
+                            data: data,
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3,
+                            pointBackgroundColor: '#6366f1',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#0f172a',
+                                titleColor: '#fff',
+                                bodyColor: '#cbd5e1',
+                                borderWidth: 1,
+                                borderColor: '#334155',
+                                padding: 10,
+                                bodyFont: {
+                                    family: 'Inter, system-ui, sans-serif',
+                                    size: 11
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                min: 0,
+                                max: 20,
+                                ticks: {
+                                    stepSize: 2,
+                                    font: {
+                                        family: 'Inter, system-ui, sans-serif',
+                                        size: 10
+                                    },
+                                    color: '#64748b'
+                                },
+                                grid: {
+                                    color: '#f1f5f9'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        }
+    }));
 });
 </script>
+@endpush
 
 <style>
     .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }

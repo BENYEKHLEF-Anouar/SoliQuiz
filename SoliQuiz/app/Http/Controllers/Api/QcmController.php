@@ -66,15 +66,24 @@ class QcmController extends Controller
         $questionDetails = $questions->map(function ($question) use ($tentative) {
             $userReponse = $question->reponses->first();
             $selectedOptions = $userReponse ? $userReponse->choixReponses->pluck('option_id') : [];
-            $correctOptions = $question->options->where('est_correcte', true)->pluck('id');
-            $isCorrect = $selectedOptions->diff($correctOptions)->isEmpty() && $correctOptions->diff($selectedOptions)->isEmpty();
+            $borderCorrect = $question->options->where('est_correcte', true)->pluck('id');
+            $isCorrect = $selectedOptions->diff($borderCorrect)->isEmpty() && $borderCorrect->diff($selectedOptions)->isEmpty();
             return [
                 'id' => $question->id,
                 'text' => $question->texte,
+                'points' => $question->points,
                 'userAnswer' => $selectedOptions->toArray(),
-                'correctAnswer' => $correctOptions->toArray(),
+                'correctAnswer' => $borderCorrect->toArray(),
                 'isCorrect' => $isCorrect,
                 'explanation' => $question->explication_feedback,
+                'options' => $question->options->map(function ($option) {
+                    return [
+                        'id' => $option->id,
+                        'text' => $option->texte,
+                        'isCorrect' => (bool)$option->est_correcte,
+                        'specificFeedback' => $option->feedback_specifique,
+                    ];
+                })->toArray(),
             ];
         });
         $score = $tentative->score_obtenu;
@@ -86,9 +95,72 @@ class QcmController extends Controller
             'title' => $qcm->titre,
             'score' => $score,
             'totalQuestions' => $totalQuestions,
+            'maxScore' => $maxScore,
             'percentage' => $percentage,
             'objectiveMet' => $objectiveMet,
             'questions' => $questionDetails,
+        ]);
+    }
+
+    public function start(Request $request, $id)
+    {
+        $qcm = QCM::findOrFail($id);
+        $student = $request->user();
+        
+        $passationService = resolve(\App\Services\PassationService::class);
+        $tentative = $passationService->demarrer($student, $qcm->id);
+        
+        if ($tentative->statut !== 'en_cours') {
+            return response()->json(['message' => 'QCM déjà terminé', 'status' => 'completed'], 400);
+        }
+        
+        // Get existing answers if any
+        $initialAnswers = [];
+        $existingReponses = $tentative->reponses()->with(['choixReponses', 'question'])->get();
+        foreach ($existingReponses as $reponse) {
+            $options = $reponse->choixReponses->pluck('option_id')->toArray();
+            $initialAnswers[$reponse->question_id] = $options;
+        }
+        
+        // Calculate remaining seconds
+        $debut = $tentative->date_debut;
+        if ($qcm->duree_minutes > 0) {
+            $finPrevue = $debut->copy()->addMinutes($qcm->duree_minutes);
+            $tempsRestant = (int) now()->diffInSeconds($finPrevue, false);
+            if ($tempsRestant <= 0) {
+                $passationService->soumettre($tentative);
+                return response()->json(['message' => 'Temps écoulé', 'status' => 'completed'], 400);
+            }
+        } else {
+            $tempsRestant = -1;
+        }
+        
+        return response()->json([
+            'qcmId' => $qcm->id,
+            'title' => $qcm->titre,
+            'durationMinutes' => $qcm->duree_minutes,
+            'tempsRestant' => $tempsRestant,
+            'initialAnswers' => $initialAnswers,
+        ]);
+    }
+
+    public function submit(Request $request, $id)
+    {
+        $tentative = Tentative::where('etudiant_id', $request->user()->id)
+            ->where('qcm_id', $id)
+            ->where('statut', 'en_cours')
+            ->firstOrFail();
+
+        $passationService = resolve(\App\Services\PassationService::class);
+        
+        $answers = $request->input('answers', []);
+        
+        $passationService->enregistrerReponses($tentative, $answers);
+        $passationService->soumettre($tentative);
+        
+        return response()->json([
+            'success' => true,
+            'score' => $tentative->score_obtenu,
         ]);
     }
 }

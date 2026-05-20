@@ -37,7 +37,7 @@
             </span>
 
             <h1 class="text-4xl font-heading font-bold text-slate-900 leading-[1.1] mb-6">
-                L'évaluation mobile qui <span class="text-primary-500 italic">booste</span> ton apprentissage.
+                L'évaluation mobile qui <span class="text-primary-500">booste</span> ton apprentissage.
             </h1>
 
             <p class="text-slate-500 text-sm leading-relaxed mb-8">

@@ -15,8 +15,14 @@ class ClasseService
     public function paginate(int $perPage = 15, ?string $search = null): LengthAwarePaginator
     {
         return Classe::with('formateur')
-            ->when($search, fn($q) => $q->where('nom', 'like', "%{$search}%")
-                ->orWhere('promotion', 'like', "%{$search}%"))
+            ->when($search, fn($q) => $q->where(function($query) use ($search) {
+                $query->where('nom', 'like', "%{$search}%")
+                    ->orWhere('promotion', 'like', "%{$search}%")
+                    ->orWhereHas('formateur', function($subQuery) use ($search) {
+                        $subQuery->where('nom', 'like', "%{$search}%")
+                            ->orWhere('prenom', 'like', "%{$search}%");
+                    });
+            }))
             ->latest()
             ->paginate($perPage);
     }

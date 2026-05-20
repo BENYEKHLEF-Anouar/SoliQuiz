@@ -51,7 +51,7 @@
                             <span class="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Terminé le</span>
                             <span class="text-sm font-bold text-slate-800">{{ $tentative->date_fin->format('d M Y à H:i') }}</span>
                         </div>
-                        <div class="bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100 flex flex-col">
+                        <!-- <div class="bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100 flex flex-col">
                             <span class="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Temps Passé</span>
                             <span class="text-sm font-bold text-slate-800">
                                 @php
@@ -61,7 +61,7 @@
                                 @endphp
                                 {{ $min > 0 ? $min . ' min ' : '' }}{{ $sec }}s
                             </span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                                     <svg class="size-3 mt-0.5 shrink-0 {{ $option->est_correcte ? 'text-emerald-500' : 'text-rose-500' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                         <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <p class="text-[10px] font-bold text-slate-500 italic leading-snug">
+                                    <p class="text-[10px] font-bold text-slate-500 leading-snug">
                                         {{ $option->feedback_specifique }}
                                     </p>
                                 </div>

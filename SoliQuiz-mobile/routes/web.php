@@ -14,6 +14,9 @@ Route::prefix('student')->group(function () {
     Route::get('/dashboard', function () {
         return view('student.dashboard');
     })->name('student.dashboard');
+    Route::get('/bibliotheque', function () {
+        return view('student.bibliotheque');
+    })->name('student.bibliotheque');
     Route::get('/qcm/{id}', function ($id) {
         return view('student.qcm-passation', ['qcmId' => $id]);
     })->name('student.qcm');
@@ -32,12 +35,15 @@ Route::prefix('formateur')->group(function () {
     Route::get('/qcms', function () {
         return view('formateur.qcms');
     })->name('formateur.qcms');
+    Route::get('/results', function () {
+        return view('formateur.results');
+    })->name('formateur.results');
     Route::get('/qcm/{id}/results', function ($id) {
         return view('formateur.qcm-results', ['qcmId' => $id]);
     })->name('formateur.qcm-results');
-    Route::get('/class-notes', function () {
-        return view('formateur.class-notes');
-    })->name('formateur.class-notes');
+    Route::get('/structure', function () {
+        return view('formateur.structure');
+    })->name('formateur.structure');
     Route::get('/profile', function () {
         return view('formateur.profile');
     })->name('formateur.profile');

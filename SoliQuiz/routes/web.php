@@ -13,6 +13,17 @@ Route::get('/dashboard', function () {
     return redirect()->route('student.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::get('/api/check-code', function(Illuminate\Http\Request $request) {
+    $code = $request->query('code');
+    $type = $request->query('type');
+    if ($type === 'ua') {
+        $exists = \App\Models\UniteApprentissage::where('code', $code)->exists();
+    } else {
+        $exists = \App\Models\Competence::where('code', $code)->exists();
+    }
+    return response()->json(['exists' => $exists]);
+})->name('api.check-code');
+
 Route::middleware(['auth'])->group(function () {
     
     // Group: Admin Only
@@ -48,6 +59,8 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/classes/{classe}', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'destroy'])->name('classes.destroy');
         Route::post('/classes/{id}/formateur', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'assignFormateur'])->name('classes.assign');
         Route::post('/classes/{classe}/etudiants', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'addStudent'])->name('classes.students.add');
+        Route::post('/classes/{classe}/etudiants/bulk', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'bulkAddStudents'])->name('classes.students.bulk-add');
+        Route::post('/classes/{classe}/etudiants/import', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'importStudents'])->name('classes.students.import');
         Route::delete('/classes/{id}/etudiants/{userId}', [\App\Http\Controllers\Web\Admin\ClasseController::class, 'removeStudent'])->name('classes.students.remove');
     });
 

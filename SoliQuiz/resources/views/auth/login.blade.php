@@ -22,7 +22,7 @@
                 <h2 class="text-5xl font-heading font-black text-white leading-[1.1] mb-8">
                     L'excellence <span class="text-primary-500">pédagogique</span> commence ici.
                 </h2>
-                <p class="text-slate-400 text-xl font-medium leading-relaxed italic opacity-80">
+                <p class="text-slate-400 text-xl font-medium leading-relaxed opacity-80">
                     Accédez à votre espace sécurisé pour piloter vos évaluations et suivre vos performances académiques.
                 </p>
             </div>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="flex flex-col">
                         <span class="text-3xl font-heading font-black tracking-tighter text-slate-900 leading-none">Soli<span class="text-primary-500">Quiz</span></span>
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1.5 italic">Plateforme d'Évaluation</span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1.5">Plateforme d'Évaluation</span>
                     </div>
                 </div>
             </div>
@@ -67,14 +67,14 @@
                 <h1 class="text-4xl font-heading font-black text-slate-900 tracking-tight leading-none mb-4 uppercase">
                     Connectez <span class="text-primary-500">Votre Futur</span>
                 </h1>
-                <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px] italic">Espace d'Authentification Sécurisé</p>
+                <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Espace d'Authentification Sécurisé</p>
             </div>
 
             <form method="POST" action="{{ route('login') }}" class="space-y-8">
                 @csrf
                 
                 <div class="space-y-3">
-                    <label for="email" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 italic leading-none">Identifiant de Connexion</label>
+                    <label for="email" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 leading-none">Identifiant de Connexion</label>
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-300 group-focus-within:text-primary-500 transition-colors">
                             <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
@@ -84,7 +84,7 @@
                             placeholder="votre@solicode.co" required autofocus>
                     </div>
                     @error('email')
-                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest italic flex items-center">
+                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
                             <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                 <circle cx="12" cy="12" r="10" />
                                 <line x1="12" y1="8" x2="12" y2="12" />
@@ -97,9 +97,9 @@
 
                 <div class="space-y-3" x-data="{ show: false }">
                     <div class="flex justify-between items-center px-1">
-                        <label for="password" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] italic leading-none">Clé de Sécurité</label>
+                        <label for="password" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] leading-none">Clé de Sécurité</label>
                         @if (Route::has('password.request'))
-                            <!-- <a class="text-[9px] font-black text-primary-500 hover:text-primary-600 transition-colors uppercase tracking-widest italic" href="{{ route('password.request') }}">Oublié ?</a> -->
+                            <!-- <a class="text-[9px] font-black text-primary-500 hover:text-primary-600 transition-colors uppercase tracking-widest" href="{{ route('password.request') }}">Oublié ?</a> -->
                         @endif
                     </div>
                     <div class="relative group">
@@ -121,7 +121,7 @@
                         </button>
                     </div>
                     @error('password')
-                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest italic flex items-center">
+                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
                             <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                 <circle cx="12" cy="12" r="10" />
                                 <line x1="12" y1="8" x2="12" y2="12" />
@@ -139,18 +139,18 @@
                             <div class="size-6 bg-slate-100 rounded-lg group-hover:bg-slate-200 peer-checked:bg-primary-500 transition-colors shadow-inner"></div>
                             <svg class="absolute inset-0 size-6 text-white scale-0 peer-checked:scale-50 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M5 13l4 4L19 7" /></svg>
                         </div>
-                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Session Persistante</span>
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Session Persistante</span>
                     </label>
                 </div>
 
                 <button type="submit"
-                    class="w-full py-4 px-8 bg-slate-900 text-white font-black rounded-2xl hover:bg-primary-500 shadow-xl shadow-slate-900/10 active:scale-[0.98] transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 italic group mt-4">
+                    class="w-full py-4 px-8 bg-slate-900 text-white font-black rounded-2xl hover:bg-primary-500 shadow-xl shadow-slate-900/10 active:scale-[0.98] transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 group mt-4">
                     Initialiser la Session
                     <svg class="size-3 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                 </button>
             </form>
 
-            <p class="mt-20 text-center text-[9px] font-black text-slate-300 uppercase tracking-[0.4em] italic leading-none">
+            <p class="mt-20 text-center text-[9px] font-black text-slate-300 uppercase tracking-[0.4em] leading-none">
                 © 2026 — SOLIQUIZ ECOSYSTEM
             </p>
         </div>

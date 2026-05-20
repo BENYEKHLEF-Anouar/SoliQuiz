@@ -45,6 +45,7 @@
             @click.stop="open = !open; if (open) $nextTick(() => positionDropdown())"
             class="w-full bg-slate-50 border-2 border-transparent hover:border-slate-200 rounded-lg py-3 px-4 flex items-center justify-between text-sm font-bold text-slate-800 transition-all outline-none focus:bg-white focus:border-slate-400">
         <span x-text="displayValue || '{{ $placeholder }}'"
+              class="truncate mr-2"
               :class="displayValue ? 'text-slate-900' : 'text-slate-400'"></span>
         <svg class="size-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -164,8 +165,7 @@
                         <button type="button"
                                 @click="selectDate(dayObj)"
                                 :disabled="dayObj.disabled"
-                                :class="{
-                                    'text-slate-300 pointer-events-none': !dayObj.isCurrentMonth,
+                                :class="{ 'text-slate-300 pointer-events-none': !dayObj.isCurrentMonth,
                                     'text-slate-800 hover:bg-primary-50 hover:text-primary-600 hover:border-primary-200': dayObj.isCurrentMonth && selectedDay !== dayObj.day,
                                     'bg-primary-500 text-white font-black shadow-md shadow-primary-500/20': dayObj.isCurrentMonth && selectedDay === dayObj.day
                                 }"

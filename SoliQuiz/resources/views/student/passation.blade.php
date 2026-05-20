@@ -10,7 +10,7 @@
     
     <!-- Sticky Header -->
     <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-4">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-2.5">
             <div class="flex items-center justify-between gap-4">
                 <div class="flex items-center gap-4 min-w-0 flex-1">
                     <button type="button"
@@ -20,13 +20,13 @@
                                 onConfirm: () => { window.onbeforeunload = null; window.location.href = '{{ route('student.bibliotheque') }}' },
                                 type: 'warning'
                             })"
-                            class="shrink-0 size-10 flex items-center justify-center rounded-xl hover:bg-slate-100 transition-colors text-slate-500">
-                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            class="shrink-0 size-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors text-slate-500">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path d="m15 18-6-6 6-6"/>
                         </svg>
                     </button>
                     <div class="min-w-0 flex items-center gap-3">
-                        <h1 class="text-lg font-bold text-slate-900 truncate">{{ $qcm->titre }}</h1>
+                        <h1 class="text-base font-bold text-slate-900 truncate">{{ $qcm->titre }}</h1>
                         
                         <!-- Auto-save Badge -->
                         <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg transition-all duration-300"
@@ -50,32 +50,32 @@
             </div>
 
             <!-- Progress Bar -->
-            <div class="mt-4 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div class="mt-2.5 h-1 bg-slate-100 rounded-full overflow-hidden">
                 <div class="h-full bg-primary-500 rounded-full transition-all duration-500"
                      :style="`width: ${completionPercentage}%`"></div>
             </div>
-            <p class="mt-2 text-xs font-medium text-slate-400 text-center">
+            <p class="mt-1.5 text-[11px] font-medium text-slate-400 text-center">
                 <span x-text="answeredCount"></span> / {{ count($qcm->questions) }} questions répondues
             </p>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 py-5 px-4 sm:px-6">
+    <main class="flex-1 py-3 px-4 sm:px-6">
         <div class="max-w-3xl mx-auto space-y-4">
             
             <!-- QCM Header Card -->
-            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 md:p-6">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="size-10 bg-primary-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-500/30">
-                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="size-8 bg-primary-500 rounded-lg flex items-center justify-center text-white shadow-md shadow-primary-500/20">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/>
                         </svg>
                     </div>
                     <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">QCM à compléter</span>
                 </div>
-                <h2 class="text-xl md:text-2xl font-heading font-black text-slate-900 leading-tight mb-3">{{ $qcm->titre }}</h2>
-                <div class="flex flex-wrap gap-4 text-sm">
+                <h2 class="text-lg md:text-xl font-heading font-black text-slate-900 leading-tight mb-2">{{ $qcm->titre }}</h2>
+                <div class="flex flex-wrap gap-3 text-xs">
                     <div class="flex items-center gap-2 text-slate-500">
                         <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
@@ -92,46 +92,46 @@
             </div>
 
             <!-- Questions Form -->
-            <form id="qcm-form" action="{{ route('student.qcm.submit', $qcm->id) }}" method="POST" class="space-y-6">
+            <form id="qcm-form" action="{{ route('student.qcm.submit', $qcm->id) }}" method="POST" class="space-y-4">
                 @csrf
                 @foreach($qcm->questions as $index => $question)
                 @php $qId = (string) $question->id; @endphp
-                <div class="bg-white rounded-2xl border-2 p-5 md:p-6 transition-all duration-300"
+                <div class="bg-white rounded-xl border-2 p-4 transition-all duration-300"
                      :class="isQuestionAnswered('{{ $qId }}') ? 'border-primary-200 shadow-sm' : 'border-slate-100 shadow-sm'">
                     
-                    <div class="flex items-start gap-3 mb-4">
-                        <div class="shrink-0 size-8 rounded-lg flex items-center justify-center font-black text-sm shadow-sm transition-colors duration-300"
+                    <div class="flex items-start gap-2.5 mb-3">
+                        <div class="shrink-0 size-6 rounded-md flex items-center justify-center font-black text-xs shadow-sm transition-colors duration-300"
                              :class="isQuestionAnswered('{{ $qId }}') ? 'bg-primary-500 text-white' : 'bg-slate-900 text-white'">
                             {{ $index + 1 }}
                         </div>
-                        <div class="flex-1 pt-1">
-                            <h3 class="text-base md:text-lg font-bold text-slate-900 leading-snug">{{ $question->texte }}</h3>
-                            <div class="flex items-center gap-3 mt-2">
-                                <span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-wider">
+                        <div class="flex-1 pt-0.5">
+                            <h3 class="text-sm md:text-base font-bold text-slate-900 leading-snug">{{ $question->texte }}</h3>
+                            <div class="flex items-center gap-3 mt-1.5">
+                                <span class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded bg-slate-100 text-slate-600 text-[9px] font-black uppercase tracking-wider">
                                     {{ $question->type === 'unique' ? 'Choix unique' : 'Choix multiples' }}
                                 </span>
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">{{ $question->points }} point{{ $question->points > 1 ? 's' : '' }}</span>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">{{ $question->points }} point{{ $question->points > 1 ? 's' : '' }}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="space-y-2 pl-11">
+                    <div class="space-y-1.5 pl-8">
                         @foreach($question->options as $option)
                         @php $oId = (string) $option->id; @endphp
 
-                        <div class="group flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200"
+                        <div class="group flex items-center gap-2.5 p-2 rounded-lg border-2 cursor-pointer transition-all duration-200"
                              :class="isSelected('{{ $qId }}', '{{ $oId }}') 
                                  ? 'border-primary-500 bg-primary-50 shadow-sm' 
                                  : 'border-slate-100 hover:border-primary-200 hover:bg-primary-50/30'"
                              @click="{{ $question->type === 'unique' ? 'selectAnswer' : 'toggleAnswer' }}('{{ $qId }}', '{{ $oId }}')">
 
-                            <div class="shrink-0 size-6 {{ $question->type === 'unique' ? 'rounded-full' : 'rounded-lg' }} border-2 flex items-center justify-center transition-all duration-200"
+                            <div class="shrink-0 size-5 {{ $question->type === 'unique' ? 'rounded-full' : 'rounded-md' }} border-2 flex items-center justify-center transition-all duration-200"
                                  :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'border-primary-500 bg-primary-500' : 'border-slate-300'">
                                 @if($question->type === 'unique')
-                                    <div class="size-2.5 rounded-full bg-white transition-transform duration-200"
+                                    <div class="size-2 rounded-full bg-white transition-transform duration-200"
                                          :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'scale-100' : 'scale-0'"></div>
                                 @else
-                                    <svg class="size-4 text-white transition-transform duration-200"
+                                    <svg class="size-3 text-white transition-transform duration-200"
                                          :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'scale-100' : 'scale-0'"
                                          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                         <path d="M5 13l4 4L19 7"/>
@@ -139,7 +139,7 @@
                                 @endif
                             </div>
 
-                            <span class="flex-1 font-medium transition-colors"
+                            <span class="flex-1 text-sm font-medium transition-colors"
                                   :class="isSelected('{{ $qId }}', '{{ $oId }}') ? 'text-slate-900' : 'text-slate-700'">
                                 {{ $option->texte }}
                             </span>
@@ -161,20 +161,20 @@
     </main>
 
     <!-- Sticky Submit Footer -->
-    <footer class="sticky bottom-0 z-40 bg-white/80 backdrop-blur-xl border-t border-slate-200 p-4 sm:p-6">
+    <footer class="sticky bottom-0 z-40 bg-white/80 backdrop-blur-xl border-t border-slate-200 p-3 sm:p-4">
         <div class="max-w-3xl mx-auto flex items-center justify-between gap-4">
             <div class="hidden sm:block">
-                <p class="text-sm font-medium text-slate-600">
+                <p class="text-xs font-medium text-slate-600">
                     <span x-text="answeredCount"></span> / {{ count($qcm->questions) }} répondue{{ count($qcm->questions) > 1 ? 's' : '' }}
                 </p>
-                <p class="text-xs text-slate-400">Vos réponses sont enregistrées lors de la soumission</p>
+                <p class="text-[10px] text-slate-400">Vos réponses sont enregistrées lors de la soumission</p>
             </div>
             
             <button type="button"
-                    class="flex-1 sm:flex-none h-11 px-6 bg-slate-900 text-white rounded-xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-primary-500 shadow-xl shadow-slate-900/10 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+                    class="flex-1 sm:flex-none h-9 px-5 bg-slate-900 text-white rounded-lg font-black text-[10px] uppercase tracking-[0.2em] hover:bg-primary-500 shadow-md shadow-slate-900/10 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
                     @click="submitForm()">
                 <span>Soumettre le QCM</span>
-                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path d="M5 13l4 4L19 7"/>
                 </svg>
             </button>
@@ -189,7 +189,7 @@
                     <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
             </div>
-            <h3 class="text-xl font-black text-slate-900 uppercase italic mb-2">Le temps est écoulé !</h3>
+            <h3 class="text-xl font-black text-slate-900 uppercase mb-2">Le temps est écoulé !</h3>
             <p class="text-slate-500 text-sm mb-8">Votre tentative va être soumise automatiquement avec les réponses déjà fournies.</p>
             <button type="button" @click="finalSubmit()" class="w-full h-14 rounded-2xl bg-slate-900 text-white font-black text-xs uppercase tracking-widest hover:bg-primary-500 transition-all">
                 Voir mes résultats

@@ -46,8 +46,9 @@ class StudentController extends Controller
         $historique = $this->etudiantService->historique($student, 5); // top 5 recent
         $lastScores = $this->etudiantService->getLastScores($student, 7);
         $activeSessions = $this->etudiantService->getActiveSessions($student);
+        $progressByUa = $this->etudiantService->getProgressByUa($student);
 
-        return view('student.dashboard', compact('metrics', 'historique', 'upcoming', 'lastScores', 'activeSessions', 'formateur'));
+        return view('student.dashboard', compact('metrics', 'historique', 'upcoming', 'lastScores', 'activeSessions', 'formateur', 'progressByUa'));
     }
 
     /**
@@ -114,14 +115,25 @@ class StudentController extends Controller
         // Extracting average from EtudiantService logic instead to keep it DRY
         $metrics = $this->etudiantService->getDashboard($student);
         $moyenne = $metrics['score_moyen'] ?? 0;
-        // Extraire les unités d'apprentissage du formateur de l'étudiant
-        $unites = collect();
-        if ($student->classe_id) {
-            $classe = \App\Models\Classe::with('formateur')->find($student->classe_id);
-            if ($classe && $classe->formateur_id) {
-                $unites = \App\Models\UniteApprentissage::where('user_id', $classe->formateur_id)->get();
+        // Extraire les unités d'apprentissage des QCMs accessibles ou du formateur
+        $unites = \App\Models\UniteApprentissage::where(function ($query) use ($student) {
+            $query->whereHas('qcms', function ($q) use ($student) {
+                $q->where('statut', 'public')
+                  ->where(function($sq) use ($student) {
+                      $sq->whereNull('classe_id');
+                      if ($student->classe_id) {
+                          $sq->orWhere('classe_id', $student->classe_id);
+                      }
+                  });
+            });
+
+            if ($student->classe_id) {
+                $classe = \App\Models\Classe::find($student->classe_id);
+                if ($classe && $classe->formateur_id) {
+                    $query->orWhere('user_id', $classe->formateur_id);
+                }
             }
-        }
+        })->get();
 
         return view('student.bibliotheque', compact('termines', 'enCours', 'aFaire', 'moyenne', 'search', 'unites', 'formateur'));
     }

@@ -142,6 +142,13 @@ class DashboardService
 
         $nbActiveAttempts = Tentative::whereIn('qcm_id', $qcms->pluck('id'))
             ->where('statut', 'en_cours')
+            ->with('qcm')
+            ->get()
+            ->filter(function ($t) {
+                if (!$t->qcm) return false;
+                $limitMinutes = $t->qcm->duree_minutes > 0 ? ($t->qcm->duree_minutes + 2) : 120; // 120 mins limit if unlimited
+                return $t->date_debut && $t->date_debut->copy()->addMinutes($limitMinutes)->isAfter(now());
+            })
             ->count();
 
         return [
@@ -206,5 +213,27 @@ class DashboardService
 
         $growth = round((($thisWeekCount - $lastWeekCount) / $lastWeekCount) * 100);
         return ($growth >= 0 ? '+' : '') . $growth . '%';
+    }
+
+    /**
+     * Retourne les métriques détaillées pour toutes les classes (Admin).
+     */
+    public function getAllClassesMetrics(): Collection
+    {
+        return Classe::withCount('etudiants')
+            ->get()
+            ->map(function($classe) {
+                $tentatives = Tentative::whereIn('etudiant_id', $classe->etudiants->pluck('id'))
+                    ->where('statut', '!=', 'en_cours')
+                    ->get();
+                
+                $classe->moyenne = round($tentatives->avg('score_obtenu') ?? 0, 1);
+                $classe->nb_reussis = $tentatives->where('statut', 'reussi')->count();
+                $classe->taux_reussite = $tentatives->count() > 0 
+                    ? round(($classe->nb_reussis / $tentatives->count()) * 100) 
+                    : 0;
+                
+                return $classe;
+            });
     }
 }

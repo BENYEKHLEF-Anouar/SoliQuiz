@@ -57,16 +57,15 @@
                 
                 <div class="grid gap-5 text-left">
                     <template x-for="evaluation in evaluations" :key="evaluation.id">
-                        <a :href="'/student/qcm/' + evaluation.id" 
-                            class="group block bg-white border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] rounded-[2.5rem] p-7 relative overflow-hidden active:scale-[0.97] transition-all duration-300 hover:border-primary-100">
+                        <div class="group bg-white border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] rounded-[2.5rem] p-7 relative overflow-hidden transition-all duration-300 hover:border-slate-200">
                             
                             <!-- Status Indicator Accent -->
-                            <div class="absolute top-0 right-12 w-16 h-1 rounded-b-full transition-all duration-500 group-hover:h-2" 
-                                :class="evaluation.urgent ? 'bg-semantic-warning shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 'bg-slate-100 group-hover:bg-primary-500'"></div>
+                            <div class="absolute top-0 right-12 w-16 h-1 rounded-b-full transition-all duration-500" 
+                                :class="evaluation.urgent ? 'bg-semantic-warning shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 'bg-slate-100'"></div>
                             
                             <div class="flex justify-between items-start mb-5">
                                 <div class="flex items-center gap-3">
-                                    <div class="size-11 rounded-[1.25rem] bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-primary-50 group-hover:text-primary-500 transition-all">
+                                    <div class="size-11 rounded-[1.25rem] bg-slate-50 flex items-center justify-center text-slate-300 transition-all">
                                         <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>
                                     </div>
                                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]" x-text="evaluation.subject"></span>
@@ -76,17 +75,12 @@
                             <h3 class="text-2xl font-heading font-extrabold text-slate-900 leading-[1.1] tracking-tight mb-8" x-text="evaluation.title"></h3>
                             
                             <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-x-2 text-[10px] font-black uppercase" :class="evaluation.urgent ? 'text-semantic-warning' : 'text-slate-300 group-hover:text-slate-500'">
+                                <div class="flex items-center gap-x-2 text-[10px] font-black uppercase" :class="evaluation.urgent ? 'text-semantic-warning' : 'text-slate-300'">
                                     <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                     <span class="tracking-widest" x-text="evaluation.urgent ? 'Expire aujourd\'hui' : 'À venir'"></span>
                                 </div>
-                                
-                                <div class="inline-flex items-center gap-x-2 text-xs font-black text-primary-600 transition-transform group-hover:translate-x-1">
-                                    <span class="uppercase tracking-widest">Démarrer</span>
-                                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="m9 18 6-6-6-6"/></svg>
-                                </div>
                             </div>
-                        </a>
+                        </div>
                     </template>
                 </div>
             </section>
@@ -110,7 +104,7 @@
         <div class="p-5 overflow-y-auto max-h-full">
             <template x-for="notif in notifications" :key="notif.id">
                 <div class="p-4 rounded-xl border mb-3" :class="notif.type === 'urgent' ? 'bg-semantic-warning/20 text-semantic-warning border-semantic-warning/30' : 'bg-slate-50 text-slate-800 border-slate-100'">
-                    <p class="text-sm font-bold mb-1 uppercase tracking-tight italic" x-text="notif.type === 'urgent' ? 'QCM Urgent !' : 'Note publiée'"></p>
+                    <p class="text-sm font-bold mb-1 uppercase tracking-tight" x-text="notif.type === 'urgent' ? 'QCM Urgent !' : 'Note publiée'"></p>
                     <p class="text-xs" x-text="notif.message"></p>
                 </div>
             </template>

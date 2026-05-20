@@ -18,7 +18,13 @@ class QcmService
     {
         return QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
             ->withCount(['questions', 'tentatives'])
-            ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
+            ->when($search, fn($q) => $q->where(function($query) use ($search) {
+                $query->where('titre', 'like', "%{$search}%")
+                    ->orWhereHas('formateur', function($subQuery) use ($search) {
+                        $subQuery->where('nom', 'like', "%{$search}%")
+                            ->orWhere('prenom', 'like', "%{$search}%");
+                    });
+            }))
             ->when($formateurId, fn($q) => $q->where('formateur_id', $formateurId))
             ->when($statut, fn($q) => $q->where('statut', $statut))
             ->latest()

@@ -124,10 +124,12 @@ class FormateurController extends Controller
     {
         $request->validate([
             'nom' => 'required|string|max:255',
-            'code' => 'required|string|unique:unites_apprentissage,code',
+            'code' => 'required|string',
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
+
+        $codeExists = UniteApprentissage::where('code', $request->code)->exists();
 
         $seance = Auth::user()->isAdmin()
             ? Seance::findOrFail($seanceId)
@@ -141,7 +143,11 @@ class FormateurController extends Controller
             'seance_id' => $seance->id
         ]);
 
-        return back()->with('success', 'Unité d\'apprentissage ajoutée.');
+        $redirect = back()->with('success', 'Unité d\'apprentissage ajoutée.');
+        if ($codeExists) {
+            $redirect->with('code_warning', 'Attention : Le code de l\'UA est déjà utilisé.');
+        }
+        return $redirect;
     }
 
     public function destroyUA($id)
@@ -157,18 +163,26 @@ class FormateurController extends Controller
     {
         $request->validate([
             'libelle' => 'required|string|max:255',
-            'code' => 'required|string|unique:competences,code',
+            'code' => 'required|string',
+            'description' => 'nullable|string',
         ]);
+
+        $codeExists = Competence::where('code', $request->code)->exists();
 
         $ua = Auth::user()->isAdmin()
             ? UniteApprentissage::findOrFail($uaId)
             : UniteApprentissage::where('id', $uaId)->where('user_id', Auth::id())->firstOrFail();
         $ua->competences()->create([
             'libelle' => $request->libelle,
-            'code' => $request->code
+            'code' => $request->code,
+            'description' => $request->description
         ]);
 
-        return back()->with('success', 'Compétence ajoutée.');
+        $redirect = back()->with('success', 'Compétence ajoutée.');
+        if ($codeExists) {
+            $redirect->with('code_warning', 'Attention : Le code de la compétence est déjà utilisé.');
+        }
+        return $redirect;
     }
 
     public function destroyCompetence($id)
@@ -227,7 +241,7 @@ class FormateurController extends Controller
     {
         $request->validate([
             'nom' => 'required|string|max:255',
-            'code' => 'required|string|unique:unites_apprentissage,code,' . $id,
+            'code' => 'required|string',
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
@@ -257,7 +271,8 @@ class FormateurController extends Controller
     {
         $request->validate([
             'libelle' => 'required|string|max:255',
-            'code' => 'required|string|unique:competences,code,' . $id,
+            'code' => 'required|string',
+            'description' => 'nullable|string',
         ]);
 
         $competence = Competence::findOrFail($id);
@@ -266,7 +281,8 @@ class FormateurController extends Controller
 
         $competence->update([
             'libelle' => $request->libelle,
-            'code' => $request->code
+            'code' => $request->code,
+            'description' => $request->description
         ]);
         return back()->with('success', 'Compétence mise à jour.');
     }
@@ -332,14 +348,14 @@ class FormateurController extends Controller
             'competence_ids.*' => 'exists:competences,id',
             'questions' => 'required|array|min:1',
             'questions.*.texte' => 'required|string',
-            'questions.*.points' => 'required|integer|min:0',
+            'questions.*.points' => 'required|numeric|min:0',
             'questions.*.type' => 'required|in:choix_unique,choix_multiple',
             'questions.*.explication_feedback' => 'nullable|string',
             'questions.*.options' => 'required|array|min:2',
             'questions.*.options.*.texte' => 'required|string',
             'questions.*.options.*.est_correcte' => 'nullable',
             'questions.*.options.*.feedback_specifique' => 'nullable|string',
-        ]);
+        ], $this->getQcmValidationMessages());
 
         $data = $request->all();
         $data['formateur_id'] = Auth::id();
@@ -421,7 +437,7 @@ class FormateurController extends Controller
             'questions.*.options.*.texte' => 'required|string',
             'questions.*.options.*.est_correcte' => 'nullable',
             'questions.*.options.*.feedback_specifique' => 'nullable|string',
-        ]);
+        ], $this->getQcmValidationMessages());
 
         $data = $request->all();
 
@@ -646,6 +662,14 @@ class FormateurController extends Controller
         $newStatus = $qcm->fresh()->statut;
         $message = $newStatus === 'public' ? 'QCM publié et visible aux étudiants.' : 'QCM mis en brouillon.';
 
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'statut' => $newStatus,
+                'message' => $message
+            ]);
+        }
+
         return back()->with('success', $message);
     }
 
@@ -773,5 +797,36 @@ class FormateurController extends Controller
 
         $pdf = Pdf::loadView('exports.tentative-pdf', compact('qcm', 'tentative', 'questionDetails'));
         return $pdf->download('Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.pdf');
+    }
+
+    private function getQcmValidationMessages(): array
+    {
+        return [
+            'titre.required' => "Le titre du QCM est obligatoire.",
+            'unite_apprentissage_id.required' => "Veuillez sélectionner une Unité d'Apprentissage (UA).",
+            'unite_apprentissage_id.exists' => "L'unité d'apprentissage sélectionnée est invalide.",
+            'classe_id.required' => "Veuillez sélectionner une Cohorte Cible.",
+            'classe_id.exists' => "La classe sélectionnée est invalide.",
+            'duree_minutes.required' => "La durée en minutes est requise.",
+            'duree_minutes.integer' => "La durée doit être un nombre entier.",
+            'duree_minutes.min' => "La durée ne peut pas être négative.",
+            'score_reussite.required' => "Le score de réussite est requis.",
+            'score_reussite.numeric' => "Le score de réussite doit être un nombre.",
+            'score_reussite.min' => "Le score de réussite doit être au moins 0.",
+            'score_reussite.max' => "Le score de réussite ne peut pas dépasser 20.",
+            'questions.required' => "Le QCM doit contenir au moins une question.",
+            'questions.array' => "Le format des questions est invalide.",
+            'questions.min' => "Le QCM doit contenir au moins une question.",
+            'questions.*.texte.required' => "L'énoncé de chaque question est obligatoire.",
+            'questions.*.points.required' => "Le barème (points) pour chaque question est obligatoire.",
+            'questions.*.points.numeric' => "Le barème d'une question doit être un nombre.",
+            'questions.*.points.min' => "Le barème d'une question doit être au moins 0.",
+            'questions.*.type.required' => "Le type de chaque question est obligatoire.",
+            'questions.*.type.in' => "Le type de question sélectionné est invalide.",
+            'questions.*.options.required' => "Chaque question doit avoir des options de réponse.",
+            'questions.*.options.array' => "Les options de réponse doivent être au format correct.",
+            'questions.*.options.min' => "Chaque question doit avoir au moins 2 options de réponse.",
+            'questions.*.options.*.texte.required' => "Le texte de l'option de réponse est obligatoire.",
+        ];
     }
 }
