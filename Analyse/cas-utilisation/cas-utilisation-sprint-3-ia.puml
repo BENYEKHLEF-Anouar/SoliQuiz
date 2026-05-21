@@ -36,9 +36,9 @@ rectangle "Sprint 3 — IA, Sécurité & Notifications" {
     }
 
     package "Sécurité & Accès" {
-        usecase "Demander la réinitialisation\ndu mot de passe" as UC_FORGOT_PW
-        usecase "Recevoir une alerte Admin\n(tentative mot de passe oublié)" as UC_ADMIN_ALERT
-        usecase "Réinitialiser le mot de passe\nvia lien sécurisé" as UC_RESET_PW
+        usecase "Signaler un mot de passe oublié" as UC_FORGOT_PW
+        usecase "Recevoir l'alerte de mot de passe oublié" as UC_ADMIN_ALERT
+        usecase "Réinitialiser manuellement\nle mot de passe" as UC_RESET_PW
     }
 
 }
@@ -57,8 +57,8 @@ UC_AI_QCM ..> UC_AI_REVIEW : <<include>>
 
 ' Mot de passe oublié
 U -- UC_FORGOT_PW
-UC_FORGOT_PW ..> UC_RESET_PW  : <<include>>
-UC_FORGOT_PW ..> UC_ADMIN_ALERT : <<extend>>
+UC_FORGOT_PW ..> UC_ADMIN_ALERT : <<include>>
 A -- UC_ADMIN_ALERT
+UC_ADMIN_ALERT ..> UC_RESET_PW : <<include>>
 
 @enduml

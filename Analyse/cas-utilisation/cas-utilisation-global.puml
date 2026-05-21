@@ -9,76 +9,77 @@ skinparam usecase {
     ArrowColor #2E86C1
 }
 
-' ACTORS
 actor "Utilisateur" as U
-actor "Administrateur" as A
-actor "Formateur" as F
 actor "Étudiant" as E
+actor "Formateur" as F
+actor "Administrateur" as A
 actor "Application Mobile" as M
+actor "SoliLMS" as LMS
 
-U <|-- A
-U <|-- F
 U <|-- E
+U <|-- F
+U <|-- A
+
+E -[hidden]d-> F
+F -[hidden]d-> A
 
 package "Système global SoliQuiz" {
 
-    package "Accès & Sécurité (Commun)" {
+    package "Espace Étudiant" as P_ETUD {
+        usecase "Consulter historique & scores" as UC_HIST
+        usecase "Passer un QCM (Évaluation)" as UC_PLAY
+        usecase "Accéder au feedback/correction" as UC_FEED
+        usecase "voir les résultats (Scores)" as UC_SCORE
+        
+        E -- UC_HIST
+        E -- UC_PLAY
+        UC_HIST ..> UC_FEED : <<extend>>
+        UC_PLAY ..> UC_SCORE : <<include>>
+    }
+
+    package "Espace Formateur" as P_FORM {
+        usecase "Consulter les résultats & scores" as UC_RES
+        usecase "Gérer les QCM (CRUD)" as UC_CRUD
+        usecase "Lier QCM à une Session" as UC_LINK
+        usecase "Gérer les Questions & Choix" as UC_QUEST
+        
+        F -- UC_RES
+        F -- UC_CRUD
+        F -- UC_LINK
+        UC_LINK ..> UC_CRUD : <<extend>>
+        UC_CRUD ..> UC_QUEST : <<include>>
+    }
+
+    package "Accès & Sécurité (Commun)" as P_SEC {
         usecase "S'authentifier (Web/Mobile)" as UC_LOGIN
         usecase "Accéder à la Landing Page" as UC_PUBLIC
-        usecase "Gérer son profil" as UC_PROFILE
         U -- UC_LOGIN
         U -- UC_PUBLIC
-        U -- UC_PROFILE
     }
 
-    package "Espace Administrateur (Web)" {
-        usecase "Voir le tableau de bord global" as UC_DASH
-        usecase "Gérer les utilisateurs & rôles" as UC_ROLES
-        usecase "Gérer la pédagogie" as UC_PEDA_A
-        usecase "Gérer les classes & cohortes" as UC_CLASSES
-        usecase "Superviser tous les QCMs" as UC_QCMS_A
+    package "Interface API / Mobile Integration" as P_API {
+        usecase "Consommer les données (API)" as UC_API
+        M -- UC_API
+    }
 
+    package "Espace Administrateur (Web)" as P_ADMIN {
+        usecase "Voir le tableau de bord global" as UC_DASH
+        usecase "Gérer les utilisateurs (Rôles)" as UC_ROLES
+        usecase "Configuration API SoliLMS" as UC_CONF
         A -- UC_DASH
         A -- UC_ROLES
-        A -- UC_PEDA_A
-        A -- UC_CLASSES
-        A -- UC_QCMS_A
-    }
-
-    package "Espace Formateur (Web)" {
-        usecase "Gérer les QCM (CRUD)" as UC_CRUD
-        usecase "Gérer les Questions & Choix" as UC_QUEST
-        usecase "Gérer la pédagogie personnelle" as UC_PEDA_F
-        usecase "Consulter les résultats & exporter" as UC_RES
-
-        F -- UC_CRUD
-        F -- UC_PEDA_F
-        F -- UC_RES
-
-        UC_CRUD <.. UC_QUEST : <<include>>
-    }
-
-    package "Espace Étudiant (Web)" {
-        usecase "Passer un QCM (Timer + Auto-save)" as UC_PLAY
-        usecase "Consulter résultats & feedback" as UC_FEED
-        usecase "Consulter historique & progression" as UC_HIST
-        usecase "Voir classement de la cohorte" as UC_RANK
-
-        E -- UC_PLAY
-        E -- UC_HIST
-
-        UC_PLAY ..> UC_FEED : <<include>>
-        UC_HIST ..> UC_RANK : <<extend>>
-    }
-
-    package "Interface API / Mobile" {
-        usecase "Consommer les données (API)" as UC_API
-
-        M -- UC_API
-        UC_API ..> UC_RES  : <<include>>
-        UC_API ..> UC_HIST : <<include>>
-        UC_API ..> UC_LOGIN : <<include>>
+        A -- UC_CONF
+        LMS -- UC_CONF
     }
 }
+
+P_ETUD -[hidden]d-> P_FORM
+P_FORM -[hidden]d-> P_SEC
+P_SEC -[hidden]d-> P_API
+P_API -[hidden]d-> P_ADMIN
+
+UC_API ..> UC_LOGIN : <<include>>
+UC_API ..> UC_HIST : <<include>>
+UC_API ..> UC_RES : <<include>>
 
 @enduml

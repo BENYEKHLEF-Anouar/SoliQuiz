@@ -17,7 +17,7 @@ actor "Administrateur" as A
 actor "Formateur" as F
 actor "Étudiant" as E
 actor "Application Mobile" as M
-' actor "SoliLMS" as LMS
+actor "SoliLMS" as LMS
 
 ' Inheritance
 U <|-- A
@@ -45,12 +45,15 @@ package "SoliQuiz Web" {
         usecase "Gérer la pédagogie" as UC_PEDA
         usecase "Gérer les classes & cohortes" as UC_CLASS
         usecase "Superviser tous les QCMs" as UC_QCMS
+        usecase "Configuration API SoliLMS" as UC_CONF
 
         A -- UC10
         A -- UC9
         A -- UC_PEDA
         A -- UC_CLASS
         A -- UC_QCMS
+        A -- UC_CONF
+        LMS -- UC_CONF
     }
 
     package "Espace Formateur" {
@@ -58,10 +61,13 @@ package "SoliQuiz Web" {
         usecase "Gérer les Questions et Choix" as UC2
         usecase "Lier QCM à une Session/Objectif" as UC3
         usecase "Consulter les résultats" as UC5
+        usecase "Exporter les notes vers SoliLMS" as UC_EXP_LMS
 
         F -- UC1
         F -- UC3
         F -- UC5
+        F -- UC_EXP_LMS
+        LMS -- UC_EXP_LMS
 
         UC3 ..> UC1 : <<extend>>
         UC1 ..> UC2 : <<include>>
