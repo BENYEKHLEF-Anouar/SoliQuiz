@@ -23,8 +23,8 @@ style: |
     right: 60px;
   }
   .logo-header img { height: 140px; margin: 0; margin-left:10px; margin-right:10px }
-  h1 { color: #088dc7; font-size: 2.8em; margin-top: 100px; text-align: left; }
-  h2 { color: #088dc7; font-size: 2em; border-bottom: 2px solid #088dc7; margin-bottom: 40px;}
+  h1 { color: #3498DB; font-size: 2.8em; margin-top: 100px; text-align: left; }
+  h2 { color: #3498DB; font-size: 2em; border-bottom: 2px solid #3498DB; margin-bottom: 40px;}
   h3 { text-align: left; color: #444; margin-top: 0; }
 
   .sommaire-grid {
@@ -39,10 +39,10 @@ style: |
     background: #f4faff;
     border-radius: 12px;
     padding: 15px 20px;
-    border-left: 5px solid #088dc7;
+    border-left: 5px solid #3498DB;
   }
   .sommaire-num {
-    background: #088dc7; color: white; width: 35px; height: 35px;
+    background: #3498DB; color: white; width: 35px; height: 35px;
     display: flex; justify-content: center; align-items: center;
     border-radius: 50%; font-weight: bold; margin-right: 15px; flex-shrink: 0;
   }
@@ -59,7 +59,7 @@ style: |
     background: #f0f7fa;
     padding: 30px;
     border-radius: 10px;
-    border-top: 6px solid #088dc7;
+    border-top: 6px solid #3498DB;
     text-align: left;
     margin-top: 20px;
     width: 100%;
@@ -76,17 +76,10 @@ style: |
     padding: 8px 18px;
     border-radius: 6px;
     font-weight: 600;
-    background-color: #545353ff; /* Gris foncé unique */
+    background-color: #545353ff;
     color: #ffffff !important;
     font-size: 0.85em;
     border: 1px solid #222;
-  }
-  .maquette-grid {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    align-items: flex-start;
-    height: 350px;
   }
 
   .context-grid {
@@ -99,22 +92,21 @@ style: |
     background: #f4faff;
     border-radius: 10px;
     padding: 20px 25px;
-    border-left: 5px solid #088dc7;
+    border-left: 5px solid #3498DB;
   }
-  .context-card h4 { color: #088dc7; margin: 0 0 10px 0; }
+  .context-card h4 { color: #3498DB; margin: 0 0 10px 0; }
   .problem-card {
     background: #fff5f5;
     border-left-color: #e74c3c;
   }
   .problem-card h4 { color: #e74c3c; }
 
-  /* New Premium Cards for Empathie/Ideation */
   .persona-card {
     background: #ffffff;
     padding: 18px;
     border-radius: 14px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    border-top: 5px solid #088dc7;
+    border-top: 5px solid #3498DB;
     transition: transform 0.3s ease;
   }
   .persona-card strong { font-size: 1.1em; display: block; margin-bottom: 8px; }
@@ -130,8 +122,32 @@ style: |
     margin-bottom: 5px;
   }
 
+  .demo-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+  }
+  .demo-icon {
+    font-size: 5em;
+    margin-bottom: 20px;
+  }
+  .demo-url {
+    background: #3498DB;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 20px;
+    display: inline-block;
+  }
+
 ---
 
+<!-- PAGE DE GARDE -->
 
 <div class="logo-header">
   <img src="images/ofppt-logo.png" alt="Logo Left">
@@ -143,219 +159,202 @@ style: |
 
 **Réalisé par :** <span class="highlight">BENYEKHLEF Anouar</span>  
 **Encadré par :** <span class="highlight">M. ESSARRAJ Fouad</span>  
-**Filière :** Développement Mobile
+**Filière :** Développement Mobile  
+**Date de soutenance :** 12/06/2026
+
+
 
 ---
+
+<!-- SOMMAIRE -->
 
 ## Sommaire
 
 <div class="sommaire-grid">
-  <div class="sommaire-item"><div class="sommaire-num">1</div><div class="sommaire-text">Méthodologie de travail</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text">Branche Fonctionnelle</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text">Branche Technique</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">4</div><div class="sommaire-text">Conception</div></div>
-  <div class="sommaire-item"><div class="sommaire-num">5</div><div class="sommaire-text">Conclusion</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">01</div><div class="sommaire-text">Contexte du projet</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">02</div><div class="sommaire-text">Méthodologie de Travail</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">03</div><div class="sommaire-text">Branche Fonctionnelle</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">04</div><div class="sommaire-text">Branche Technique</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">05</div><div class="sommaire-text">Conception</div></div>
+  <div class="sommaire-item"><div class="sommaire-num">06</div><div class="sommaire-text">Démonstration</div></div>
 </div>
-
-<!-- ---
-
-## 1. Contexte du projet
-
-![w:700 h:470 Context](./images/contexte.png)
-![w:700 h:470 Context](./images/contexte.jpg) -->
-
 
 ---
 
-## 1. Méthodologie : Design Thinking
+<!-- 01 CONTEXTE DU PROJET -->
 
+## 01. Contexte du projet
 
+![h:430 Contexte](./images/contexte.jpg)
+
+---
+
+<!-- 02 METHODOLOGIE : DESIGN THINKING -->
+
+## 02. Méthodologie : Design Thinking
 
 ![h:430 Design Thinking](./images/design-thinking.png)
 
 ---
 
-## Méthodologie : Scrum (Agile)
+## 02. Méthodologie : Scrum (Agile)
 
 ![h:490 Scrum](./images/scrum-process.png)
 
 ---
-<!-- 
-## Méthodologie : Processus 2TUP
 
-![w:700 h:450 2TUP](./images/2tup.png)
+<!-- 03 BRANCHE FONCTIONNELLE : CADRAGE DU PROBLEME -->
 
---- -->
-<!-- 
-## 3. Branche Fonctionnelle : Design Thinking
-
-### 1. EMPATHIE :
-
---- -->
-
-<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
-<!-- ### 1. EMPATHIE : Formateur (Youssef) -->
-
-<!-- ![w:1300 h:600 Carte Empathie Youssef](./images/carte-empathie-formateur-youssef-nouvelle.png)
-
---- -->
-
-<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
-<!-- ### 1. EMPATHIE : Formatrice (Fatine) -->
-
-<!-- ![w:1300 h:600 Carte Empathie Fatine](./images/carte-empathie-formatrice-fatine-nouvelle.png)
-
---- -->
-
-<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
-<!-- ### 1. EMPATHIE : Apprenant (Soufiane) -->
-
-<!-- ![w:1300 h:600 Carte Empathie Soufiane](./images/carte-empathie-apprenant-soufiane-nouvelle.png)
-
---- -->
-
-<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
-<!-- ### 1. EMPATHIE : Apprenant (Mehdi) -->
-
-<!-- ![w:1300 h:600 Carte Empathie Mehdi](./images/carte-empathie-apprenant-mehdi-nouvelle.png)
-
---- -->
-
-<!-- ## 3. Branche Fonctionnelle : Design Thinking -->
-<!-- ### 1. EMPATHIE : Administrateur (Fouad) -->
-
-<!-- ![w:1300 h:600 Carte Empathie Fouad](./images/carte-empathie-admin-fouad-nouvelle.png)
-
---- -->
-
-## 2. Branche Fonctionnelle : Design Thinking
-### 2. DÉFINITION : Cadrage du problème
+## 03. Branche Fonctionnelle
+### Cadrage du problème
 
 <div class="dt-card" style="border-top-color: #e74c3c; background: linear-gradient(135deg, #fffafa 0%, #ffffff 100%); box-shadow: 0 10px 40px rgba(231, 76, 60, 0.08); padding: 40px; border-radius: 16px;">
   <h4 style="color: #e74c3c; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8em; margin-bottom: 15px;">Énoncé du problème</h4>
-  <p style="font-size: 1.1em; line-height: 1.6; color: #2c3e50; margin: 0;">
-    Les acteurs de Solicode <strong>ne disposent d'aucun outil d'évaluation unifié</strong>, les obligeant à jongler entre Google Forms, SoliLMS et Excel — entraînant une <strong>perte de temps, des erreurs de saisie et une absence de feedback pédagogique exploitable</strong> par objectif.
-  </p>
+  <ul style="font-size: 1.05em; color: #2c3e50; line-height: 1.8; margin: 0; padding-left: 20px;">
+    <li><strong>Aucun outil d'évaluation unifié</strong> à Solicode</li>
+    <li>Outils dispersés : Google Forms, SoliLMS, Excel</li>
+    <li><strong>Perte de temps</strong> et erreurs de saisie</li>
+    <li>Absence de <strong>feedback pédagogique</strong> par objectif</li>
+  </ul>
 </div>
 
 <br>
 
 <div style="margin-top: 35px; background: #2c3e50; padding: 20px; border-radius: 10px; text-align: center;">
-  <p style="margin: 0; font-style: italic; color: #ecf0f1; font-size: 1em;">
-    <strong style="color: #f1c40f;">How Might We :</strong> Comment pourrions-nous offrir un outil d'évaluation QCM intégré qui automatise la correction, structure les résultats par objectif et fournit un feedback immédiat ?
+  <p style="margin: 0; color: #ecf0f1; font-size: 1em;">
+    <strong style="color: #f1c40f;">HMW :</strong> Offrir un outil QCM intégré → correction auto + résultats par objectif + feedback immédiat
   </p>
 </div>
 
 ---
 
-## Branche Fonctionnelle : Design Thinking
+<!-- 03 BRANCHE FONCTIONNELLE : CAS D'UTILISATION GLOBAL -->
 
-### 3. IDÉATION : Cas d'utilisation (Plateforme Web & Application Mobile)
+## 03. Branche Fonctionnelle
 
-<!-- --- -->
-<!-- ## Branche Fonctionnelle : Design Thinking -->
-<!-- ### 3. IDÉATION : Cas d'utilisation (Plateforme Web & Application Mobile) -->
-
-<!-- ![w:1000 h:500 Ideation Global](./images/cas-utilisation-global.png) -->
-
-
----
 ## Branche Fonctionnelle : Cas d'utilisation (Web)
-<!-- ### 3. IDÉATION : Cas d'utilisation (Plateforme Web) -->
 
 ![w:1600 h:500 Ideation Global](./images/cas-utilisation-global-web.png)
 
 ---
 
-## Branche Fonctionnelle : Cas d'utilisation (Apk)
-<!-- ### 3. IDÉATION : Cas d'utilisation (Application Mobile) -->
 
-![w:1600 h:500 Ideation Global](./images/cas-utilisation-global-mobile.png)
+## Branche Fonctionnelle : Partie Publique
 
-<!-- ---
-
-## Branche Fonctionnelle : Cas d'utilisation — Sprint 1 MVP
-
-![w:1000 h:600 Use Case Sprint 1](./images/cas-utilisation-sprint-1-mvp.png) -->
-
-<!-- ---
-
-## Branche Fonctionnelle : Cas d'utilisation — Sprint 2 Avancé
-
-![w:1000 h:500 Use Case Sprint 2](./images/cas-utilisation-sprint-2-avancé.png) -->
+![h:480 Partie Publique](./images/uc-public.png)
 
 ---
 
-## Branche Fonctionnelle : Maquettage (Public Landing)
 
-![h:500 Public Landing](./images/public-landing(2).png)
+## Branche Fonctionnelle : Espace Formateur
 
-<!-- ---
-
-## Branche Fonctionnelle : Maquettage (Admin Dashboard)
-
-![h:450 Admin Dashboard](./images/admin-dashboard.png) -->
+![h:480 Espace Formateur](./images/uc-formateur.png)
 
 ---
 
-## Branche Fonctionnelle : Maquettage (Formateur Dashboard)
+## Branche Fonctionnelle : Espace Étudiant
 
-![h:450 Formateur Dashboard](./images/formateur-dashboard(2).png)
-
----
-
-## Branche Fonctionnelle : Maquettage (Apprenant Dashboard)
-
-![h:450 Apprenant Dashboard](./images/apprenant-dashboard(2).png)
+![h:480 Espace Étudiant](./images/uc-etudiant.png)
 
 ---
 
-## Branche Fonctionnelle : Maquettage (Mobile Dashboard)
+## Branche Fonctionnelle : Espace Administrateur
 
-![h:450 Mobile Dashboard](./images/mobile-dashboard(2).png)
+![h:480 Espace Administrateur](./images/uc-administrateur.png)
 
 ---
 
-## 3. Branche Technique : Tech Stack
-<div class="sommaire-grid">
-  <div class="dt-card" style="margin-top:0;">
-    <h4>Back-end & Architecture</h4>
-    <ul>
-      <li><strong>PHP 8.2+ / Laravel 12</strong> (Framework MVC)</li>
-      <li><strong>MySQL 8.0</strong> (Persistance des données)</li>
-      <li><strong>Native PHP</strong> (Portage APK Mobile)</li>
-      <li><strong>Spatie</strong> (Gestion des rôles & permissions)</li>
+## Branche Fonctionnelle : Cas d'utilisation (Mobile APK & API)
+
+![h:480 Mobile & API](./images/cas-utilisation-global-mobile.png)
+
+---
+
+<!-- 04 BRANCHE TECHNIQUE -->
+
+## 04. Branche Technique : Stack Technologique
+
+<div>
+  <div class="dt-card" style="margin-top:0; padding: 10px 20px; font-size: 0.7em; line-height: 1.2;">
+    <h4 style="margin: 0 0 5px 0;">Back-end</h4>
+    <ul style="margin: 0; padding-left: 20px;">
+      <li style="margin-bottom: 2px;"><strong>PHP 8.2+</strong></li>
+      <li style="margin-bottom: 2px;"><strong>Laravel 12</strong> (Framework MVC)</li>
+      <li style="margin-bottom: 2px;"><strong>MySQL 8.0</strong> (Base de données)</li>
+      <li style="margin-bottom: 2px;"><strong>PHP Native</strong> (Portage APK Mobile)</li>
+      <li style="margin-bottom: 2px;"><strong>N8N</strong> (Automatisation de workflows)</li>
     </ul>
   </div>
-  <div class="dt-card" style="margin-top:0; border-top-color: #27ae60;">
-    <h4>Front-end & Outils</h4>
-    <ul>
-      <li><strong>Tailwind CSS & Preline</strong> (Mobile-First)</li>
-      <li><strong>Alpine.js</strong> (Interactions dynamiques / Timer)</li>
-      <!-- <li><strong>Tiptap</strong> (Éditeur de questions riches)</li> -->
-      <li><strong>Vite</strong> (Build Tooling)</li>
+  <div class="dt-card" style="margin-top:5px; padding: 10px 20px; font-size: 0.7em; line-height: 1.2; border-top-color: #27ae60;">
+    <h4 style="margin: 0 0 5px 0;">Front-end & Outils</h4>
+    <ul style="margin: 0; padding-left: 20px;">
+      <li style="margin-bottom: 2px;"><strong>Tailwind CSS</strong> (Utility-First CSS)</li>
+      <li style="margin-bottom: 2px;"><strong>Preline UI</strong> (Composants UI)</li>
+      <li style="margin-bottom: 2px;"><strong>Alpine.js</strong> (Interactions dynamiques)</li>
+      <li style="margin-bottom: 2px;"><strong>Vite</strong> (Build Tooling)</li>
+      <li style="margin-bottom: 2px;"><strong>Lucide Icons</strong> (Icônes SVG)</li>
     </ul>
   </div>
 </div>
 
 ---
 
+## 04. Branche Technique : Architecture
 
-## 4. Conception : Diagramme de classes
+<div>
+  <div class="dt-card" style="margin-top:0; padding: 10px 20px; font-size: 0.75em; line-height: 1.2; border-top-color: #8e44ad;">
+    <h4 style="margin: 0 0 5px 0;">MVC (Model – View – Controller)</h4>
+    <ul style="margin: 0; padding-left: 20px;">
+      <li style="margin-bottom: 4px;"><strong>Model</strong> — Eloquent ORM, relations, accesseurs</li>
+      <li style="margin-bottom: 4px;"><strong>View</strong> — Blade + Alpine.js + Tailwind</li>
+      <li style="margin-bottom: 4px;"><strong>Controller</strong> — Orchestration des requêtes HTTP</li>
+    </ul>
+  </div>
+  <div class="dt-card" style="margin-top:10px; padding: 10px 20px; font-size: 0.75em; line-height: 1.2; border-top-color: #e67e22;">
+    <h4 style="margin: 0 0 5px 0;">N-Tiers (Couche Service)</h4>
+    <ul style="margin: 0; padding-left: 20px;">
+      <li style="margin-bottom: 4px;"><strong>Controller</strong> → Validation & routing</li>
+      <li style="margin-bottom: 4px;"><strong>Service</strong> → Logique métier (QCM, Scoring, Passation)</li>
+      <li style="margin-bottom: 4px;"><strong>Repository / Model</strong> → Accès aux données</li>
+    </ul>
+  </div>
+</div>
 
 ---
 
+<!-- 05 CONCEPTION : DIAGRAMME DE CLASSES -->
 
-![w:1800 h:650 Diagramme de classe](./images/diagramme-classes-lr(2).png)
-
----
-
-## 5. Conclusion
-
-<!-- ![h:450 Conclusion](./images/conclusion.png) -->
-
-<br>
+## 05. Conception : Diagramme de classes
 
 ---
 
-### Merci pour votre attention ! 
+![w:1800 h:650 Diagramme de classe](./images/diagramme-classes-lr.png)
+
+---
+
+<!-- 06 DEMONSTRATION -->
+
+## 06. Démonstration
+
+<div class="demo-slide">
+  <div class="demo-icon"></div>
+  <h3 style="color: #3498DB; font-size: 1.8em; margin-bottom: 10px;">Démonstration en direct</h3>
+  <p style="font-size: 1.1em; color: #555; max-width: 600px;">
+    Parcours complet de la plateforme SoliQuiz — Création de QCM, passation, correction automatique et tableau de bord analytique.
+  </p>
+</div>
+
+---
+
+<!-- CONCLUSION -->
+
+## Conclusion
+
+- **Plateforme unifiée** d'évaluation QCM (Web + Mobile)
+- **Correction automatique** et feedback par objectif
+- **Architecture robuste** (MVC, N-Tiers, Services)
+- **Méthodologie Agile** et Design Thinking
+
+---
+
+### Merci pour votre attention !

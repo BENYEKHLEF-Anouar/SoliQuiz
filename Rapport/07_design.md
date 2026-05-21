@@ -7,7 +7,7 @@ Le diagramme de classes modélise l'architecture relationnelle du système et ga
 - **Moteur d'Évaluation** : `QCM`, `Question`, `Option` (gestion du contenu des questionnaires).
 - **Soumissions et Résultats** : `Tentative`, `Reponse`, `ChoixReponse` (capture sécurisée des choix et calcul des scores finaux).
 
-![Diagramme de classes](images/diagramme-classes.png)
+![Diagramme de classes](images/diagramme-classes-tb.png)
 
 ## Maquettes (UI/UX)
 Les interfaces ont été conçues pour être "mobile-first", offrant une navigation fluide entre la sélection des quiz et le passage des tests.
