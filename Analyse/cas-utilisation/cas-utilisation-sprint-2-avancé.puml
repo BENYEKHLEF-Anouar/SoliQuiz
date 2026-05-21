@@ -1,0 +1,104 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+
+' ==============================
+' ACTORS
+' ==============================
+actor "Utilisateur" as U
+actor "Administrateur" as A
+actor "Formateur" as F
+actor "Étudiant" as E
+actor "Application Mobile" as M
+actor "SoliLMS" as LMS
+
+A --|> U
+F --|> U
+E --|> U
+
+' ==============================
+' SYSTEM
+' ==============================
+package "Système SoliQuiz - Avancé (Sprint 2)" {
+
+    package "Sécurité & Accès" {
+        usecase "S'authentifier\n(Web/Mobile)" as UC_LOGIN
+    }
+
+    package "Espace Administrateur" {
+        usecase "Voir tableau de bord global" as UC_DASH_A
+        usecase "Configuration API SoliLMS" as UC_CONF
+        usecase "Exporter les notes" as UC_EXPORT
+    }
+
+    package "Espace Formateur" {
+        usecase "Lier QCM à Session/Objectif" as UC_LINK
+        usecase "Suivre progression classe" as UC_PROGRESS_F
+    }
+
+    package "Espace Étudiant" {
+        usecase "Gérer Timer & Auto-save" as UC_TIMER
+        usecase "Calculer score par objectif" as UC_SCORE
+        usecase "Consulter historique" as UC_HISTORY
+        usecase "Accéder au feedback/correction" as UC_FEEDBACK
+
+        UC_TIMER ..> UC_SCORE : <<include>>
+        UC_HISTORY ..> UC_FEEDBACK : <<extend>>
+    }
+
+    package "Interface Mobile / API Integration" {
+        usecase "Consommer les données (API)" as UC_API
+        usecase "S'authentifier via API" as UC_API_LOGIN
+    }
+}
+
+' ==============================
+' ACTOR ASSOCIATIONS
+' ==============================
+
+U -- UC_LOGIN
+
+A -- UC_DASH_A
+A -- UC_CONF
+A -- UC_EXPORT
+
+F -- UC_LINK
+F -- UC_PROGRESS_F
+
+E -- UC_TIMER
+E -- UC_HISTORY
+
+M -- UC_API
+M -- UC_API_LOGIN
+
+LMS -- UC_CONF
+LMS -- UC_EXPORT
+
+
+' ==============================
+' MOBILE / API LOGIC
+' ==============================
+
+UC_API ..> UC_LOGIN : <<include>>
+UC_API ..> UC_HISTORY : <<include>>
+UC_API ..> UC_PROGRESS_F : <<include>>
+UC_API_LOGIN ..> UC_LOGIN : <<include>>
+
+
+' ==============================
+' CROSS MODULE RELATIONS
+' ==============================
+
+UC_DASH_A ..> UC_PROGRESS_F : <<include>>
+UC_EXPORT ..> UC_HISTORY : <<include>>
+UC_TIMER ..> UC_LINK : <<extend>>
+
+@enduml

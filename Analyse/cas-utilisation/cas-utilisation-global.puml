@@ -1,0 +1,84 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+' ACTORS
+actor "Utilisateur" as U
+actor "Administrateur" as A
+actor "Formateur" as F
+actor "Étudiant" as E
+actor "Application Mobile" as M
+
+U <|-- A
+U <|-- F
+U <|-- E
+
+package "Système global SoliQuiz" {
+
+    package "Accès & Sécurité (Commun)" {
+        usecase "S'authentifier (Web/Mobile)" as UC_LOGIN
+        usecase "Accéder à la Landing Page" as UC_PUBLIC
+        usecase "Gérer son profil" as UC_PROFILE
+        U -- UC_LOGIN
+        U -- UC_PUBLIC
+        U -- UC_PROFILE
+    }
+
+    package "Espace Administrateur (Web)" {
+        usecase "Voir le tableau de bord global" as UC_DASH
+        usecase "Gérer les utilisateurs & rôles" as UC_ROLES
+        usecase "Gérer la pédagogie" as UC_PEDA_A
+        usecase "Gérer les classes & cohortes" as UC_CLASSES
+        usecase "Superviser tous les QCMs" as UC_QCMS_A
+
+        A -- UC_DASH
+        A -- UC_ROLES
+        A -- UC_PEDA_A
+        A -- UC_CLASSES
+        A -- UC_QCMS_A
+    }
+
+    package "Espace Formateur (Web)" {
+        usecase "Gérer les QCM (CRUD)" as UC_CRUD
+        usecase "Gérer les Questions & Choix" as UC_QUEST
+        usecase "Gérer la pédagogie personnelle" as UC_PEDA_F
+        usecase "Consulter les résultats & exporter" as UC_RES
+
+        F -- UC_CRUD
+        F -- UC_PEDA_F
+        F -- UC_RES
+
+        UC_CRUD <.. UC_QUEST : <<include>>
+    }
+
+    package "Espace Étudiant (Web)" {
+        usecase "Passer un QCM (Timer + Auto-save)" as UC_PLAY
+        usecase "Consulter résultats & feedback" as UC_FEED
+        usecase "Consulter historique & progression" as UC_HIST
+        usecase "Voir classement de la cohorte" as UC_RANK
+
+        E -- UC_PLAY
+        E -- UC_HIST
+
+        UC_PLAY ..> UC_FEED : <<include>>
+        UC_HIST ..> UC_RANK : <<extend>>
+    }
+
+    package "Interface API / Mobile" {
+        usecase "Consommer les données (API)" as UC_API
+
+        M -- UC_API
+        UC_API ..> UC_RES  : <<include>>
+        UC_API ..> UC_HIST : <<include>>
+        UC_API ..> UC_LOGIN : <<include>>
+    }
+}
+
+@enduml

@@ -1,0 +1,131 @@
+classDiagram
+    direction TB
+
+    class Utilisateur {
+        +Integer id
+        +String nom
+        +String prenom
+        +String email
+        +String password
+        +String type_profil
+        +DateTime derniere_connexion
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Role {
+        +Integer id
+        +String name
+        +String guard_name
+    }
+
+    class Permission {
+        +Integer id
+        +String name
+    }
+
+    class Formateur {
+        +String matricule
+    }
+
+    class Etudiant {
+        +String code_etudiant
+    }
+
+    class Classe {
+        +Integer id
+        +String nom
+        +String promotion
+    }
+
+    class Competence {
+        +Integer id
+        +String code
+        +String libelle
+        +String description
+    }
+
+    class UniteApprentissage {
+        +Integer id
+        +String nom
+        +String code
+        +Date date_debut
+        +Date date_fin
+    }
+
+    class Session {
+        +Integer id
+        +String nom
+        +Date date_debut
+        +Date date_fin
+    }
+
+    class QCM {
+        +Integer id
+        +String titre
+        +Integer duree_minutes
+        +Decimal score_reussite
+        +String statut
+    }
+    %% QCM.statut : 'brouillon' | 'public' | 'ferme'
+
+    class Question {
+        +Integer id
+        +String texte
+        +String type
+        +Decimal points
+        +String explication_feedback
+    }
+    %% Question.type : 'unique' | 'multiple'
+
+    class Option {
+        +Integer id
+        +String texte
+        +Boolean est_correcte
+        +String feedback_specifique
+    }
+
+    class Tentative {
+        +Integer id
+        +Decimal score_obtenu
+        +DateTime date_debut
+        +DateTime date_fin
+        +String statut
+    }
+    %% Tentative.statut : 'en_cours' | 'reussi' | 'echoue' | 'abandonne'
+
+    class Reponse {
+        +Integer id
+        +DateTime repondu_a
+    }
+
+    %% ───────── RBAC ─────────
+    Utilisateur "1" -- "0..*" Role : possède
+    Role "*" -- "*" Permission : accorde
+
+    %% ───────── Héritage ─────────
+    Utilisateur <|-- Formateur
+    Utilisateur <|-- Etudiant
+
+    %% ───────── Structure des Classes ─────────
+    Classe "1" -- "0..*" Etudiant : contient
+    Formateur "1" -- "0..*" Classe : gère
+
+    %% ───────── Structure Pédagogique ─────────
+    Session "1" -- "0..*" UniteApprentissage : inclut
+    UniteApprentissage "1" -- "0..*" Competence : vise
+    UniteApprentissage "1" -- "0..*" QCM : est_evaluée_par
+    QCM "*" -- "*" Competence : evalue
+
+    %% ───────── Structure du QCM ─────────
+    QCM "1" -- "1..*" Question : contient
+    Question "1" -- "2..*" Option : propose
+    Formateur "1" -- "0..*" QCM : crée
+
+    %% ───────── Participation & Réponses ─────────
+    Etudiant "1" -- "0..*" Tentative : effectue
+    QCM "1" -- "0..*" Tentative : fait_objet_de
+    
+    Tentative "1" -- "1..*" Reponse : contient
+    Reponse "0..*" -- "1" Question : concerne
+    Reponse "0..*" -- "1..*" Option : choisit

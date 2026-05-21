@@ -1,0 +1,64 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+' ==============================
+' ACTORS
+' ==============================
+actor "Visiteur"       as Visitor
+actor "Utilisateur"    as U
+actor "Étudiant"       as E
+actor "Formateur"      as F
+actor "Administrateur" as A
+
+' Hierarchy
+U <|-- E
+U <|-- F
+U <|-- A
+
+' ==============================
+' SYSTEM
+' ==============================
+rectangle "Sprint 3 — IA, Sécurité & Notifications" {
+
+    package "IA & Automatisation" {
+        usecase "Interagir avec le Chatbot IA\n(Landing Page Concierge)" as UC_CHATBOT
+        usecase "Générer un QCM automatiquement\nvia IA (AI QCM Bot)" as UC_AI_QCM
+        usecase "Valider / Modifier le QCM généré" as UC_AI_REVIEW
+    }
+
+    package "Sécurité & Accès" {
+        usecase "Demander la réinitialisation\ndu mot de passe" as UC_FORGOT_PW
+        usecase "Recevoir une alerte Admin\n(tentative mot de passe oublié)" as UC_ADMIN_ALERT
+        usecase "Réinitialiser le mot de passe\nvia lien sécurisé" as UC_RESET_PW
+    }
+
+}
+
+' ==============================
+' ASSOCIATIONS
+' ==============================
+
+' Chatbot IA
+Visitor -- UC_CHATBOT
+U       -- UC_CHATBOT
+
+' AI QCM Generator
+F -- UC_AI_QCM
+UC_AI_QCM ..> UC_AI_REVIEW : <<include>>
+
+' Mot de passe oublié
+U -- UC_FORGOT_PW
+UC_FORGOT_PW ..> UC_RESET_PW  : <<include>>
+UC_FORGOT_PW ..> UC_ADMIN_ALERT : <<extend>>
+A -- UC_ADMIN_ALERT
+
+@enduml
