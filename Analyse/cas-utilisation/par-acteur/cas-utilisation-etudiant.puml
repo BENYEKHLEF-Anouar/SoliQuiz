@@ -1,0 +1,25 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+actor "Étudiant" as E
+
+package "Espace Étudiant" {
+    usecase "Passer QCM" as UC_PLAY
+    usecase "Calculer automatiquement les scores" as UC_CALC
+    usecase "Accéder au feedback détaillé/correction" as UC_FEEDBACK
+    usecase "Consulter historique & progression" as UC_HIST
+
+    E -- UC_PLAY
+    E -- UC_HIST
+
+    UC_PLAY ..> UC_CALC : <<include>>
+    UC_HIST ..> UC_FEEDBACK : <<extend>>
+}
+@enduml

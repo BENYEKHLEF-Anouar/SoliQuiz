@@ -1,0 +1,26 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+actor "Formateur" as F
+
+package "Espace Formateur" {
+    usecase "Gérer les QCMs (CRUD)" as UC_CRUD
+    usecase "Gérer les questions et choix" as UC_QUEST
+    usecase "Lier QCM à une session/objectif" as UC_LINK
+    usecase "Consulter les résultats et exporter" as UC_RES
+
+    F -- UC_CRUD
+    F -- UC_LINK
+    F -- UC_RES
+
+    UC_LINK ..> UC_CRUD : <<extend>>
+    UC_CRUD ..> UC_QUEST : <<include>>
+}
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+actor "Administrateur" as A
+
+package "Espace Administrateur" {
+    usecase "Voir le tableau de bord global" as UC_DASH
+    usecase "Gérer les utilisateurs & rôles" as UC_ROLES
+    usecase "Gérer la pédagogie" as UC_PEDA
+    usecase "Gérer les classes & cohortes" as UC_CLASS
+    usecase "Superviser tous les QCMs" as UC_QCMS
+
+    A -- UC_DASH
+    A -- UC_ROLES
+    A -- UC_PEDA
+    A -- UC_CLASS
+    A -- UC_QCMS
+}
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+actor "Application Mobile" as M
+
+package "Interface Mobile / API" {
+    usecase "Consommer/Accéder à l'API" as UC_API
+    usecase "S'authentifier via API" as UC_LOGIN_MOBILE
+    usecase "Utiliser l'API fournie par le serveur web" as UC_API_MOBILE
+
+    M -- UC_API
+    M -- UC_LOGIN_MOBILE
+    M -- UC_API_MOBILE
+}
+@enduml

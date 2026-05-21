@@ -17,9 +17,9 @@ actor "Administrateur" as A
 actor "Formateur" as F
 actor "Étudiant" as E
 actor "Application Mobile" as M
-actor "SoliLMS" as LMS
+' actor "SoliLMS" as LMS
 
-' Inheritance: Admin, Trainer, and Student are all Users
+' Inheritance
 U <|-- A
 U <|-- F
 U <|-- E
@@ -30,17 +30,27 @@ U <|-- E
 package "SoliQuiz Web" {
 
     package "Accès & Sécurité" {
-        usecase "Accéder à la Landing Page" as UC_PUBLIC
+        usecase "Accéder à la Landing Page" as UC_LANDING
+        usecase "Interagir avec le Chatbot" as UC_CHAT
         usecase "S'authentifier" as UC_LOGIN
-        ' Link the base user to these
-        U -- UC_PUBLIC
+
+        U -- UC_LANDING
+        U -- UC_CHAT
         U -- UC_LOGIN
     }
 
     package "Espace Administrateur" {
         usecase "Voir le tableau de bord global" as UC10
         usecase "Gérer les utilisateurs (Rôles)" as UC9
-        ' usecase "Configuration API SoliLMS" as UC11
+        usecase "Gérer la pédagogie" as UC_PEDA
+        usecase "Gérer les classes & cohortes" as UC_CLASS
+        usecase "Superviser tous les QCMs" as UC_QCMS
+
+        A -- UC10
+        A -- UC9
+        A -- UC_PEDA
+        A -- UC_CLASS
+        A -- UC_QCMS
     }
 
     package "Espace Formateur" {
@@ -49,8 +59,12 @@ package "SoliQuiz Web" {
         usecase "Lier QCM à une Session/Objectif" as UC3
         usecase "Consulter les résultats" as UC5
 
-        UC1 <.. UC2 : <<include>>
+        F -- UC1
+        F -- UC3
+        F -- UC5
+
         UC3 ..> UC1 : <<extend>>
+        UC1 ..> UC2 : <<include>>
     }
 
     package "Espace Étudiant" {
@@ -59,34 +73,17 @@ package "SoliQuiz Web" {
         usecase "Consulter l'historique des évaluations" as UC7
         usecase "Accéder au feedback détaillé/correction" as UC8
 
+        E -- UC4
+        E -- UC7
+
         UC4 ..> UC6 : <<include>>
-        UC7 ..> UC8 : <<extend>>
+        UC7 <.. UC8 : <<extend>>
     }
 
     package "Interface Mobile / API" {
         usecase "Consommer/Accéder à l'API" as UC_API
+        
+        M -- UC_API
     }
 }
-
-' ==============================
-' PRIMARY ASSOCIATIONS
-' ==============================
-A -- UC9
-A -- UC10
-' A -- UC11
-UC11 -- LMS
-
-F -- UC1
-F -- UC3
-F -- UC5
-
-E -- UC4
-E -- UC7
-
-M -- UC_API
-
-' API Logic (Reduced crossing lines by targeting packages)
-UC_API ..> UC5 : <<include>>
-UC_API ..> UC7 : <<include>>
-
 @enduml
