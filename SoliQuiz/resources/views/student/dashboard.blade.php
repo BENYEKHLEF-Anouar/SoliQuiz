@@ -320,6 +320,102 @@
                 </div>
             </div> -->
 
+            <!-- Classement Cohorte -->
+            @if(isset($cohortPodiums) && $cohortPodiums->count() > 0)
+            @php
+                $podiumsJson = $cohortPodiums->map(fn($item) => [
+                    'titre'  => $item['qcm_titre'],
+                    'podium' => collect($item['podium'])->sortBy('position')->values()->toArray(),
+                ])->values()->toJson();
+            @endphp
+            <div
+                class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
+                x-data="{
+                    items: {{ $podiumsJson }},
+                    current: 0,
+                    get item() { return this.items[this.current]; },
+                    prev() { this.current = this.current > 0 ? this.current - 1 : this.items.length - 1; },
+                    next() { this.current = this.current < this.items.length - 1 ? this.current + 1 : 0; }
+                }"
+            >
+                {{-- Header --}}
+                <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <div class="size-7 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
+                            <svg class="size-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M8 21h8m-4-4v4M5 3h14l-1.5 9a5 5 0 01-4.97 4H11.47A5 5 0 016.5 12L5 3z"/>
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <span class="text-sm font-black text-slate-900 block">Classement</span>
+                            <p class="text-xs text-slate-400 font-medium truncate max-w-[140px]" x-text="item.titre"></p>
+                        </div>
+                    </div>
+                    {{-- Switcher arrows (only if multiple QCMs) --}}
+                    @if($cohortPodiums->count() > 1)
+                    <div class="flex items-center gap-1">
+                        <button @click="prev()" class="size-7 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all">
+                            <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <span class="text-[10px] font-black text-slate-400 tabular-nums w-8 text-center" x-text="(current + 1) + '/' + items.length"></span>
+                        <button @click="next()" class="size-7 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all">
+                            <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                    @else
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Cohorte</span>
+                    @endif
+                </div>
+
+                {{-- Table (reactive) --}}
+                <div class="divide-y divide-slate-100">
+                    <template x-for="(place, index) in item.podium" :key="index">
+                        <div class="flex items-center gap-3 px-5 py-3 transition-colors"
+                             :class="place.position === 1 ? 'bg-amber-50/60' : ''">
+                            {{-- Rank Badge --}}
+                            <div class="size-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-black leading-none"
+                                 :class="{
+                                     'bg-amber-500 text-white'       : place.position === 1,
+                                     'bg-slate-200 text-slate-600'   : place.position === 2,
+                                     'bg-primary-100 text-primary-700': place.position === 3
+                                 }">
+                                <span x-text="place.position"></span>
+                            </div>
+
+                            {{-- Name --}}
+                            <div class="flex-1 min-w-0">
+                                <span class="text-sm font-bold text-slate-800 truncate block" x-text="place.etudiant_nom"></span>
+                                <span x-show="place.position === 1"
+                                      class="text-[9px] font-black uppercase tracking-widest text-amber-500">Leader</span>
+                            </div>
+
+                            {{-- Score + mini bar --}}
+                            <div class="text-right shrink-0">
+                                <span class="text-sm font-bold"
+                                      :class="place.position === 1 ? 'text-amber-600 font-black' : 'text-slate-500'">
+                                    <span x-text="place.score"></span><span class="text-xs font-normal text-slate-400">/20</span>
+                                </span>
+                                <div class="mt-1 w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full transition-all duration-500"
+                                         :class="place.position === 1 ? 'bg-amber-400' : 'bg-slate-300'"
+                                         :style="'width:' + Math.round((place.score / 20) * 100) + '%'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    {{-- Empty state if no podium --}}
+                    <template x-if="item.podium.length === 0">
+                        <div class="px-5 py-6 text-center text-xs text-slate-400 font-medium">
+                            Aucun résultat disponible pour ce QCM.
+                        </div>
+                    </template>
+                </div>
+            </div>
+            @endif
+
+
             <!-- Study Tips -->
             <div class="bg-slate-50 rounded-xl border border-slate-200 p-5">
                 <div class="flex items-center gap-2 mb-3">

@@ -11,6 +11,7 @@ use App\Models\Classe;
 use App\Services\QcmService;
 use App\Services\ClasseService;
 use App\Services\ResultatService;
+use App\Services\SeanceService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,7 @@ class FormateurController extends Controller
     private ClasseService $classeService;
     private \App\Services\DashboardService $dashboardService;
     private ResultatService $resultatService;
+    private SeanceService $seanceService;
 
     private function requireClasseForFormateur(?int $classeId): void
     {
@@ -69,12 +71,14 @@ class FormateurController extends Controller
         QcmService $qcmService,
         ClasseService $classeService,
         \App\Services\DashboardService $dashboardService,
-        ResultatService $resultatService
+        ResultatService $resultatService,
+        SeanceService $seanceService
     ) {
         $this->qcmService = $qcmService;
         $this->classeService = $classeService;
         $this->dashboardService = $dashboardService;
         $this->resultatService = $resultatService;
+        $this->seanceService = $seanceService;
     }
 
     /**
@@ -94,8 +98,7 @@ class FormateurController extends Controller
      */
     public function pedagogie()
     {
-        $formateur = Auth::user();
-        $seances = $formateur->seances()->with('unitesApprentissage.competences')->orderBy('date_debut', 'desc')->get();
+        $seances = $this->seanceService->getSeancesWithRelations(Auth::user()->isAdmin() ? null : Auth::id());
         return view('formateur.pedagogie', compact('seances'));
     }
 
@@ -107,7 +110,12 @@ class FormateurController extends Controller
             'date_fin' => 'nullable|date',
         ]);
 
-        Auth::user()->seances()->create($request->only('nom', 'date_debut', 'date_fin'));
+        $this->seanceService->create([
+            'nom' => $request->nom,
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
+            'user_id' => Auth::id()
+        ]);
         return back()->with('success', 'Session créée.');
     }
 
@@ -116,7 +124,7 @@ class FormateurController extends Controller
         $seance = Auth::user()->isAdmin()
             ? Seance::findOrFail($id)
             : Auth::user()->seances()->findOrFail($id);
-        $seance->delete();
+        $this->seanceService->delete($seance);
         return back()->with('success', 'Session supprimée.');
     }
 
@@ -134,13 +142,13 @@ class FormateurController extends Controller
         $seance = Auth::user()->isAdmin()
             ? Seance::findOrFail($seanceId)
             : Auth::user()->seances()->findOrFail($seanceId);
-        $seance->unitesApprentissage()->create([
+
+        $this->seanceService->addUniteApprentissage($seance, [
             'nom' => $request->nom,
             'code' => $request->code,
+            'user_id' => $seance->user_id,
             'date_debut' => $request->date_debut,
             'date_fin' => $request->date_fin,
-            'user_id' => $seance->user_id,
-            'seance_id' => $seance->id
         ]);
 
         $redirect = back()->with('success', 'Unité d\'apprentissage ajoutée.');
@@ -155,7 +163,7 @@ class FormateurController extends Controller
         $ua = Auth::user()->isAdmin()
             ? UniteApprentissage::findOrFail($id)
             : UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
-        $ua->delete();
+        $this->seanceService->deleteUniteApprentissage($ua);
         return back()->with('success', 'UA supprimée.');
     }
 
@@ -172,9 +180,10 @@ class FormateurController extends Controller
         $ua = Auth::user()->isAdmin()
             ? UniteApprentissage::findOrFail($uaId)
             : UniteApprentissage::where('id', $uaId)->where('user_id', Auth::id())->firstOrFail();
-        $ua->competences()->create([
-            'libelle' => $request->libelle,
+
+        $this->seanceService->addCompetence($ua, [
             'code' => $request->code,
+            'libelle' => $request->libelle,
             'description' => $request->description
         ]);
 
@@ -191,7 +200,7 @@ class FormateurController extends Controller
         if (!Auth::user()->isAdmin() && $competence->uniteApprentissage->user_id !== Auth::id())
             abort(403);
 
-        $competence->delete();
+        $this->seanceService->deleteCompetence($competence);
         return back()->with('success', 'Compétence supprimée.');
     }
 
@@ -219,7 +228,7 @@ class FormateurController extends Controller
         $seance = Auth::user()->isAdmin()
             ? Seance::findOrFail($id)
             : Auth::user()->seances()->findOrFail($id);
-        $seance->update($request->only('nom', 'date_debut', 'date_fin'));
+        $this->seanceService->update($seance, $request->only('nom', 'date_debut', 'date_fin'));
         return back()->with('success', 'Session mise à jour.');
     }
 
@@ -249,7 +258,7 @@ class FormateurController extends Controller
         $ua = Auth::user()->isAdmin()
             ? UniteApprentissage::findOrFail($id)
             : UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
-        $ua->update($request->only('nom', 'code', 'date_debut', 'date_fin'));
+        $this->seanceService->updateUniteApprentissage($ua, $request->only('nom', 'code', 'date_debut', 'date_fin'));
         return back()->with('success', 'Unité d\'apprentissage mise à jour.');
     }
 
@@ -279,9 +288,9 @@ class FormateurController extends Controller
         if (!Auth::user()->isAdmin() && $competence->uniteApprentissage->user_id !== Auth::id())
             abort(403);
 
-        $competence->update([
-            'libelle' => $request->libelle,
+        $this->seanceService->updateCompetence($competence, [
             'code' => $request->code,
+            'libelle' => $request->libelle,
             'description' => $request->description
         ]);
         return back()->with('success', 'Compétence mise à jour.');
@@ -293,12 +302,11 @@ class FormateurController extends Controller
     public function bibliotheque(Request $request)
     {
         $search = $request->input('search');
-        $qcms = QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
-            ->withCount(['questions', 'tentatives'])
-            ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
-            ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
-            ->latest()
-            ->paginate(15);
+        $qcms = $this->qcmService->paginate(
+            15,
+            $search,
+            Auth::user()->isAdmin() ? null : Auth::id()
+        );
 
         $unites = UniteApprentissage::where('user_id', Auth::id())->get();
 
@@ -311,14 +319,13 @@ class FormateurController extends Controller
         $status = $request->input('status');
         $uaId = $request->input('ua_id');
 
-        $qcms = QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
-            ->withCount(['questions', 'tentatives'])
-            ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
-            ->when($status, fn($q) => $q->where('statut', $status))
-            ->when($uaId, fn($q) => $q->where('unite_apprentissage_id', $uaId))
-            ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
-            ->latest()
-            ->paginate(50); // increased for dynamic view
+        $qcms = $this->qcmService->paginate(
+            50,
+            $search,
+            Auth::user()->isAdmin() ? null : Auth::id(),
+            $status,
+            $uaId ? (int)$uaId : null
+        );
         return response()->json($qcms);
     }
 

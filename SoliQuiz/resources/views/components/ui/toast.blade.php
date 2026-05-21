@@ -31,7 +31,7 @@
             class="pointer-events-auto min-w-[340px] max-w-md p-5 rounded-[2rem] shadow-premium bg-white/80 backdrop-blur-xl border border-white/40 flex items-center gap-5 transition-all group"
         >
             <!-- Icon Mapping -->
-            <div class="flex-shrink-0 size-14 rounded-2xl flex items-center justify-center shadow-lg relative overflow-hidden"
+            <div class="flex-shrink-0 size-14 rounded-2xl flex items-center justify-center relative overflow-hidden"
                  :class="{ 'bg-emerald-50 text-emerald-500': msg.type === 'success',
                     'bg-rose-50 text-rose-500': msg.type === 'error',
                     'bg-sky-50 text-sky-500': msg.type === 'info',

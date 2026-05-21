@@ -42,6 +42,7 @@
                 </button>
 
                 <div x-show="open" 
+                     x-cloak
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 translate-y-2"
                      x-transition:enter-end="opacity-100 translate-y-0"
@@ -221,12 +222,13 @@
                     <!-- Individual QCM Export Dropdown -->
                     <div x-data="{ open: false }" class="relative ml-2">
                         <button @click="open = !open" @click.away="open = false"
-                           class="size-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-emerald-50 hover:text-emerald-600 transition-all"
+                           class="size-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
                            title="Exporter ce QCM">
                             <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                         </button>
 
                         <div x-show="open" 
+                             x-cloak
                              x-transition:enter="transition ease-out duration-100"
                              x-transition:enter-start="opacity-0 scale-95"
                              x-transition:enter-end="opacity-100 scale-100"
@@ -310,31 +312,32 @@
                                         <template x-if="t.score !== null">
                                             <div x-data="{ open: false }" class="inline-block relative">
                                                 <button @click="open = !open" @click.away="open = false"
-                                                    class="inline-flex size-8 rounded-lg bg-slate-50 text-slate-400 items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-sm"
+                                                    class="inline-flex size-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
                                                     title="Exporter le bilan">
-                                                    <svg class="size-4 transition-transform duration-300" :class="open ? 'rotate-180 text-primary-500' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                                    <svg class="size-4 transition-transform duration-300" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                                                 </button>
                                                 
                                                 <!-- Beautiful Horizontal Popout Menu -->
                                                 <div x-show="open" 
+                                                        x-cloak
                                                         x-transition:enter="transition ease-out duration-200"
                                                         x-transition:enter-start="opacity-0 -translate-x-4 scale-95"
                                                         x-transition:enter-end="opacity-100 translate-x-0 scale-100"
-                                                        class="absolute right-full top-1/2 -translate-y-1/2 mr-3 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 p-1.5 flex items-center gap-1"
+                                                        class="absolute right-full top-1/2 -translate-y-1/2 mr-3 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 p-1.5 flex items-center gap-1.5"
                                                         style="display: none;">
                                                     
                                                     <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=pdf'" 
-                                                        class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-rose-600 bg-rose-50/50 hover:bg-rose-500 hover:text-white rounded-md transition-all">
+                                                        class="flex-1 py-1.5 text-center text-[9px] font-black uppercase tracking-wider text-rose-600 bg-rose-50 hover:bg-rose-500 hover:text-white rounded-lg transition-all border border-rose-100 hover:border-rose-500">
                                                         PDF
                                                     </button>
 
                                                     <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=excel'" 
-                                                        class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-teal-600 bg-teal-50/50 hover:bg-teal-500 hover:text-white rounded-md transition-all">
+                                                        class="flex-1 py-1.5 text-center text-[9px] font-black uppercase tracking-wider text-teal-600 bg-teal-50 hover:bg-teal-500 hover:text-white rounded-lg transition-all border border-teal-100 hover:border-teal-500">
                                                         XLS
                                                     </button>
 
                                                     <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=csv'" 
-                                                        class="flex-1 py-1.5 text-center text-[8px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50/50 hover:bg-emerald-500 hover:text-white rounded-md transition-all">
+                                                        class="flex-1 py-1.5 text-center text-[9px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 hover:bg-emerald-500 hover:text-white rounded-lg transition-all border border-emerald-100 hover:border-emerald-500">
                                                         CSV
                                                     </button>
                                                 </div>

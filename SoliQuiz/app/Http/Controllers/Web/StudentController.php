@@ -47,8 +47,9 @@ class StudentController extends Controller
         $lastScores = $this->etudiantService->getLastScores($student, 7);
         $activeSessions = $this->etudiantService->getActiveSessions($student);
         $progressByUa = $this->etudiantService->getProgressByUa($student);
+        $cohortPodiums = $this->etudiantService->getCohortPodiums($student);
 
-        return view('student.dashboard', compact('metrics', 'historique', 'upcoming', 'lastScores', 'activeSessions', 'formateur', 'progressByUa'));
+        return view('student.dashboard', compact('metrics', 'historique', 'upcoming', 'lastScores', 'activeSessions', 'formateur', 'progressByUa', 'cohortPodiums'));
     }
 
     /**
@@ -59,81 +60,14 @@ class StudentController extends Controller
         $student = Auth::user()->load('classe.formateur');
         $formateur = $student->classe ? $student->classe->formateur : null;
         $search = $request->input('search');
-        
-        // On récupère les QCM publics accessibles OU ceux que l'étudiant a déjà tenté
-        $publicQcmIds = QCM::where('statut', 'public')
-            ->where(function($query) use ($student) {
-                $query->whereNull('classe_id')
-                      ->orWhere('classe_id', $student->classe_id);
-            })
-            ->pluck('id');
 
-        $tentativeQcmIds = Tentative::where('etudiant_id', $student->id)->pluck('qcm_id');
-        $allIds = $publicQcmIds->merge($tentativeQcmIds)->unique();
+        $data = $this->etudiantService->getBibliothequeData($student, $search);
 
-        $qcms = QCM::whereIn('id', $allIds)
-            ->with(['formateur', 'uniteApprentissage'])
-            ->withCount('questions')
-            ->withCount(['tentatives as mes_tentatives_count' => fn($q) => $q->where('etudiant_id', $student->id)])
-            ->orderByDesc('created_at')
-            ->get();
-
-        // Filtrer par recherche
-        if ($search) {
-            $qcms = $qcms->filter(function($q) use ($search) {
-                return str_contains(strtolower($q->titre), strtolower($search));
-            });
-        }
-            
-        // Tentatives de l'étudiant complètes pour l'état courant
-        $tentatives = Tentative::where('etudiant_id', $student->id)->get();
-        
-        // Associer l'état à chaque QCM
-        $qcmList = $qcms->map(function ($qcm) use ($tentatives) {
-            $tentative = $tentatives->where('qcm_id', $qcm->id)->first();
-            $qcm->etat = $tentative ? $tentative->statut : 'a_faire';
-            $qcm->score = $tentative ? $tentative->score_obtenu : null;
-            $qcm->tentative_id = $tentative ? $tentative->id : null;
-            $qcm->date_fin = $tentative ? ($tentative->date_fin ? $tentative->date_fin->format('d M Y') : null) : null;
-            $qcm->unite_nom = $qcm->uniteApprentissage ? $qcm->uniteApprentissage->nom : 'Évaluation transverse';
-            $qcm->url_passation = route('student.passation', $qcm->id);
-            $qcm->url_resultats = $qcm->tentative_id ? route('student.resultats', $qcm->id) : '#';
-            // Timer: compute expiry timestamp for countdown
-            if ($tentative && $tentative->date_debut && $qcm->duree_minutes > 0) {
-                $qcm->timer_expires_at = $tentative->date_debut->addMinutes($qcm->duree_minutes)->toIso8601String();
-            } else {
-                $qcm->timer_expires_at = null;
-            }
-            return $qcm;
-        });
-
-        // Filtrer
-        $termines = $qcmList->whereIn('etat', ['reussi', 'echoue'])->sortByDesc('date_fin');
-        $enCours = $qcmList->where('etat', 'en_cours');
-        $aFaire = $qcmList->where('etat', 'a_faire');
-
-        // Extracting average from EtudiantService logic instead to keep it DRY
-        $metrics = $this->etudiantService->getDashboard($student);
-        $moyenne = $metrics['score_moyen'] ?? 0;
-        // Extraire les unités d'apprentissage des QCMs accessibles ou du formateur
-        $unites = \App\Models\UniteApprentissage::where(function ($query) use ($student) {
-            $query->whereHas('qcms', function ($q) use ($student) {
-                $q->where('statut', 'public')
-                  ->where(function($sq) use ($student) {
-                      $sq->whereNull('classe_id');
-                      if ($student->classe_id) {
-                          $sq->orWhere('classe_id', $student->classe_id);
-                      }
-                  });
-            });
-
-            if ($student->classe_id) {
-                $classe = \App\Models\Classe::find($student->classe_id);
-                if ($classe && $classe->formateur_id) {
-                    $query->orWhere('user_id', $classe->formateur_id);
-                }
-            }
-        })->get();
+        $termines = $data['termines'];
+        $enCours = $data['enCours'];
+        $aFaire = $data['aFaire'];
+        $moyenne = $data['moyenne'];
+        $unites = $data['unites'];
 
         return view('student.bibliotheque', compact('termines', 'enCours', 'aFaire', 'moyenne', 'search', 'unites', 'formateur'));
     }
@@ -145,63 +79,17 @@ class StudentController extends Controller
     {
         $student = Auth::user();
         $search = $request->input('search');
-        $statut = $request->input('statut'); // 'reussi', 'echoue', 'a_faire', 'en_cours'
+        $statut = $request->input('statut');
         $uaId = $request->input('ua_id');
-        
-        $publicQcmIds = QCM::where('statut', 'public')
-            ->where(function($query) use ($student) {
-                $query->whereNull('classe_id')
-                      ->orWhere('classe_id', $student->classe_id);
-            })
-            ->pluck('id');
 
-        $tentativeQcmIds = Tentative::where('etudiant_id', $student->id)->pluck('qcm_id');
-        $allIds = $publicQcmIds->merge($tentativeQcmIds)->unique();
+        $results = $this->etudiantService->searchBibliotheque(
+            $student,
+            $search,
+            $statut,
+            $uaId ? (int)$uaId : null
+        );
 
-        $qcms = QCM::whereIn('id', $allIds)
-            ->with(['formateur', 'uniteApprentissage'])
-            ->withCount('questions')
-            ->withCount(['tentatives as mes_tentatives_count' => fn($q) => $q->where('etudiant_id', $student->id)])
-            ->orderByDesc('created_at')
-            ->get();
-
-        if ($search) {
-            $qcms = $qcms->filter(fn($q) => str_contains(strtolower($q->titre), strtolower($search)));
-        }
-
-        if ($uaId) {
-            $qcms = $qcms->filter(fn($q) => $q->unite_apprentissage_id == $uaId);
-        }
-            
-        $tentatives = Tentative::where('etudiant_id', $student->id)->get();
-        
-        $qcmList = $qcms->map(function ($qcm) use ($tentatives) {
-            $tentative = $tentatives->where('qcm_id', $qcm->id)->first();
-            $qcm->etat = $tentative ? $tentative->statut : 'a_faire';
-            $qcm->score = $tentative ? $tentative->score_obtenu : null;
-            $qcm->tentative_id = $tentative ? $tentative->id : null;
-            $qcm->date_fin = $tentative ? ($tentative->date_fin ? $tentative->date_fin->format('d M Y') : null) : null;
-            $qcm->unite_nom = $qcm->uniteApprentissage ? $qcm->uniteApprentissage->nom : 'Évaluation transverse';
-            $qcm->url_passation = route('student.passation', $qcm->id);
-            $qcm->url_resultats = $qcm->tentative_id ? route('student.resultats', $qcm->id) : '#';
-            if ($tentative && $tentative->date_debut && $qcm->duree_minutes > 0) {
-                $qcm->timer_expires_at = $tentative->date_debut->addMinutes($qcm->duree_minutes)->toIso8601String();
-            } else {
-                $qcm->timer_expires_at = null;
-            }
-            return $qcm;
-        });
-
-        // Filtrer par état si demandé
-        if ($statut) {
-            $qcmList = $qcmList->filter(fn($q) => $q->etat === $statut);
-        }
-
-        return response()->json([
-            'enCours' => $qcmList->where('etat', 'en_cours')->values(),
-            'aFaire' => $qcmList->where('etat', 'a_faire')->values(),
-            'termines' => $qcmList->whereIn('etat', ['reussi', 'echoue'])->sortByDesc('date_fin')->values(),
-        ]);
+        return response()->json($results);
     }
 
     /**

@@ -109,4 +109,36 @@ class UserService
     {
         return User::where('type_profil', 'etudiant')->orderBy('nom')->get();
     }
+
+    /**
+     * Recherche d'utilisateurs paginée avec chargement des relations de classe.
+     */
+    public function searchUsersWithRelations(?string $search = null, ?string $role = null): LengthAwarePaginator
+    {
+        return User::with(['classe', 'classeGeree'])
+            ->when($search, function ($q) use ($search) {
+                $q->where(function($sq) use ($search) {
+                    $sq->where('nom', 'like', "%{$search}%")
+                      ->orWhere('prenom', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->when($role, function ($q) use ($role) {
+                $q->where('type_profil', $role);
+            })
+            ->orderByRaw("CASE WHEN type_profil = 'admin' THEN 1 WHEN type_profil = 'formateur' THEN 2 ELSE 3 END")
+            ->orderBy('nom')
+            ->paginate(8);
+    }
+
+    /**
+     * Récupère la liste de tous les étudiants sans classe
+     */
+    public function getAvailableStudents(): Collection
+    {
+        return User::where('type_profil', 'etudiant')
+            ->whereNull('classe_id')
+            ->orderBy('nom')
+            ->get();
+    }
 }

@@ -86,20 +86,7 @@ class AdminController extends Controller
         $search = $request->input('search');
         $role = $request->input('role');
 
-        $users = User::with(['classe', 'classeGeree'])
-            ->when($search, function ($q) use ($search) {
-                $q->where(function($sq) use ($search) {
-                    $sq->where('nom', 'like', "%{$search}%")
-                      ->orWhere('prenom', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->when($role, function ($q) use ($role) {
-                $q->where('type_profil', $role);
-            })
-            ->orderByRaw("CASE WHEN type_profil = 'admin' THEN 1 WHEN type_profil = 'formateur' THEN 2 ELSE 3 END")
-            ->orderBy('nom')
-            ->paginate(8)
+        $users = $this->userService->searchUsersWithRelations($search, $role)
             ->appends($request->query());
 
         $totalEtudiants = User::where('type_profil', 'etudiant')->count();
@@ -114,20 +101,7 @@ class AdminController extends Controller
         $search = $request->input('search');
         $role = $request->input('role');
 
-        $users = User::with(['classe', 'classeGeree'])
-            ->when($search, function ($q) use ($search) {
-                $q->where(function($sq) use ($search) {
-                    $sq->where('nom', 'like', "%{$search}%")
-                      ->orWhere('prenom', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->when($role, function ($q) use ($role) {
-                $q->where('type_profil', $role);
-            })
-            ->orderByRaw("CASE WHEN type_profil = 'admin' THEN 1 WHEN type_profil = 'formateur' THEN 2 ELSE 3 END")
-            ->orderBy('nom')
-            ->paginate(8)
+        $users = $this->userService->searchUsersWithRelations($search, $role)
             ->appends($request->query());
         
         return response()->json($users);
@@ -223,14 +197,7 @@ class AdminController extends Controller
     {
         $creatorFilter = $request->input('creator');
 
-        $query = Seance::with(['unitesApprentissage.competences', 'user'])
-            ->orderBy('date_debut', 'desc');
-
-        if ($creatorFilter) {
-            $query->where('user_id', $creatorFilter);
-        }
-
-        $seances = $query->get();
+        $seances = $this->seanceService->getSeancesWithRelations($creatorFilter ? (int)$creatorFilter : null);
 
         $creatorIds = Seance::whereNotNull('user_id')->distinct()->pluck('user_id');
         $creators = User::whereIn('id', $creatorIds)->orderBy('nom')->get();
@@ -338,7 +305,7 @@ class AdminController extends Controller
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
-        $seance->update($data);
+        $this->seanceService->update($seance, $data);
         return redirect()->route('admin.pedagogie')->with('success', 'Séance mise à jour.');
     }
 
@@ -364,7 +331,7 @@ class AdminController extends Controller
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
-        $ua->update($data);
+        $this->seanceService->updateUniteApprentissage($ua, $data);
         return redirect()->route('admin.pedagogie')->with('success', 'Unité d\'apprentissage mise à jour.');
     }
 
@@ -388,7 +355,7 @@ class AdminController extends Controller
             'libelle' => 'required|string|max:255',
             'description' => 'nullable|string'
         ]);
-        $competence->update($data);
+        $this->seanceService->updateCompetence($competence, $data);
         return redirect()->route('admin.pedagogie')->with('success', 'Compétence mise à jour.');
     }
 

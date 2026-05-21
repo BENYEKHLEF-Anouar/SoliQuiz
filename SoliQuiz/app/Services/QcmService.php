@@ -14,7 +14,7 @@ class QcmService
     /**
      * Liste paginée des QCM avec filtrage optionnel (recherche, formateur)
      */
-    public function paginate(int $perPage = 15, ?string $search = null, ?int $formateurId = null, ?string $statut = null): LengthAwarePaginator
+    public function paginate(int $perPage = 15, ?string $search = null, ?int $formateurId = null, ?string $statut = null, ?int $uaId = null): LengthAwarePaginator
     {
         return QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
             ->withCount(['questions', 'tentatives'])
@@ -27,6 +27,7 @@ class QcmService
             }))
             ->when($formateurId, fn($q) => $q->where('formateur_id', $formateurId))
             ->when($statut, fn($q) => $q->where('statut', $statut))
+            ->when($uaId, fn($q) => $q->where('unite_apprentissage_id', $uaId))
             ->latest()
             ->paginate($perPage);
     }
@@ -217,5 +218,97 @@ class QcmService
     {
         $qcm->update(['statut' => 'termine']);
         return $qcm->fresh();
+    }
+
+    public function getApiDetails(int $id): array
+    {
+        $qcm = QCM::with('uniteApprentissage')->findOrFail($id);
+        return [
+            'id' => $qcm->id,
+            'title' => $qcm->titre,
+            'durationMinutes' => $qcm->duree_minutes,
+            'totalQuestions' => $qcm->questions->count(),
+            'successScore' => $qcm->score_reussite,
+            'isPublished' => $qcm->statut === 'public',
+        ];
+    }
+
+    public function getApiQuestions(int $id): array
+    {
+        $qcm = QCM::findOrFail($id);
+        $questions = $qcm->questions()->with('options')->get();
+        return $questions->map(function ($question) {
+            return [
+                'id' => $question->id,
+                'text' => $question->texte,
+                'type' => $question->type,
+                'points' => $question->points,
+                'options' => $question->options->map(function ($option) {
+                    return [
+                        'id' => $option->id,
+                        'text' => $option->texte,
+                    ];
+                })->toArray(),
+            ];
+        })->toArray();
+    }
+
+    public function getApiResult(\App\Models\User $student, int $id): array
+    {
+        $tentative = \App\Models\Tentative::where('qcm_id', $id)
+            ->where('etudiant_id', $student->id)
+            ->whereNotNull('score_obtenu')
+            ->latest('date_fin')
+            ->first();
+
+        if (!$tentative) {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException('No result found');
+        }
+
+        $qcm = QCM::findOrFail($id);
+        $totalQuestions = $qcm->questions->count();
+        $questions = $qcm->questions()->with(['options', 'reponses' => function ($query) use ($tentative) {
+            $query->where('tentative_id', $tentative->id);
+        }])->get();
+
+        $questionDetails = $questions->map(function ($question) use ($tentative) {
+            $userReponse = $question->reponses->first();
+            $selectedOptions = $userReponse ? $userReponse->choixReponses->pluck('option_id') : [];
+            $borderCorrect = $question->options->where('est_correcte', true)->pluck('id');
+            $isCorrect = $selectedOptions->diff($borderCorrect)->isEmpty() && $borderCorrect->diff($selectedOptions)->isEmpty();
+            return [
+                'id' => $question->id,
+                'text' => $question->texte,
+                'points' => $question->points,
+                'userAnswer' => $selectedOptions->toArray(),
+                'correctAnswer' => $borderCorrect->toArray(),
+                'isCorrect' => $isCorrect,
+                'explanation' => $question->explication_feedback,
+                'options' => $question->options->map(function ($option) {
+                    return [
+                        'id' => $option->id,
+                        'text' => $option->texte,
+                        'isCorrect' => (bool)$option->est_correcte,
+                        'specificFeedback' => $option->feedback_specifique,
+                    ];
+                })->toArray(),
+            ];
+        });
+
+        $score = $tentative->score_obtenu;
+        $maxScore = $qcm->questions()->sum('points') ?: ($qcm->questions()->count() * 2) ?: 20;
+        $percentage = $maxScore > 0 ? round(($score / $maxScore) * 100) : 0;
+        $objectiveMet = $score >= $qcm->score_reussite;
+
+        return [
+            'qcmId' => $qcm->id,
+            'title' => $qcm->titre,
+            'score' => $score,
+            'totalQuestions' => $totalQuestions,
+            'maxScore' => $maxScore,
+            'percentage' => $percentage,
+            'objectiveMet' => $objectiveMet,
+            'questions' => $questionDetails->toArray(),
+        ];
     }
 }
