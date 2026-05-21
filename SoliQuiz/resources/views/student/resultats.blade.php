@@ -6,7 +6,7 @@
         
         <!-- Navigation -->
         <div class="mb-8">
-            <a href="javascript:history.back()" 
+            <a href="{{ route('student.bibliotheque') }}" 
                class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
                 <div class="size-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:border-primary-200 group-hover:bg-primary-50 transition-all shadow-sm">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
@@ -51,7 +51,7 @@
                             <span class="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Terminé le</span>
                             <span class="text-sm font-bold text-slate-800">{{ $tentative->date_fin->format('d M Y à H:i') }}</span>
                         </div>
-                        <div class="bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100 flex flex-col">
+                        <!-- <div class="bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100 flex flex-col">
                             <span class="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Temps Passé</span>
                             <span class="text-sm font-bold text-slate-800">
                                 @php
@@ -61,7 +61,7 @@
                                 @endphp
                                 {{ $min > 0 ? $min . ' min ' : '' }}{{ $sec }}s
                             </span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                                     <svg class="size-3 mt-0.5 shrink-0 {{ $option->est_correcte ? 'text-emerald-500' : 'text-rose-500' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                         <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <p class="text-[10px] font-bold text-slate-500 italic leading-snug">
+                                    <p class="text-[10px] font-bold text-slate-500 leading-snug">
                                         {{ $option->feedback_specifique }}
                                     </p>
                                 </div>

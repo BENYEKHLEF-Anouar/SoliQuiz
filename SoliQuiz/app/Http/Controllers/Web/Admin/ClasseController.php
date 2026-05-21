@@ -11,10 +11,12 @@ use Illuminate\Http\Request;
 class ClasseController extends Controller
 {
     protected $classeService;
+    protected $userService;
 
-    public function __construct(ClasseService $classeService)
+    public function __construct(ClasseService $classeService, \App\Services\UserService $userService)
     {
         $this->classeService = $classeService;
+        $this->userService = $userService;
     }
 
     public function index(Request $request)
@@ -22,31 +24,20 @@ class ClasseController extends Controller
         $search = $request->input('search');
         $classes = $this->classeService->paginate(9, $search);
         
-        // Pour les formulaires de création/édition
-        $formateurs = User::where('type_profil', 'formateur')->orderBy('nom')->get();
-        $availableStudents = User::where('type_profil', 'etudiant')
-            ->whereNull('classe_id')
-            ->orderBy('nom')
-            ->get();
+        $formateurs = $this->userService->getFormateurs();
+        $availableStudents = $this->userService->getAvailableStudents();
 
         return view('admin.classes', compact('classes', 'search', 'formateurs', 'availableStudents'));
     }
 
     public function show($id)
     {
-        $classe = Classe::with(['formateur', 'etudiants.tentatives'])->findOrFail($id);
+        $details = $this->classeService->getDetailsWithStats($id);
         
-        $totalEtudiants = $classe->etudiants->count();
-        $activeStudents = $classe->etudiants->filter(fn($e) => $e->tentatives->count() > 0)->count();
-        $tauxEngagement = $totalEtudiants > 0 ? round(($activeStudents / $totalEtudiants) * 100, 1) : 0;
-
-        $allScores = $classe->etudiants->flatMap->tentatives->whereNotNull('score_obtenu')->pluck('score_obtenu');
-        $moyenneGlobale = $allScores->count() > 0 ? round($allScores->avg(), 1) : null;
-        
-        $etudiantsSansClasse = User::where('type_profil', 'etudiant')
-            ->whereNull('classe_id')
-            ->orderBy('nom')
-            ->get();
+        $classe = $details['classe'];
+        $tauxEngagement = $details['tauxEngagement'];
+        $moyenneGlobale = $details['moyenneGlobale'];
+        $etudiantsSansClasse = $details['etudiantsSansClasse'];
 
         return view('admin.classes-show', compact('classe', 'etudiantsSansClasse', 'tauxEngagement', 'moyenneGlobale'));
     }
@@ -117,6 +108,48 @@ class ClasseController extends Controller
     {
         $this->classeService->removeStudent($userId);
         return back()->with('success', 'L\'étudiant a été retiré de la classe.');
+    }
+
+    /**
+     * Ajoute plusieurs étudiants à une classe
+     */
+    public function bulkAddStudents(Request $request, Classe $classe)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'exists:users,id',
+        ]);
+
+        $this->classeService->bulkAddStudents($classe, $request->user_ids);
+
+        return back()->with('success', count($request->user_ids) . ' étudiants ont été ajoutés à la classe.');
+    }
+
+    /**
+     * Importation en masse d'étudiants (création / affectation)
+     */
+    public function importStudents(Request $request, Classe $classe)
+    {
+        $request->validate([
+            'import_data' => 'required|string',
+        ]);
+
+        $result = $this->classeService->importStudents($classe, $request->import_data);
+
+        $createdCount = $result['createdCount'];
+        $addedCount = $result['addedCount'];
+        $errors = $result['errors'];
+
+        $message = "Importation terminée.";
+        if ($createdCount > 0 || $addedCount > 0) {
+            $message .= " {$createdCount} nouveaux étudiants créés et {$addedCount} étudiants existants affectés.";
+        }
+
+        if (count($errors) > 0) {
+            return back()->with('success', $message)->withErrors($errors);
+        }
+
+        return back()->with('success', $message);
     }
 
     /**

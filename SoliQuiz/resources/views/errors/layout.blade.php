@@ -66,7 +66,7 @@
             @yield('code')
         </h1>
         
-        <h2 class="text-2xl lg:text-3xl font-heading font-black text-slate-900 mb-6 tracking-tight leading-tight uppercase italic">
+        <h2 class="text-2xl lg:text-3xl font-heading font-black text-slate-900 mb-6 tracking-tight leading-tight uppercase">
             @yield('message')
         </h2>
         

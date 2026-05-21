@@ -3,28 +3,7 @@
 @section('content')
 <div x-data="history" x-init="init()" class="h-full flex flex-col relative overflow-hidden bg-slate-50">
     <!-- Header -->
-    <header class="bg-white/80 backdrop-blur-md px-5 pt-safe-top pb-4 border-b border-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.02)] shrink-0 sticky top-0 z-40">
-        <div class="h-[44px] hidden ios:block"></div>
-        <div class="flex justify-between items-center mt-2">
-            <div class="flex items-center gap-3">
-                <a class="flex items-center gap-2 group outline-none" href="{{ route('student.dashboard') }}">
-                    <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 active:scale-95 transition-transform">
-                        <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <path d="m9 15 2 2 4-4" />
-                        </svg>
-                    </div>
-                </a>
-                <h1 class="text-xl font-heading font-extrabold text-slate-900 tracking-tight">Historique</h1>
-            </div>
-            <div class="size-9 rounded-full bg-slate-100 flex items-center justify-center">
-                <svg class="size-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-            </div>
-        </div>
-    </header>
+    @include('components.header.student-header')
 
     <main class="flex-1 overflow-y-auto w-full px-5 py-8 pb-32 hide-scrollbar relative">
         <!-- Global Loading State -->
@@ -40,39 +19,8 @@
              x-transition:enter="transition ease-out duration-700 delay-300"
              x-transition:enter-start="opacity-0 translate-y-4"
              x-transition:enter-end="opacity-100 translate-y-0">
-            <div class="space-y-8">
-                <div class="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <div class="flex flex-col mb-6">
-                        <h2 class="text-lg font-heading font-extrabold text-slate-900 tracking-tight">VOS RÉSULTATS</h2>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Parcours individuel</p>
-                    </div>
-                    
-                    <div class="grid gap-4">
-                        <template x-for="item in history" :key="item.id">
-                            <div class="p-5 flex items-center bg-white border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] rounded-[2rem] cursor-pointer active:scale-[0.98] transition-all hover:border-slate-200 group" 
-                                 @click="window.location.href = '/student/qcm/' + item.id + '/result'">
-                                <div class="size-12 rounded-2xl bg-slate-50 flex items-center justify-center text-primary-500 shrink-0 group-hover:bg-primary-50 transition-colors">
-                                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                                <div class="ms-5 flex-1">
-                                    <h3 class="font-extrabold text-slate-900 text-base leading-tight" x-text="item.title"></h3>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight mt-1" x-text="item.date"></p>
-                                </div>
-                                <div class="text-right">
-                                    <span class="px-3 py-1.5 rounded-xl text-xs font-black tracking-tight border shadow-sm transition-all"
-                                        :class="item.score >= 10 ? 'bg-primary-50 text-primary-600 border-primary-100' : 'bg-semantic-error/10 text-semantic-error border-semantic-error/10'">
-                                        <span x-text="item.score"></span> <span class="opacity-40 text-[9px]">/</span> 20
-                                    </span>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Empty state -->
+            
+            <!-- Empty state (overall history is empty) -->
             <div x-show="history.length === 0" class="text-center py-24 animate-in fade-in duration-700">
                 <div class="size-20 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 text-slate-200 shadow-inner">
                     <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -81,6 +29,93 @@
                 </div>
                 <p class="text-base font-extrabold text-slate-900 tracking-tight">Aucune activité</p>
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">Commencez un QCM pour voir vos stats</p>
+            </div>
+
+            <div x-show="history.length > 0" class="space-y-6">
+                <!-- Title -->
+                <div>
+                    <h2 class="text-3xl font-heading font-extrabold text-slate-900 tracking-tight">HISTORIQUE</h2>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Parcours individuel</p>
+                </div>
+
+                <!-- Progression Chart Card -->
+                <div class="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative overflow-hidden group">
+                    <!-- Target line overlay (10/20 mark) -->
+                    <div class="absolute inset-x-6 top-1/2 border-t border-dashed border-slate-100 flex justify-between items-center z-0 pointer-events-none">
+                        <span class="text-[7px] font-black text-slate-300 uppercase tracking-widest bg-white pr-2 mt-[-6px]">Moyenne (10/20)</span>
+                    </div>
+
+                    <div class="relative z-10 flex justify-between items-center mb-4">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] block">Évolution des notes</span>
+                        <span class="text-[9px] font-black text-primary-500 uppercase tracking-wider" x-text="'Moyenne: ' + (history.length > 0 ? (history.reduce((acc, h) => acc + Number(h.score), 0) / history.length).toFixed(1) : 0) + '/20'"></span>
+                    </div>
+
+                    <!-- Bars -->
+                    <div class="h-28 flex items-end gap-3 px-1 relative z-10">
+                        <template x-for="(score, index) in lastScores" :key="index">
+                            <div class="flex-1 rounded-t-xl transition-all duration-500 relative group/bar flex flex-col justify-end h-full"
+                                 :class="score >= 10 ? 'bg-gradient-to-t from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600' : 'bg-gradient-to-t from-rose-400 to-rose-500 hover:from-rose-500 hover:to-rose-600'"
+                                 :style="'height: ' + ((score / maxScore) * 100) + '%'">
+                                
+                                <!-- Interactive Tooltip -->
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 text-white text-[9px] font-black px-2 py-1 rounded-lg opacity-0 group-hover/bar:opacity-100 transition-opacity duration-200 whitespace-nowrap z-30 shadow-lg flex flex-col items-center">
+                                    <span x-text="score + '/20'"></span>
+                                    <span class="text-[6px] text-slate-400 font-bold uppercase tracking-wider">Note</span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Filter Pills -->
+                <div class="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200/40">
+                    <button @click="filterStatus = 'all'" 
+                            :class="filterStatus === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'"
+                            class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all outline-none">
+                        <span class="size-1.5 rounded-full bg-slate-400"></span>
+                        Tous
+                    </button>
+                    <button @click="filterStatus = 'success'" 
+                            :class="filterStatus === 'success' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'"
+                            class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all outline-none">
+                        <span class="size-1.5 rounded-full" :class="filterStatus === 'success' ? 'bg-white' : 'bg-emerald-500'"></span>
+                        Réussis
+                    </button>
+                    <button @click="filterStatus = 'failure'" 
+                            :class="filterStatus === 'failure' ? 'bg-rose-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'"
+                            class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all outline-none">
+                        <span class="size-1.5 rounded-full" :class="filterStatus === 'failure' ? 'bg-white' : 'bg-rose-500'"></span>
+                        Échoués
+                    </button>
+                </div>
+
+                <!-- History list -->
+                <div class="grid gap-4">
+                    <template x-for="item in filteredHistory" :key="item.id">
+                        <div class="p-5 flex items-center bg-white border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] rounded-[2rem] cursor-pointer active:scale-[0.98] transition-all hover:border-slate-200 group" 
+                             @click="window.location.href = '/student/qcm/' + item.qcm_id + '/result'">
+                            <div class="size-12 rounded-2xl bg-slate-50 flex items-center justify-center text-primary-500 shrink-0 group-hover:bg-primary-50 transition-colors">
+                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="ms-5 flex-1">
+                                <h3 class="font-extrabold text-slate-900 text-base leading-tight" x-text="item.title"></h3>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight mt-1" x-text="item.date"></p>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-3 py-1.5 rounded-xl text-xs font-black tracking-tight border shadow-sm transition-all"
+                                    :class="item.score >= 10 ? 'bg-primary-50 text-primary-600 border-primary-100' : 'bg-semantic-error/10 text-semantic-error border-semantic-error/10'">
+                                    <span x-text="item.score"></span> <span class="opacity-40 text-[9px]">/</span> 20
+                                </span>
+                            </div>
+                        </div>
+                    </template>
+                    
+                    <div x-show="filteredHistory.length === 0" class="text-center py-12 animate-in fade-in duration-500">
+                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Aucun résultat trouvé</p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -98,13 +133,30 @@
         Alpine.data('history', () => ({
             history: [],
             loading: false,
+            filterStatus: 'all',
+            get lastScores() {
+                return this.history.slice(0, 7).map(item => Number(item.score)).reverse();
+            },
+            get maxScore() {
+                const scores = this.lastScores;
+                return scores.length > 0 ? Math.max(...scores) : 20;
+            },
+            get filteredHistory() {
+                if (this.filterStatus === 'success') {
+                    return this.history.filter(item => item.score >= 10);
+                }
+                if (this.filterStatus === 'failure') {
+                    return this.history.filter(item => item.score < 10);
+                }
+                return this.history;
+            },
             async init() {
                 await this.fetchHistory();
             },
             async fetchHistory() {
                 this.loading = true;
                 try {
-                    const response = await fetch(`${Alpine.store('config').apiBaseUrl}/student/history`);
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/history`);
                     this.history = await response.json();
                 } catch (e) {
                     console.error('Failed to load history', e);

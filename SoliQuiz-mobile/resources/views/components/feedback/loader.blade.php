@@ -13,7 +13,7 @@
     </div>
     
     @if($message)
-        <p class="mt-8 text-[11px] font-black uppercase tracking-[0.3em] text-slate-400 italic">
+        <p class="mt-8 text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">
             {{ $message }}
         </p>
     @endif

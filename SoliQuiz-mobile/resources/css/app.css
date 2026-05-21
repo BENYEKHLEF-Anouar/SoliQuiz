@@ -92,3 +92,7 @@ button, input, select, textarea, .btn, .nav-link, a, span, p {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+[x-cloak] {
+  display: none !important;
+}

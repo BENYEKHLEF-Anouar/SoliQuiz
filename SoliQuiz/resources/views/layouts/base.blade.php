@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth min-h-screen">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth min-h-screen alpine-loading">
 
 <head>
     <meta charset="utf-8">
@@ -21,7 +21,18 @@
 
 
     @stack('styles')
-    <style>[x-cloak] { display: none !important; }</style>
+    <style>
+        [x-cloak] { display: none !important; }
+        .alpine-loading [x-show] { display: none !important; }
+    </style>
+    <script>
+        document.addEventListener('alpine:initialized', () => {
+            document.documentElement.classList.remove('alpine-loading');
+        });
+        setTimeout(() => {
+            document.documentElement.classList.remove('alpine-loading');
+        }, 1500);
+    </script>
 </head>
 
 <body class="@yield('body-class', 'font-sans antialiased text-slate-800 bg-slate-50 min-h-screen')">
@@ -31,7 +42,14 @@
     <x-ui.toast />
     <x-ui.confirm-modal />
 
+    <script>
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                window.location.reload();
+            }
+        });
+    </script>
+
     @stack('scripts')
 </body>
-
 </html>

@@ -20,9 +20,16 @@
 
         <div class="relative" x-data="{ open: false }" x-init="$store.config.profile || fetchProfile()">
             <button @click="open = !open" class="size-[38px] rounded-full ring-2 ring-primary-500/20 overflow-hidden active:scale-95 transition-transform bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-primary-500/30">
-                <span x-text="$store.config.getInitials()">FM</span>
+                <template x-if="$store.config.profile">
+                    <span x-text="$store.config.getInitials()"></span>
+                </template>
+                <template x-if="!$store.config.profile">
+                    <svg class="size-4 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </template>
             </button>
             <div x-show="open"
+                 x-cloak
+                 style="display: none;"
                  @click.away="open = false"
                  x-transition:enter="transition ease-out duration-200"
                  x-transition:enter-start="opacity-0 scale-95"

@@ -1,15 +1,14 @@
 classDiagram
     direction TB
 
-    class User {
+    class Utilisateur {
         +Integer id
-        +String name
+        +String nom
         +String prenom
         +String email
         +String password
         +String type_profil
-        +Boolean is_active
-        +DateTime last_login_at
+        +DateTime derniere_connexion
         +DateTime created_at
         +DateTime updated_at
     }
@@ -23,65 +22,64 @@ classDiagram
     class Permission {
         +Integer id
         +String name
-        +String guard_name
+    }
+
+    class Formateur {
+        +String matricule
+    }
+
+    class Etudiant {
+        +String code_etudiant
     }
 
     class Classe {
         +Integer id
-        +Integer formateur_id
         +String nom
         +String promotion
     }
 
-    class Seance {
-        +Integer id
-        +Integer user_id
-        +String nom
-        +DateTime date
-    }
-
-    class UniteApprentissage {
-        +Integer id
-        +Integer seance_id
-        +Integer user_id
-        +String nom
-        +String code
-    }
-
     class Competence {
         +Integer id
-        +Integer unite_apprentissage_id
         +String code
         +String libelle
         +String description
     }
 
+    class UniteApprentissage {
+        +Integer id
+        +String nom
+        +String code
+        +Date date_debut
+        +Date date_fin
+    }
+
+    class Session {
+        +Integer id
+        +String nom
+        +Date date_debut
+        +Date date_fin
+    }
+
     class QCM {
         +Integer id
-        +Integer formateur_id
-        +Integer classe_id
-        +Integer unite_apprentissage_id
         +String titre
-        +String description
         +Integer duree_minutes
         +Decimal score_reussite
         +String statut
-        +Boolean est_publie
     }
+    %% QCM.statut : 'brouillon' | 'public' | 'ferme'
 
     class Question {
         +Integer id
-        +Integer qcm_id
         +String texte
         +String type
-        +Integer points
+        +Decimal points
         +String explication_feedback
     }
     %% Question.type : 'unique' | 'multiple'
 
     class Option {
         +Integer id
-        +Integer question_id
         +String texte
         +Boolean est_correcte
         +String feedback_specifique
@@ -89,56 +87,45 @@ classDiagram
 
     class Tentative {
         +Integer id
-        +Integer etudiant_id
-        +Integer qcm_id
         +Decimal score_obtenu
         +DateTime date_debut
         +DateTime date_fin
         +String statut
     }
-    %% Tentative.statut : 'en_cours' | 'soumis' | 'expire'
+    %% Tentative.statut : 'en_cours' | 'reussi' | 'echoue' | 'abandonne'
 
     class Reponse {
         +Integer id
-        +Integer tentative_id
-        +Integer question_id
-    }
-
-    class ChoixReponse {
-        +Integer id
-        +Integer reponse_id
-        +Integer option_id
+        +DateTime repondu_a
     }
 
     %% ───────── RBAC ─────────
-    User "1" -- "0..*" Role : possède
+    Utilisateur "1" -- "0..*" Role : possède
     Role "*" -- "*" Permission : accorde
 
-    %% ───────── Héritage / Profils (Logique) ─────────
-    %% Les profils 'admin', 'formateur', 'etudiant' sont gérés via le champ type_profil et les rôles Spatie.
+    %% ───────── Héritage ─────────
+    Utilisateur <|-- Formateur
+    Utilisateur <|-- Etudiant
 
     %% ───────── Structure des Classes ─────────
-    Classe "1" -- "0..*" User : contient_etudiants
-    User "1" -- "0..*" Classe : gère_en_tant_que_formateur
+    Classe "1" -- "0..*" Etudiant : contient
+    Formateur "1" -- "0..*" Classe : gère
 
     %% ───────── Structure Pédagogique ─────────
-    User "1" -- "0..*" Seance : crée
-    Seance "1" -- "0..*" UniteApprentissage : inclut
+    Session "1" -- "0..*" UniteApprentissage : inclut
     UniteApprentissage "1" -- "0..*" Competence : vise
-    UniteApprentissage "1" -- "0..*" QCM : contient
-    Competence "*" -- "*" QCM : est_évaluée_par
+    UniteApprentissage "1" -- "0..*" QCM : est_evaluée_par
+    QCM "*" -- "*" Competence : evalue
 
     %% ───────── Structure du QCM ─────────
     QCM "1" -- "1..*" Question : contient
     Question "1" -- "2..*" Option : propose
-    User "1" -- "0..*" QCM : crée
-    Classe "1" -- "0..*" QCM : assigné_à
+    Formateur "1" -- "0..*" QCM : crée
 
     %% ───────── Participation & Réponses ─────────
-    User "1" -- "0..*" Tentative : effectue
+    Etudiant "1" -- "0..*" Tentative : effectue
     QCM "1" -- "0..*" Tentative : fait_objet_de
     
-    Tentative "1" -- "0..*" Reponse : contient
-    Reponse "1" -- "1" Question : concerne
-    Reponse "1" -- "1..*" ChoixReponse : contient
-    ChoixReponse "0..*" -- "1" Option : choisit
+    Tentative "1" -- "1..*" Reponse : contient
+    Reponse "0..*" -- "1" Question : concerne
+    Reponse "0..*" -- "1..*" Option : choisit

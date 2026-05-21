@@ -61,13 +61,54 @@
                 </p>
             </div>
             <button @click="$dispatch('open-modal', 'add-user-modal')"
-                    class="px-8 py-4 bg-slate-900 text-white text-[11px] font-black uppercase tracking-widest italic rounded-xl flex items-center gap-2 shrink-0 hover:bg-primary-600 active:scale-95 transition-all">
+                    class="px-8 py-4 bg-slate-900 text-white text-[11px] font-black uppercase tracking-widest rounded-xl flex items-center gap-2 shrink-0 hover:bg-primary-600 active:scale-95 transition-all">
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
                 Nouvel Agent
             </button>
         </div>
     </div>
 
+    <!-- KPIs Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Students KPI -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex items-center justify-between">
+            <div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Apprenants</span>
+                <h3 class="text-3xl font-black text-slate-900 mt-2">{{ $totalEtudiants }}</h3>
+            </div>
+            <div class="size-12 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Formateurs KPI -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex items-center justify-between">
+            <div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Formateurs</span>
+                <h3 class="text-3xl font-black text-slate-900 mt-2">{{ $totalFormateurs }}</h3>
+            </div>
+            <div class="size-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Admins KPI -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex items-center justify-between">
+            <div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Administrateurs</span>
+                <h3 class="text-3xl font-black text-slate-900 mt-2">{{ $totalAdmins }}</h3>
+            </div>
+            <div class="size-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+            </div>
+        </div>
+    </div>
 
     <!-- Filters & Search -->
     <div class="flex flex-col md:flex-row gap-4 mb-8">
@@ -206,7 +247,7 @@
                                     </div>
                                 </template>
                                 <template x-if="user.type_profil === 'formateur' && (!user.classe_geree || user.classe_geree.length === 0)">
-                                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Sans Assignation</span>
+                                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Sans Assignation</span>
                                 </template>
 
                                 <!-- Logique Affichage Etudiant -->
@@ -217,12 +258,12 @@
                                     </div>
                                 </template>
                                 <template x-if="user.type_profil === 'etudiant' && !user.classe">
-                                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Indépendant</span>
+                                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Indépendant</span>
                                 </template>
 
                                 <!-- Logique Affichage Admin -->
                                 <template x-if="user.type_profil === 'admin'">
-                                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Superviseur Global</span>
+                                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Superviseur Global</span>
                                 </template>
                             </td>
                             <td class="ps-4 pe-6 py-3 text-right">
@@ -278,7 +319,7 @@
                 <div class="size-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
                     <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 </div>
-                <p class="text-slate-400 font-black text-xs uppercase tracking-widest italic">Aucun utilisateur trouvé</p>
+                <p class="text-slate-400 font-black text-xs uppercase tracking-widest">Aucun utilisateur trouvé</p>
             </div>
         </template>
     </div>

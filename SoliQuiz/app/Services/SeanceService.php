@@ -18,7 +18,7 @@ class SeanceService
     {
         return Seance::withCount('unitesApprentissage')
             ->when($search, fn($q) => $q->where('nom', 'like', "%{$search}%"))
-            ->latest('date')
+            ->latest('date_debut')
             ->paginate($perPage);
     }
 
@@ -110,5 +110,44 @@ class SeanceService
     public function deleteCompetence(Competence $competence): void
     {
         $competence->delete();
+    }
+
+    /**
+     * Récupère les séances d'apprentissage avec leurs relations (UA, compétences, auteur).
+     */
+    public function getSeancesWithRelations(?int $creatorFilter = null): Collection
+    {
+        return Seance::with(['unitesApprentissage.competences', 'user'])
+            ->when($creatorFilter, fn($q) => $q->where('user_id', $creatorFilter))
+            ->orderBy('date_debut', 'desc')
+            ->get();
+    }
+
+    /**
+     * Met à jour une unité d'apprentissage existante.
+     */
+    public function updateUniteApprentissage(UniteApprentissage $ua, array $data): UniteApprentissage
+    {
+        $ua->update([
+            'nom' => $data['nom'],
+            'code' => $data['code'],
+            'user_id' => $data['user_id'] ?? $ua->user_id,
+            'date_debut' => $data['date_debut'] ?? null,
+            'date_fin' => $data['date_fin'] ?? null,
+        ]);
+        return $ua->fresh();
+    }
+
+    /**
+     * Met à jour une compétence existante.
+     */
+    public function updateCompetence(Competence $competence, array $data): Competence
+    {
+        $competence->update([
+            'code' => $data['code'],
+            'libelle' => $data['libelle'],
+            'description' => $data['description'] ?? null,
+        ]);
+        return $competence->fresh();
     }
 }

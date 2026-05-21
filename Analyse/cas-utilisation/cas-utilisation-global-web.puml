@@ -40,14 +40,14 @@ package "SoliQuiz Web" {
     package "Espace Administrateur" {
         usecase "Voir le tableau de bord global" as UC10
         usecase "Gérer les utilisateurs (Rôles)" as UC9
-        usecase "Configuration API SoliLMS" as UC11
+        ' usecase "Configuration API SoliLMS" as UC11
     }
 
     package "Espace Formateur" {
         usecase "Gérer les QCM (CRUD)" as UC1
         usecase "Gérer les Questions et Choix" as UC2
         usecase "Lier QCM à une Session/Objectif" as UC3
-        usecase "Consulter les résultats (Total & Objectif)" as UC5
+        usecase "Consulter les résultats" as UC5
 
         UC1 <.. UC2 : <<include>>
         UC3 ..> UC1 : <<extend>>
@@ -73,7 +73,7 @@ package "SoliQuiz Web" {
 ' ==============================
 A -- UC9
 A -- UC10
-A -- UC11
+' A -- UC11
 UC11 -- LMS
 
 F -- UC1

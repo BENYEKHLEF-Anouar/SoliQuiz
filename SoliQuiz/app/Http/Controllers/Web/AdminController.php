@@ -44,18 +44,22 @@ class AdminController extends Controller
     {
         $search = $request->input('search');
         $statut = $request->input('statut');
+        $formateurId = $request->input('formateur_id');
         
-        $qcms = $this->qcmService->paginate(15, $search, null, $statut);
+        $qcms = $this->qcmService->paginate(15, $search, $formateurId ? (int)$formateurId : null, $statut);
         $qcms->appends($request->query());
         
-        return view('admin.qcms', compact('qcms', 'search', 'statut'));
+        $formateurs = User::where('type_profil', 'formateur')->orderBy('nom')->get();
+        
+        return view('admin.qcms', compact('qcms', 'search', 'statut', 'formateurId', 'formateurs'));
     }
 
     public function searchQcms(Request $request)
     {
         $search = $request->input('search');
         $statut = $request->input('statut');
-        $qcms = $this->qcmService->paginate(15, $search, null, $statut);
+        $formateurId = $request->input('formateur_id');
+        $qcms = $this->qcmService->paginate(15, $search, $formateurId ? (int)$formateurId : null, $statut);
         return response()->json($qcms);
     }
 
@@ -69,8 +73,9 @@ class AdminController extends Controller
         $recentTentatives = $this->dashboardService->getRecentTentatives(10);
         $topPerformers = $this->dashboardService->getTopPerformers(3);
         $systemStatus = $this->dashboardService->getSystemStatus();
+        $classes = $this->dashboardService->getAllClassesMetrics();
         
-        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus'));
+        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus', 'classes'));
     }
 
     /**
@@ -81,23 +86,14 @@ class AdminController extends Controller
         $search = $request->input('search');
         $role = $request->input('role');
 
-        $users = User::with(['classe', 'classeGeree'])
-            ->when($search, function ($q) use ($search) {
-                $q->where(function($sq) use ($search) {
-                    $sq->where('nom', 'like', "%{$search}%")
-                      ->orWhere('prenom', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->when($role, function ($q) use ($role) {
-                $q->where('type_profil', $role);
-            })
-            ->orderByRaw("CASE WHEN type_profil = 'admin' THEN 1 WHEN type_profil = 'formateur' THEN 2 ELSE 3 END")
-            ->orderBy('nom')
-            ->paginate(8)
+        $users = $this->userService->searchUsersWithRelations($search, $role)
             ->appends($request->query());
+
+        $totalEtudiants = User::where('type_profil', 'etudiant')->count();
+        $totalFormateurs = User::where('type_profil', 'formateur')->count();
+        $totalAdmins = User::where('type_profil', 'admin')->count();
         
-        return view('admin.gestion-utilisateurs', compact('users', 'search', 'role'));
+        return view('admin.gestion-utilisateurs', compact('users', 'search', 'role', 'totalEtudiants', 'totalFormateurs', 'totalAdmins'));
     }
 
     public function searchUsers(Request $request)
@@ -105,20 +101,7 @@ class AdminController extends Controller
         $search = $request->input('search');
         $role = $request->input('role');
 
-        $users = User::with(['classe', 'classeGeree'])
-            ->when($search, function ($q) use ($search) {
-                $q->where(function($sq) use ($search) {
-                    $sq->where('nom', 'like', "%{$search}%")
-                      ->orWhere('prenom', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->when($role, function ($q) use ($role) {
-                $q->where('type_profil', $role);
-            })
-            ->orderByRaw("CASE WHEN type_profil = 'admin' THEN 1 WHEN type_profil = 'formateur' THEN 2 ELSE 3 END")
-            ->orderBy('nom')
-            ->paginate(8)
+        $users = $this->userService->searchUsersWithRelations($search, $role)
             ->appends($request->query());
         
         return response()->json($users);
@@ -214,14 +197,7 @@ class AdminController extends Controller
     {
         $creatorFilter = $request->input('creator');
 
-        $query = Seance::with(['unitesApprentissage.competences', 'user'])
-            ->orderBy('date_debut', 'desc');
-
-        if ($creatorFilter) {
-            $query->where('user_id', $creatorFilter);
-        }
-
-        $seances = $query->get();
+        $seances = $this->seanceService->getSeancesWithRelations($creatorFilter ? (int)$creatorFilter : null);
 
         $creatorIds = Seance::whereNotNull('user_id')->distinct()->pluck('user_id');
         $creators = User::whereIn('id', $creatorIds)->orderBy('nom')->get();
@@ -262,8 +238,16 @@ class AdminController extends Controller
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
+        
+        $codeExists = UniteApprentissage::where('code', $data['code'])->exists();
+        
         $this->seanceService->addUniteApprentissage($seance, $data);
-        return redirect()->route('admin.pedagogie')->with('success', 'Unité d\'apprentissage ajoutée.');
+        
+        $redirect = redirect()->route('admin.pedagogie')->with('success', 'Unité d\'apprentissage ajoutée.');
+        if ($codeExists) {
+            $redirect->with('code_warning', 'Attention : Le code de l\'UA est déjà utilisé.');
+        }
+        return $redirect;
     }
 
     public function destroyUA($id)
@@ -281,8 +265,16 @@ class AdminController extends Controller
             'libelle' => 'required|string|max:255',
             'description' => 'nullable|string'
         ]);
+        
+        $codeExists = Competence::where('code', $data['code'])->exists();
+        
         $this->seanceService->addCompetence($ua, $data);
-        return redirect()->route('admin.pedagogie')->with('success', 'Compétence ajoutée.');
+        
+        $redirect = redirect()->route('admin.pedagogie')->with('success', 'Compétence ajoutée.');
+        if ($codeExists) {
+            $redirect->with('code_warning', 'Attention : Le code de la compétence est déjà utilisé.');
+        }
+        return $redirect;
     }
 
     public function destroyCompetence($id)
@@ -313,7 +305,7 @@ class AdminController extends Controller
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
-        $seance->update($data);
+        $this->seanceService->update($seance, $data);
         return redirect()->route('admin.pedagogie')->with('success', 'Séance mise à jour.');
     }
 
@@ -334,12 +326,12 @@ class AdminController extends Controller
         $ua = UniteApprentissage::findOrFail($id);
         $data = $request->validate([
             'nom' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:unites_apprentissage,code,' . $id,
+            'code' => 'required|string|max:50',
             'user_id' => 'required|exists:users,id',
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
-        $ua->update($data);
+        $this->seanceService->updateUniteApprentissage($ua, $data);
         return redirect()->route('admin.pedagogie')->with('success', 'Unité d\'apprentissage mise à jour.');
     }
 
@@ -359,11 +351,11 @@ class AdminController extends Controller
     {
         $competence = Competence::findOrFail($id);
         $data = $request->validate([
-            'code' => 'required|string|max:50|unique:competences,code,' . $id,
+            'code' => 'required|string|max:50',
             'libelle' => 'required|string|max:255',
             'description' => 'nullable|string'
         ]);
-        $competence->update($data);
+        $this->seanceService->updateCompetence($competence, $data);
         return redirect()->route('admin.pedagogie')->with('success', 'Compétence mise à jour.');
     }
 

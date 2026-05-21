@@ -5,7 +5,7 @@ La méthodologie Scrum est une méthodologie agile qui permet de gérer un proje
 
 Dans le cadre de ce projet SoliQuiz, nous avons organisé le travail selon les principes de Scrum, ce qui nous a permis de mieux planifier, suivre et livrer les différentes fonctionnalités de manière efficace.
 
-![Processus Scrum](images/scrum-process.jpg)
+![Processus Scrum](images/scrum-process.png)
 
 **Principes clés**
 - **Transparence** : Toutes les tâches et objectifs sont visibles par l’équipe.

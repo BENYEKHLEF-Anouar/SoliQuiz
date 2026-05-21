@@ -9,7 +9,7 @@
         <div class="flex justify-between items-center mt-2">
             <div class="flex items-center gap-3">
                 <div class="size-10 bg-slate-950 text-white rounded-xl flex items-center justify-center shadow-lg shadow-slate-950/20">
-                    <span class="text-sm font-black italic" x-text="currentIndex + 1"></span>
+                    <span class="text-sm font-black" x-text="currentIndex + 1"></span>
                 </div>
                 <div class="flex flex-col">
                     <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Progression</span>
@@ -23,7 +23,7 @@
                         <circle cx="12" cy="12" r="10" />
                         <polyline points="12 6 12 12 16 14" />
                     </svg>
-                    <span class="text-[11px] font-black tracking-widest italic" x-text="timerDisplay">00:00</span>
+                    <span class="text-[11px] font-black tracking-widest" x-text="timerDisplay">00:00</span>
                 </div>
                 
                 <a href="{{ route('student.dashboard') }}" class="size-10 inline-flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-slate-100 transition-colors active:scale-90 outline-none">
@@ -65,8 +65,7 @@
                 <div class="grid space-y-5">
                     <template x-for="(option, index) in currentQuestion.options" :key="option.id">
                         <label class="flex items-center p-6 w-full border border-slate-100 rounded-[2rem] cursor-pointer transition-all active:scale-[0.98] group relative shadow-[0_4px_15px_-3px_rgba(0,0,0,0.02)]"
-                            :class="selectedOptionIds.includes(option.id) 
-                                ? 'bg-primary-50/30 border-primary-500/30 shadow-xl shadow-primary-500/5' 
+                            :class="selectedOptionIds.includes(option.id) ? 'bg-primary-50/30 border-primary-500/30 shadow-xl shadow-primary-500/5' 
                                 : 'bg-white hover:border-slate-200'">
                             
                             <!-- Custom Radio Visual -->
@@ -88,9 +87,23 @@
                                 x-text="option.text"></span>
 
                             <!-- Letter Badge (A, B, C...) -->
-                            <span class="absolute top-1/2 -translate-y-1/2 right-6 text-[10px] font-black text-slate-200 group-hover:text-slate-300 transition-colors uppercase italic" x-text="String.fromCharCode(65 + index)"></span>
+                            <span class="absolute top-1/2 -translate-y-1/2 right-6 text-[10px] font-black text-slate-200 group-hover:text-slate-300 transition-colors uppercase" x-text="String.fromCharCode(65 + index)"></span>
                         </label>
                     </template>
+                </div>
+
+                <!-- Clear Selection Button -->
+                <div class="flex justify-end mt-5">
+                    <button type="button" 
+                            x-show="selectedOptionIds.length > 0"
+                            x-cloak
+                            @click="clearSelection()"
+                            class="inline-flex items-center gap-x-1.5 py-2 px-4 rounded-xl text-xs font-black uppercase tracking-wider text-rose-500 bg-rose-50 hover:bg-rose-100 active:scale-95 transition-all outline-none">
+                        <svg class="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Effacer la sélection
+                    </button>
                 </div>
             </div>
         </template>
@@ -156,12 +169,24 @@
             },
             async fetchQcm() {
                 try {
-                    const response = await fetch(`${Alpine.store('config').apiBaseUrl}/qcm/${this.qcmId}`);
-                    this.qcm = await response.json();
-                    this.timerMinutes = this.qcm.durationMinutes || 5;
-                    this.timerSeconds = 0;
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/qcm/${this.qcmId}/start`);
+                    const data = await response.json();
+                    this.qcm = data;
+                    if (data.tempsRestant > 0) {
+                        this.timerMinutes = Math.floor(data.tempsRestant / 60);
+                        this.timerSeconds = data.tempsRestant % 60;
+                    } else if (data.durationMinutes > 0) {
+                        this.timerMinutes = data.durationMinutes;
+                        this.timerSeconds = 0;
+                    } else {
+                        this.timerMinutes = 0;
+                        this.timerSeconds = 0;
+                    }
+                    if (data.initialAnswers) {
+                        this.selectedOptions = data.initialAnswers;
+                    }
                 } catch (e) {
-                    console.error('Failed to load QCM', e);
+                    console.error('Failed to start/load QCM', e);
                     this.timerMinutes = 5;
                     this.timerSeconds = 0;
                 }
@@ -169,10 +194,12 @@
             async fetchQuestions() {
                 this.loading = true;
                 try {
-                    const response = await fetch(`${Alpine.store('config').apiBaseUrl}/qcm/${this.qcmId}/questions`);
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/qcm/${this.qcmId}/questions`);
                     this.questions = await response.json();
                     this.questions.forEach(q => {
-                        this.selectedOptions[q.id] = [];
+                        if (!this.selectedOptions[q.id]) {
+                            this.selectedOptions[q.id] = [];
+                        }
                     });
                 } catch (e) {
                     console.error('Failed to load questions', e);
@@ -194,21 +221,49 @@
                     }
                 }
             },
+            clearSelection() {
+                const q = this.currentQuestion;
+                if (!q) return;
+                this.selectedOptions[q.id] = [];
+            },
             prevQuestion() {
                 if (this.currentIndex > 0) this.currentIndex--;
             },
-            nextQuestion() {
+            async nextQuestion() {
                 if (this.currentIndex < this.totalQuestions - 1) {
                     this.currentIndex++;
                 } else {
-                    window.location.href = `/student/qcm/${this.qcmId}/result`;
+                    await this.submitQcm();
+                }
+            },
+            async submitQcm() {
+                this.loading = true;
+                try {
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/qcm/${this.qcmId}/submit`, {
+                        method: 'POST',
+                        body: JSON.stringify({ answers: this.selectedOptions })
+                    });
+                    if (response.ok) {
+                        window.location.href = `/student/qcm/${this.qcmId}/result`;
+                    } else {
+                        alert('Erreur lors de la soumission.');
+                    }
+                } catch (e) {
+                    console.error('Failed to submit QCM', e);
+                    alert('Erreur réseau lors de la soumission.');
+                } finally {
+                    this.loading = false;
                 }
             },
             startTimer() {
-                this.timerInterval = setInterval(() => {
+                if (this.timerMinutes === 0 && this.timerSeconds === 0 && this.qcm.durationMinutes === 0) {
+                    return;
+                }
+                this.timerInterval = setInterval(async () => {
                     if (this.timerSeconds === 0) {
                         if (this.timerMinutes === 0) {
                             clearInterval(this.timerInterval);
+                            await this.submitQcm();
                             return;
                         }
                         this.timerMinutes--;

@@ -16,7 +16,7 @@
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Dashboard</span>
                     @if($formateur)
                         <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-primary-600 italic">Formateur : {{ $formateur->nom_complet }}</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-primary-600">Formateur : {{ $formateur->nom_complet }}</span>
                     @endif
                 </div>
                 <h3 class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
@@ -27,7 +27,7 @@
                 </p>
             </div>
             <a href="{{ route('student.bibliotheque') }}"
-               class="h-14 px-8 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] italic shadow-2xl shadow-slate-900/20 hover:bg-primary-500 hover:-translate-y-1 transition-all flex items-center gap-3 shrink-0">
+               class="h-14 px-8 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-slate-900/20 hover:bg-primary-500 hover:-translate-y-1 transition-all flex items-center gap-3 shrink-0">
                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 Mes QCMs
             </a>
@@ -131,9 +131,9 @@
     </div>
 
     <!-- Main Dashboard Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Left Column - Recent Activity -->
-        <div class="lg:col-span-2">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Activité Récente -->
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-5 border-b border-slate-100 flex items-center justify-between">
                     <div>
@@ -190,6 +190,40 @@
                             </div>
                             <p class="text-sm text-slate-500">Aucune activité récente</p>
                             <a href="{{ route('student.bibliotheque') }}" class="mt-2 text-xs font-bold text-primary-600 hover:text-primary-700">Commencer un QCM</a>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+
+            <!-- Progression par Objectif d'Apprentissage -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-slate-100">
+                    <h3 class="font-bold text-slate-900">Progression par Objectif d'Apprentissage</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Votre score moyen par unité d'apprentissage</p>
+                </div>
+                <div class="p-5">
+                    @forelse($progressByUa as $data)
+                        <div class="mb-4 last:mb-0">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
+                                <div class="truncate max-w-[70%] flex flex-col">
+                                    <span class="text-slate-900 font-bold text-sm">{{ $data['ua_nom'] }}</span>
+                                    @if($data['session_nom'])
+                                        <span class="text-[10px] text-slate-400 font-medium">Session : {{ $data['session_nom'] }}</span>
+                                    @endif
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-indigo-600 font-black">{{ $data['score_moyen'] }}/20</span>
+                                    <span class="text-slate-400">({{ $data['total_tentatives'] }} tentative(s))</span>
+                                </div>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2">
+                                <div class="h-2 rounded-full transition-all duration-500 {{ $data['score_moyen'] >= 14 ? 'bg-emerald-500' : ($data['score_moyen'] >= 10 ? 'bg-amber-500' : 'bg-rose-500') }}"
+                                     style="width: {{ ($data['score_moyen'] / 20) * 100 }}%"></div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="py-8 text-center text-slate-400 text-xs font-bold">
+                            Aucune donnée de progression disponible. Complétez vos QCM pour voir vos scores par objectif.
                         </div>
                     @endforelse
                 </div>
@@ -285,6 +319,102 @@
                     @endif
                 </div>
             </div> -->
+
+            <!-- Classement Cohorte -->
+            @if(isset($cohortPodiums) && $cohortPodiums->count() > 0)
+            @php
+                $podiumsJson = $cohortPodiums->map(fn($item) => [
+                    'titre'  => $item['qcm_titre'],
+                    'podium' => collect($item['podium'])->sortBy('position')->values()->toArray(),
+                ])->values()->toJson();
+            @endphp
+            <div
+                class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
+                x-data="{
+                    items: {{ $podiumsJson }},
+                    current: 0,
+                    get item() { return this.items[this.current]; },
+                    prev() { this.current = this.current > 0 ? this.current - 1 : this.items.length - 1; },
+                    next() { this.current = this.current < this.items.length - 1 ? this.current + 1 : 0; }
+                }"
+            >
+                {{-- Header --}}
+                <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <div class="size-7 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
+                            <svg class="size-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M8 21h8m-4-4v4M5 3h14l-1.5 9a5 5 0 01-4.97 4H11.47A5 5 0 016.5 12L5 3z"/>
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <span class="text-sm font-black text-slate-900 block">Classement</span>
+                            <p class="text-xs text-slate-400 font-medium truncate max-w-[140px]" x-text="item.titre"></p>
+                        </div>
+                    </div>
+                    {{-- Switcher arrows (only if multiple QCMs) --}}
+                    @if($cohortPodiums->count() > 1)
+                    <div class="flex items-center gap-1">
+                        <button @click="prev()" class="size-7 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all">
+                            <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <span class="text-[10px] font-black text-slate-400 tabular-nums w-8 text-center" x-text="(current + 1) + '/' + items.length"></span>
+                        <button @click="next()" class="size-7 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all">
+                            <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                    @else
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Cohorte</span>
+                    @endif
+                </div>
+
+                {{-- Table (reactive) --}}
+                <div class="divide-y divide-slate-100">
+                    <template x-for="(place, index) in item.podium" :key="index">
+                        <div class="flex items-center gap-3 px-5 py-3 transition-colors"
+                             :class="place.position === 1 ? 'bg-amber-50/60' : ''">
+                            {{-- Rank Badge --}}
+                            <div class="size-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-black leading-none"
+                                 :class="{
+                                     'bg-amber-500 text-white'       : place.position === 1,
+                                     'bg-slate-200 text-slate-600'   : place.position === 2,
+                                     'bg-primary-100 text-primary-700': place.position === 3
+                                 }">
+                                <span x-text="place.position"></span>
+                            </div>
+
+                            {{-- Name --}}
+                            <div class="flex-1 min-w-0">
+                                <span class="text-sm font-bold text-slate-800 truncate block" x-text="place.etudiant_nom"></span>
+                                <span x-show="place.position === 1"
+                                      class="text-[9px] font-black uppercase tracking-widest text-amber-500">Leader</span>
+                            </div>
+
+                            {{-- Score + mini bar --}}
+                            <div class="text-right shrink-0">
+                                <span class="text-sm font-bold"
+                                      :class="place.position === 1 ? 'text-amber-600 font-black' : 'text-slate-500'">
+                                    <span x-text="place.score"></span><span class="text-xs font-normal text-slate-400">/20</span>
+                                </span>
+                                <div class="mt-1 w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full transition-all duration-500"
+                                         :class="place.position === 1 ? 'bg-amber-400' : 'bg-slate-300'"
+                                         :style="'width:' + Math.round((place.score / 20) * 100) + '%'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    {{-- Empty state if no podium --}}
+                    <template x-if="item.podium.length === 0">
+                        <div class="px-5 py-6 text-center text-xs text-slate-400 font-medium">
+                            Aucun résultat disponible pour ce QCM.
+                        </div>
+                    </template>
+                </div>
+            </div>
+            @endif
+
 
             <!-- Study Tips -->
             <div class="bg-slate-50 rounded-xl border border-slate-200 p-5">

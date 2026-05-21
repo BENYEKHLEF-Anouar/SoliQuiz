@@ -194,8 +194,8 @@
                         <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                     </div>
                     <div>
-                        <h4 class="text-sm font-black text-slate-800 uppercase italic" x-text="qcm.titre"></h4>
-                        <p class="text-[9px] font-bold text-slate-400" x-text="qcm.duree_minutes + 'min · Seuil ' + qcm.score_reussite + '/20'"></p>
+                        <h4 class="text-sm font-black text-slate-800 uppercase" x-text="qcm.titre"></h4>
+                        <p class="text-[9px] font-bold text-slate-400" x-text="(qcm.duree_minutes > 0 ? qcm.duree_minutes + 'min' : 'Illimité') + ' · Seuil ' + qcm.score_reussite + '/20'"></p>
                     </div>
                 </div>
                 

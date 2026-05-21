@@ -10,6 +10,8 @@ use App\Models\Competence;
 use App\Models\Classe;
 use App\Services\QcmService;
 use App\Services\ClasseService;
+use App\Services\ResultatService;
+use App\Services\SeanceService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +21,8 @@ class FormateurController extends Controller
     private QcmService $qcmService;
     private ClasseService $classeService;
     private \App\Services\DashboardService $dashboardService;
+    private ResultatService $resultatService;
+    private SeanceService $seanceService;
 
     private function requireClasseForFormateur(?int $classeId): void
     {
@@ -66,11 +70,15 @@ class FormateurController extends Controller
     public function __construct(
         QcmService $qcmService,
         ClasseService $classeService,
-        \App\Services\DashboardService $dashboardService
+        \App\Services\DashboardService $dashboardService,
+        ResultatService $resultatService,
+        SeanceService $seanceService
     ) {
         $this->qcmService = $qcmService;
         $this->classeService = $classeService;
         $this->dashboardService = $dashboardService;
+        $this->resultatService = $resultatService;
+        $this->seanceService = $seanceService;
     }
 
     /**
@@ -90,8 +98,7 @@ class FormateurController extends Controller
      */
     public function pedagogie()
     {
-        $formateur = Auth::user();
-        $seances = $formateur->seances()->with('unitesApprentissage.competences')->orderBy('date_debut', 'desc')->get();
+        $seances = $this->seanceService->getSeancesWithRelations(Auth::user()->isAdmin() ? null : Auth::id());
         return view('formateur.pedagogie', compact('seances'));
     }
 
@@ -103,7 +110,12 @@ class FormateurController extends Controller
             'date_fin' => 'nullable|date',
         ]);
 
-        Auth::user()->seances()->create($request->only('nom', 'date_debut', 'date_fin'));
+        $this->seanceService->create([
+            'nom' => $request->nom,
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
+            'user_id' => Auth::id()
+        ]);
         return back()->with('success', 'Session créée.');
     }
 
@@ -112,7 +124,7 @@ class FormateurController extends Controller
         $seance = Auth::user()->isAdmin()
             ? Seance::findOrFail($id)
             : Auth::user()->seances()->findOrFail($id);
-        $seance->delete();
+        $this->seanceService->delete($seance);
         return back()->with('success', 'Session supprimée.');
     }
 
@@ -120,24 +132,30 @@ class FormateurController extends Controller
     {
         $request->validate([
             'nom' => 'required|string|max:255',
-            'code' => 'required|string|unique:unites_apprentissage,code',
+            'code' => 'required|string',
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
 
+        $codeExists = UniteApprentissage::where('code', $request->code)->exists();
+
         $seance = Auth::user()->isAdmin()
             ? Seance::findOrFail($seanceId)
             : Auth::user()->seances()->findOrFail($seanceId);
-        $seance->unitesApprentissage()->create([
+
+        $this->seanceService->addUniteApprentissage($seance, [
             'nom' => $request->nom,
             'code' => $request->code,
+            'user_id' => $seance->user_id,
             'date_debut' => $request->date_debut,
             'date_fin' => $request->date_fin,
-            'user_id' => $seance->user_id,
-            'seance_id' => $seance->id
         ]);
 
-        return back()->with('success', 'Unité d\'apprentissage ajoutée.');
+        $redirect = back()->with('success', 'Unité d\'apprentissage ajoutée.');
+        if ($codeExists) {
+            $redirect->with('code_warning', 'Attention : Le code de l\'UA est déjà utilisé.');
+        }
+        return $redirect;
     }
 
     public function destroyUA($id)
@@ -145,7 +163,7 @@ class FormateurController extends Controller
         $ua = Auth::user()->isAdmin()
             ? UniteApprentissage::findOrFail($id)
             : UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
-        $ua->delete();
+        $this->seanceService->deleteUniteApprentissage($ua);
         return back()->with('success', 'UA supprimée.');
     }
 
@@ -153,18 +171,27 @@ class FormateurController extends Controller
     {
         $request->validate([
             'libelle' => 'required|string|max:255',
-            'code' => 'required|string|unique:competences,code',
+            'code' => 'required|string',
+            'description' => 'nullable|string',
         ]);
+
+        $codeExists = Competence::where('code', $request->code)->exists();
 
         $ua = Auth::user()->isAdmin()
             ? UniteApprentissage::findOrFail($uaId)
             : UniteApprentissage::where('id', $uaId)->where('user_id', Auth::id())->firstOrFail();
-        $ua->competences()->create([
+
+        $this->seanceService->addCompetence($ua, [
+            'code' => $request->code,
             'libelle' => $request->libelle,
-            'code' => $request->code
+            'description' => $request->description
         ]);
 
-        return back()->with('success', 'Compétence ajoutée.');
+        $redirect = back()->with('success', 'Compétence ajoutée.');
+        if ($codeExists) {
+            $redirect->with('code_warning', 'Attention : Le code de la compétence est déjà utilisé.');
+        }
+        return $redirect;
     }
 
     public function destroyCompetence($id)
@@ -173,7 +200,7 @@ class FormateurController extends Controller
         if (!Auth::user()->isAdmin() && $competence->uniteApprentissage->user_id !== Auth::id())
             abort(403);
 
-        $competence->delete();
+        $this->seanceService->deleteCompetence($competence);
         return back()->with('success', 'Compétence supprimée.');
     }
 
@@ -194,14 +221,14 @@ class FormateurController extends Controller
     public function updateSeance(Request $request, $id)
     {
         $request->validate([
-            'nom' => 'required|string|max:255', 
+            'nom' => 'required|string|max:255',
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
         $seance = Auth::user()->isAdmin()
             ? Seance::findOrFail($id)
             : Auth::user()->seances()->findOrFail($id);
-        $seance->update($request->only('nom', 'date_debut', 'date_fin'));
+        $this->seanceService->update($seance, $request->only('nom', 'date_debut', 'date_fin'));
         return back()->with('success', 'Session mise à jour.');
     }
 
@@ -223,7 +250,7 @@ class FormateurController extends Controller
     {
         $request->validate([
             'nom' => 'required|string|max:255',
-            'code' => 'required|string|unique:unites_apprentissage,code,' . $id,
+            'code' => 'required|string',
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date',
         ]);
@@ -231,7 +258,7 @@ class FormateurController extends Controller
         $ua = Auth::user()->isAdmin()
             ? UniteApprentissage::findOrFail($id)
             : UniteApprentissage::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
-        $ua->update($request->only('nom', 'code', 'date_debut', 'date_fin'));
+        $this->seanceService->updateUniteApprentissage($ua, $request->only('nom', 'code', 'date_debut', 'date_fin'));
         return back()->with('success', 'Unité d\'apprentissage mise à jour.');
     }
 
@@ -253,16 +280,18 @@ class FormateurController extends Controller
     {
         $request->validate([
             'libelle' => 'required|string|max:255',
-            'code' => 'required|string|unique:competences,code,' . $id,
+            'code' => 'required|string',
+            'description' => 'nullable|string',
         ]);
 
         $competence = Competence::findOrFail($id);
         if (!Auth::user()->isAdmin() && $competence->uniteApprentissage->user_id !== Auth::id())
             abort(403);
 
-        $competence->update([
+        $this->seanceService->updateCompetence($competence, [
+            'code' => $request->code,
             'libelle' => $request->libelle,
-            'code' => $request->code
+            'description' => $request->description
         ]);
         return back()->with('success', 'Compétence mise à jour.');
     }
@@ -273,15 +302,14 @@ class FormateurController extends Controller
     public function bibliotheque(Request $request)
     {
         $search = $request->input('search');
-        $qcms = QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
-            ->withCount(['questions', 'tentatives'])
-            ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
-            ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
-            ->latest()
-            ->paginate(15);
-            
+        $qcms = $this->qcmService->paginate(
+            15,
+            $search,
+            Auth::user()->isAdmin() ? null : Auth::id()
+        );
+
         $unites = UniteApprentissage::where('user_id', Auth::id())->get();
-            
+
         return view('formateur.bibliotheque', compact('qcms', 'search', 'unites'));
     }
 
@@ -291,14 +319,13 @@ class FormateurController extends Controller
         $status = $request->input('status');
         $uaId = $request->input('ua_id');
 
-        $qcms = QCM::with(['formateur', 'uniteApprentissage', 'classe.etudiants'])
-            ->withCount(['questions', 'tentatives'])
-            ->when($search, fn($q) => $q->where('titre', 'like', "%{$search}%"))
-            ->when($status, fn($q) => $q->where('statut', $status))
-            ->when($uaId, fn($q) => $q->where('unite_apprentissage_id', $uaId))
-            ->tap(fn($q) => $this->scopeQcmQueryForCurrentUser($q))
-            ->latest()
-            ->paginate(50); // increased for dynamic view
+        $qcms = $this->qcmService->paginate(
+            50,
+            $search,
+            Auth::user()->isAdmin() ? null : Auth::id(),
+            $status,
+            $uaId ? (int)$uaId : null
+        );
         return response()->json($qcms);
     }
 
@@ -321,21 +348,21 @@ class FormateurController extends Controller
             'titre' => 'required|string|max:255',
             'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id',
             'classe_id' => Auth::user()->isAdmin() ? 'nullable|exists:classes,id' : 'required|exists:classes,id',
-            'duree_minutes' => 'required|integer|min:1',
+            'duree_minutes' => 'required|integer|min:0',
             'score_reussite' => 'required|numeric|min:0|max:20',
             'statut' => 'required|in:brouillon,public,termine',
             'competence_ids' => 'nullable|array',
             'competence_ids.*' => 'exists:competences,id',
             'questions' => 'required|array|min:1',
             'questions.*.texte' => 'required|string',
-            'questions.*.points' => 'required|integer|min:0',
+            'questions.*.points' => 'required|numeric|min:0',
             'questions.*.type' => 'required|in:choix_unique,choix_multiple',
             'questions.*.explication_feedback' => 'nullable|string',
             'questions.*.options' => 'required|array|min:2',
             'questions.*.options.*.texte' => 'required|string',
             'questions.*.options.*.est_correcte' => 'nullable',
             'questions.*.options.*.feedback_specifique' => 'nullable|string',
-        ]);
+        ], $this->getQcmValidationMessages());
 
         $data = $request->all();
         $data['formateur_id'] = Auth::id();
@@ -403,7 +430,7 @@ class FormateurController extends Controller
             'titre' => 'required|string|max:255',
             'unite_apprentissage_id' => 'required|exists:unites_apprentissage,id',
             'classe_id' => 'nullable|exists:classes,id',
-            'duree_minutes' => 'required|integer|min:1',
+            'duree_minutes' => 'required|integer|min:0',
             'score_reussite' => 'required|numeric|min:0|max:20',
             'statut' => 'required|in:brouillon,public,termine',
             'competence_ids' => 'nullable|array',
@@ -417,7 +444,7 @@ class FormateurController extends Controller
             'questions.*.options.*.texte' => 'required|string',
             'questions.*.options.*.est_correcte' => 'nullable',
             'questions.*.options.*.feedback_specifique' => 'nullable|string',
-        ]);
+        ], $this->getQcmValidationMessages());
 
         $data = $request->all();
 
@@ -480,11 +507,11 @@ class FormateurController extends Controller
         $data = $this->qcmService->getResultsForFormateur(Auth::id());
         $classes = $data['classes'];
         $qcms = $data['qcms'];
-        
+
         // Liste des étudiants issus de ses classes gérées
         $etudiantsClasses = $classes->flatMap->etudiants
             ->map(fn($e) => $e->prenom . ' ' . $e->nom);
-            
+
         // Liste des étudiants ayant réellement passé ses QCM (même s'ils ne sont pas dans ses classes)
         $etudiantsTentatives = $qcms->flatMap->tentatives
             ->map(fn($t) => $t->etudiant?->prenom . ' ' . $t->etudiant?->nom)
@@ -503,35 +530,28 @@ class FormateurController extends Controller
      */
     public function exportResultats(Request $request)
     {
-        $formateurId = Auth::id();
         $qcmId = $request->input('qcm');
         $classeName = $request->input('classe');
         $format = $request->input('format', 'csv');
-
-        $query = \App\Models\Tentative::with(['etudiant.classe', 'qcm'])
-            ->whereHas('qcm', function($q) use ($formateurId) {
-                $q->where('formateur_id', $formateurId);
-            });
 
         $suffix = '';
         $prefix = 'resultats_soliquiz';
 
         if ($classeName) {
-            $query->whereHas('etudiant.classe', function($q) use ($classeName) {
-                $q->where('nom', $classeName);
-            });
             $prefix = 'resultats_' . \Illuminate\Support\Str::slug($classeName);
         }
 
         $qcmName = null;
         if ($qcmId) {
-            $query->where('qcm_id', $qcmId);
             $qcm = \App\Models\QCM::find($qcmId);
             $qcmName = $qcm->titre ?? 'qcm';
             $suffix = '_' . \Illuminate\Support\Str::slug($qcmName);
         }
 
-        $results = $query->latest()->get();
+        $results = $this->resultatService->getCohorteResults([
+            'classe' => $classeName,
+            'qcm_id' => $qcmId
+        ]);
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('exports.resultats-pdf', [
@@ -542,19 +562,62 @@ class FormateurController extends Controller
             return $pdf->download($prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.pdf');
         }
 
+        if ($format === 'excel' || $format === 'xls') {
+            $fileName = $prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.xls';
+
+            $html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+            $html .= '<head><meta http-equiv="Content-type" content="text/html;charset=utf-8" /></head>';
+            $html .= '<body>';
+            $html .= '<table border="1">';
+            $html .= '<tr style="background-color: #4F46E5; color: #FFFFFF; font-weight: bold;">';
+            $html .= '<th>Date</th><th>Étudiant</th><th>Classe</th><th>QCM</th><th>Durée</th><th>Score</th><th>Seuil Réussite</th><th>Statut</th>';
+            $html .= '</tr>';
+
+            foreach ($results as $result) {
+                $duree = '-';
+                if ($result->date_debut && $result->date_fin) {
+                    $diff = $result->date_debut->diff($result->date_fin);
+                    $m = ($diff->h * 60) + $diff->i;
+                    $s = $diff->s;
+                    $duree = ($m > 0 ? $m . 'm ' : '') . $s . 's';
+                }
+
+                $html .= '<tr>';
+                $html .= '<td>' . ($result->date_debut?->format('d/m/Y H:i') ?? '-') . '</td>';
+                $html .= '<td>' . htmlspecialchars($result->etudiant?->nom_complet ?? 'Inconnu') . '</td>';
+                $html .= '<td>' . htmlspecialchars($result->etudiant?->classe?->nom ?? '-') . '</td>';
+                $html .= '<td>' . htmlspecialchars($result->qcm?->titre ?? '-') . '</td>';
+                $html .= '<td>' . $duree . '</td>';
+                $html .= '<td>' . ($result->score_obtenu !== null ? $result->score_obtenu . '/20' : '-') . '</td>';
+                $html .= '<td>' . ($result->qcm?->score_reussite ?? '10') . '/20' . '</td>';
+                $html .= '<td>' . ucfirst($result->statut) . '</td>';
+                $html .= '</tr>';
+            }
+
+            $html .= '</table></body></html>';
+
+            return response($html, 200, [
+                'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                'Pragma' => 'no-cache',
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires' => '0',
+            ]);
+        }
+
         $fileName = $prefix . $suffix . '_' . now()->format('Y-m-d_H-i') . '.csv';
         $headers = [
-            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-type" => "text/csv; charset=UTF-8",
             "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
         ];
 
-        $callback = function() use($results) {
+        $callback = function () use ($results) {
             $file = fopen('php://output', 'w');
-            fputs($file, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
-            
+            fputs($file, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+
             fputcsv($file, [
                 'Date',
                 'Étudiant',
@@ -606,6 +669,14 @@ class FormateurController extends Controller
         $newStatus = $qcm->fresh()->statut;
         $message = $newStatus === 'public' ? 'QCM publié et visible aux étudiants.' : 'QCM mis en brouillon.';
 
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'statut' => $newStatus,
+                'message' => $message
+            ]);
+        }
+
         return back()->with('success', $message);
     }
 
@@ -621,43 +692,148 @@ class FormateurController extends Controller
 
         return back()->with('success', 'QCM fermé. Les étudiants ne peuvent plus y accéder.');
     }
+
     /**
-     * Exporte un bilan individuel d'un étudiant au format PDF (pour le formateur)
+     * Exporte un bilan individuel d'un étudiant au format PDF, Excel, ou CSV (pour le formateur)
      */
-    public function exportTentative($id)
+    public function exportTentative(Request $request, $id)
     {
         $tentative = \App\Models\Tentative::with(['etudiant.classe', 'qcm'])->findOrFail($id);
-        
+
         // Vérifier l'autorisation (le formateur doit posséder le QCM)
         if (!Auth::user()->isAdmin() && $tentative->qcm->formateur_id !== Auth::id()) {
             abort(403);
         }
 
-        $qcm = $tentative->qcm;
-        $questions = $qcm->questions()->with(['options', 'reponses' => function($q) use ($tentative) {
-            $q->where('tentative_id', $tentative->id);
-        }])->get();
+        $details = $this->resultatService->getTentativeDetails($tentative);
+        $qcm = $details['qcm'];
+        $questionDetails = $details['questionDetails'];
 
-        $questionDetails = $questions->map(function ($question) {
-            $userReponse = $question->reponses->first();
-            $selectedOptions = $userReponse ? $userReponse->choixReponses->pluck('option_id')->toArray() : [];
-            $correctOptions = $question->options->where('est_correcte', true)->pluck('id')->toArray();
-            
-            $isCorrect = (count($correctOptions) === count($selectedOptions)) && empty(array_diff($correctOptions, $selectedOptions));
+        $format = $request->input('format', 'pdf');
 
-            return (object) [
-                'texte' => $question->texte,
-                'points' => $question->points,
-                'explication' => $question->explication_feedback,
-                'isCorrect' => $isCorrect,
-                'options' => $question->options->map(function($opt) use ($selectedOptions) {
-                    $opt->isSelected = in_array($opt->id, $selectedOptions);
-                    return $opt;
-                })
+        if ($format === 'excel' || $format === 'xls') {
+            $fileName = 'Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.xls';
+
+            $html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+            $html .= '<head><meta http-equiv="Content-type" content="text/html;charset=utf-8" /></head>';
+            $html .= '<body>';
+
+            $html .= '<h2>Bilan Individuel - SoliQuiz</h2>';
+            $html .= '<table>';
+            $html .= '<tr><td><b>Étudiant :</b></td><td>' . htmlspecialchars($tentative->etudiant?->nom_complet) . '</td></tr>';
+            $html .= '<tr><td><b>Classe :</b></td><td>' . htmlspecialchars($tentative->etudiant?->classe?->nom ?? '-') . '</td></tr>';
+            $html .= '<tr><td><b>QCM :</b></td><td>' . htmlspecialchars($qcm->titre) . '</td></tr>';
+            $html .= '<tr><td><b>Score :</b></td><td><b>' . $tentative->score_obtenu . '/20</b></td></tr>';
+            $html .= '<tr><td><b>Seuil Réussite :</b></td><td>' . $qcm->score_reussite . '/20</td></tr>';
+            $html .= '<tr><td><b>Statut :</b></td><td>' . ucfirst($tentative->statut) . '</td></tr>';
+            $html .= '</table><br/><br/>';
+
+            $html .= '<table border="1">';
+            $html .= '<tr style="background-color: #4F46E5; color: #FFFFFF; font-weight: bold;">';
+            $html .= '<th>N°</th><th>Question</th><th>Points</th><th>Résultat</th><th>Explication</th>';
+            $html .= '</tr>';
+
+            foreach ($questionDetails as $idx => $qd) {
+                $html .= '<tr>';
+                $html .= '<td>' . ($idx + 1) . '</td>';
+                $html .= '<td>' . htmlspecialchars($qd->texte) . '</td>';
+                $html .= '<td>' . $qd->points . '</td>';
+                $html .= '<td>' . ($qd->isCorrect ? 'Correct' : 'Incorrect') . '</td>';
+                $html .= '<td>' . htmlspecialchars($qd->explication ?? '-') . '</td>';
+                $html .= '</tr>';
+            }
+
+            $html .= '</table></body></html>';
+
+            return response($html, 200, [
+                'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                'Pragma' => 'no-cache',
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires' => '0',
+            ]);
+        }
+
+        if ($format === 'csv') {
+            $fileName = 'Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.csv';
+
+            $headers = [
+                "Content-type" => "text/csv; charset=UTF-8",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
             ];
-        });
+
+            $callback = function () use ($tentative, $qcm, $questionDetails) {
+                $file = fopen('php://output', 'w');
+                fputs($file, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+
+                fputcsv($file, ['Bilan Individuel - SoliQuiz'], ';');
+                fputcsv($file, ['Étudiant', $tentative->etudiant?->nom_complet], ';');
+                fputcsv($file, ['Classe', $tentative->etudiant?->classe?->nom ?? '-'], ';');
+                fputcsv($file, ['QCM', $qcm->titre], ';');
+                fputcsv($file, ['Score', $tentative->score_obtenu . '/20'], ';');
+                fputcsv($file, ['Seuil Réussite', $qcm->score_reussite . '/20'], ';');
+                fputcsv($file, ['Statut', ucfirst($tentative->statut)], ';');
+                fputcsv($file, [], ';');
+
+                fputcsv($file, [
+                    'N°',
+                    'Question',
+                    'Points',
+                    'Résultat',
+                    'Explication'
+                ], ';');
+
+                foreach ($questionDetails as $idx => $qd) {
+                    fputcsv($file, [
+                        $idx + 1,
+                        $qd->texte,
+                        $qd->points,
+                        $qd->isCorrect ? 'Correct' : 'Incorrect',
+                        $qd->explication ?? '-'
+                    ], ';');
+                }
+
+                fclose($file);
+            };
+
+            return response()->stream($callback, 200, $headers);
+        }
 
         $pdf = Pdf::loadView('exports.tentative-pdf', compact('qcm', 'tentative', 'questionDetails'));
         return $pdf->download('Bilan_' . \Illuminate\Support\Str::slug($tentative->etudiant->nom_complet) . '_' . \Illuminate\Support\Str::slug($qcm->titre) . '.pdf');
+    }
+
+    private function getQcmValidationMessages(): array
+    {
+        return [
+            'titre.required' => "Le titre du QCM est obligatoire.",
+            'unite_apprentissage_id.required' => "Veuillez sélectionner une Unité d'Apprentissage (UA).",
+            'unite_apprentissage_id.exists' => "L'unité d'apprentissage sélectionnée est invalide.",
+            'classe_id.required' => "Veuillez sélectionner une Cohorte Cible.",
+            'classe_id.exists' => "La classe sélectionnée est invalide.",
+            'duree_minutes.required' => "La durée en minutes est requise.",
+            'duree_minutes.integer' => "La durée doit être un nombre entier.",
+            'duree_minutes.min' => "La durée ne peut pas être négative.",
+            'score_reussite.required' => "Le score de réussite est requis.",
+            'score_reussite.numeric' => "Le score de réussite doit être un nombre.",
+            'score_reussite.min' => "Le score de réussite doit être au moins 0.",
+            'score_reussite.max' => "Le score de réussite ne peut pas dépasser 20.",
+            'questions.required' => "Le QCM doit contenir au moins une question.",
+            'questions.array' => "Le format des questions est invalide.",
+            'questions.min' => "Le QCM doit contenir au moins une question.",
+            'questions.*.texte.required' => "L'énoncé de chaque question est obligatoire.",
+            'questions.*.points.required' => "Le barème (points) pour chaque question est obligatoire.",
+            'questions.*.points.numeric' => "Le barème d'une question doit être un nombre.",
+            'questions.*.points.min' => "Le barème d'une question doit être au moins 0.",
+            'questions.*.type.required' => "Le type de chaque question est obligatoire.",
+            'questions.*.type.in' => "Le type de question sélectionné est invalide.",
+            'questions.*.options.required' => "Chaque question doit avoir des options de réponse.",
+            'questions.*.options.array' => "Les options de réponse doivent être au format correct.",
+            'questions.*.options.min' => "Chaque question doit avoir au moins 2 options de réponse.",
+            'questions.*.options.*.texte.required' => "Le texte de l'option de réponse est obligatoire.",
+        ];
     }
 }

@@ -6,7 +6,7 @@
     <!-- Page Title & Context -->
     <div class="flex items-center gap-4 min-w-0">
         <div class="size-2 rounded-full bg-primary-500 shadow-[0_0_10px_rgba(23,162,184,0.4)]"></div>
-        <h2 class="text-xs font-black text-slate-900 uppercase italic tracking-[0.2em] truncate font-heading">
+        <h2 class="text-xs font-black text-slate-900 uppercase tracking-[0.2em] truncate font-heading">
             @yield('page-title', 'Tableau de Bord')
         </h2>
     </div>
@@ -15,7 +15,7 @@
     <div class="flex items-center gap-6">
         <!-- Date Display -->
         <div class="hidden md:flex flex-col text-right">
-            <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest italic leading-none mb-1">Session Active</span>
+            <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">Session Active</span>
             <span class="text-[11px] font-bold text-slate-600">{{ now()->translatedFormat('d F Y') }}</span>
         </div>
 

@@ -21,7 +21,6 @@ class PassationService
     {
         $existante = Tentative::where('etudiant_id', $etudiant->id)
             ->where('qcm_id', $qcmId)
-            ->where('statut', 'en_cours')
             ->first();
 
         if ($existante) {
@@ -177,6 +176,46 @@ class PassationService
             'score_obtenu' => $tentative->score_obtenu ?? 0,
             'score_max' => 20,
             'reussi' => $tentative->statut === 'reussi',
+        ];
+    }
+
+    public function getOrCreateTentativeState(User $student, int $qcmId): array
+    {
+        $qcm = QCM::findOrFail($qcmId);
+        $tentative = $this->demarrer($student, $qcmId);
+
+        if ($tentative->statut !== 'en_cours') {
+            return ['status' => 'completed', 'message' => 'QCM déjà terminé'];
+        }
+
+        // Get existing answers if any
+        $initialAnswers = [];
+        $existingReponses = $tentative->reponses()->with(['choixReponses', 'question'])->get();
+        foreach ($existingReponses as $reponse) {
+            $options = $reponse->choixReponses->pluck('option_id')->toArray();
+            $initialAnswers[$reponse->question_id] = $options;
+        }
+
+        // Calculate remaining seconds
+        $debut = $tentative->date_debut;
+        if ($qcm->duree_minutes > 0) {
+            $finPrevue = $debut->copy()->addMinutes($qcm->duree_minutes);
+            $tempsRestant = (int) now()->diffInSeconds($finPrevue, false);
+            if ($tempsRestant <= 0) {
+                $this->soumettre($tentative);
+                return ['status' => 'completed', 'message' => 'Temps écoulé'];
+            }
+        } else {
+            $tempsRestant = -1;
+        }
+
+        return [
+            'status' => 'in_progress',
+            'qcmId' => $qcm->id,
+            'title' => $qcm->titre,
+            'durationMinutes' => $qcm->duree_minutes,
+            'tempsRestant' => $tempsRestant,
+            'initialAnswers' => $initialAnswers,
         ];
     }
 }

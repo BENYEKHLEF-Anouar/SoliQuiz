@@ -56,6 +56,7 @@ package "Système SoliQuiz - Avancé (Sprint 2)" {
 
     package "Interface Mobile / API Integration" {
         usecase "Consommer les données (API)" as UC_API
+        usecase "S'authentifier via API" as UC_API_LOGIN
     }
 }
 
@@ -76,6 +77,7 @@ E -- UC_TIMER
 E -- UC_HISTORY
 
 M -- UC_API
+M -- UC_API_LOGIN
 
 LMS -- UC_CONF
 LMS -- UC_EXPORT
@@ -88,6 +90,7 @@ LMS -- UC_EXPORT
 UC_API ..> UC_LOGIN : <<include>>
 UC_API ..> UC_HISTORY : <<include>>
 UC_API ..> UC_PROGRESS_F : <<include>>
+UC_API_LOGIN ..> UC_LOGIN : <<include>>
 
 
 ' ==============================

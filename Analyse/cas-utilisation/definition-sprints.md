@@ -59,3 +59,23 @@
 | **Intégration** | UC_API | Config API SoliLMS | L'admin configure les endpoints de synchronisation. | Fouad |
 
 **Résultat Final Sprint 2 :** SoliQuiz devient un véritable pont numérique. Le formateur analyse les lacunes précises ; l'étudiant apprend de ses erreurs ; l'administrateur supervise le centre avec transparence.
+
+---
+
+## 4. Sprint 3 — IA, Sécurité & Notifications
+
+**Objectif** : Intégrer l'intelligence artificielle comme levier d'automatisation (génération de QCM, chatbot d'accueil) et renforcer la sécurité du cycle d'authentification (mot de passe oublié + alerte admin).
+
+### Backlog Sprint 3
+
+| Axe | ID | Cas d'Utilisation | Description | Issue GitHub | Persona |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **IA** | UC_CHATBOT | Chatbot IA Landing Page | Concierge IA interactif sur la page d'accueil pour guider les visiteurs et répondre aux questions fréquentes. | [#13](https://github.com/BENYEKHLEF-Anouar/SoliQuiz/issues/13) | Visiteur, Utilisateur |
+| **IA** | UC_AI_QCM | Générateur IA de QCM | Le formateur décrit un sujet en langage naturel ; l'IA génère automatiquement les questions, options et correction. | [#14](https://github.com/BENYEKHLEF-Anouar/SoliQuiz/issues/14) | Youssef, Fatine |
+| **IA** | UC_AI_REVIEW | Validation du QCM généré | Le formateur révise, modifie et valide le QCM proposé par l'IA avant publication. | [#14](https://github.com/BENYEKHLEF-Anouar/SoliQuiz/issues/14) | Youssef, Fatine |
+| **Sécurité** | UC_FORGOT_PW | Mot de passe oublié | L'utilisateur demande un lien de réinitialisation par email. | [#15](https://github.com/BENYEKHLEF-Anouar/SoliQuiz/issues/15) | Tous |
+| **Sécurité** | UC_RESET_PW | Réinitialisation sécurisée | Accès via token temporaire pour définir un nouveau mot de passe. | [#15](https://github.com/BENYEKHLEF-Anouar/SoliQuiz/issues/15) | Tous |
+| **Notification** | UC_ADMIN_ALERT | Alerte Admin | L'administrateur reçoit une notification à chaque tentative de réinitialisation pour détecter des comportements suspects. | [#15](https://github.com/BENYEKHLEF-Anouar/SoliQuiz/issues/15) | Fouad |
+
+**Résultat Attendu Sprint 3 :** SoliQuiz intègre l'IA comme collaborateur actif : les formateurs gagnent du temps en génération de QCM, les visiteurs bénéficient d'une aide contextuelle dès la landing page, et l'administration dispose d'alertes de sécurité proactives.
+

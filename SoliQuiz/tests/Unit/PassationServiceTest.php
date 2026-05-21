@@ -24,7 +24,14 @@ class PassationServiceTest extends TestCase
     public function test_it_can_demarrer_une_tentative()
     {
         $etudiant = User::where('type_profil', 'etudiant')->first();
-        $qcm = QCM::first();
+        $formateur = User::where('type_profil', 'formateur')->first();
+        
+        $qcm = QCM::create([
+            'titre' => 'Clean QCM Test',
+            'duree_minutes' => 10,
+            'score_reussite' => 10,
+            'formateur_id' => $formateur->id
+        ]);
 
         $tentative = $this->service->demarrer($etudiant, $qcm->id);
 
@@ -39,9 +46,15 @@ class PassationServiceTest extends TestCase
     public function test_it_can_soumettre_une_tentative_en_cours()
     {
         $etudiant = User::where('type_profil', 'etudiant')->first();
+        $formateur = User::where('type_profil', 'formateur')->first();
 
         // Créer un QCM léger avec une question pour tester son exécution sans fail fail key
-        $qcm = QCM::create(['titre' => 'TestQcm', 'duree_minutes' => 10, 'formateur_id' => User::where('type_profil', 'formateur')->first()->id]);
+        $qcm = QCM::create([
+            'titre' => 'TestQcm',
+            'duree_minutes' => 10,
+            'score_reussite' => 10,
+            'formateur_id' => $formateur->id
+        ]);
         $question = $qcm->questions()->create(['texte' => 'TestQuestion1', 'type' => 'unique', 'points' => 10]);
         $question->options()->create(['texte' => 'optTrue', 'est_correcte' => true]);
         $question->options()->create(['texte' => 'optFalse', 'est_correcte' => false]);

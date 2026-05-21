@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\QCM;
-use App\Models\Classe;
-use App\Models\Tentative;
+use App\Services\FormateurService;
 use Illuminate\Http\Request;
 
 class FormateurController extends Controller
 {
+    protected $formateurService;
+
+    public function __construct(FormateurService $formateurService)
+    {
+        $this->formateurService = $formateurService;
+    }
+
     /**
      * Get the profile of the authenticated formateur.
      */
@@ -32,123 +36,106 @@ class FormateurController extends Controller
 
     public function qcms(Request $request)
     {
-        $qcms = QCM::where('formateur_id', $request->user()->id)
-            ->withCount('questions')
-            ->withCount('tentatives')
-            ->get();
-        $formatted = $qcms->map(function ($qcm) {
-            return [
-                'id' => $qcm->id,
-                'title' => $qcm->titre,
-                'status' => $qcm->statut === 'public' ? 'Actif' : ($qcm->statut === 'termine' ? 'Terminé' : 'Brouillon'),
-                'questionsCount' => $qcm->questions_count,
-                'assignedCohort' => $qcm->classe->nom ?? 'Général',
-                'resultsCount' => $qcm->tentatives_count,
-            ];
-        });
-        return response()->json($formatted);
+        $qcms = $this->formateurService->getQcms($request->user());
+        return response()->json($qcms);
     }
 
     public function cohorts(Request $request)
     {
-        $classes = Classe::where('formateur_id', $request->user()->id)->get();
-        $formatted = $classes->map(function ($classe) {
-            return [
-                'id' => $classe->id,
-                'name' => $classe->nom,
-                'promotion' => $classe->promotion,
-            ];
-        });
-        return response()->json($formatted);
+        $cohorts = $this->formateurService->getCohorts($request->user());
+        return response()->json($cohorts);
     }
 
     public function cohortStudents($cohortId)
     {
-        $students = User::where('classe_id', $cohortId)
-            ->where('type_profil', 'etudiant')
-            ->get();
-        $formatted = $students->map(function ($student) {
-            $tentatives = $student->tentatives()->whereNotNull('score_obtenu')->get();
-            $averageScore = $tentatives->avg('score_obtenu') ?? 0;
-            // Determine alert flag (simple threshold)
-            $alert = $averageScore < 10; // example
-            return [
-                'id' => $student->id,
-                'name' => $student->prenom . ' ' . $student->nom,
-                'avatarUrl' => null,
-                'averageScore' => round($averageScore, 2),
-                'alert' => $alert,
-            ];
-        });
-        return response()->json($formatted);
+        $students = $this->formateurService->getCohortStudents((int) $cohortId);
+        return response()->json($students);
     }
 
     public function studentPerformance($studentId)
     {
-        $student = User::where('type_profil', 'etudiant')->findOrFail($studentId);
-        $tentatives = $student->tentatives()->whereNotNull('score_obtenu')->orderBy('date_fin', 'desc')->get();
-        $lastQcmScore = $tentatives->first()?->score_obtenu;
-        $totalAttempts = $tentatives->count();
-        $averageScore = $tentatives->avg('score_obtenu') ?? 0;
-        $participation = $totalAttempts > 0 ? 'Active' : 'Faible'; // simplistic
-        $alert = $averageScore < 10;
-        return response()->json([
-            'studentId' => $student->id,
-            'name' => $student->prenom . ' ' . $student->nom,
-            'lastQcmScore' => $lastQcmScore,
-            'participation' => $participation,
-            'averageScore' => round($averageScore, 2),
-            'alert' => $alert,
-        ]);
+        $performance = $this->formateurService->getStudentPerformance((int) $studentId);
+        return response()->json($performance);
     }
 
     public function studentHistory($studentId)
     {
-        $student = User::where('type_profil', 'etudiant')->findOrFail($studentId);
-        $tentatives = $student->tentatives()
-            ->whereNotNull('score_obtenu')
-            ->with('qcm')
-            ->orderBy('date_fin', 'desc')
-            ->get();
-        $history = $tentatives->map(function ($tentative) {
-            return [
-                'id' => $tentative->id,
-                'title' => $tentative->qcm->titre,
-                'date' => $tentative->date_fin?->format('Y-m-d H:i'),
-                'score' => $tentative->score_obtenu,
-                'totalQuestions' => $tentative->qcm->questions->count(),
-            ];
-        });
+        $history = $this->formateurService->getStudentHistory((int) $studentId);
         return response()->json($history);
     }
 
     public function qcmResults(Request $request, $qcmId)
     {
-        $qcm = QCM::where('formateur_id', $request->user()->id)->findOrFail($qcmId);
-        $tentatives = Tentative::where('qcm_id', $qcmId)
-            ->whereNotNull('score_obtenu')
-            ->with('etudiant')
-            ->orderBy('score_obtenu', 'desc')
-            ->get();
+        $results = $this->formateurService->getQcmResults($request->user(), (int) $qcmId);
+        return response()->json($results);
+    }
 
-        $totalQuestions = $qcm->questions()->count();
-        $maxScore = $qcm->questions()->sum('points') ?: ($totalQuestions * 2); // Fallback to 2pts per question
+    public function results(Request $request)
+    {
+        $formateur = $request->user();
+        if (!$formateur->isFormateur()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
 
-        $formatted = $tentatives->map(function ($tentative) use ($totalQuestions, $maxScore) {
-            return [
-                'id' => $tentative->id,
-                'studentName' => $tentative->etudiant ? $tentative->etudiant->prenom . ' ' . $tentative->etudiant->nom : 'Étudiant Inconnu',
-                'score' => $tentative->score_obtenu,
-                'totalQuestions' => $totalQuestions,
-                'maxScore' => $maxScore,
-                'date' => $tentative->date_fin ? $tentative->date_fin->format('Y-m-d H:i') : null,
-            ];
-        });
+        $data = $this->formateurService->getResultsDashboard($formateur);
+        return response()->json($data);
+    }
+
+    /**
+     * Update the formateur's profile information.
+     */
+    public function updateProfile(Request $request)
+    {
+        $formateur = $request->user();
+        if (!$formateur->isFormateur()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+        ]);
+
+        $profile = $this->formateurService->updateProfile($formateur, $request->only(['nom', 'prenom']));
 
         return response()->json([
-            'qcmId' => $qcm->id,
-            'title' => $qcm->titre,
-            'results' => $formatted
+            'message' => 'Profil mis à jour avec succès.',
+            'profile' => $profile
         ]);
+    }
+
+    /**
+     * Update the formateur's password.
+     */
+    public function updatePassword(Request $request)
+    {
+        $formateur = $request->user();
+        if (!$formateur->isFormateur()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $this->formateurService->updatePassword($formateur, $request->only(['current_password', 'password']));
+
+        return response()->json([
+            'message' => 'Mot de passe mis à jour avec succès.'
+        ]);
+    }
+
+    public function pedagogie(Request $request)
+    {
+        $formateur = $request->user();
+        if (!$formateur->isFormateur() && !$formateur->isAdmin()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $creatorFilter = $request->input('creator') ? (int) $request->input('creator') : null;
+        $data = $this->formateurService->getPedagogieData($formateur, $creatorFilter);
+
+        return response()->json($data);
     }
 }

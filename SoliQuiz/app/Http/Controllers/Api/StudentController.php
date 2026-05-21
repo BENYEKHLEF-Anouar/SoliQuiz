@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Tentative;
-use App\Models\QCM;
+use App\Services\EtudiantService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class StudentController extends Controller
 {
+    protected $etudiantService;
+
+    public function __construct(EtudiantService $etudiantService)
+    {
+        $this->etudiantService = $etudiantService;
+    }
+
     /**
      * Get the profile of the authenticated student.
      */
@@ -34,47 +38,14 @@ class StudentController extends Controller
     public function scores(Request $request)
     {
         $student = $request->user();
-        // Compute global score average from tentatives where score_obtenu is not null
-        $tentatives = $student->tentatives()->whereNotNull('score_obtenu')->get();
-        $globalScore = $tentatives->avg('score_obtenu') ?? 0;
-        // Compute ranking among students in same cohort
-        $cohortId = $student->classe_id;
-        $ranking = 0;
-        if ($cohortId) {
-            // Get all students in same cohort
-            $cohortStudents = User::where('classe_id', $cohortId)->where('type_profil', 'etudiant')->get();
-            $scores = $cohortStudents->map(function ($s) {
-                $tentatives = $s->tentatives()->whereNotNull('score_obtenu')->get();
-                return $tentatives->avg('score_obtenu') ?? 0;
-            });
-            $sorted = $scores->sortDesc()->values();
-            $position = $sorted->search($globalScore);
-            $ranking = $position !== false ? $position + 1 : 0;
-        }
-        return response()->json([
-            'globalScore' => round($globalScore, 2),
-            'ranking' => $ranking,
-            'totalStudents' => $cohortId ? User::where('classe_id', $cohortId)->where('type_profil', 'etudiant')->count() : 0,
-        ]);
+        $data = $this->etudiantService->getApiScores($student);
+        return response()->json($data);
     }
 
     public function evaluations(Request $request)
     {
         $student = $request->user();
-        // Get published QCMs that the student has not attempted (or tentatives not completed)
-        $attemptedQcmIds = $student->tentatives()->pluck('qcm_id');
-        $pendingQcms = QCM::where('statut', 'public')
-            ->whereNotIn('id', $attemptedQcmIds)
-            ->get();
-        $evaluations = $pendingQcms->map(function ($qcm) {
-            return [
-                'id' => $qcm->id,
-                'title' => $qcm->titre,
-                'subject' => optional($qcm->uniteApprentissage)->nom ?? 'General',
-                'dueDate' => null, // Not in schema
-                'urgent' => false,
-            ];
-        });
+        $evaluations = $this->etudiantService->getApiEvaluations($student);
         return response()->json($evaluations);
     }
 
@@ -102,20 +73,79 @@ class StudentController extends Controller
     public function history(Request $request)
     {
         $student = $request->user();
-        $tentatives = $student->tentatives()
-            ->whereNotNull('score_obtenu')
-            ->with('qcm')
-            ->orderBy('date_fin', 'desc')
-            ->get();
-        $history = $tentatives->map(function ($tentative) {
-            return [
-                'id' => $tentative->id,
-                'title' => $tentative->qcm->titre,
-                'date' => $tentative->date_fin?->format('Y-m-d H:i'),
-                'score' => $tentative->score_obtenu,
-                'totalQuestions' => $tentative->qcm->questions->count(),
-            ];
-        });
+        $history = $this->etudiantService->getApiHistory($student);
         return response()->json($history);
+    }
+
+    public function bibliotheque(Request $request)
+    {
+        $student = $request->user();
+        $data = $this->etudiantService->getApiBibliotheque($student);
+        return response()->json($data);
+    }
+
+    /**
+     * Update the student's profile information.
+     */
+    public function updateProfile(Request $request)
+    {
+        $student = $request->user();
+        if (!$student->isEtudiant()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+        ]);
+
+        $student->nom = $request->nom;
+        $student->prenom = $request->prenom;
+        $student->save();
+
+        return response()->json([
+            'message' => 'Profil mis à jour avec succès.',
+            'profile' => [
+                'id' => $student->id,
+                'nom' => $student->nom,
+                'prenom' => $student->prenom,
+                'email' => $student->email,
+                'avatarUrl' => null,
+                'role' => 'Apprenant',
+                'cohort' => $student->classe->nom ?? 'N/A',
+            ]
+        ]);
+    }
+
+    /**
+     * Update the student's password.
+     */
+    public function updatePassword(Request $request)
+    {
+        $student = $request->user();
+        if (!$student->isEtudiant()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $student->password)) {
+            return response()->json([
+                'message' => 'Le mot de passe actuel est incorrect.',
+                'errors' => [
+                    'current_password' => ['Le mot de passe actuel est incorrect.']
+                ]
+            ], 422);
+        }
+
+        $student->password = $request->password;
+        $student->save();
+
+        return response()->json([
+            'message' => 'Mot de passe mis à jour avec succès.'
+        ]);
     }
 }

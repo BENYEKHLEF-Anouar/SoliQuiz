@@ -71,7 +71,7 @@
             <div class="flex-1 text-left">
                 <div class="mb-5">
                     <h3 class="text-2xl font-black text-slate-900 tracking-tight leading-tight mb-1" x-text="title"></h3>
-                    <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest italic" :class="type === 'danger' ? 'text-rose-400' : 'text-amber-400'">Attention nécessaire</p>
+                    <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest" :class="type === 'danger' ? 'text-rose-400' : 'text-amber-400'">Attention nécessaire</p>
                 </div>
                 <p class="text-slate-500 text-base leading-relaxed font-medium mb-0" x-text="message"></p>
             </div>

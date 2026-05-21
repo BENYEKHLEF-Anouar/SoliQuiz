@@ -177,7 +177,7 @@ style: |
 
 ## Méthodologie : Scrum (Agile)
 
-![h:490 Scrum](./images/scrum-process.jpg)
+![h:490 Scrum](./images/scrum-process.png)
 
 ---
 <!-- 

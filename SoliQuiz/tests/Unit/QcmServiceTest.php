@@ -23,12 +23,40 @@ class QcmServiceTest extends TestCase
 
     public function test_it_can_get_all_qcms()
     {
+        $formateur = User::where('type_profil', 'formateur')->first() ?: User::create([
+            'nom' => 'Formateur',
+            'prenom' => 'Test',
+            'email' => 'formateur.test@soliquiz.com',
+            'password' => 'password',
+            'type_profil' => 'formateur'
+        ]);
+        QCM::create([
+            'titre' => 'General QCM',
+            'duree_minutes' => 30,
+            'score_reussite' => 20,
+            'formateur_id' => $formateur->id
+        ]);
+
         $result = $this->service->paginate();
         $this->assertGreaterThan(0, $result->total());
     }
 
     public function test_it_can_filter_qcms_by_search_title()
     {
+        $formateur = User::where('type_profil', 'formateur')->first() ?: User::create([
+            'nom' => 'Formateur',
+            'prenom' => 'Test',
+            'email' => 'formateur.test@soliquiz.com',
+            'password' => 'password',
+            'type_profil' => 'formateur'
+        ]);
+        QCM::create([
+            'titre' => 'PHP Advanced Quiz',
+            'duree_minutes' => 30,
+            'score_reussite' => 20,
+            'formateur_id' => $formateur->id
+        ]);
+
         $result = $this->service->paginate(15, 'PHP');
 
         $this->assertGreaterThanOrEqual(1, $result->total());
@@ -39,14 +67,24 @@ class QcmServiceTest extends TestCase
 
     public function test_it_can_filter_qcms_by_formateur()
     {
-        // Pick a formateur that exists in your seeded data
-        $formateur = User::where('type_profil', 'formateur')->first();
+        $formateur = User::where('type_profil', 'formateur')->first() ?: User::create([
+            'nom' => 'Formateur',
+            'prenom' => 'Test',
+            'email' => 'formateur.test@soliquiz.com',
+            'password' => 'password',
+            'type_profil' => 'formateur'
+        ]);
+        QCM::create([
+            'titre' => 'Formateur Filter QCM',
+            'duree_minutes' => 30,
+            'score_reussite' => 20,
+            'formateur_id' => $formateur->id
+        ]);
 
         $result = $this->service->paginate(15, null, $formateur->id);
 
         $this->assertGreaterThan(0, $result->total());
 
-        // Ensure every returned qcm belongs to the selected formateur
         foreach ($result->items() as $qcm) {
             $this->assertEquals($formateur->id, $qcm->formateur_id);
         }
@@ -123,5 +161,33 @@ class QcmServiceTest extends TestCase
         $this->assertDatabaseMissing('qcms', [
             'id' => $qcm->id,
         ]);
+    }
+
+    public function test_it_can_search_qcms_by_formateur_name()
+    {
+        $formateur = User::create([
+            'nom' => 'Alami',
+            'prenom' => 'Youssef',
+            'email' => 'youssef.alami@soliquiz.com',
+            'password' => 'password',
+            'type_profil' => 'formateur'
+        ]);
+
+        $qcm = QCM::create([
+            'titre' => 'Unique Searchable QCM',
+            'duree_minutes' => 30,
+            'score_reussite' => 20,
+            'formateur_id' => $formateur->id
+        ]);
+
+        // Search by prenom
+        $result = $this->service->paginate(15, 'Youssef');
+        $this->assertGreaterThanOrEqual(1, $result->total());
+        $firstQcm = collect($result->items())->first();
+        $this->assertEquals($qcm->id, $firstQcm->id);
+
+        // Search by nom
+        $result2 = $this->service->paginate(15, 'Alami');
+        $this->assertGreaterThanOrEqual(1, $result2->total());
     }
 }

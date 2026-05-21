@@ -3,21 +3,29 @@
 @section('content')
 <div x-data="qcmResults" x-init="init()" x-data-qcm-id="{{ $qcmId }}" class="h-full flex flex-col relative overflow-hidden font-sans bg-slate-50">
     <!-- Header -->
-    <header class="bg-slate-950 px-5 pt-safe-top pb-4 border-b border-white/5 shadow-sm shrink-0 sticky top-0 z-40">
+    <header class="bg-slate-950/95 backdrop-blur-md px-5 pt-safe-top pb-4 border-b border-white/[0.03] shadow-lg shrink-0 sticky top-0 z-40">
         <div class="flex items-center gap-4 mt-2">
-            <a href="{{ route('formateur.qcms') }}" class="size-9 bg-white/10 rounded-xl flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-90">
-                <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <a href="{{ route('formateur.qcms') }}" class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 active:scale-95 transition-transform outline-none border-none text-white">
+                <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m15 18-6-6 6-6" />
                 </svg>
             </a>
             <div class="flex-1 min-w-0">
-                <h1 class="text-lg font-heading font-bold text-white tracking-tight leading-none truncate" x-text="qcmTitle || 'Chargement...'"></h1>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Résultats de passage</p>
+                <h1 class="text-lg font-heading font-extrabold text-white tracking-tight leading-none truncate" x-text="qcmTitle || 'Chargement...'"></h1>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1.5">Résultats de passage</p>
             </div>
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto w-full px-5 py-6 pb-32 hide-scrollbar">
+    <main class="flex-1 overflow-y-auto w-full px-5 py-6 pb-32 hide-scrollbar relative">
+        <!-- Global Loading State -->
+        <div x-show="loading" 
+             x-transition:leave="transition ease-in duration-500"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="absolute inset-0 z-50 bg-slate-50 flex items-center justify-center">
+            <x-feedback.loader message="Extraction des résultats..." />
+        </div>
         <!-- Search & Filters Row -->
         <div class="flex flex-col gap-4 mb-6">
             <!-- Search Input -->
@@ -189,11 +197,6 @@
             </template>
         </div>
 
-        <!-- Loading state -->
-        <div x-show="loading" class="flex flex-col items-center justify-center py-20 gap-6">
-            <div class="size-16 border-4 border-slate-100 border-t-primary-500 rounded-full animate-spin"></div>
-            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 italic">Extraction des données...</p>
-        </div>
 
         <!-- Empty state -->
         <div x-show="!loading && filteredResults.length === 0" class="text-center py-16 animate-in fade-in duration-500">

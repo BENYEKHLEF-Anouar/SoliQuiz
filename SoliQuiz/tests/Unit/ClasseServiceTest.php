@@ -28,6 +28,13 @@ class ClasseServiceTest extends TestCase
 
     public function test_it_can_filter_classes_by_search()
     {
+        $formateur = User::where('type_profil', 'formateur')->first();
+        Classe::create([
+            'nom' => 'DWB101',
+            'promotion' => '2026',
+            'formateur_id' => $formateur->id,
+        ]);
+
         $result = $this->service->paginate(15, 'DWB101');
 
         $this->assertGreaterThanOrEqual(1, $result->total());

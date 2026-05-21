@@ -65,4 +65,16 @@ class EtudiantServiceTest extends TestCase
         $this->assertEquals($tentative->id, $result->id);
         $this->assertNotNull($result->qcm);
     }
+
+    public function test_it_can_get_progress_by_ua()
+    {
+        $etudiant = User::where('type_profil', 'etudiant')->first();
+        if (!$etudiant) {
+            $etudiant = User::factory()->create(['type_profil' => 'etudiant']);
+        }
+
+        $result = $this->service->getProgressByUa($etudiant);
+
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
+    }
 }

@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+@source "../../node_modules/preline/dist/*.js";
+@import "../../node_modules/preline/variants.css";
+
 [x-cloak] { display: none !important; }
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -116,7 +119,6 @@ select {
     color: #94a3b8;
     text-transform: uppercase;
     letter-spacing: 0.3em;
-    font-style: italic;
 }
 
 /* Button Premium Style */
@@ -133,7 +135,6 @@ select {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-size: 11px;
-    font-style: italic;
 }
 
 .btn-premium:hover {

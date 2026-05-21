@@ -31,9 +31,8 @@
             class="pointer-events-auto min-w-[340px] max-w-md p-5 rounded-[2rem] shadow-premium bg-white/80 backdrop-blur-xl border border-white/40 flex items-center gap-5 transition-all group"
         >
             <!-- Icon Mapping -->
-            <div class="flex-shrink-0 size-14 rounded-2xl flex items-center justify-center shadow-lg relative overflow-hidden"
-                 :class="{
-                    'bg-emerald-50 text-emerald-500': msg.type === 'success',
+            <div class="flex-shrink-0 size-14 rounded-2xl flex items-center justify-center relative overflow-hidden"
+                 :class="{ 'bg-emerald-50 text-emerald-500': msg.type === 'success',
                     'bg-rose-50 text-rose-500': msg.type === 'error',
                     'bg-sky-50 text-sky-500': msg.type === 'info',
                  }">
@@ -47,14 +46,13 @@
             </div>
 
             <div class="flex-grow">
-                <p class="text-[8px] font-black uppercase tracking-[0.4em] mb-1 italic opacity-40" 
-                   :class="{
-                       'text-emerald-600': msg.type === 'success',
+                <p class="text-[8px] font-black uppercase tracking-[0.4em] mb-1 opacity-40" 
+                   :class="{ 'text-emerald-600': msg.type === 'success',
                        'text-rose-600': msg.type === 'error',
                        'text-sky-600': msg.type === 'info',
                    }"
                    x-text="msg.type === 'success' ? 'Confirmation' : (msg.type === 'error' ? 'Anomalie' : 'Notification')"></p>
-                <p class="text-xs font-black text-slate-900 uppercase italic leading-tight" x-text="msg.message"></p>
+                <p class="text-xs font-black text-slate-900 uppercase leading-tight" x-text="msg.message"></p>
             </div>
 
             <button @click="remove(msg.id)" class="size-8 rounded-xl hover:bg-slate-50 flex items-center justify-center text-slate-300 hover:text-slate-900 transition-all active:scale-90">

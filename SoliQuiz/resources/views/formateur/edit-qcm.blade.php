@@ -5,7 +5,7 @@
 @section('page-title', 'Studio de Modification')
 
 @section('content')
-<div class="fade-in pb-32" x-data="qcmBuilder({{ Js::from($unites) }}, {{ Js::from($classes) }}, {{ Js::from($qcm) }})">
+<div class="fade-in pb-32" x-data="qcmBuilder({{ Js::from($unites) }}, {{ Js::from($classes) }}, {{ Js::from($qcm) }}, {{ Js::from(old()) }})">
     
     <!-- Header: Navigation & Breadcrumbs -->
     <div class="mb-8 space-y-6">
@@ -28,25 +28,34 @@
         @csrf
         @method('PUT')
         
-        @if($errors->any())
-        <div class="fixed top-24 left-1/2 -translate-x-1/2 z-[110] w-[90%] max-w-2xl animate-in fade-in slide-in-from-top-4 duration-500">
-            <div class="bg-rose-50 border-2 border-rose-100 rounded-2xl p-4 flex items-start gap-3 shadow-xl">
-                <svg class="size-5 text-rose-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <div class="flex-1">
-                    <h4 class="text-xs font-black text-rose-900 uppercase tracking-widest mb-1">Erreurs de validation</h4>
-                    <ul class="text-[10px] font-bold text-rose-600 space-y-1 list-disc list-inside">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                <button type="button" @click="$el.closest('.fixed').remove()" class="text-rose-400 hover:text-rose-600 p-1">
-                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-            </div>
-        </div>
+        @if($errors->any() || session('error'))
+            <div x-data x-init="$nextTick(() => { $dispatch('open-modal', 'validation-errors'); })"></div>
+            <template x-teleport="body">
+                <x-ui.modal name="validation-errors" maxWidth="md">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="size-10 bg-rose-100 rounded-xl flex items-center justify-center">
+                            <svg class="size-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-black text-slate-800">Erreurs de validation</h3>
+                    </div>
+                    <div class="bg-rose-50 rounded-xl p-4 border border-rose-100 mb-6">
+                        <ul class="text-[11px] font-bold text-rose-600 space-y-2 list-disc list-inside">
+                            @if(session('error'))
+                                <li>{{ session('error') }}</li>
+                            @endif
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <button type="button" @click="$dispatch('close-modal', 'validation-errors')"
+                        class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider bg-slate-900 text-white hover:bg-slate-800 transition-all">
+                        Compris
+                    </button>
+                </x-ui.modal>
+            </template>
         @endif
         
         <!-- Main Column: Content (Questions) -->
@@ -59,7 +68,7 @@
                 <div class="relative z-10 space-y-3">
                     <label class="text-label ml-1">Identité de l'évaluation</label>
                     <input type="text" name="titre" required x-model="titre" 
-                           class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 text-xl font-black text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-primary-500 transition-all outline-none uppercase italic" 
+                           class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 text-xl font-black text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-primary-500 transition-all outline-none uppercase" 
                            placeholder="Saisir le titre du QCM...">
                 </div>
             </div>
@@ -73,7 +82,7 @@
                     <!-- Question Sub-Header -->
                     <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between bg-slate-50/20">
                         <div class="flex items-center gap-6">
-                            <div class="size-8 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm font-black italic" x-text="qIndex + 1"></div>
+                            <div class="size-8 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm font-black" x-text="qIndex + 1"></div>
                             <div class="flex flex-col">
                                 <span class="text-label">Configuration de l'item</span>
                                 <div class="flex items-center gap-3 mt-1">
@@ -108,17 +117,69 @@
                         <div class="space-y-5">
                             <div class="flex items-center justify-between border-b border-slate-50 pb-3">
                                 <div class="flex items-center gap-3">
-                                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Options Strategiques</h4>
+                                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Options Strategiques</h4>
                                     <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase" 
                                           :class="question.type === 'choix_unique' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'"
                                           x-text="question.type === 'choix_unique' ? 'UNIQUE' : 'MULTIPLE'"></span>
                                 </div>
-                                <select x-model="question.type" 
-                                            :name="'questions[' + qIndex + '][type]'" 
-                                            class="!bg-primary-50 !border-transparent !rounded-xl !py-2 !px-4 !w-52 !text-primary-600 text-xs font-black uppercase">
-                                        <option value="choix_unique">Reponse Unique</option>
-                                        <option value="choix_multiple">Multi-Reponses</option>
-                                    </select>
+                                <div class="relative" x-data="{ 
+                                        open: false,
+                                        options: [
+                                            { value: 'choix_unique', label: 'Réponse Unique' },
+                                            { value: 'choix_multiple', label: 'Réponses Multiples' }
+                                        ],
+                                        get selectedOption() {
+                                            return this.options.find(opt => opt.value === question.type) || this.options[0];
+                                        },
+                                        select(value) {
+                                            question.type = value;
+                                            open = false;
+                                        }
+                                    }" @click.away="open = false">
+                                    <!-- Hidden input for form submission -->
+                                    <input type="hidden" :name="'questions[' + qIndex + '][type]'" x-model="question.type">
+                                    
+                                    <!-- Dropdown Trigger -->
+                                    <button @click="open = !open" 
+                                            type="button"
+                                            :class="open ? 'border-primary-500 bg-white ring-4 ring-primary-500/10 text-primary-600' : 'border-slate-100 bg-slate-50/50 text-slate-700'"
+                                            class="w-56 border-2 rounded-xl py-3 px-5 text-[11px] font-black uppercase tracking-wider outline-none active:scale-98 transition-all flex items-center justify-between group hover:bg-slate-50 hover:border-slate-200 shadow-sm">
+                                        <span x-text="selectedOption.label"></span>
+                                        <svg class="size-4 text-slate-400 group-hover:text-primary-500 transition-transform duration-300 shrink-0 ml-2" 
+                                             :class="open ? 'rotate-180 text-primary-500' : ''" 
+                                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <path d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Dropdown Menu -->
+                                    <div x-show="open" 
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave="transition ease-in duration-150"
+                                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                         class="absolute z-50 w-56 mt-2 bg-white border border-slate-100/80 rounded-2xl shadow-2xl shadow-slate-200/60 overflow-hidden py-1.5">
+                                        
+                                        <div>
+                                            <template x-for="option in options" :key="option.value">
+                                                <button @click.stop="question.type = option.value; open = false"
+                                                        type="button"
+                                                        class="w-full px-4 py-3 text-left flex items-center gap-3 transition-colors text-[11px] font-bold tracking-wider uppercase"
+                                                        :class="question.type === option.value ? 'bg-primary-50/80 text-primary-600 font-black' 
+                                                            : 'text-slate-600 hover:bg-slate-50/80 hover:text-slate-900'">
+                                                    <span x-text="option.label"></span>
+                                                    <svg x-show="question.type === option.value" 
+                                                         class="size-4 text-primary-500 ml-auto animate-in zoom-in duration-300" 
+                                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                        <path d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="flex items-center gap-3">
@@ -157,7 +218,7 @@
                                         </div>
                                         <input type="text" x-model="opt.feedback_specifique" :name="'questions[' + qIndex + '][options][' + oIndex + '][feedback_specifique]'" 
                                                placeholder="Feedback correctif (optionnel)..." 
-                                               class="w-full bg-white/50 border border-slate-100 rounded-xl py-2 px-4 text-[10px] font-bold text-slate-500 italic placeholder:text-slate-200 focus:bg-white transition-all outline-none">
+                                               class="w-full bg-white/50 border border-slate-100 rounded-xl py-2 px-4 text-[10px] font-bold text-slate-500 placeholder:text-slate-200 focus:bg-white transition-all outline-none">
                                     </div>
                                 </template>
 
@@ -190,7 +251,7 @@
             <!-- Final Actions -->
             <div class="flex flex-col items-center gap-10 py-8">
                 <button @click="addQuestion()" type="button" 
-                        class="h-20 px-12 bg-white border border-slate-100 rounded-[2.5rem] font-black text-slate-900 uppercase tracking-[0.3em] italic shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all flex items-center gap-4">
+                        class="h-20 px-12 bg-white border border-slate-100 rounded-[2.5rem] font-black text-slate-900 uppercase tracking-[0.3em] shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all flex items-center gap-4">
                     <svg class="size-6 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
                     Nouvelle Question
                 </button>
@@ -198,10 +259,10 @@
         </div>
 
         <!-- Sidebar Column: Configuration -->
-        <div class="w-full lg:w-[320px] xl:w-[380px] shrink-0 space-y-6 sticky top-8">
+        <div class="w-full lg:w-[640px] xl:w-[760px] shrink-0 flex flex-col lg:flex-row gap-6 sticky top-8 items-start">
             
             <!-- Settings Card -->
-            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-8">
+            <div class="w-full lg:w-1/2 bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-8">
                 <div class="flex items-center justify-between pb-6 border-b border-slate-50">
                     <h3 class="text-xs font-black uppercase tracking-widest text-slate-900">Configuration</h3>
                 </div>
@@ -248,46 +309,79 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-3">
-                            <label class="text-label ml-1">Durée (min)</label>
-                            <input type="number" name="duree_minutes" x-model="dureeMinutes" required 
-                                   class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
-                        </div>
-                        <div class="space-y-3">
-                            <label class="text-label ml-1">Réussite (pts)</label>
-                            <input type="number" name="score_reussite" x-model="scoreReussite" required step="0.5"
-                                   class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
+                    <div class="space-y-4">
+                        <label class="relative group cursor-pointer w-full flex items-center gap-3 bg-slate-50/50 hover:bg-slate-100/50 p-4 rounded-2xl border border-transparent transition-all">
+                            <input type="checkbox" x-model="hasTimer" class="hidden">
+                            <div :class="hasTimer ? 'border-primary-600 bg-primary-600' : 'border-slate-300 bg-white'"
+                                 class="shrink-0 size-5 rounded flex items-center justify-center border-2 transition-all duration-300">
+                                <svg :class="hasTimer ? 'opacity-100 scale-100' : 'opacity-0 scale-75'"
+                                     class="size-3 text-white transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                    <path d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-700 leading-snug">Limite de temps</span>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider mt-0.5" x-text="hasTimer ? 'Activée' : 'Désactivée (Temps Illimité)'"></span>
+                            </div>
+                        </label>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                                <label class="text-label ml-1">Durée (min)</label>
+                                <input type="hidden" name="duree_minutes" :value="hasTimer ? dureeMinutes : 0">
+                                <input type="number" x-model="dureeMinutes" :disabled="!hasTimer"
+                                       class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 disabled:opacity-50 transition-all outline-none">
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-label ml-1">Réussite (pts)</label>
+                                <input type="number" name="score_reussite" x-model="scoreReussite" required step="0.5"
+                                       class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Competences Card -->
-            <div x-show="selectedUniteId" x-transition class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+            <div class="w-full lg:w-1/2 bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
                 <div class="flex items-center justify-between pb-4 border-b border-slate-50">
                     <h3 class="text-xs font-black uppercase tracking-widest text-slate-900">Compétences</h3>
-                    <span class="text-[10px] font-black text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" x-text="`${filteredCompetences.length}`"></span>
+                    <span x-show="selectedUniteId" class="text-[10px] font-black text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" x-text="`${filteredCompetences.length}`"></span>
                 </div>
-                <div class="flex flex-col gap-2.5 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                
+                <!-- Empty State: No UA selected -->
+                <div x-show="!selectedUniteId" class="text-center py-8 px-4 text-slate-400 text-xs font-bold border-2 border-dashed border-slate-100 rounded-xl">
+                    <svg class="size-8 mx-auto mb-2 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    Sélectionnez d'abord une Unité d'Apprentissage (UA) pour afficher ses compétences associées.
+                </div>
+
+                <!-- Competences List -->
+                <div x-show="selectedUniteId" class="flex flex-col gap-2.5 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                     <template x-for="comp in filteredCompetences" :key="comp.id">
                         <label class="relative group cursor-pointer w-full">
                             <input type="checkbox" name="competence_ids[]" :value="comp.id" 
                                    :checked="selectedCompetences.includes(comp.id)"
-                                   class="peer hidden">
-                            <div class="w-full px-4 py-3 bg-slate-50/80 hover:bg-slate-100 rounded-2xl border border-transparent peer-checked:border-primary-500 peer-checked:bg-primary-50/30 transition-all flex items-start gap-3">
-                                <div class="shrink-0 size-5 mt-0.5 rounded flex items-center justify-center border-2 border-slate-300 peer-checked:border-primary-500 peer-checked:bg-primary-500 transition-colors">
-                                    <svg class="size-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M5 13l4 4L19 7" /></svg>
+                                   @click="if (selectedCompetences.includes(comp.id)) { selectedCompetences = selectedCompetences.filter(id => id != comp.id) } else { selectedCompetences.push(comp.id) }"
+                                   class="hidden">
+                            <div :class="selectedCompetences.includes(comp.id) ? 'border-primary-500 bg-primary-50/30' : 'border-transparent bg-slate-50/80'"
+                                 class="w-full px-4 py-3 hover:bg-slate-100 rounded-2xl border transition-all flex items-start gap-3">
+                                <div :class="selectedCompetences.includes(comp.id) ? 'border-primary-500 bg-primary-500' : 'border-slate-300 bg-white'"
+                                     class="shrink-0 size-5 mt-0.5 rounded flex items-center justify-center border-2 transition-colors">
+                                    <svg :class="selectedCompetences.includes(comp.id) ? 'opacity-100 scale-100' : 'opacity-0 scale-75'"
+                                         class="size-3 text-white transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                        <path d="M5 13l4 4L19 7" />
+                                    </svg>
                                 </div>
                                 <div class="flex flex-col">
-                                    <span class="text-[10px] font-black text-slate-400 peer-checked:text-primary-600 transition-colors" x-text="comp.code"></span>
+                                    <span :class="selectedCompetences.includes(comp.id) ? 'text-primary-600' : 'text-slate-400'"
+                                          class="text-[10px] font-black transition-colors" x-text="comp.code"></span>
                                     <span class="text-xs font-bold text-slate-700 leading-snug mt-0.5 group-hover:text-slate-900 transition-colors" x-text="comp.libelle"></span>
                                 </div>
                             </div>
                         </label>
                     </template>
-                    <div x-show="filteredCompetences.length === 0" class="text-center py-6 text-slate-400 text-xs font-bold italic">
-                        Aucune compétence disponible
+                    <div x-show="filteredCompetences.length === 0" class="text-center py-6 text-slate-400 text-xs font-bold">
+                        Aucune compétence disponible pour cette UA
                     </div>
                 </div>
             </div>
@@ -300,10 +394,10 @@
                 <div class="flex items-center gap-6">
                     <div class="flex flex-col">
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">État du Barème</span>
-                        <span class="text-lg font-black italic leading-none" :class="totalPoints === 20 ? 'text-emerald-400' : 'text-amber-400'" x-text="`${totalPoints} / 20 PTS`"></span>
+                        <span class="text-lg font-black leading-none" :class="totalPoints === 20 ? 'text-emerald-400' : 'text-amber-400'" x-text="`${totalPoints} / 20 PTS`"></span>
                     </div>
                 </div>
-                <button type="submit" class="h-12 px-10 bg-primary-500 text-white rounded-xl font-black uppercase tracking-widest text-sm italic hover:bg-primary-400 shadow-lg shadow-primary-500/20 transition-all flex items-center gap-3">
+                <button type="submit" class="h-12 px-10 bg-primary-500 text-white rounded-xl font-black uppercase tracking-widest text-sm hover:bg-primary-400 shadow-lg shadow-primary-500/20 transition-all flex items-center gap-3">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7" /></svg>
                     Enregistrer les modifications
                 </button>
@@ -319,10 +413,10 @@
                     <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
             </div>
-            <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tight mb-4">Total non-conforme</h3>
+            <h3 class="text-2xl font-black text-slate-900 uppercase tracking-tight mb-4">Total non-conforme</h3>
             <p class="text-slate-500 text-sm leading-relaxed mb-10">
                 La somme actuelle est de <strong class="text-rose-600" x-text="totalPoints"></strong> points. 
-                Le système requiert exactement <span class="font-black text-slate-900 italic">20 points</span> pour validation.
+                Le système requiert exactement <span class="font-black text-slate-900">20 points</span> pour validation.
             </p>
             
             <div class="grid grid-cols-1 gap-3">
@@ -341,19 +435,47 @@
 
 <script>
 document.addEventListener('alpine:init', () => {
-    Alpine.data('qcmBuilder', (initialUnites, initialClasses, initialQcm) => ({
-        titre: initialQcm?.titre || '',
-        statut: initialQcm?.statut || 'brouillon',
-        showPointsWarning: false,
-        dureeMinutes: initialQcm?.duree_minutes || 30,
-        scoreReussite: initialQcm?.score_reussite || 10,
-        allUnites: initialUnites,
-        allClasses: initialClasses,
-        selectedUniteId: initialQcm?.unite_apprentissage_id || '',
-        selectedClasseId: initialQcm?.classe_id || '',
-        selectedCompetences: initialQcm?.competences?.map(c => c.id) || [],
+    Alpine.data('qcmBuilder', (initialUnites, initialClasses, initialQcm, oldData = {}) => {
+        const hasOld = oldData && Object.keys(oldData).length > 0;
         
-        init() {
+        // Old questions parser
+        let oldQuestions = null;
+        if (hasOld && oldData.questions) {
+            oldQuestions = (Array.isArray(oldData.questions) ? oldData.questions : Object.values(oldData.questions)).map(q => ({
+                texte: q.texte || '',
+                type: (q.type === 'unique' || q.type === 'choix_unique') ? 'choix_unique' : 'choix_multiple',
+                points: q.points ? parseFloat(q.points) : 1,
+                explication_feedback: q.explication_feedback || '',
+                options: (q.options ? (Array.isArray(q.options) ? q.options : Object.values(q.options)) : []).map(o => ({
+                    texte: o.texte || '',
+                    est_correcte: o.est_correcte == '1' || o.est_correcte === true || o.est_correcte === 'true' || o.est_correcte === 'on',
+                    feedback_specifique: o.feedback_specifique || ''
+                }))
+            }));
+        }
+
+        let oldCompetences = [];
+        if (hasOld) {
+            let rawComps = oldData.competence_ids || [];
+            oldCompetences = Array.isArray(rawComps) ? rawComps.map(id => parseInt(id)) : [];
+        } else {
+            oldCompetences = initialQcm?.competences?.map(c => c.id) || [];
+        }
+
+        return {
+            titre: hasOld ? (oldData.titre || '') : (initialQcm?.titre || ''),
+            statut: hasOld ? (oldData.statut || 'brouillon') : (initialQcm?.statut || 'brouillon'),
+            showPointsWarning: false,
+            hasTimer: hasOld ? (oldData.duree_minutes !== undefined ? (parseInt(oldData.duree_minutes) > 0) : true) : (initialQcm ? (initialQcm.duree_minutes > 0) : true),
+            dureeMinutes: hasOld ? (oldData.duree_minutes !== undefined ? parseInt(oldData.duree_minutes) : 30) : ((initialQcm?.duree_minutes > 0) ? initialQcm.duree_minutes : 30),
+            scoreReussite: hasOld ? (oldData.score_reussite !== undefined ? parseFloat(oldData.score_reussite) : 10) : (initialQcm?.score_reussite || 10),
+            allUnites: initialUnites,
+            allClasses: initialClasses,
+            selectedUniteId: hasOld ? (oldData.unite_apprentissage_id || '') : (initialQcm?.unite_apprentissage_id || ''),
+            selectedClasseId: hasOld ? (oldData.classe_id || '') : (initialQcm?.classe_id || ''),
+            selectedCompetences: oldCompetences,
+            
+            init() {
             this.$watch('questions', (questions) => {
                 questions.forEach((q, idx) => {
                     if (q.type === 'choix_unique') {
@@ -363,6 +485,12 @@ document.addEventListener('alpine:init', () => {
                         }
                     }
                 });
+            });
+
+            this.$watch('selectedUniteId', (value, oldValue) => {
+                if (oldValue && value !== oldValue) {
+                    this.selectedCompetences = [];
+                }
             });
         },
         
@@ -386,14 +514,14 @@ document.addEventListener('alpine:init', () => {
             });
         },
 
-        questions: initialQcm?.questions?.map(q => ({
+        questions: oldQuestions && oldQuestions.length > 0 ? oldQuestions : (initialQcm?.questions?.map(q => ({
             texte: q.texte,
-            type: q.type === 'unique' ? 'choix_unique' : 'choix_multiple',
+            type: (q.type === 'unique' || q.type === 'choix_unique') ? 'choix_unique' : 'choix_multiple',
             points: q.points,
             explication_feedback: q.explication_feedback || '',
             options: q.options?.map(o => ({
                 texte: o.texte,
-                est_correcte: o.est_correcte,
+                est_correcte: o.est_correcte == '1' || o.est_correcte === true || o.est_correcte === 'true',
                 feedback_specifique: o.feedback_specifique || ''
             })) || [
                 { texte: '', est_correcte: false, feedback_specifique: '' },
@@ -410,7 +538,7 @@ document.addEventListener('alpine:init', () => {
                     { texte: '', est_correcte: false, feedback_specifique: '' }
                 ]
             }
-        ],
+        ]),
 
         addQuestion() {
             this.questions.push({
@@ -513,7 +641,7 @@ document.addEventListener('alpine:init', () => {
                 });
             }
         }
-    }));
+    }; });
     // Interception de la fermeture de l'onglet/rechargement
     window.onbeforeunload = function(e) {
         const builder = Alpine.evaluate(document.querySelector('[x-data^=qcmBuilder]'), 'isDirty()');
