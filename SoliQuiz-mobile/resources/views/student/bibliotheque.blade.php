@@ -135,12 +135,7 @@
                                     <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5"><path d="m9 18 6-6-6-6"/></svg>
                                 </a>
                             </template>
-                            <template x-if="qcm.etat === 'en_cours'">
-                                <a :href="'/student/qcm/' + qcm.id" class="inline-flex items-center gap-1.5 px-5 py-2.5 bg-amber-500 text-white text-[10px] font-black uppercase tracking-wider rounded-xl hover:bg-amber-600 transition-colors">
-                                    Reprendre
-                                    <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5"><path d="m9 18 6-6-6-6"/></svg>
-                                </a>
-                            </template>
+
                             <template x-if="qcm.etat === 'reussi' || qcm.etat === 'echoue'">
                                 <a :href="'/student/qcm/' + qcm.id + '/result'" class="inline-flex items-center gap-1.5 px-5 py-2.5 bg-slate-50 text-slate-900 border border-slate-100 text-[10px] font-black uppercase tracking-wider rounded-xl hover:bg-slate-100 transition-colors">
                                     Bilan

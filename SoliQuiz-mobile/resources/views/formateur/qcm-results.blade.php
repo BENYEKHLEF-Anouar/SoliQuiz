@@ -12,7 +12,9 @@
             </a>
             <div class="flex-1 min-w-0">
                 <h1 class="text-lg font-heading font-extrabold text-white tracking-tight leading-none truncate" x-text="qcmTitle || 'Chargement...'"></h1>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1.5">Résultats de passage</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1.5">
+                    Résultats de passage <span x-show="classeName" class="text-primary-400" x-text="'• ' + classeName"></span>
+                </p>
             </div>
         </div>
     </header>
@@ -225,6 +227,7 @@
         Alpine.data('qcmResults', () => ({
             qcmId: null,
             qcmTitle: '',
+            classeName: '',
             results: [],
             filteredResults: [],
             loading: false,
@@ -246,6 +249,7 @@
                     const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/formateur/qcms/${this.qcmId}/results`);
                     const data = await response.json();
                     this.qcmTitle = data.title;
+                    this.classeName = data.classeName || '';
                     this.results = data.results.map((r, i) => ({ ...r, rank: i + 1 }));
                     this.applyFilters();
                 } catch (e) {

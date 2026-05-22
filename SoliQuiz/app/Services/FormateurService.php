@@ -131,6 +131,7 @@ class FormateurService
         return [
             'qcmId' => $qcm->id,
             'title' => $qcm->titre,
+            'classeName' => $qcm->classe->nom ?? 'Général',
             'results' => $formatted->toArray()
         ];
     }
