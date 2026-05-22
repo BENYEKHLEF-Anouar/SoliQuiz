@@ -9,6 +9,7 @@ skinparam usecase {
 }
 
 actor "Administrateur" as A
+actor "SoliLMS" as LMS
 
 package "Espace Administrateur" {
     usecase "Voir le tableau de bord global" as UC_DASH
@@ -16,11 +17,15 @@ package "Espace Administrateur" {
     usecase "Gérer la pédagogie" as UC_PEDA
     usecase "Gérer les classes & cohortes" as UC_CLASS
     usecase "Superviser tous les QCMs" as UC_QCMS
+    usecase "Configurer l'API SoliLMS" as UC_CONF
 
     A -- UC_DASH
     A -- UC_ROLES
     A -- UC_PEDA
     A -- UC_CLASS
     A -- UC_QCMS
+    A -- UC_CONF
+
+    LMS -- UC_CONF
 }
 @enduml
