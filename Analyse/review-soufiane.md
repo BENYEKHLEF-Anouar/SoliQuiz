@@ -1,5 +1,5 @@
 # Revue et Suggestions Fonctionnelles - SoliQuiz
-**Auteur :** Soufian (Apprenant)
+**Auteur :** Soufiane (Apprenant)
 
 Salut Monsieur, voici mes retours et mes suggestions d'amélioration purement fonctionnelles pour l'application **SoliQuiz** :
 
