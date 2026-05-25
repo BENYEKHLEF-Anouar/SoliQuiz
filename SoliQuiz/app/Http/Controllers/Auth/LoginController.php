@@ -70,6 +70,6 @@ class LoginController extends Controller
             return redirect()->route('formateur.dashboard');
         }
         
-        return redirect()->route('student.dashboard');
+        return redirect()->route('etudiant.dashboard');
     }
 }

@@ -156,7 +156,7 @@
             async fetchHistory() {
                 this.loading = true;
                 try {
-                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/history`);
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/etudiant/history`);
                     this.history = await response.json();
                 } catch (e) {
                     console.error('Failed to load history', e);

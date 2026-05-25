@@ -187,7 +187,7 @@
             async init() {
                 this.loading = true;
                 try {
-                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/bibliotheque`);
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/etudiant/bibliotheque`);
                     const data = await response.json();
                     
                     this.allQcms = data.qcms || [];

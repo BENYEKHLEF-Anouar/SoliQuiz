@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ResultatService;
 
-class StudentController extends Controller
+class EtudiantController extends Controller
 {
     private PassationService $passationService;
     private EtudiantService $etudiantService;
@@ -49,7 +49,37 @@ class StudentController extends Controller
         $progressByUa = $this->etudiantService->getProgressByUa($student);
         $cohortPodiums = $this->etudiantService->getCohortPodiums($student);
 
-        return view('student.dashboard', compact('metrics', 'historique', 'upcoming', 'lastScores', 'activeSessions', 'formateur', 'progressByUa', 'cohortPodiums'));
+        return view('etudiant.dashboard', compact('metrics', 'historique', 'upcoming', 'lastScores', 'activeSessions', 'formateur', 'progressByUa', 'cohortPodiums'));
+    }
+
+    /**
+     * Affiche la progression personnelle de l'étudiant.
+     */
+    public function progression()
+    {
+        $student = Auth::user()->load('classe.formateur');
+        $formateur = $student->classe ? $student->classe->formateur : null;
+        $metrics = $this->etudiantService->getDashboard($student);
+        
+        $tentatives = $student->tentatives()
+            ->whereNotNull('score_obtenu')
+            ->with(['qcm.uniteApprentissage'])
+            ->orderBy('date_fin', 'asc')
+            ->get();
+
+        $totalAttempts = $tentatives->count();
+        $averageScore = $totalAttempts > 0 ? round($tentatives->avg('score_obtenu'), 2) : 0;
+        $successRate = $totalAttempts > 0 ? round(($tentatives->where('statut', 'reussi')->count() / $totalAttempts) * 100) : 0;
+
+        $unites = $tentatives->map(fn($t) => $t->qcm->uniteApprentissage)
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        $history = $tentatives->sortByDesc('date_fin');
+        $progressByUa = $this->etudiantService->getProgressByUa($student);
+
+        return view('etudiant.progression', compact('student', 'formateur', 'metrics', 'totalAttempts', 'averageScore', 'successRate', 'history', 'unites', 'progressByUa'));
     }
 
     /**
@@ -69,7 +99,7 @@ class StudentController extends Controller
         $moyenne = $data['moyenne'];
         $unites = $data['unites'];
 
-        return view('student.bibliotheque', compact('termines', 'enCours', 'aFaire', 'moyenne', 'search', 'unites', 'formateur'));
+        return view('etudiant.bibliotheque', compact('termines', 'enCours', 'aFaire', 'moyenne', 'search', 'unites', 'formateur'));
     }
 
     /**
@@ -117,7 +147,7 @@ class StudentController extends Controller
         $tentative = $this->passationService->demarrer($student, $qcm->id);
 
         if ($tentative->statut !== 'en_cours') {
-            return redirect()->route('student.bibliotheque');
+            return redirect()->route('etudiant.bibliotheque');
         }
 
         // CALCUL DU TEMPS RESTANT : Heure de fin prévue - Maintenant
@@ -130,7 +160,7 @@ class StudentController extends Controller
             // Si le temps est écoulé (négatif ou zéro), on soumet automatiquement
             if ($tempsRestant <= 0) {
                 $this->passationService->soumettre($tentative);
-                return redirect()->route('student.resultats', $qcm->id)->with('info', 'Le temps est écoulé.');
+                return redirect()->route('etudiant.resultats', $qcm->id)->with('info', 'Le temps est écoulé.');
             }
         } else {
             $tempsRestant = -1;
@@ -144,7 +174,7 @@ class StudentController extends Controller
             $initialAnswers[$reponse->question_id] = $reponse->question->type === 'unique' ? ($options[0] ?? null) : $options;
         }
 
-        return view('student.passation', compact('qcm', 'tentative', 'tempsRestant', 'initialAnswers'));
+        return view('etudiant.passation', compact('qcm', 'tentative', 'tempsRestant', 'initialAnswers'));
     }
 
     /**
@@ -175,7 +205,7 @@ class StudentController extends Controller
         $this->passationService->enregistrerReponses($tentative, $request->input('answers', []));
         $this->passationService->soumettre($tentative);
 
-        return redirect()->route('student.resultats', ['id' => $id])->with('success', 'QCM soumis avec succès !');
+        return redirect()->route('etudiant.resultats', ['id' => $id])->with('success', 'QCM soumis avec succès !');
     }
 
     /**
@@ -194,8 +224,9 @@ class StudentController extends Controller
         $questionDetails = $details['questionDetails'];
         $totalQuestions = $qcm->questions->count();
 
-        return view('student.resultats', compact('qcm', 'tentative', 'questionDetails', 'totalQuestions'));
+        return view('etudiant.resultats', compact('qcm', 'tentative', 'questionDetails', 'totalQuestions'));
     }
+
     /**
      * Exporte les résultats finaux d'un QCM au format PDF
      */

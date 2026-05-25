@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\EtudiantService;
 use Illuminate\Http\Request;
 
-class StudentController extends Controller
+class EtudiantController extends Controller
 {
     protected $etudiantService;
 

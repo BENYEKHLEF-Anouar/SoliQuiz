@@ -6,7 +6,14 @@
         
         <!-- Navigation -->
         <div class="mb-8">
-            <a href="{{ route('student.bibliotheque') }}" 
+            @php
+                $referer = request()->headers->get('referer', '');
+                $backUrl = route('etudiant.bibliotheque');
+                if (str_contains($referer, 'progression')) {
+                    $backUrl = route('etudiant.progression');
+                }
+            @endphp
+            <a href="{{ $backUrl }}" 
                class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
                 <div class="size-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:border-primary-200 group-hover:bg-primary-50 transition-all shadow-sm">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
@@ -133,43 +140,78 @@
                             $isMissed = !$option->isSelected && $option->est_correcte;
                             $isJustFalse = !$option->isSelected && !$option->est_correcte;
                             
-                            $cardStyle = "bg-slate-50/50 border-2 border-transparent p-5 rounded-2xl transition-all h-full opacity-60";
-                            $statusColor = "text-slate-400";
-                            $statusText = "Fausse";
+                            $cardStyle = "bg-slate-50/20 border border-slate-200/50 p-5 rounded-[1.25rem] transition-all duration-300 h-full opacity-50 hover:opacity-75";
+                            $statusBadgeStyle = "";
+                            $statusText = "";
+                            $iconBoxStyle = "border border-slate-200 bg-slate-50/50 text-transparent";
+                            $isSelectedAnswer = false;
 
                             if ($isUserCorrect) {
-                                $cardStyle = "bg-emerald-50 border-emerald-200 p-5 rounded-2xl shadow-sm transition-all h-full relative overflow-hidden";
-                                $statusColor = "text-emerald-600";
-                                $statusText = "Ma réponse (Correcte)";
+                                $cardStyle = "bg-emerald-500/[0.03] border border-emerald-500/25 p-5 rounded-[1.25rem] shadow-xs shadow-emerald-500/[0.02] transition-all duration-300 h-full relative overflow-hidden";
+                                $statusBadgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-100";
+                                $statusText = "Correcte";
+                                $iconBoxStyle = "bg-emerald-500 border-emerald-500 text-white shadow-xs";
+                                $isSelectedAnswer = true;
                             } elseif ($isUserWrong) {
-                                $cardStyle = "bg-rose-50 border-rose-200 p-5 rounded-2xl shadow-sm transition-all h-full relative overflow-hidden";
-                                $statusColor = "text-rose-600";
-                                $statusText = "Ma réponse (Fausse)";
+                                $cardStyle = "bg-rose-500/[0.03] border border-rose-500/25 p-5 rounded-[1.25rem] shadow-xs shadow-rose-500/[0.02] transition-all duration-300 h-full relative overflow-hidden";
+                                $statusBadgeStyle = "bg-rose-50 text-rose-700 border border-rose-100";
+                                $statusText = "Fausse";
+                                $iconBoxStyle = "bg-rose-500 border-rose-500 text-white shadow-xs";
+                                $isSelectedAnswer = true;
                             } elseif ($isMissed) {
-                                $cardStyle = "bg-emerald-50/50 border-2 border-dashed border-emerald-200 p-5 rounded-2xl transition-all h-full";
-                                $statusColor = "text-emerald-600";
+                                $cardStyle = "bg-emerald-500/[0.01] border-2 border-dashed border-emerald-500/20 p-5 rounded-[1.25rem] transition-all duration-300 h-full";
+                                $statusBadgeStyle = "bg-emerald-50/50 text-emerald-700 border border-emerald-100/50";
                                 $statusText = "Réponse attendue";
+                                $iconBoxStyle = "border-2 border-emerald-500 text-emerald-500 bg-white";
                             }
                         @endphp
                         
                         <div class="{{ $cardStyle }}">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-bold text-slate-800 leading-tight">{{ $option->texte }}</span>
-                                <span class="text-[9px] font-black uppercase tracking-widest {{ $statusColor }}">
-                                    {{ $statusText }}
-                                </span>
-                            </div>
-
-                            @if($option->feedback_specifique && ($option->isSelected || $option->est_correcte))
-                                <div class="mt-3 pt-3 border-t border-slate-900/5 flex gap-2">
-                                    <svg class="size-3 mt-0.5 shrink-0 {{ $option->est_correcte ? 'text-emerald-500' : 'text-rose-500' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                                        <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <p class="text-[10px] font-bold text-slate-500 leading-snug">
-                                        {{ $option->feedback_specifique }}
-                                    </p>
+                            <div class="flex items-start gap-3">
+                                <!-- Status Indicator Icon -->
+                                <div class="size-5 rounded-lg flex items-center justify-center shrink-0 mt-0.5 {{ $iconBoxStyle }}">
+                                    @if($isUserCorrect)
+                                        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    @elseif($isUserWrong)
+                                        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    @elseif($isMissed)
+                                        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    @endif
                                 </div>
-                            @endif
+
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <span class="text-xs font-bold text-slate-800 leading-tight">{{ $option->texte }}</span>
+                                        <div class="flex items-center gap-1.5 shrink-0">
+                                            @if($isSelectedAnswer)
+                                                <span class="px-2 py-0.5 rounded-md bg-primary-600 text-white text-[8px] font-black uppercase tracking-wider whitespace-nowrap shadow-xs shadow-primary-600/10">Ma réponse</span>
+                                            @endif
+                                            @if($statusText)
+                                                <span class="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider shrink-0 {{ $statusBadgeStyle }} whitespace-nowrap">
+                                                    {{ $statusText }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    @if($option->feedback_specifique && ($option->isSelected || $option->est_correcte))
+                                        <div class="mt-3 pt-3 border-t border-slate-900/5 flex gap-2">
+                                            <svg class="size-3 mt-0.5 shrink-0 {{ $option->est_correcte ? 'text-emerald-500' : 'text-rose-500' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <p class="text-[10px] font-bold text-slate-500 leading-snug">
+                                                {{ $option->feedback_specifique }}
+                                            </p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -179,7 +221,7 @@
 
         <!-- CTA footer results -->
         <footer class="mt-16 flex flex-col md:flex-row items-center justify-center gap-4">
-            <a href="{{ route('student.dashboard') }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-slate-100 text-slate-700 font-black rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-[0.2em] text-xs group active:scale-[0.98]">
+            <a href="{{ route('etudiant.dashboard') }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-slate-100 text-slate-700 font-black rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-[0.2em] text-xs group active:scale-[0.98]">
                 <svg class="size-4 transition-transform group-hover:-translate-x-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m12 19-7-7 7-7" />
                     <path d="M19 12H5" />
@@ -188,7 +230,7 @@
             </a>
 
             <!-- @if(!$isSuccess)
-                <a href="{{ route('student.passation', $qcm->id) }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-3 px-10 py-4 h-16 bg-primary-600 text-white font-black rounded-2xl hover:bg-primary-700 transition-all shadow-xl shadow-primary-600/20 uppercase tracking-[0.2em] text-xs group active:scale-[0.98]">
+                <a href="{{ route('etudiant.passation', $qcm->id) }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-3 px-10 py-4 h-16 bg-primary-600 text-white font-black rounded-2xl hover:bg-primary-700 transition-all shadow-xl shadow-primary-600/20 uppercase tracking-[0.2em] text-xs group active:scale-[0.98]">
                     <svg class="size-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
@@ -196,7 +238,7 @@
                 </a>
             @endif -->
 
-            <a href="{{ route('student.resultats.export', $qcm->id) }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-white border border-slate-200 text-slate-400 font-black rounded-2xl hover:bg-slate-50 hover:text-slate-900 transition-all uppercase tracking-[0.2em] text-xs active:scale-[0.98]">
+            <a href="{{ route('etudiant.resultats.export', $qcm->id) }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-white border border-slate-200 text-slate-400 font-black rounded-2xl hover:bg-slate-50 hover:text-slate-900 transition-all uppercase tracking-[0.2em] text-xs active:scale-[0.98]">
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" />
                 </svg>

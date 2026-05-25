@@ -10,7 +10,7 @@ Route::get('/dashboard', function () {
     $user = Auth::user();
     if ($user->isAdmin()) return redirect()->route('admin.dashboard');
     if ($user->isFormateur()) return redirect()->route('formateur.dashboard');
-    return redirect()->route('student.dashboard');
+    return redirect()->route('etudiant.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('/api/check-code', function(Illuminate\Http\Request $request) {
@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     // Group: Admin Only
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function() {
         Route::get('/dashboard', [\App\Http\Controllers\Web\AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/resultats', [\App\Http\Controllers\Web\AdminController::class, 'resultats'])->name('resultats');
         Route::get('/qcms', [\App\Http\Controllers\Web\AdminController::class, 'indexQcms'])->name('qcms');
         Route::get('/qcms/search', [\App\Http\Controllers\Web\AdminController::class, 'searchQcms'])->name('qcms.search');
         
@@ -81,6 +82,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/resultats', [\App\Http\Controllers\Web\FormateurController::class, 'resultatsCohorte'])->name('resultats');
         Route::get('/resultats/export', [\App\Http\Controllers\Web\FormateurController::class, 'exportResultats'])->name('resultats.export');
         Route::get('/resultats/tentative/{id}/export', [\App\Http\Controllers\Web\FormateurController::class, 'exportTentative'])->name('resultats.tentative.export');
+        Route::get('/etudiants/{id}/progression', [\App\Http\Controllers\Web\FormateurController::class, 'studentProgress'])->name('etudiants.progression');
         
         Route::get('/pedagogie', [\App\Http\Controllers\Web\FormateurController::class, 'pedagogie'])->name('pedagogie');
         Route::post('/pedagogie/seance', [\App\Http\Controllers\Web\FormateurController::class, 'storeSeance'])->name('pedagogie.seance.store');
@@ -98,15 +100,16 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Group: Student Only
-    Route::middleware(['role:etudiant'])->prefix('student')->name('student.')->group(function() {
-        Route::get('/dashboard', [\App\Http\Controllers\Web\StudentController::class, 'dashboard'])->name('dashboard');
-        Route::get('/bibliotheque', [\App\Http\Controllers\Web\StudentController::class, 'bibliotheque'])->name('bibliotheque');
-        Route::get('/bibliotheque/search', [\App\Http\Controllers\Web\StudentController::class, 'bibliothequeSearch'])->name('bibliotheque.search');
-        Route::get('/qcm/{id}', [\App\Http\Controllers\Web\StudentController::class, 'passation'])->name('passation');
-        Route::post('/qcm/{id}', [\App\Http\Controllers\Web\StudentController::class, 'submitQcm'])->name('qcm.submit');
-        Route::post('/qcm/{id}/save', [\App\Http\Controllers\Web\StudentController::class, 'saveProgress'])->name('qcm.save');
-        Route::get('/qcm/{id}/resultats', [\App\Http\Controllers\Web\StudentController::class, 'resultats'])->name('resultats');
-        Route::get('/qcm/{id}/export', [\App\Http\Controllers\Web\StudentController::class, 'exportResultat'])->name('resultats.export');
+    Route::middleware(['role:etudiant'])->prefix('etudiant')->name('etudiant.')->group(function() {
+        Route::get('/dashboard', [\App\Http\Controllers\Web\EtudiantController::class, 'dashboard'])->name('dashboard');
+        Route::get('/progression', [\App\Http\Controllers\Web\EtudiantController::class, 'progression'])->name('progression');
+        Route::get('/bibliotheque', [\App\Http\Controllers\Web\EtudiantController::class, 'bibliotheque'])->name('bibliotheque');
+        Route::get('/bibliotheque/search', [\App\Http\Controllers\Web\EtudiantController::class, 'bibliothequeSearch'])->name('bibliotheque.search');
+        Route::get('/qcm/{id}', [\App\Http\Controllers\Web\EtudiantController::class, 'passation'])->name('passation');
+        Route::post('/qcm/{id}', [\App\Http\Controllers\Web\EtudiantController::class, 'submitQcm'])->name('qcm.submit');
+        Route::post('/qcm/{id}/save', [\App\Http\Controllers\Web\EtudiantController::class, 'saveProgress'])->name('qcm.save');
+        Route::get('/qcm/{id}/resultats', [\App\Http\Controllers\Web\EtudiantController::class, 'resultats'])->name('resultats');
+        Route::get('/qcm/{id}/export', [\App\Http\Controllers\Web\EtudiantController::class, 'exportResultat'])->name('resultats.export');
     });
 
     // Shared Profile Routes

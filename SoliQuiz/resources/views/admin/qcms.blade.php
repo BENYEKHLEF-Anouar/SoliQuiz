@@ -10,7 +10,9 @@
             initialSearch: '{{ $search }}',
             initialStatut: '{{ $statut }}',
             initialFormateurId: '{{ $formateurId ?? '' }}',
-            formateurs: {{ Js::from($formateurs->map(fn($f) => ['id' => $f->id, 'nom_complet' => $f->nom_complet])->toArray()) }}
+            formateurs: {{ Js::from($formateurs->map(fn($f) => ['id' => $f->id, 'nom_complet' => $f->nom_complet])->toArray()) }},
+            totalCount: {{ $qcms->total() }},
+            searchUrl: '{{ route('admin.qcms.search') }}'
          })">
 
         <!-- Header -->
@@ -461,114 +463,5 @@
         </div>
     </div>
 
-    @push('scripts')
-        <script>
-            function adminQcmBank(config) {
-                return {
-                    qcms: config.initialQcms,
-                    search: config.initialSearch,
-                    statut: config.initialStatut,
-                    formateurId: config.initialFormateurId,
-                    formateurs: config.formateurs,
-                    loading: false,
-                    totalCount: {{ $qcms->total() }},
-                    viewMode: localStorage.getItem('qcms_view_mode') || 'cards',
-                    setViewMode(mode) {
-                        this.viewMode = mode;
-                        localStorage.setItem('qcms_view_mode', mode);
-                    },
 
-                    get statutLabel() {
-                        if (!this.statut) return 'Tous les statuts';
-                        return this.statut.charAt(0).toUpperCase() + this.statut.slice(1);
-                    },
-
-                    get formateurLabel() {
-                        if (!this.formateurId) return 'Tous les formateurs';
-                        const f = this.formateurs.find(x => x.id == this.formateurId);
-                        return f ? f.nom_complet : 'Tous les formateurs';
-                    },
-
-                    async applyFilters() {
-                        this.loading = true;
-                        const url = new URL('{{ route('admin.qcms.search') }}');
-                        if (this.search) url.searchParams.set('search', this.search);
-                        if (this.statut) url.searchParams.set('statut', this.statut);
-                        if (this.formateurId) url.searchParams.set('formateur_id', this.formateurId);
-
-                        try {
-                            const response = await fetch(url);
-                            const data = await response.json();
-                            this.qcms = data.data;
-                            this.totalCount = data.total;
-
-                            // Update URL for bookmarking
-                            const browserUrl = new URL(window.location);
-                            if (this.search) browserUrl.searchParams.set('search', this.search); else browserUrl.searchParams.delete('search');
-                            if (this.statut) browserUrl.searchParams.set('statut', this.statut); else browserUrl.searchParams.delete('statut');
-                            if (this.formateurId) browserUrl.searchParams.set('formateur_id', this.formateurId); else browserUrl.searchParams.delete('formateur_id');
-                            history.pushState({}, '', browserUrl);
-                        } catch (error) {
-                            console.error('Erreur de recherche:', error);
-                        } finally {
-                            this.loading = false;
-                        }
-                    },
-
-                    async toggleStatus(qcm) {
-                        try {
-                            const response = await fetch(`/formateur/qcm/${qcm.id}/toggle`, {
-                                method: 'PATCH',
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                    'Accept': 'application/json'
-                                }
-                            });
-                            if (response.ok) {
-                                const data = await response.json();
-                                qcm.statut = data.statut;
-                                window.dispatchEvent(new CustomEvent('toast', { detail: { message: data.message || 'Statut mis à jour', type: 'success' } }));
-                            }
-                        } catch (error) {
-                            window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Erreur lors de la mise à jour', type: 'error' } }));
-                        }
-                    },
-
-                    deleteQcm(id) {
-                        window.dispatchEvent(new CustomEvent('confirm', {
-                            detail: {
-                                title: 'Supprimer ce QCM ?',
-                                message: 'Cette action est irréversible et supprimera définitivement toutes les données et tentatives liées à cette évaluation.',
-                                type: 'danger',
-                                confirmText: 'Supprimer l\'actif',
-                                onConfirm: () => this.executeDelete(id)
-                            }
-                        }));
-                    },
-
-                    async executeDelete(id) {
-                        this.loading = true;
-                        try {
-                            const response = await fetch(`/formateur/qcm/${id}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                    'Accept': 'application/json'
-                                }
-                            });
-                            if (response.ok) {
-                                this.qcms = this.qcms.filter(q => q.id !== id);
-                                this.totalCount--;
-                                window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'QCM supprimé définitivement', type: 'success' } }));
-                            }
-                        } catch (error) {
-                            window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Erreur lors de la suppression', type: 'error' } }));
-                        } finally {
-                            this.loading = false;
-                        }
-                    }
-                }
-            }
-        </script>
-    @endpush
 @endsection

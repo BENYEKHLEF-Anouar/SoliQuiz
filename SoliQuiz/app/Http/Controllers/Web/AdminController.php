@@ -77,6 +77,34 @@ class AdminController extends Controller
         
         return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus', 'classes'));
     }
+    
+    /**
+     * Affiche les résultats des étudiants pour une classe sélectionnée (Admin)
+     */
+    public function resultats(Request $request)
+    {
+        $classes = Classe::orderBy('nom')->get();
+        $selectedClasseId = $request->input('classe_id') ?: ($classes->first()?->id ?? null);
+        
+        $selectedClasse = $selectedClasseId ? Classe::with('etudiants')->find($selectedClasseId) : null;
+        
+        $qcms = $selectedClasseId 
+            ? \App\Models\QCM::where('classe_id', $selectedClasseId)
+                ->where('statut', '!=', 'brouillon')
+                ->with(['tentatives.etudiant', 'uniteApprentissage'])
+                ->latest()
+                ->get()
+            : collect();
+            
+        $etudiants = $selectedClasse 
+            ? $selectedClasse->etudiants->map(fn($e) => [
+                'id' => $e->id,
+                'name' => $e->prenom . ' ' . $e->nom
+            ])->sortBy('name')->values()
+            : collect();
+            
+        return view('admin.resultats', compact('classes', 'selectedClasseId', 'selectedClasse', 'qcms', 'etudiants'));
+    }
 
     /**
      * Affiche la liste des utilisateurs.

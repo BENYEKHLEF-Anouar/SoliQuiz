@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="space-y-10 reveal active" 
-     x-data="studentLibrary({ 
+     x-data="etudiantLibrary({ 
          enCours: {{ Js::from($enCours->values()) }}, 
          aFaire: {{ Js::from($aFaire->values()) }}, 
          termines: {{ Js::from($termines->values()) }}, 
@@ -12,7 +12,8 @@
          uaId: '',
          uaLabel: 'Toutes les unités',
          statut: '',
-         statutLabel: 'Tous les scores'
+         statutLabel: 'Tous les scores',
+         searchUrl: '{{ route('etudiant.bibliotheque.search') }}'
      })">
     <!-- Header Section -->
     <div class="relative z-30 mb-10">
@@ -46,51 +47,6 @@
                         <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Terminés</p>
                         <p class="text-lg font-black text-emerald-500 leading-none">{{ $termines->count() }}</p>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filters Row -->
-        <div class="mt-8 flex flex-col md:flex-row gap-4 items-center">
-            <!-- Search -->
-            <div class="flex-1 relative group w-full">
-                <svg class="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-300 pointer-events-none group-focus-within:text-primary-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <input type="text" x-model="search" @input.debounce.300ms="applyFilters()"
-                       placeholder="Rechercher une évaluation..."
-                       class="w-full h-14 bg-white border-2 border-slate-100 rounded-2xl pl-12 pr-14 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all shadow-xs group-hover:shadow-sm">
-                
-                <div x-show="loading" class="absolute right-5 top-1/2 -translate-y-1/2" style="display: none;">
-                    <div class="size-4 border-2 border-primary-200 border-t-primary-500 rounded-full animate-spin"></div>
-                </div>
-            </div>
-
-            <!-- UA Filter -->
-            <div x-data="{ open: false }" class="relative w-full md:w-64">
-                <button @click="open = !open" @click.away="open = false"
-                        class="w-full h-14 px-5 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-between text-sm font-bold text-slate-600 hover:border-primary-300 transition-all">
-                    <span class="truncate pr-2" x-text="uaLabel"></span>
-                    <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div x-show="open" style="display: none;" class="absolute top-full left-0 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 p-2 max-h-60 overflow-y-auto">
-                    <button @click="uaId = ''; uaLabel = 'Toutes les unités'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-500 hover:bg-slate-50 rounded-lg">Toutes les unités</button>
-                    @foreach($unites as $unite)
-                        <button @click="uaId = '{{ $unite->id }}'; uaLabel = '{{ $unite->nom }}'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-900 hover:bg-primary-50 hover:text-primary-600 rounded-lg">{{ $unite->nom }}</button>
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Status Filter -->
-            <div x-data="{ open: false }" class="relative w-full md:w-56">
-                <button @click="open = !open" @click.away="open = false"
-                        class="w-full h-14 px-5 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-between text-sm font-bold text-slate-600 hover:border-primary-300 transition-all">
-                    <span x-text="statutLabel"></span>
-                    <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div x-show="open" style="display: none;" class="absolute top-full left-0 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 p-2">
-                    <button @click="statut = ''; statutLabel = 'Tous les scores'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-500 hover:bg-slate-50 rounded-lg">Tous les scores</button>
-                    <button @click="statut = 'reussi'; statutLabel = 'Réussi (70%+)'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg">Réussi</button>
-                    <button @click="statut = 'echoue'; statutLabel = 'Échoué (< 70%)'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-lg">Échoué</button>
-                    <button @click="statut = 'a_faire'; statutLabel = 'À faire'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg">À faire</button>
                 </div>
             </div>
         </div>
@@ -137,9 +93,51 @@
                         <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">QCM Restants</span>
                     </div>
                 </div>
-                <!-- <div class="size-10 rounded-xl bg-primary-50 text-primary-500 flex items-center justify-center group-hover:bg-primary-500 group-hover:text-white transition-colors">
-                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round"/></svg>
-                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="flex flex-col md:flex-row gap-4 items-center mb-8">
+        <!-- Search -->
+        <div class="flex-1 relative group w-full">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-300 pointer-events-none group-focus-within:text-primary-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" x-model="search" @input.debounce.300ms="applyFilters()"
+                   placeholder="Rechercher une évaluation..."
+                   class="w-full h-14 bg-white border-2 border-slate-100 rounded-2xl pl-12 pr-14 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all shadow-xs group-hover:shadow-sm">
+            
+            <div x-show="loading" class="absolute right-5 top-1/2 -translate-y-1/2" style="display: none;">
+                <div class="size-4 border-2 border-primary-200 border-t-primary-500 rounded-full animate-spin"></div>
+            </div>
+        </div>
+
+        <!-- UA Filter -->
+        <div x-data="{ open: false }" class="relative w-full md:w-64">
+            <button @click="open = !open" @click.away="open = false"
+                    class="w-full h-14 px-5 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-between text-sm font-bold text-slate-600 hover:border-primary-300 transition-all">
+                <span class="truncate pr-2" x-text="uaLabel"></span>
+                <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div x-show="open" style="display: none;" class="absolute top-full left-0 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 p-2 max-h-60 overflow-y-auto">
+                <button @click="uaId = ''; uaLabel = 'Toutes les unités'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-500 hover:bg-slate-50 rounded-lg">Toutes les unités</button>
+                @foreach($unites as $unite)
+                    <button @click="uaId = '{{ $unite->id }}'; uaLabel = '{{ $unite->nom }}'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-900 hover:bg-primary-50 hover:text-primary-600 rounded-lg">{{ $unite->nom }}</button>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Status Filter -->
+        <div x-data="{ open: false }" class="relative w-full md:w-56">
+            <button @click="open = !open" @click.away="open = false"
+                    class="w-full h-14 px-5 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-between text-sm font-bold text-slate-600 hover:border-primary-300 transition-all">
+                <span x-text="statutLabel"></span>
+                <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div x-show="open" style="display: none;" class="absolute top-full left-0 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 p-2">
+                <button @click="statut = ''; statutLabel = 'Tous les scores'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-500 hover:bg-slate-50 rounded-lg">Tous les scores</button>
+                <button @click="statut = 'reussi'; statutLabel = 'Réussi (70%+)'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg">Réussi</button>
+                <button @click="statut = 'echoue'; statutLabel = 'Échoué (< 70%)'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-lg">Échoué</button>
+                <button @click="statut = 'a_faire'; statutLabel = 'À faire'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg">À faire</button>
             </div>
         </div>
     </div>
@@ -199,7 +197,7 @@
                                     <div>
                                         <div class="flex items-center gap-2 mb-1.5">
                                             <h3 class="text-lg font-heading font-black text-slate-900 tracking-tight leading-snug group-hover:text-primary-600 transition-colors" x-text="qcm.titre"></h3>
-                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest"
+                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest whitespace-nowrap"
                                                   :class="qcm.etat === 'en_cours' ? 'bg-primary-50 text-primary-600 border border-primary-100' : 'bg-slate-100 text-slate-500'">
                                                 <span class="size-1.5 rounded-full" :class="qcm.etat === 'en_cours' ? 'bg-primary-500 animate-pulse' : 'bg-slate-400'"></span>
                                                 <span x-text="qcm.etat === 'en_cours' ? 'En cours' : 'Prêt'"></span>
@@ -312,42 +310,6 @@
         </div>
     </section>
 
-    <script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('studentLibrary', (config) => ({
-            enCours: config.enCours,
-            aFaire: config.aFaire,
-            termines: config.termines,
-            search: config.search,
-            uaId: config.uaId,
-            uaLabel: config.uaLabel,
-            statut: config.statut,
-            statutLabel: config.statutLabel,
-            loading: false,
 
-            async applyFilters() {
-                this.loading = true;
-                const url = new URL('{{ route('student.bibliotheque.search') }}');
-                if (this.search) url.searchParams.set('search', this.search);
-                if (this.uaId) url.searchParams.set('ua_id', this.uaId);
-                if (this.statut) url.searchParams.set('statut', this.statut);
-
-                try {
-                    const response = await fetch(url.toString(), {
-                        headers: { 'Accept': 'application/json' }
-                    });
-                    const data = await response.json();
-                    this.enCours = data.enCours;
-                    this.aFaire = data.aFaire;
-                    this.termines = data.termines;
-                } catch (error) {
-                    console.error('Erreur recherche student:', error);
-                } finally {
-                    this.loading = false;
-                }
-            }
-        }));
-    });
-    </script>
 </div>
 @endsection

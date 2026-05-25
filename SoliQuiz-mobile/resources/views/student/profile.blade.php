@@ -302,7 +302,7 @@
             async fetchProfile() {
                 this.loading = true;
                 try {
-                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/profile`);
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/etudiant/profile`);
                     const data = await response.json();
                     Alpine.store('config').setStudentProfile(data);
                 } catch (e) {
@@ -335,7 +335,7 @@
                 }
                 this.savingProfile = true;
                 try {
-                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/profile`, {
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/etudiant/profile`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -373,7 +373,7 @@
                 }
                 this.savingPassword = true;
                 try {
-                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/student/profile/password`, {
+                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/etudiant/profile/password`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',

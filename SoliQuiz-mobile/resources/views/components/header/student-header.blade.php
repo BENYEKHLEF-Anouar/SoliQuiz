@@ -55,7 +55,7 @@
                 if (Alpine.store('config').studentProfile) return;
                 try {
                     const response = await Alpine.store('config').authFetch(
-                        `${Alpine.store('config').apiBaseUrl}/student/profile`
+                        `${Alpine.store('config').apiBaseUrl}/etudiant/profile`
                     );
                     if (response.ok) {
                         const data = await response.json();

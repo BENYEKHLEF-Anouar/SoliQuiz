@@ -62,6 +62,10 @@ class ResultatService
             $query->where('qcm_id', $filters['qcm_id']);
         }
 
+        if (!empty($filters['etudiant_id'])) {
+            $query->where('etudiant_id', $filters['etudiant_id']);
+        }
+
         return $query->latest()->get();
     }
 }

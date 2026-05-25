@@ -6,7 +6,11 @@
 
 @section('body')
 
-<div x-data="qcmForm({{ $tempsRestant }}, {{ json_encode($initialAnswers) }})" class="min-h-screen flex flex-col">
+<div x-data="qcmForm({{ $tempsRestant }}, {{ json_encode($initialAnswers) }}, {
+    totalQuestions: {{ count($qcm->questions) }},
+    saveUrl: '{{ route('etudiant.qcm.save', $qcm->id) }}',
+    csrfToken: '{{ csrf_token() }}'
+})" class="min-h-screen flex flex-col">
     
     <!-- Sticky Header -->
     <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
@@ -17,7 +21,7 @@
                             @click="$dispatch('confirm', { 
                                 title: 'Suspendre l\'évaluation ?', 
                                 message: 'Vos réponses sont enregistrées automatiquement. Vous pourrez reprendre ce QCM plus tard, mais le chronomètre continuera de s\'écouler.', 
-                                onConfirm: () => { window.onbeforeunload = null; window.location.href = '{{ route('student.bibliotheque') }}' },
+                                onConfirm: () => { window.onbeforeunload = null; window.location.href = '{{ route('etudiant.bibliotheque') }}' },
                                 type: 'warning'
                             })"
                             class="shrink-0 size-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors text-slate-500">
@@ -92,7 +96,7 @@
             </div>
 
             <!-- Questions Form -->
-            <form id="qcm-form" action="{{ route('student.qcm.submit', $qcm->id) }}" method="POST" class="space-y-4">
+            <form id="qcm-form" action="{{ route('etudiant.qcm.submit', $qcm->id) }}" method="POST" class="space-y-4">
                 @csrf
                 @foreach($qcm->questions as $index => $question)
                 @php $qId = (string) $question->id; @endphp
@@ -230,159 +234,5 @@
             </div>
         </div>
     </x-ui.modal>
-
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('qcmForm', (timeRemainingSeconds, initialAnswers = {}) => ({
-                answers: initialAnswers,
-                isSaving: false,
-                lastSaved: null,
-                saveTimeout: null,
-                timeRemaining: timeRemainingSeconds,
-                isSubmitting: false,
-                totalQuestions: {{ count($qcm->questions) }},
-
-                init() {
-                    this.startTimer();
-                    
-                    // Watchers pour l'auto-sauvegarde
-                    this.$watch('answers', () => {
-                        this.debouncedSave();
-                    });
-
-                    // Avertir uniquement si une sauvegarde est en cours
-                    window.addEventListener('beforeunload', (e) => {
-                        if (this.isSaving) {
-                            e.preventDefault();
-                            e.returnValue = '';
-                        }
-                    });
-                },
-
-                debouncedSave() {
-                    clearTimeout(this.saveTimeout);
-                    this.saveTimeout = setTimeout(() => {
-                        this.persistAnswers();
-                    }, 2000); // Sauvegarde après 2s d'inactivité
-                },
-
-                async persistAnswers() {
-                    if (this.isSubmitting) return;
-                    this.isSaving = true;
-                    
-                    try {
-                        await fetch("{{ route('student.qcm.save', $qcm->id) }}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({ answers: this.answers })
-                        });
-                        this.lastSaved = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    } catch (e) {
-                        console.error('Auto-save failed', e);
-                    } finally {
-                        this.isSaving = false;
-                    }
-                },
-
-                selectAnswer(questionId, optionId) {
-                    this.answers[questionId] = String(optionId);
-                    this.answers = { ...this.answers };
-                },
-
-                clearQuestionAnswer(questionId) {
-                    this.answers[questionId] = null;
-                    this.answers = { ...this.answers };
-                },
-
-                toggleAnswer(questionId, optionId) {
-                    const current = this.answers[questionId] || [];
-                    const strId = String(optionId);
-                    const idx = current.map(String).indexOf(strId);
-                    if (idx === -1) {
-                        this.answers[questionId] = [...current, strId];
-                    } else {
-                        this.answers[questionId] = current.filter((_, i) => i !== idx);
-                    }
-                    this.answers = { ...this.answers };
-                },
-
-                isSelected(questionId, optionId) {
-                    const answer = this.answers[questionId];
-                    if (!answer) return false;
-                    if (Array.isArray(answer)) return answer.map(String).includes(String(optionId));
-                    return String(answer) === String(optionId);
-                },
-
-                isQuestionAnswered(questionId) {
-                    const answer = this.answers[questionId];
-                    if (!answer) return false;
-                    if (Array.isArray(answer)) return answer.length > 0;
-                    return true;
-                },
-
-                get answeredCount() {
-                    return Object.keys(this.answers).filter(id => this.isQuestionAnswered(id)).length;
-                },
-
-                get completionPercentage() {
-                    return this.totalQuestions > 0 ? (this.answeredCount / this.totalQuestions) * 100 : 0;
-                },
-
-                get formattedTime() {
-                    if (this.timeRemaining < 0) return 'Illimité';
-                    const m = Math.floor(this.timeRemaining / 60);
-                    const s = Math.floor(this.timeRemaining % 60);
-                    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                },
-
-                startTimer() {
-                    if (this.timeRemaining < 0) return;
-                    if (this.timeRemaining <= 0) {
-                        this.onTimeUp();
-                        return;
-                    }
-                    const interval = setInterval(() => {
-                        if (this.isSubmitting) {
-                            clearInterval(interval);
-                            return;
-                        }
-                        this.timeRemaining--;
-                        if (this.timeRemaining <= 0) {
-                            clearInterval(interval);
-                            this.onTimeUp();
-                        }
-                    }, 1000);
-                },
-
-                onTimeUp() {
-                    this.$dispatch('open-modal', 'time-up');
-                    // Auto-submit after 5 seconds if no action
-                    setTimeout(() => {
-                        if (!this.isSubmitting) this.finalSubmit();
-                    }, 5000);
-                },
-
-                submitForm() {
-                    if (this.answeredCount < this.totalQuestions) {
-                        this.$dispatch('open-modal', 'incomplete-warning');
-                    } else {
-                        this.finalSubmit();
-                    }
-                },
-
-                finalSubmit() {
-                    if (this.isSubmitting) return;
-                    this.isSubmitting = true;
-                    window.onbeforeunload = null;
-                    this.persistAnswers().then(() => {
-                        document.getElementById('qcm-form').submit();
-                    });
-                }
-            }));
-        });
-    </script>
 </div>
 @endsection

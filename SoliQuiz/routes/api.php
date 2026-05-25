@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\EtudiantController;
 use App\Http\Controllers\Api\QcmController;
 use App\Http\Controllers\Api\FormateurController;
 use App\Http\Controllers\Api\AuthController;
@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\AuthController;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/chatbot/chat', [\App\Http\Controllers\Api\ChatbotController::class, 'chat']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -21,16 +22,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Student endpoints - etudiant and admin role can access
-    Route::prefix('student')->middleware('role:etudiant,admin')->group(function () {
-        Route::get('/profile', [StudentController::class, 'profile']);
-        Route::put('/profile', [StudentController::class, 'updateProfile']);
-        Route::put('/profile/password', [StudentController::class, 'updatePassword']);
-        Route::get('/scores', [StudentController::class, 'scores']);
-        Route::get('/evaluations', [StudentController::class, 'evaluations']);
-        Route::get('/notifications', [StudentController::class, 'notifications']);
-        Route::get('/history', [StudentController::class, 'history']);
-        Route::get('/bibliotheque', [StudentController::class, 'bibliotheque']);
+    Route::prefix('etudiant')->middleware('role:etudiant,admin')->group(function () {
+        Route::get('/profile', [EtudiantController::class, 'profile']);
+        Route::put('/profile', [EtudiantController::class, 'updateProfile']);
+        Route::put('/profile/password', [EtudiantController::class, 'updatePassword']);
+        Route::get('/scores', [EtudiantController::class, 'scores']);
+        Route::get('/evaluations', [EtudiantController::class, 'evaluations']);
+        Route::get('/notifications', [EtudiantController::class, 'notifications']);
+        Route::get('/history', [EtudiantController::class, 'history']);
+        Route::get('/bibliotheque', [EtudiantController::class, 'bibliotheque']);
     });
+
+
 
     // QCM endpoints - etudiant and admin role can access
     Route::prefix('qcm')->middleware('role:etudiant,admin')->group(function () {

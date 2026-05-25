@@ -179,6 +179,10 @@
                         <h3 class="font-bold text-slate-900">Suivi des Cohortes</h3>
                         <p class="text-xs text-slate-500 mt-0.5">Taux de réussite et moyenne générale par classe</p>
                     </div>
+                    <a href="{{ route('admin.resultats') }}" class="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1 group/link">
+                        Voir tout
+                        <svg class="size-3 group-hover/link:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+                    </a>
                 </div>
                 
                 <div class="relative w-full min-h-[280px] flex items-center justify-center">

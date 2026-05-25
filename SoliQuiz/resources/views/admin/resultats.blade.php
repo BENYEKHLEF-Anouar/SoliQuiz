@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Supervision des Performances - SoliQuiz')
+@section('title', 'Supervision des Classes - SoliQuiz')
 
 @section('content')
 @php
@@ -28,72 +28,89 @@
     classeList: {{ Js::from($classes->pluck('nom')->toArray()) }},
     studentList: {{ Js::from($etudiants) }},
     allGlobalTentatives: {{ Js::from($allGlobalTentatives) }},
-    exportUrl: '{{ route('formateur.resultats.export') }}'
+    exportUrl: '{{ route('formateur.resultats.export') }}',
+    selectedClasse: '{{ $selectedClasse->nom ?? '' }}'
 })">
     
-    <!-- Navigation -->
-    <div class="mb-6">
-        <!-- <a href="javascript:history.back()" 
-           class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
-            <div class="size-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:border-primary-200 group-hover:bg-primary-50 transition-all shadow-sm">
-                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            </div>
-            <span class="text-[10px] font-black uppercase tracking-widest">Retour</span>
-        </a> -->
-    </div>
     <!-- Header Section -->
     <div class="relative z-30 mb-10">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-200">
             <div>
                 <div class="flex items-center gap-4 mb-3">
-                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Espace Formateur</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Espace Admin</span>
                     <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Analytique</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Analytique de Classe</span>
                 </div>
                 <h3 class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
-                    Supervision des Résultats
+                    Supervision de Cohorte
                 </h3>
                 <p class="mt-2 text-sm text-slate-500 max-w-xl">
-                    Consultez et exportez les performances de vos cohortes en temps réel.
+                    Sélectionnez une cohorte et suivez les performances en temps réel sur l'ensemble des modules d'évaluation.
                 </p>
             </div>
             
-            <!-- Export Actions Dropdown -->
-            <div x-data="{ open: false }" class="relative">
-                <button @click="open = !open" @click.away="open = false"
-                        class="h-14 px-8 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-emerald-600/20 hover:bg-emerald-500 transition-all flex items-center gap-3 group">
-                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    Exporter
-                    <svg class="size-4 text-emerald-200 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 9l-7 7-7-7"/></svg>
-                </button>
+            <!-- Global Cohort Selector & Export Actions -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <!-- Class / Cohort Selector -->
+                <div x-data="{ open: false }" class="relative w-full sm:w-64">
+                    <button type="button" @click="open = !open" @click.away="open = false"
+                            class="w-full h-14 px-5 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-between text-[11px] font-black uppercase tracking-widest text-slate-700 hover:border-primary-300 transition-all shadow-xs">
+                        <span class="truncate mr-2">Classe : {{ $selectedClasse->nom ?? 'Sélectionner' }}</span>
+                        <svg class="size-4 text-slate-400 transition-transform shrink-0" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div x-show="open" x-transition class="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden" style="display: none;">
+                        <div class="max-h-64 overflow-y-auto custom-scrollbar">
+                            @foreach($classes as $c)
+                                <button type="button" @click="switchClasse({{ $c->id }})" 
+                                   class="w-full block px-5 py-4 text-left text-[11px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                                    <span>{{ $c->nom }}</span>
+                                    @if($selectedClasseId == $c->id)
+                                        <span class="size-2 bg-primary-500 rounded-full"></span>
+                                    @endif
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
 
-                <div x-show="open" 
-                     x-cloak
-                     x-transition:enter="transition ease-out duration-150"
-                     x-transition:enter-start="opacity-0 translate-y-2"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     class="absolute right-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-premium overflow-hidden py-1 z-50">
-                                       <button @click="exportData('csv')"
-                       class="w-full px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors flex items-center gap-3">
-                        <div class="size-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-mono">CSV</div>
-                        Format CSV (.csv)
+                <!-- Export dropdown -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" @click.away="open = false"
+                            class="h-14 px-8 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-emerald-600/20 hover:bg-emerald-500 transition-all flex items-center gap-3 group">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Exporter
+                        <svg class="size-4 text-emerald-200 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 9l-7 7-7-7"/></svg>
                     </button>
 
-                    <button @click="exportData('excel')"
-                       class="w-full px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-teal-50 hover:text-teal-600 transition-colors flex items-center gap-3">
-                        <div class="size-8 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center font-mono">XLS</div>
-                        Format Excel (.xls)
-                    </button>
+                    <div x-show="open" 
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 translate-y-2"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         class="absolute right-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-premium overflow-hidden py-1 z-50">
+                        <button @click="exportData('csv')"
+                           class="w-full px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors flex items-center gap-3">
+                            <div class="size-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-mono">CSV</div>
+                            Format CSV (.csv)
+                        </button>
 
-                    <button @click="exportData('pdf')"
-                       class="w-full px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-colors flex items-center gap-3">
-                        <div class="size-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-mono">PDF</div>
-                        Format PDF (.pdf)
-                    </button>
+                        <button @click="exportData('excel')"
+                           class="w-full px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-teal-50 hover:text-teal-600 transition-colors flex items-center gap-3">
+                            <div class="size-8 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center font-mono">XLS</div>
+                            Format Excel (.xls)
+                        </button>
+
+                        <button @click="exportData('pdf')"
+                           class="w-full px-5 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-colors flex items-center gap-3">
+                            <div class="size-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-mono">PDF</div>
+                            Format PDF (.pdf)
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
+        @if($selectedClasse)
         <!-- Filters Row -->
         <div class="mt-8 flex flex-col sm:flex-row gap-4 items-center">
             <!-- Search / Student Dropdown -->
@@ -134,7 +151,7 @@
                 </div>
             </div>
             
-            <!-- QCM Filter Dropdown (Restored & Scrollable) -->
+            <!-- QCM Filter Dropdown -->
             <div x-data="{ open: false }" class="relative w-full sm:w-80">
                 <button type="button" @click="open = !open" @click.away="open = false"
                         class="w-full h-14 px-5 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-between text-[11px] font-black uppercase tracking-widest text-slate-600 hover:border-primary-300 transition-all shadow-xs">
@@ -161,8 +178,10 @@
                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
+        @endif
     </div>
 
+    @if($selectedClasse)
     <!-- Tabs Selector -->
     <div class="mt-8 flex gap-6 border-b border-slate-100 pb-px">
         <button @click="activeTab = 'qcm'" type="button" 
@@ -281,23 +300,23 @@
                              class="absolute right-0 mt-2 w-40 bg-white border border-slate-100 rounded-xl shadow-xl z-50 py-1 overflow-hidden"
                              style="display: none;">
                             
-                            <button @click="window.location.href = '{{ route('formateur.resultats.export', ['qcm' => $qcm->id, 'format' => 'csv']) }}'" 
+                            <a href="{{ route('formateur.resultats.export', ['qcm' => $qcm->id, 'format' => 'csv']) }}" 
                                class="w-full px-4 py-3 text-left text-[9px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-2">
                                 <div class="size-5 rounded bg-emerald-100 text-emerald-600 flex items-center justify-center text-[7px] font-mono">CSV</div>
                                 CSV
-                            </button>
+                            </a>
 
-                            <button @click="window.location.href = '{{ route('formateur.resultats.export', ['qcm' => $qcm->id, 'format' => 'excel']) }}'" 
+                            <a href="{{ route('formateur.resultats.export', ['qcm' => $qcm->id, 'format' => 'excel']) }}" 
                                class="w-full px-4 py-3 text-left text-[9px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-2">
                                 <div class="size-5 rounded bg-teal-100 text-teal-600 flex items-center justify-center text-[7px] font-mono">XLS</div>
                                 Excel
-                            </button>
+                            </a>
 
-                            <button @click="window.location.href = '{{ route('formateur.resultats.export', ['qcm' => $qcm->id, 'format' => 'pdf']) }}'" 
+                            <a href="{{ route('formateur.resultats.export', ['qcm' => $qcm->id, 'format' => 'pdf']) }}" 
                                class="w-full px-4 py-3 text-left text-[9px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-2">
                                 <div class="size-5 rounded bg-rose-100 text-rose-600 flex items-center justify-center text-[7px] font-mono">PDF</div>
                                 PDF
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -348,11 +367,11 @@
                                 <td class="px-8 py-5 text-right">
                                     <div class="inline-flex items-center gap-2 justify-end">
                                         <template x-if="t.score !== null">
-                                            <button @click="window.location.href = '/formateur/etudiants/' + t.etudiant_id + '/progression'"
+                                            <a :href="'/formateur/etudiants/' + t.etudiant_id + '/progression'"
                                                 class="inline-flex size-8 rounded-lg bg-indigo-50 text-indigo-500 items-center justify-center hover:bg-indigo-500 hover:text-white transition-all shadow-sm"
                                                 title="Graphique de progression">
                                                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                                            </button>
+                                            </a>
                                         </template>
 
                                         <template x-if="t.score !== null">
@@ -372,20 +391,20 @@
                                                         class="absolute right-full top-1/2 -translate-y-1/2 mr-3 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 p-1.5 flex items-center gap-1.5"
                                                         style="display: none;">
                                                     
-                                                    <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=pdf'" 
+                                                    <a :href="'/formateur/resultats/tentative/' + t.id + '/export?format=pdf'" 
                                                         class="flex-1 py-1.5 text-center text-[9px] font-black uppercase tracking-wider text-rose-600 bg-rose-50 hover:bg-rose-500 hover:text-white rounded-lg transition-all border border-rose-100 hover:border-rose-500">
                                                         PDF
-                                                    </button>
+                                                    </a>
 
-                                                    <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=excel'" 
+                                                    <a :href="'/formateur/resultats/tentative/' + t.id + '/export?format=excel'" 
                                                         class="flex-1 py-1.5 text-center text-[9px] font-black uppercase tracking-wider text-teal-600 bg-teal-50 hover:bg-teal-500 hover:text-white rounded-lg transition-all border border-teal-100 hover:border-teal-500">
                                                         XLS
-                                                    </button>
+                                                    </a>
 
-                                                    <button @click="window.location.href = '/formateur/resultats/tentative/' + t.id + '/export?format=csv'" 
+                                                    <a :href="'/formateur/resultats/tentative/' + t.id + '/export?format=csv'" 
                                                         class="flex-1 py-1.5 text-center text-[9px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 hover:bg-emerald-500 hover:text-white rounded-lg transition-all border border-emerald-100 hover:border-emerald-500">
                                                         CSV
-                                                    </button>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </template>
@@ -407,7 +426,7 @@
             <div class="size-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-200">
                 <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             </div>
-            <p class="text-slate-400 font-black uppercase tracking-widest">Aucun résultat consolidé</p>
+            <p class="text-slate-400 font-black uppercase tracking-widest">Aucun QCM configuré ou complété pour cette classe.</p>
         </div>
         @endforelse
         </div>
@@ -444,15 +463,15 @@
                     </div>
 
                     <!-- Action Button -->
-                    <button type="button" @click="window.location.href = '/formateur/etudiants/' + student.id + '/progression'"
+                    <a :href="'/formateur/etudiants/' + student.id + '/progression'"
                         :disabled="student.completed === 0"
-                        :class="student.completed > 0 ? 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-lg shadow-slate-900/10 active:scale-98' : 'bg-slate-100 text-slate-400 cursor-not-allowed'"
+                        :class="student.completed > 0 ? 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-lg shadow-slate-900/10 active:scale-98' : 'bg-slate-100 text-slate-400 cursor-not-allowed pointer-events-none'"
                         class="w-full h-12 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2">
                         <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
                         Bilan & Progression
-                    </button>
+                    </a>
                 </div>
             </template>
             <div x-show="studentsStats.length === 0" class="col-span-full bg-white rounded-[2rem] border border-slate-100 p-20 text-center">
@@ -529,10 +548,15 @@
                 </div>
             </div>
         </div>
-        <!-- Removed Student Progress Modal -->
-
     </div>
-</div>
+    @else
+    <div class="bg-white rounded-[2rem] border border-slate-100 p-20 text-center">
+        <div class="size-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-200">
+            <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        </div>
+        <p class="text-slate-400 font-black uppercase tracking-widest">Veuillez sélectionner une classe pour afficher les statistiques.</p>
+    </div>
+    @endif
 </div>
 
 @push('scripts')
