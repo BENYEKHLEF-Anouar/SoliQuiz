@@ -77,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/qcm/{id}/toggle', [\App\Http\Controllers\Web\FormateurController::class, 'toggleQcmStatus'])->name('qcm.toggle');
         Route::patch('/qcm/{id}/close', [\App\Http\Controllers\Web\FormateurController::class, 'closeQcm'])->name('qcm.close');
         Route::post('/qcm/{id}/duplicate', [\App\Http\Controllers\Web\FormateurController::class, 'duplicateQcm'])->name('qcm.duplicate');
+        Route::post('/qcm/generate-ai', [\App\Http\Controllers\Web\FormateurController::class, 'generateWithAI'])->name('qcm.generate_ai');
         Route::get('/resultats', [\App\Http\Controllers\Web\FormateurController::class, 'resultatsCohorte'])->name('resultats');
         Route::get('/resultats/export', [\App\Http\Controllers\Web\FormateurController::class, 'exportResultats'])->name('resultats.export');
         Route::get('/resultats/tentative/{id}/export', [\App\Http\Controllers\Web\FormateurController::class, 'exportTentative'])->name('resultats.tentative.export');

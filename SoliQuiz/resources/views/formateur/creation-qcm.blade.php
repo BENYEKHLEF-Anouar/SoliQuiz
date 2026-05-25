@@ -58,6 +58,143 @@
 
             <!-- Main Column: Content (Questions) -->
             <div class="flex-1 w-full space-y-8">
+                <!-- AI Assistant Widget -->
+                <div class="bg-white rounded-2xl border border-slate-100 border-l-4 border-l-slate-900 shadow-md p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="size-12 rounded-xl bg-slate-50 text-slate-900 flex items-center justify-center shrink-0 border border-slate-100 relative">
+                            <svg class="size-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="16" height="16" x="4" y="4" rx="2" />
+                                <rect width="6" height="6" x="9" y="9" rx="1" />
+                                <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3" />
+                            </svg>
+                            <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-800">Générateur Pédagogique Assisté</h4>
+                            <p class="text-[11px] font-bold text-slate-400 mt-1">Concevez des questions d'évaluation en quelques secondes à l'aide de l'IA.</p>
+                        </div>
+                    </div>
+                    
+                    <button @click="$dispatch('open-modal', 'ai-generation')" type="button" class="px-5 py-3 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 relative z-10 active:scale-98">
+                        Générer avec l'IA
+                    </button>
+
+                    <!-- Configuration Modal -->
+                    <template x-teleport="body">
+                        <x-ui.modal name="ai-generation" title="Générateur <br> IA" maxWidth="md">
+                            <div class="space-y-6">
+                                <div class="space-y-3">
+                                    <label class="text-label ml-1">Thème ou Compétence Ciblée</label>
+                                    <input x-model="aiTopic" type="text" placeholder="Ex: Héritage en PHP, Flexbox CSS..." class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 text-xs font-bold text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-slate-900 transition-all outline-none uppercase">
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <label class="text-label ml-1">Nombre de Questions</label>
+                                    <input x-model.number="aiQuestionCount" type="number" min="1" max="100" class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3.5 px-4 text-xs font-bold text-slate-900 focus:bg-white focus:border-slate-900 transition-all outline-none">
+                                </div>
+
+                                <div class="space-y-3">
+                                    <label class="text-label ml-1">Type de Question</label>
+                                    <div class="grid grid-cols-3 gap-2 bg-slate-50/50 p-1.5 rounded-2xl border border-slate-100/50">
+                                        <button @click="aiQuestionType = 'single'" type="button" 
+                                            :class="aiQuestionType === 'single' ? 'bg-slate-900 text-white shadow-sm font-black' : 'text-slate-500 hover:text-slate-800 font-bold'"
+                                            class="py-2.5 px-3 text-[10px] uppercase tracking-wider rounded-xl transition-all text-center active:scale-98">
+                                            Unique
+                                        </button>
+                                        <button @click="aiQuestionType = 'multiple'" type="button" 
+                                            :class="aiQuestionType === 'multiple' ? 'bg-slate-900 text-white shadow-sm font-black' : 'text-slate-500 hover:text-slate-800 font-bold'"
+                                            class="py-2.5 px-3 text-[10px] uppercase tracking-wider rounded-xl transition-all text-center active:scale-98">
+                                            Multiple
+                                        </button>
+                                        <button @click="aiQuestionType = 'both'" type="button" 
+                                            :class="aiQuestionType === 'both' ? 'bg-slate-900 text-white shadow-sm font-black' : 'text-slate-500 hover:text-slate-800 font-bold'"
+                                            class="py-2.5 px-3 text-[10px] uppercase tracking-wider rounded-xl transition-all text-center active:scale-98">
+                                            Mélange
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <x-slot:footer>
+                                <button @click="$dispatch('close-modal', 'ai-generation')" type="button" class="px-5 py-3 border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-50 transition-all">
+                                    Annuler
+                                </button>
+                                <button @click="generateQuestionsWithAI()" :disabled="aiLoading" type="button" class="px-6 py-3 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 disabled:opacity-50 flex items-center justify-center min-w-[120px] active:scale-98 transition-all">
+                                    <svg x-show="aiLoading" class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span x-text="aiLoading ? 'Génération...' : 'Lancer'"></span>
+                                </button>
+                            </x-slot:footer>
+                        </x-ui.modal>
+                    </template>
+
+                    <!-- Success Modal -->
+                    <template x-teleport="body">
+                        <x-ui.modal name="ai-success" title="Génération <br> Réussie" maxWidth="md">
+                            <div class="text-center py-4">
+                                <div class="size-20 bg-emerald-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-emerald-500 shadow-sm relative">
+                                    <div class="absolute inset-0 border border-emerald-100 rounded-[2rem] animate-pulse"></div>
+                                    <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-base font-black text-slate-800 uppercase tracking-wider mb-2">Questions importées !</h3>
+                                <p class="text-slate-500 text-xs font-bold leading-relaxed mb-6">
+                                    <span class="text-emerald-600 font-black" x-text="aiSuccessCount"></span> questions ont été générées et ajoutées avec succès à votre QCM.
+                                </p>
+                                <div class="bg-amber-50/50 rounded-2xl p-4 border border-amber-100/50 text-left mb-6">
+                                    <div class="flex gap-3">
+                                        <div class="shrink-0 size-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center font-black">!</div>
+                                        <div>
+                                            <p class="text-[10px] font-black text-amber-700 uppercase tracking-wider mb-0.5">Vérification recommandée</p>
+                                            <p class="text-[10px] font-bold text-slate-500 leading-snug">Veuillez bien relire les énoncés, les options de réponses ainsi que le barème de points pour chaque question générée.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" @click="$dispatch('close-modal', 'ai-success')" class="w-full h-14 rounded-2xl bg-slate-900 text-white font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-98 shadow-lg shadow-slate-900/10">
+                                    Découvrir les questions
+                                </button>
+                            </div>
+                        </x-ui.modal>
+                    </template>
+
+                    <!-- Error Modal -->
+                    <template x-teleport="body">
+                        <x-ui.modal name="ai-error" title="Échec de <br> Génération" maxWidth="md">
+                            <div class="text-center py-4">
+                                <div class="size-20 bg-rose-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-rose-500 shadow-sm relative">
+                                    <div class="absolute inset-0 border border-rose-100 rounded-[2rem] animate-pulse"></div>
+                                    <svg class="size-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-base font-black text-slate-800 uppercase tracking-wider mb-2">Erreur d'automatisation</h3>
+                                <p class="text-slate-500 text-xs font-bold leading-relaxed mb-6">
+                                    Impossible de générer les questions avec l'IA.
+                                </p>
+                                <div class="bg-rose-50/50 rounded-2xl p-4 border border-rose-100/50 text-left mb-6 space-y-3">
+                                    <div class="flex gap-3">
+                                        <div class="shrink-0 size-8 rounded-lg bg-rose-500/10 text-rose-600 flex items-center justify-center font-black">1</div>
+                                        <p class="text-[10px] font-bold text-slate-600 leading-snug">Vérifiez que votre serveur <strong class="text-slate-900">n8n</strong> fonctionne en local sur le port 5678.</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="shrink-0 size-8 rounded-lg bg-rose-500/10 text-rose-600 flex items-center justify-center font-black">2</div>
+                                        <p class="text-[10px] font-bold text-slate-600 leading-snug">Assurez-vous que le workflow n8n est bien actif ou à l'écoute d'événements.</p>
+                                    </div>
+                                </div>
+                                <button type="button" @click="$dispatch('close-modal', 'ai-error')" class="w-full h-14 rounded-2xl bg-slate-900 text-white font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-98 shadow-lg shadow-slate-900/10">
+                                    Compris
+                                </button>
+                            </div>
+                        </x-ui.modal>
+                    </template>
+                </div>
+
                 <!-- Main Title Box -->
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6 relative overflow-hidden">
                     <div class="-top-8 absolute right-0 p-8 opacity-5">
@@ -534,6 +671,12 @@
                     duree_minutes: oldData.duree_minutes !== undefined ? parseInt(oldData.duree_minutes) : 30,
                     selectedCompetences: oldCompetences,
                     scoreReussite: oldData.score_reussite !== undefined ? parseFloat(oldData.score_reussite) : 10,
+                    openAiModal: false,
+                    aiLoading: false,
+                    aiTopic: '',
+                    aiQuestionCount: 5,
+                    aiQuestionType: 'both',
+                    aiSuccessCount: 0,
 
                 init() {
                     // Watch for question type changes to auto-normalize unique questions
@@ -679,6 +822,76 @@
                         this.isSubmitting = true;
                         window.onbeforeunload = null;
                         document.getElementById('qcmForm').submit();
+                    }
+                },
+
+                async generateQuestionsWithAI() {
+                    if (!this.aiTopic.trim()) {
+                        return this.$dispatch('toast', { message: 'Veuillez spécifier un thème ou une compétence.', type: 'error' });
+                    }
+                    this.aiLoading = true;
+                    
+                    try {
+                        const response = await fetch('/formateur/qcm/generate-ai', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                topic: this.aiTopic,
+                                question_count: this.aiQuestionCount,
+                                question_type: this.aiQuestionType
+                            })
+                        });
+
+                        if (!response.ok) throw new Error();
+
+                        const data = await response.json();
+                        let rawQuestions = [];
+
+                        if (Array.isArray(data)) {
+                            rawQuestions = data;
+                            if (!this.titre || this.titre.trim() === '') {
+                                this.titre = "ÉVALUATION : " + this.aiTopic.toUpperCase();
+                            }
+                        } else if (data && typeof data === 'object') {
+                            rawQuestions = data.questions || [];
+                            if (data.title) {
+                                this.titre = data.title.toUpperCase();
+                            } else if (!this.titre || this.titre.trim() === '') {
+                                this.titre = "ÉVALUATION : " + this.aiTopic.toUpperCase();
+                            }
+                        }
+
+                        const mappedQuestions = rawQuestions.map(q => ({
+                            texte: q.text || q.texte || '',
+                            type: (q.type === 'single' || q.type === 'choix_unique') ? 'choix_unique' : 'choix_multiple',
+                            points: q.points ? parseFloat(q.points) : 0,
+                            explication_feedback: q.explanation || q.explication_feedback || '',
+                            options: (q.options || []).map(o => ({
+                                texte: o.text || o.texte || '',
+                                est_correcte: !!(o.isCorrect || o.est_correcte),
+                                feedback_specifique: o.feedback || o.feedback_specifique || ''
+                            }))
+                        }));
+
+                        if (this.questions.length === 1 && this.questions[0].texte === '') {
+                            this.questions = mappedQuestions;
+                        } else {
+                            this.questions = [...this.questions, ...mappedQuestions];
+                        }
+                        this.equalizePoints();
+
+                        this.aiSuccessCount = mappedQuestions.length;
+                        this.$dispatch('close-modal', 'ai-generation');
+                        this.aiTopic = '';
+                        this.$dispatch('open-modal', 'ai-success');
+                    } catch (error) {
+                        this.$dispatch('close-modal', 'ai-generation');
+                        this.$dispatch('open-modal', 'ai-error');
+                    } finally {
+                        this.aiLoading = false;
                     }
                 }
             }; });

@@ -5,6 +5,22 @@
 @section('page-title', 'Espace Personnel Apprenant')
 
 @section('content')
+@php
+    $allPersonalTentatives = Auth::user()->tentatives()
+        ->whereNotNull('score_obtenu')
+        ->with('qcm.uniteApprentissage')
+        ->orderBy('date_debut', 'asc')
+        ->get()
+        ->map(function($t) {
+            return [
+                'id' => $t->id,
+                'qcm_titre' => $t->qcm->titre,
+                'ua_nom' => $t->qcm->uniteApprentissage?->nom ?? 'Indépendant',
+                'score' => $t->score_obtenu,
+                'date' => $t->date_debut?->format('d/m/Y'),
+            ];
+        });
+@endphp
 <div class="space-y-8 fade-in">
     <!-- Header -->
     <div class="relative z-30 mb-10">
@@ -133,6 +149,30 @@
     <!-- Main Dashboard Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-6">
+            <!-- Courbe de Progression Personnel -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h3 class="font-bold text-slate-900">Courbe de Progression</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Évolution de vos notes au fil des évaluations complétées</p>
+                </div>
+                
+                @if(count($allPersonalTentatives) > 0)
+                    <div class="relative w-full h-[280px] mt-6">
+                        <canvas id="studentPersonalProgressChart"></canvas>
+                    </div>
+                @else
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <div class="size-16 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center text-slate-300 shadow-sm mb-4">
+                            <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                        </div>
+                        <h4 class="text-xs font-black text-slate-700 uppercase tracking-widest">Aucune donnée de progression</h4>
+                        <p class="text-xs text-slate-400 max-w-xs mt-2 font-medium">Complétez vos premières évaluations pour voir votre courbe de progression personnelle s'afficher ici.</p>
+                    </div>
+                @endif
+            </div>
+
             <!-- Activité Récente -->
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-5 border-b border-slate-100 flex items-center justify-between">
@@ -325,21 +365,25 @@
             @php
                 $podiumsJson = $cohortPodiums->map(fn($item) => [
                     'titre'  => $item['qcm_titre'],
+                    'my_position' => $item['my_position'],
+                    'my_score' => $item['my_score'],
+                    'total_students' => $item['total_students'],
                     'podium' => collect($item['podium'])->sortBy('position')->values()->toArray(),
                 ])->values()->toJson();
             @endphp
             <div
-                class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
+                class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md"
                 x-data="{
                     items: {{ $podiumsJson }},
                     current: 0,
+                    open: false,
                     get item() { return this.items[this.current]; },
                     prev() { this.current = this.current > 0 ? this.current - 1 : this.items.length - 1; },
                     next() { this.current = this.current < this.items.length - 1 ? this.current + 1 : 0; }
                 }"
             >
                 {{-- Header --}}
-                <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50/50">
                     <div class="flex items-center gap-2">
                         <div class="size-7 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
                             <svg class="size-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -347,18 +391,18 @@
                             </svg>
                         </div>
                         <div class="min-w-0">
-                            <span class="text-sm font-black text-slate-900 block">Classement</span>
-                            <p class="text-xs text-slate-400 font-medium truncate max-w-[140px]" x-text="item.titre"></p>
+                            <span class="text-xs font-black uppercase tracking-widest text-slate-900 block">Classement</span>
+                            <p class="text-[11px] text-slate-400 font-bold truncate max-w-[140px] mt-0.5" x-text="item.titre"></p>
                         </div>
                     </div>
                     {{-- Switcher arrows (only if multiple QCMs) --}}
                     @if($cohortPodiums->count() > 1)
                     <div class="flex items-center gap-1">
-                        <button @click="prev()" class="size-7 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all">
+                        <button @click="prev(); open = false;" class="size-7 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all">
                             <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M15 19l-7-7 7-7"/></svg>
                         </button>
                         <span class="text-[10px] font-black text-slate-400 tabular-nums w-8 text-center" x-text="(current + 1) + '/' + items.length"></span>
-                        <button @click="next()" class="size-7 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all">
+                        <button @click="next(); open = false;" class="size-7 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all">
                             <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
                         </button>
                     </div>
@@ -367,51 +411,185 @@
                     @endif
                 </div>
 
-                {{-- Table (reactive) --}}
-                <div class="divide-y divide-slate-100">
-                    <template x-for="(place, index) in item.podium" :key="index">
-                        <div class="flex items-center gap-3 px-5 py-3 transition-colors"
-                             :class="place.position === 1 ? 'bg-amber-50/60' : ''">
-                            {{-- Rank Badge --}}
-                            <div class="size-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-black leading-none"
-                                 :class="{
-                                     'bg-amber-500 text-white'       : place.position === 1,
-                                     'bg-slate-200 text-slate-600'   : place.position === 2,
-                                     'bg-primary-100 text-primary-700': place.position === 3
-                                 }">
-                                <span x-text="place.position"></span>
+                {{-- Personal Rank Summary Block --}}
+                <div class="p-5 flex flex-col items-center justify-center text-center border-b border-slate-100 bg-white">
+                    <template x-if="item.my_position !== null">
+                        <div class="flex flex-col items-center">
+                            <div class="inline-flex items-center justify-center size-12 bg-indigo-50 text-indigo-600 rounded-full mb-3 shadow-sm border border-indigo-100/50">
+                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                                </svg>
                             </div>
-
-                            {{-- Name --}}
-                            <div class="flex-1 min-w-0">
-                                <span class="text-sm font-bold text-slate-800 truncate block" x-text="place.etudiant_nom"></span>
-                                <span x-show="place.position === 1"
-                                      class="text-[9px] font-black uppercase tracking-widest text-amber-500">Leader</span>
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Votre Rang</span>
+                            <div class="flex items-baseline justify-center gap-1 mt-2">
+                                <h4 class="text-3xl font-black text-indigo-600 tracking-tight" x-text="item.my_position + (item.my_position === 1 ? 'er' : 'ème')"></h4>
+                                <span class="text-xs font-bold text-slate-400" x-text="'/ ' + item.total_students + ' élèves'"></span>
                             </div>
-
-                            {{-- Score + mini bar --}}
-                            <div class="text-right shrink-0">
-                                <span class="text-sm font-bold"
-                                      :class="place.position === 1 ? 'text-amber-600 font-black' : 'text-slate-500'">
-                                    <span x-text="place.score"></span><span class="text-xs font-normal text-slate-400">/20</span>
-                                </span>
-                                <div class="mt-1 w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full transition-all duration-500"
-                                         :class="place.position === 1 ? 'bg-amber-400' : 'bg-slate-300'"
-                                         :style="'width:' + Math.round((place.score / 20) * 100) + '%'">
-                                    </div>
-                                </div>
-                            </div>
+                            <p class="text-xs font-bold text-slate-500 mt-2 font-medium" x-text="'Note obtenue : ' + item.my_score + '/20'"></p>
                         </div>
                     </template>
-
-                    {{-- Empty state if no podium --}}
-                    <template x-if="item.podium.length === 0">
-                        <div class="px-5 py-6 text-center text-xs text-slate-400 font-medium">
-                            Aucun résultat disponible pour ce QCM.
+                    <template x-if="item.my_position === null">
+                        <div class="flex flex-col items-center">
+                            <div class="inline-flex items-center justify-center size-12 bg-slate-50 text-slate-400 rounded-full mb-3 border border-slate-100">
+                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                            </div>
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Non classé</span>
+                            <h4 class="text-base font-black text-slate-600 mt-2">Évaluation non tentée</h4>
+                            <p class="text-[10px] text-slate-400 max-w-xs mt-1 font-medium">Vous devez terminer cette évaluation pour voir votre classement par rapport à la classe.</p>
                         </div>
                     </template>
                 </div>
+
+                {{-- Trigger Button to display class list --}}
+                <button type="button" @click="open = true" 
+                    class="w-full h-12 bg-slate-50 hover:bg-slate-100 text-[10px] font-black uppercase tracking-wider text-slate-600 flex items-center justify-center gap-2 transition-all select-none">
+                    Voir le classement complet de la classe
+                    <svg class="size-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+
+                {{-- Teleported Popup Modal --}}
+                <template x-teleport="body">
+                    <div x-show="open" 
+                         class="fixed inset-0 z-[999] flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto"
+                         x-cloak>
+                        {{-- Backdrop Overlay --}}
+                        <div x-show="open"
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0"
+                             x-transition:enter-end="opacity-100"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             class="fixed inset-0 bg-slate-955/40 backdrop-blur-xs transition-opacity"
+                             @click="open = false"></div>
+
+                        {{-- Modal Container --}}
+                        <div x-show="open"
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+                             class="bg-white rounded-[2.5rem] border border-slate-100 shadow-2xl max-w-lg w-full overflow-hidden transform transition-all relative z-10">
+                            
+                            {{-- Header --}}
+                            <div class="px-8 pt-7 pb-5 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-base font-black text-slate-900 uppercase tracking-tight">Classement Général</h3>
+                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Supervision de la Cohorte</p>
+                                </div>
+                                <button @click="open = false" class="size-8 rounded-lg bg-white border border-slate-100 text-slate-400 hover:text-slate-600 shadow-xs flex items-center justify-center transition-all">
+                                    <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            {{-- QCM Switcher / Navigator inside Modal --}}
+                            <div class="px-8 py-4 bg-slate-50/40 border-b border-slate-100/80 flex items-center justify-between gap-4 select-none">
+                                <button @click="prev()" 
+                                        :disabled="items.length <= 1"
+                                        :class="items.length <= 1 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100 hover:text-slate-900 hover:scale-105 active:scale-95 shadow-sm'"
+                                        class="size-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 transition-all">
+                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15 19l-7-7 7-7"/></svg>
+                                </button>
+                                
+                                <div class="min-w-0 text-center flex-1">
+                                    <span class="inline-flex px-2.5 py-1 bg-white border border-slate-200/50 rounded-lg text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1" 
+                                          x-text="'ÉVALUATION ' + (current + 1) + ' / ' + items.length"></span>
+                                    <h4 class="text-sm font-black text-slate-800 uppercase tracking-tight truncate" x-text="item.titre"></h4>
+                                </div>
+
+                                <button @click="next()" 
+                                        :disabled="items.length <= 1"
+                                        :class="items.length <= 1 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100 hover:text-slate-900 hover:scale-105 active:scale-95 shadow-sm'"
+                                        class="size-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 transition-all">
+                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+                                </button>
+                            </div>
+
+                            {{-- Personal rank summary in the pop-up --}}
+                            <div class="px-8 py-4 bg-indigo-50/20 border-b border-indigo-100/30 flex items-center justify-between gap-4 select-none">
+                                <div class="flex items-center gap-3">
+                                    <div class="size-8 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
+                                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="text-left">
+                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest block leading-none">Votre Statut</span>
+                                        <span class="text-xs font-bold text-slate-700 mt-1 block font-heading" x-text="item.my_position !== null ? 'Note: ' + item.my_score + '/20' : 'Non tenté'"></span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <template x-if="item.my_position !== null">
+                                        <span class="inline-flex px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-black" x-text="item.my_position + (item.my_position === 1 ? 'er' : 'ème') + ' / ' + item.total_students"></span>
+                                    </template>
+                                    <template x-if="item.my_position === null">
+                                        <span class="inline-flex px-3 py-1 bg-slate-100 text-slate-400 rounded-full text-[9px] font-black uppercase tracking-widest">Pas de rang</span>
+                                    </template>
+                                </div>
+                            </div>
+
+                            {{-- Ranking list as beautiful distinct cards with margins --}}
+                            <div class="overflow-y-auto max-h-[380px] custom-scrollbar bg-white py-4 pb-8 flex flex-col gap-3">
+                                <template x-for="(place, index) in item.podium" :key="index">
+                                    <div class="flex items-center gap-4 p-4 mx-6 rounded-2xl transition-all duration-300 border bg-white"
+                                         :class="{
+                                             'bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-amber-200 shadow-xs shadow-amber-500/5': place.position === 1,
+                                             'bg-gradient-to-r from-slate-100/50 via-slate-50/20 to-transparent border-slate-200': place.position === 2,
+                                             'bg-gradient-to-r from-indigo-50/40 via-indigo-50/10 to-transparent border-indigo-100': place.position === 3,
+                                             'bg-slate-50/20 border-slate-100/70': place.position > 3
+                                         }">
+                                        {{-- Rank Badge --}}
+                                        <div class="size-8 rounded-xl flex items-center justify-center shrink-0 text-xs font-black leading-none shadow-xs"
+                                             :class="{
+                                                 'bg-amber-500 text-white shadow-md shadow-amber-500/20'       : place.position === 1,
+                                                 'bg-slate-200 text-slate-600'   : place.position === 2,
+                                                 'bg-indigo-100 text-indigo-700': place.position === 3,
+                                                 'bg-slate-100 text-slate-500'   : place.position > 3
+                                             }">
+                                            <span x-text="place.position"></span>
+                                        </div>
+
+                                        {{-- Name --}}
+                                        <div class="flex-1 min-w-0 text-left">
+                                            <span class="text-sm font-bold text-slate-800 truncate block font-heading" x-text="place.etudiant_nom"></span>
+                                            <span x-show="place.position === 1"
+                                                  class="text-[9px] font-black uppercase tracking-widest text-amber-500 leading-none">Leader</span>
+                                        </div>
+
+                                        {{-- Score + mini bar --}}
+                                        <div class="text-right shrink-0">
+                                            <span class="text-sm font-black"
+                                                  :class="place.position === 1 ? 'text-amber-600 font-black' : 'text-slate-500'">
+                                                <span x-text="place.score"></span><span class="text-xs font-normal text-slate-400">/20</span>
+                                            </span>
+                                            <div class="mt-1.5 w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                                <div class="h-full rounded-full transition-all duration-500"
+                                                     :class="place.position === 1 ? 'bg-amber-400' : 'bg-slate-300'"
+                                                     :style="'width:' + Math.round((place.score / 20) * 100) + '%'">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                {{-- Empty state if no podium --}}
+                                <template x-if="item.podium.length === 0">
+                                    <div class="px-8 py-12 text-center text-xs text-slate-400 font-medium">
+                                        Aucun résultat disponible pour ce QCM.
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
             @endif
 
@@ -429,4 +607,101 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('studentPersonalProgressChart');
+        if (!ctx) return;
+
+        const rawAttempts = {{ Js::from($allPersonalTentatives) }};
+        if (rawAttempts.length === 0) return;
+
+        const labels = rawAttempts.map(a => {
+            const title = a.qcm_titre;
+            return title.length > 15 ? title.substring(0, 15) + '...' : title;
+        });
+        const data = rawAttempts.map(a => a.score);
+
+        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 280);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.25)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Note obtenue (/20)',
+                    data: data,
+                    borderColor: '#6366f1',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#6366f1',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        titleColor: '#fff',
+                        bodyColor: '#cbd5e1',
+                        borderWidth: 1,
+                        borderColor: '#334155',
+                        padding: 10,
+                        bodyFont: {
+                            family: "'Plus Jakarta Sans', system-ui, sans-serif",
+                            size: 11
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Plus Jakarta Sans', system-ui, sans-serif",
+                                size: 9,
+                                weight: 'bold'
+                            },
+                            color: '#64748b',
+                            maxRotation: 15,
+                            autoSkip: true,
+                            maxTicksLimit: 6
+                        }
+                    },
+                    y: {
+                        min: 0,
+                        max: 20,
+                        ticks: {
+                            stepSize: 2,
+                            font: {
+                                family: "'Plus Jakarta Sans', system-ui, sans-serif",
+                                size: 10
+                            },
+                            color: '#64748b'
+                        },
+                        grid: {
+                            color: '#f1f5f9'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+@endpush
 @endsection

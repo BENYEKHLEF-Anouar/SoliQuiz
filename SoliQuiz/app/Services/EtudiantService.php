@@ -441,8 +441,7 @@ class EtudiantService
             ->get();
 
         return $qcms->map(function ($qcm) use ($student) {
-            // Top 3 tentatives terminées pour les élèves de la même classe
-            $topTentatives = Tentative::where('qcm_id', $qcm->id)
+            $allTentatives = Tentative::where('qcm_id', $qcm->id)
                 ->whereIn('etudiant_id', function ($query) use ($student) {
                     $query->select('id')->from('users')->where('classe_id', $student->classe_id);
                 })
@@ -450,19 +449,36 @@ class EtudiantService
                 ->with('etudiant')
                 ->orderByDesc('score_obtenu')
                 ->orderBy('date_fin')
-                ->limit(3)
-                ->get()
-                ->map(function ($t, $index) {
-                    return [
-                        'position' => $index + 1,
-                        'etudiant_nom' => $t->etudiant->prenom . ' ' . substr($t->etudiant->nom, 0, 1) . '.',
-                        'score' => $t->score_obtenu,
-                    ];
-                });
+                ->get();
+
+            $myAttempt = $allTentatives->where('etudiant_id', $student->id)->first();
+            $myPosition = null;
+            $myScore = null;
+            if ($myAttempt) {
+                $rank = 1;
+                foreach ($allTentatives as $t) {
+                    if ($t->score_obtenu > $myAttempt->score_obtenu) {
+                        $rank++;
+                    }
+                }
+                $myPosition = $rank;
+                $myScore = $myAttempt->score_obtenu;
+            }
+
+            $topTentatives = $allTentatives->take(3)->values()->map(function ($t, $index) {
+                return [
+                    'position' => $index + 1,
+                    'etudiant_nom' => $t->etudiant->prenom . ' ' . substr($t->etudiant->nom, 0, 1) . '.',
+                    'score' => $t->score_obtenu,
+                ];
+            });
 
             return [
                 'qcm_id' => $qcm->id,
                 'qcm_titre' => $qcm->titre,
+                'my_position' => $myPosition,
+                'my_score' => $myScore,
+                'total_students' => \App\Models\User::where('classe_id', $student->classe_id)->where('type_profil', 'etudiant')->count(),
                 'podium' => $topTentatives,
             ];
         })->filter(fn($item) => $item['podium']->isNotEmpty());

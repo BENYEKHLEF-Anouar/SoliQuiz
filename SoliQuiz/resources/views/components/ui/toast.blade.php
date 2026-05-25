@@ -13,9 +13,11 @@
     x-on:toast.window="add($event.detail.message, $event.detail.type)"
     x-init="
         @if(session('success')) add('{{ addslashes(session('success')) }}', 'success'); @endif
-        @if(session('error')) add('{{ addslashes(session('error')) }}', 'error'); @endif
-        @if(session('info')) add('{{ addslashes(session('info')) }}', 'info'); @endif
-        @if($errors->any()) add('{{ addslashes($errors->first()) }}', 'error'); @endif
+        @if(!request()->routeIs('login'))
+            @if(session('error')) add('{{ addslashes(session('error')) }}', 'error'); @endif
+            @if(session('info')) add('{{ addslashes(session('info')) }}', 'info'); @endif
+            @if($errors->any()) add('{{ addslashes($errors->first()) }}', 'error'); @endif
+        @endif
     "
     class="fixed bottom-10 right-10 z-[200] flex flex-col gap-4 pointer-events-none"
 >
