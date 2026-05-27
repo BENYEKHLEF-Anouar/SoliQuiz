@@ -10,6 +10,7 @@ import studentChartData from './components/formateur/studentChartData';
 import etudiantLibrary from './components/etudiant/etudiantLibrary';
 import qcmForm from './components/etudiant/qcmForm';
 import chatbot from './components/common/chatbot';
+import aiExplain from './components/etudiant/aiExplain';
 
 window.Alpine = Alpine;
 
@@ -21,6 +22,7 @@ Alpine.data('studentChartData', studentChartData);
 Alpine.data('etudiantLibrary', etudiantLibrary);
 Alpine.data('qcmForm', qcmForm);
 Alpine.data('chatbot', chatbot);
+Alpine.data('aiExplain', aiExplain);
 
 // Standard initialization for Vite-loaded scripts (deferred by default)
 Alpine.start();

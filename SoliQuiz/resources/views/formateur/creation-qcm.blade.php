@@ -59,28 +59,46 @@
             <!-- Main Column: Content (Questions) -->
             <div class="flex-1 w-full space-y-8">
                 <!-- AI Assistant Widget -->
-                <div class="bg-white rounded-2xl border border-slate-100 border-l-4 border-l-slate-900 shadow-md p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="size-12 rounded-xl bg-slate-50 text-slate-900 flex items-center justify-center shrink-0 border border-slate-100 relative">
-                            <svg class="size-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="16" height="16" x="4" y="4" rx="2" />
-                                <rect width="6" height="6" x="9" y="9" rx="1" />
-                                <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3" />
-                            </svg>
-                            <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
-                            </span>
+                <div 
+                    @click="$dispatch('open-modal', 'ai-generation')"
+                    class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6 relative overflow-hidden transition-all duration-500 cursor-pointer hover:border-primary-300 hover:shadow-md active:scale-[0.99] group/ai mb-6"
+                >
+                    <!-- Shimmering neon light glow in the corner -->
+                    <div class="absolute -right-20 -top-20 size-40 rounded-full bg-primary-400/10 blur-3xl group-hover/ai:bg-primary-400/20 transition-all duration-500"></div>
+
+                    <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                        <!-- Left: AI Core Header -->
+                        <div class="flex items-center gap-4">
+                            <div class="relative size-12 rounded-2xl bg-primary-50 border border-primary-100 flex items-center justify-center shrink-0 shadow-inner-premium group-hover/ai:border-primary-200 transition-colors">
+                                <svg class="size-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect width="16" height="16" x="4" y="4" rx="2" />
+                                    <rect width="6" height="6" x="9" y="9" rx="1" />
+                                    <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3" />
+                                </svg>
+                                <!-- AI Active Glow Ring -->
+                                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-primary-600 leading-none">Assistant SoliBot</span>
+                                <h4 class="text-sm font-black text-slate-800 tracking-tight mt-1">Générateur Pédagogique Assisté</h4>
+                                <p class="text-[11px] font-bold text-slate-400 mt-0.5 leading-none">Concevez des questions d'évaluation en quelques secondes à l'aide de l'IA.</p>
+                            </div>
                         </div>
-                        <div>
-                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-800">Générateur Pédagogique Assisté</h4>
-                            <p class="text-[11px] font-bold text-slate-400 mt-1">Concevez des questions d'évaluation en quelques secondes à l'aide de l'IA.</p>
+
+                        <!-- Right: Action Trigger -->
+                        <div class="shrink-0">
+                            <button 
+                                type="button" 
+                                class="w-full sm:w-auto px-5 h-12 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-98 flex items-center justify-center gap-2 group-hover/ai:bg-primary-600 relative z-10"
+                            >
+                                Générer avec l'IA
+                            </button>
                         </div>
                     </div>
-                    
-                    <button @click="$dispatch('open-modal', 'ai-generation')" type="button" class="px-5 py-3 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 relative z-10 active:scale-98">
-                        Générer avec l'IA
-                    </button>
+                </div>
 
                     <!-- Configuration Modal -->
                     <template x-teleport="body">
@@ -193,7 +211,6 @@
                             </div>
                         </x-ui.modal>
                     </template>
-                </div>
 
                 <!-- Main Title Box -->
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6 relative overflow-hidden">

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\ChatbotLog;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -29,13 +29,14 @@ class ChatbotController extends Controller
             return response()->json(['error' => 'Configuration IA incomplète.'], 500);
         }
 
-        ChatbotLog::create([
+        Log::channel('chatbot')->info(json_encode([
             'session_id' => $sessionId,
             'speaker'    => 'user',
             'message'    => $message,
             'ip_address' => $ip,
             'user_agent' => $ua,
-        ]);
+            'timestamp'  => now()->toIso8601String(),
+        ], JSON_UNESCAPED_UNICODE));
 
         $contents = [];
         foreach ($history as $msg) {
@@ -108,15 +109,16 @@ class ChatbotController extends Controller
             $reply          = $data['candidates'][0]['content']['parts'][0]['text'] ?? "Je n'ai pas pu traiter votre demande.";
             $detectedLang   = $data['candidates'][0]['content']['parts'][0]['detectedLanguage'] ?? null;
 
-            ChatbotLog::create([
-                'session_id'       => $sessionId,
-                'speaker'          => 'bot',
-                'message'          => trim($reply),
+            Log::channel('chatbot')->info(json_encode([
+                'session_id'        => $sessionId,
+                'speaker'           => 'bot',
+                'message'           => trim($reply),
                 'detected_language' => $detectedLang,
-                'ip_address'       => $ip,
-                'user_agent'       => $ua,
-                'response_time_ms' => $responseTimeMs,
-            ]);
+                'ip_address'        => $ip,
+                'user_agent'        => $ua,
+                'response_time_ms'  => $responseTimeMs,
+                'timestamp'         => now()->toIso8601String(),
+            ], JSON_UNESCAPED_UNICODE));
 
             return response()->json([
                 'reply'      => trim($reply),

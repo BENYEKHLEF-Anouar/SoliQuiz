@@ -78,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/qcm/{id}/toggle', [\App\Http\Controllers\Web\FormateurController::class, 'toggleQcmStatus'])->name('qcm.toggle');
         Route::patch('/qcm/{id}/close', [\App\Http\Controllers\Web\FormateurController::class, 'closeQcm'])->name('qcm.close');
         Route::post('/qcm/{id}/duplicate', [\App\Http\Controllers\Web\FormateurController::class, 'duplicateQcm'])->name('qcm.duplicate');
-        Route::post('/qcm/generate-ai', [\App\Http\Controllers\Web\FormateurController::class, 'generateWithAI'])->name('qcm.generate_ai');
+        Route::post('/qcm/generate-ai', [\App\Http\Controllers\Api\AiQcmController::class, 'generateWithAI'])->name('qcm.generate_ai');
         Route::get('/resultats', [\App\Http\Controllers\Web\FormateurController::class, 'resultatsCohorte'])->name('resultats');
         Route::get('/resultats/export', [\App\Http\Controllers\Web\FormateurController::class, 'exportResultats'])->name('resultats.export');
         Route::get('/resultats/tentative/{id}/export', [\App\Http\Controllers\Web\FormateurController::class, 'exportTentative'])->name('resultats.tentative.export');
@@ -110,6 +110,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/qcm/{id}/save', [\App\Http\Controllers\Web\EtudiantController::class, 'saveProgress'])->name('qcm.save');
         Route::get('/qcm/{id}/resultats', [\App\Http\Controllers\Web\EtudiantController::class, 'resultats'])->name('resultats');
         Route::get('/qcm/{id}/export', [\App\Http\Controllers\Web\EtudiantController::class, 'exportResultat'])->name('resultats.export');
+        Route::post('/ai/explain-question', [\App\Http\Controllers\Api\AiExplainController::class, 'explainQuestion'])->name('ai.explain');
     });
 
     // Shared Profile Routes

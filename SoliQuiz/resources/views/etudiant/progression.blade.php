@@ -190,7 +190,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-200">
             <div>
                 <!-- Return Button styled like QCM edit page -->
-                @if(str_contains(request()->headers->get('referer', ''), 'dashboard'))
+                {{-- @if(str_contains(request()->headers->get('referer', ''), 'dashboard'))
                 <div class="mb-5">
                     <a href="{{ route('etudiant.dashboard') }}" 
                        class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
@@ -200,7 +200,7 @@
                         <span class="text-[10px] font-black uppercase tracking-widest">Retour au Dashboard</span>
                     </a>
                 </div>
-                @endif
+                @endif --}}
 
                 <div class="flex items-center gap-4 mb-2">
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Espace Apprenant</span>

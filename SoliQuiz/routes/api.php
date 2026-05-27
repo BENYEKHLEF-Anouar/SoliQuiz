@@ -18,8 +18,10 @@ Route::post('/chatbot/chat', [\App\Http\Controllers\Api\ChatbotController::class
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
-    
+
     Route::post('/logout', [AuthController::class, 'logout']);
+
+
 
     // Student endpoints - etudiant and admin role can access
     Route::prefix('etudiant')->middleware('role:etudiant,admin')->group(function () {

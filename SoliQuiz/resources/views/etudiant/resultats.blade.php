@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Résultats : ' . $qcm->titre . ' - SoliQuiz')
+
 @section('content')
 <div class="bg-transparent min-h-screen pb-16">
     <main class="max-w-4xl mx-auto px-4 py-12">
@@ -82,7 +84,9 @@
             </div>
 
             @foreach($questionDetails as $index => $question)
-            <div class="bg-white border-2 {{ $question->isCorrect ? 'border-emerald-100' : 'border-rose-100' }} rounded-[2.5rem] p-8 md:p-10 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] relative group/card transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] active:scale-[0.98]">
+            <div
+                x-data="aiExplain({{ $question->id }}, {{ $tentative->id }})"
+                class="bg-white border-2 {{ $question->isCorrect ? 'border-emerald-100' : 'border-rose-100' }} rounded-[2.5rem] p-8 md:p-10 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] relative group/card transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] active:scale-[0.98]">
                 
                 <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8 mt-2">
                     <div class="flex-1">
@@ -215,6 +219,82 @@
                         </div>
                     @endforeach
                 </div>
+
+
+
+                {{-- AI Explanation Panel (only on failed questions) --}}
+                @if(!$question->isCorrect)
+                <div class="mt-8 pt-6 border-t border-slate-100">
+                    <!-- Futuristic Glassmorphic AI Helper Widget -->
+                    <div 
+                        @click="explain()"
+                        :class="explanation ? 'pointer-events-none' : 'cursor-pointer hover:border-primary-300 hover:shadow-[0_12px_40px_rgba(190,220,240,0.25)] active:scale-[0.99]'"
+                        class="relative overflow-hidden rounded-3xl border-2 border-primary-100/70 bg-white p-6 transition-all duration-500 group/ai shadow-xs"
+                    >
+                        <!-- Shimmering neon light glow in the corner -->
+                        <div class="absolute -right-20 -top-20 size-40 rounded-full bg-primary-400/10 blur-3xl group-hover/ai:bg-primary-400/20 transition-all duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <!-- Left: AI Core Header -->
+                            <div class="flex items-center gap-4">
+                                <div class="relative size-12 rounded-2xl bg-primary-50 border border-primary-100 flex items-center justify-center shrink-0 shadow-inner-premium group-hover/ai:border-primary-200 transition-colors">
+                                    <svg class="size-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                    </svg>
+                                    <!-- AI Active Glow Ring -->
+                                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] font-black uppercase tracking-widest text-primary-600 leading-none">Assistant SoliBot</span>
+                                    <h4 class="text-sm font-black text-slate-800 tracking-tight mt-1">Analyse pédagogique intelligente</h4>
+                                    <p class="text-[11px] font-bold text-slate-400 mt-0.5 leading-none">Comprenez instantanément pourquoi votre réponse a échoué.</p>
+                                </div>
+                            </div>
+
+                            <!-- Right: Action Trigger -->
+                            <div class="shrink-0" x-show="!explanation">
+                                <button 
+                                    :disabled="loading"
+                                    class="w-full md:w-auto px-5 h-12 bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-98 flex items-center justify-center gap-2 group-hover/ai:bg-primary-600"
+                                >
+                                    <span x-show="loading" class="animate-spin size-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+                                    <span x-text="loading ? 'Analyse...' : 'Expliquer l\'erreur'"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Smooth Expanding Analysis Panel -->
+                        <div
+                            x-show="explanation"
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 -translate-y-2"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            class="mt-6 pt-6 border-t border-slate-100 flex flex-col gap-4"
+                            style="display: none;"
+                        >
+                            <div class="rounded-2xl bg-linear-to-br from-primary-50/40 to-primary-100/10 border border-primary-100/40 p-5">
+                                <p x-text="explanation" class="text-xs font-semibold text-slate-700 leading-relaxed whitespace-pre-line"></p>
+                            </div>
+                        </div>
+
+                        <!-- Error Alert -->
+                        <div
+                            x-show="error"
+                            x-transition
+                            class="mt-4 rounded-xl bg-rose-50 border border-rose-100/60 p-4"
+                            style="display: none;"
+                        >
+                            <div class="flex items-center gap-2.5 text-rose-700">
+                                <svg class="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                <p x-text="error" class="text-[11px] font-black uppercase tracking-wider"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
             @endforeach
         </section>

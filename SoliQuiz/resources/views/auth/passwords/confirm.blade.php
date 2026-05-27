@@ -1,5 +1,7 @@
 @extends('layouts.guest')
 
+@section('title', 'Confirmation Mot de Passe - SoliQuiz')
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

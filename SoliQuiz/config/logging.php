@@ -127,6 +127,14 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'chatbot' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/chatbot.log'),
+            'level' => 'info',
+            'days' => 30,
+            'replace_placeholders' => true,
+        ],
+
     ],
 
 ];
