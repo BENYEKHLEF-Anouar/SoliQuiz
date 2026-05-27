@@ -3,7 +3,18 @@
 @section('content')
     <div class="h-[44px] w-full shrink-0"></div> <!-- iOS Safe Area -->
 
-    <main class="w-full max-w-md mx-auto p-6 flex flex-col justify-center flex-1 animate-in fade-in duration-1000">
+    <main x-data="loginForm" class="w-full max-w-md mx-auto p-6 flex flex-col justify-center flex-1 animate-in fade-in duration-1000 relative">
+        <!-- Return Button -->
+        <div class="mb-4">
+            <a href="{{ route('landing') }}" 
+               class="inline-flex items-center gap-2 text-slate-400 hover:text-primary-600 transition-colors group">
+                <div class="size-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:border-primary-200 group-hover:bg-primary-50 transition-all">
+                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest">Retour</span>
+            </a>
+        </div>
+
         <div class="bg-white border border-slate-100 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
             <div class="p-8 sm:p-12">
                 <div class="text-center mb-10">
@@ -24,52 +35,7 @@
                 </div>
 
                 <div class="mt-8">
-                    <form x-data="{
-                        email: '',
-                        password: '',
-                        error: null,
-                        loading: false,
-                        async handleLogin() {
-                            this.loading = true;
-                            this.error = null;
-                            try {
-                                const response = await fetch(`${Alpine.store('config').apiBaseUrl}/login`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Accept': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        email: this.email,
-                                        password: this.password,
-                                        device_name: 'MobileApp'
-                                    })
-                                });
-
-                                const data = await response.json();
-
-                                if (!response.ok) {
-                                    throw new Error(data.message || 'Échec de la connexion');
-                                }
-
-                                // Store authentication data
-                                Alpine.store('config').setAuth(data.token, data.user);
-
-                                // Redirect based on role
-                                if (data.user.type_profil === 'formateur') {
-                                    window.location.href = '/formateur/qcms';
-                                } else if (data.user.type_profil === 'admin') {
-                                    window.location.href = '/admin/dashboard'; // Assuming this exists or falls back
-                                } else {
-                                    window.location.href = '/student/dashboard';
-                                }
-                            } catch (e) {
-                                this.error = e.message;
-                            } finally {
-                                this.loading = false;
-                            }
-                        }
-                    }" @submit.prevent="handleLogin" class="grid gap-y-6">
+                    <form @submit.prevent="handleLogin" class="grid gap-y-6">
                         
                         <!-- Error Alert -->
                         <div x-show="error" x-cloak class="p-4 bg-red-50 border border-red-100 rounded-2xl text-[10px] font-black text-red-600 uppercase tracking-widest text-center" x-text="error"></div>
@@ -93,8 +59,7 @@
                                     class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Mot
                                     de
                                     passe</label>
-                                <!-- <a class="text-[10px] text-primary-600 font-black uppercase tracking-widest" href="#">Oublié
-                                    ?</a> -->
+                                <button type="button" @click="showResetModal = true" class="text-[10px] text-primary-600 font-black uppercase tracking-widest outline-none border-none bg-transparent cursor-pointer">Oublié ?</button>
                             </div>
                             <div class="relative group">
                                 <input type="password" id="password" name="password" x-model="password"
@@ -130,6 +95,66 @@
                         </button>
                     </form>
                 </div>
+            </div>
+        </div>
+
+        <!-- Reset Password Modal (Sleek Glassmorphic) -->
+        <div x-show="showResetModal" 
+             x-cloak
+             class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/50 backdrop-blur-md"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+             
+            <div @click.away="showResetModal = false"
+                 class="w-full max-w-sm bg-white border border-slate-100 rounded-[2.5rem] shadow-2xl p-8 relative"
+                 x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="opacity-0 translate-y-8 scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave="transition ease-in duration-200 transform"
+                 x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-8 scale-95">
+                 
+                <div class="text-center mb-6">
+                    <h3 class="text-xl font-heading font-black text-slate-900">Mot de passe oublié</h3>
+                    <p class="mt-2 text-xs text-slate-400 font-bold uppercase tracking-wider">
+                        Saisis ton adresse e-mail pour réinitialiser
+                    </p>
+                </div>
+                
+                <form @submit.prevent="handleResetPassword" class="grid gap-y-4">
+                
+                    <!-- Alerts -->
+                    <div x-show="resetError" class="p-3 bg-red-50 border border-red-100 rounded-xl text-[10px] font-black text-red-600 uppercase tracking-widest text-center" x-text="resetError" x-cloak></div>
+                    <div x-show="resetSuccess" class="p-3 bg-emerald-50 border border-emerald-100 rounded-xl text-[10px] font-black text-emerald-600 uppercase tracking-widest text-center" x-text="resetSuccess" x-cloak></div>
+                    
+                    <div>
+                        <label for="resetEmail" class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">E-mail</label>
+                        <input type="email" id="resetEmail" x-model="resetEmail" required
+                               class="py-3 px-5 block w-full border-slate-100 bg-slate-50 rounded-xl text-sm font-bold focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 transition-all outline-none"
+                               placeholder="prenom@solicode.co">
+                    </div>
+                    
+                    <button type="submit" :disabled="resetLoading"
+                            class="w-full h-12 inline-flex justify-center items-center text-xs font-black rounded-xl border border-transparent bg-slate-950 text-white shadow-xl hover:bg-slate-900 active:scale-[0.98] transition-all uppercase tracking-wider disabled:opacity-70">
+                        <span x-show="!resetLoading">Envoyer la demande</span>
+                        <span x-show="resetLoading" class="flex items-center gap-1.5" x-cloak>
+                            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Envoi...
+                        </span>
+                    </button>
+                    
+                    <button type="button" @click="showResetModal = false; resetError = null; resetSuccess = null;"
+                            class="w-full h-12 inline-flex justify-center items-center text-xs font-bold rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-[0.98] transition-all uppercase tracking-wider">
+                        Fermer
+                    </button>
+                </form>
             </div>
         </div>
     </main>

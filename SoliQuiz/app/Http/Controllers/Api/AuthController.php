@@ -9,10 +9,14 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     protected $authService;
+    protected $passwordResetService;
 
-    public function __construct(AuthService $authService)
-    {
+    public function __construct(
+        AuthService $authService,
+        \App\Services\PasswordResetService $passwordResetService
+    ) {
         $this->authService = $authService;
+        $this->passwordResetService = $passwordResetService;
     }
 
     /**
@@ -33,6 +37,28 @@ class AuthController extends Controller
         );
 
         return response()->json($data);
+    }
+
+    /**
+     * Request a password reset for mobile user.
+     */
+    public function requestPasswordReset(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $success = $this->passwordResetService->requestReset($request->email);
+
+        if (!$success) {
+            return response()->json([
+                'message' => "Aucun utilisateur n'est enregistré avec cette adresse e-mail."
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => "Votre demande de réinitialisation a été transmise à l'administrateur."
+        ]);
     }
 
     /**

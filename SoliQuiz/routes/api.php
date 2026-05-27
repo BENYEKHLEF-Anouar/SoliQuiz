@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\AuthController;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/password/reset-request', [AuthController::class, 'requestPasswordReset']);
 Route::post('/chatbot/chat', [\App\Http\Controllers\Api\ChatbotController::class, 'chat']);
 
 // Protected routes

@@ -41,8 +41,8 @@
                 <!-- Progression Chart Card -->
                 <div class="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative overflow-hidden group">
                     <!-- Target line overlay (10/20 mark) -->
-                    <div class="absolute inset-x-6 top-1/2 border-t border-dashed border-slate-100 flex justify-between items-center z-0 pointer-events-none">
-                        <span class="text-[7px] font-black text-slate-300 uppercase tracking-widest bg-white pr-2 mt-[-6px]">Moyenne (10/20)</span>
+                    <div class="absolute inset-x-6 top-1/2 border-t border-dashed border-slate-100 flex justify-end items-center z-20 pointer-events-none">
+                        <span class="text-[7px] font-black text-slate-400 uppercase tracking-widest bg-white pl-2 mt-[-6px]">Moyenne (10/20)</span>
                     </div>
 
                     <div class="relative z-10 flex justify-between items-center mb-4">
@@ -52,15 +52,16 @@
 
                     <!-- Bars -->
                     <div class="h-28 flex items-end gap-3 px-1 relative z-10">
-                        <template x-for="(score, index) in lastScores" :key="index">
-                            <div class="flex-1 rounded-t-xl transition-all duration-500 relative group/bar flex flex-col justify-end h-full"
-                                 :class="score >= 10 ? 'bg-gradient-to-t from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600' : 'bg-gradient-to-t from-rose-400 to-rose-500 hover:from-rose-500 hover:to-rose-600'"
-                                 :style="'height: ' + ((score / maxScore) * 100) + '%'">
+                        <template x-for="(attempt, index) in lastAttempts" :key="index">
+                            <div class="flex-1 h-full flex items-end relative group/bar">
+                                <div class="w-full rounded-t-lg transition-all duration-500"
+                                     :class="attempt.score >= 10 ? 'bg-gradient-to-t from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600' : 'bg-gradient-to-t from-rose-400 to-rose-500 hover:from-rose-500 hover:to-rose-600'"
+                                     :style="'height: ' + ((attempt.score / 20) * 100) + '%'"></div>
                                 
                                 <!-- Interactive Tooltip -->
                                 <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 text-white text-[9px] font-black px-2 py-1 rounded-lg opacity-0 group-hover/bar:opacity-100 transition-opacity duration-200 whitespace-nowrap z-30 shadow-lg flex flex-col items-center">
-                                    <span x-text="score + '/20'"></span>
-                                    <span class="text-[6px] text-slate-400 font-bold uppercase tracking-wider">Note</span>
+                                    <span class="text-[7px] text-slate-400 font-bold max-w-[80px] truncate block" x-text="attempt.title"></span>
+                                    <span x-text="attempt.score + '/20'"></span>
                                 </div>
                             </div>
                         </template>
@@ -127,44 +128,4 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </div>
-
-<script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('history', () => ({
-            history: [],
-            loading: false,
-            filterStatus: 'all',
-            get lastScores() {
-                return this.history.slice(0, 7).map(item => Number(item.score)).reverse();
-            },
-            get maxScore() {
-                const scores = this.lastScores;
-                return scores.length > 0 ? Math.max(...scores) : 20;
-            },
-            get filteredHistory() {
-                if (this.filterStatus === 'success') {
-                    return this.history.filter(item => item.score >= 10);
-                }
-                if (this.filterStatus === 'failure') {
-                    return this.history.filter(item => item.score < 10);
-                }
-                return this.history;
-            },
-            async init() {
-                await this.fetchHistory();
-            },
-            async fetchHistory() {
-                this.loading = true;
-                try {
-                    const response = await Alpine.store('config').authFetch(`${Alpine.store('config').apiBaseUrl}/etudiant/history`);
-                    this.history = await response.json();
-                } catch (e) {
-                    console.error('Failed to load history', e);
-                } finally {
-                    this.loading = false;
-                }
-            }
-        }));
-    });
-</script>
 @endsection

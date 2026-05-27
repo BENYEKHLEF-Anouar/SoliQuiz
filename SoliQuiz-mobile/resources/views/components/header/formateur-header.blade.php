@@ -18,7 +18,7 @@
             </a>
         </div>
 
-        <div class="relative" x-data="{ open: false }" x-init="$store.config.profile || fetchProfile()">
+        <div class="relative" x-data="{ open: false }" x-init="$store.config.profile || $store.config.fetchProfile()">
             <button @click="open = !open" class="size-[38px] rounded-full ring-2 ring-primary-500/20 overflow-hidden active:scale-95 transition-transform bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-primary-500/30">
                 <template x-if="$store.config.profile">
                     <span x-text="$store.config.getInitials()"></span>
@@ -48,22 +48,5 @@
                 <button @click="$store.config.logout()" class="w-full flex items-center gap-x-3 py-2 px-3 rounded-xl text-sm text-semantic-error hover:bg-semantic-error/10 font-bold text-left">Déconnexion</button>
             </div>
         </div>
-
-        <script>
-            async function fetchProfile() {
-                if (Alpine.store('config').profile) return;
-                try {
-                    const response = await Alpine.store('config').authFetch(
-                        `${Alpine.store('config').apiBaseUrl}/formateur/profile`
-                    );
-                    if (response.ok) {
-                        const data = await response.json();
-                        Alpine.store('config').setProfile(data);
-                    }
-                } catch (e) {
-                    console.error('Failed to load profile', e);
-                }
-            }
-        </script>
     </div>
 </header>
