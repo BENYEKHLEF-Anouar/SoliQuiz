@@ -21,13 +21,15 @@ class AdminController extends Controller
     private SeanceService $seanceService;
     private ClasseService $classeService;
     private \App\Services\QcmService $qcmService;
+    private \App\Services\PasswordResetService $passwordResetService;
 
     public function __construct(
         UserService $userService, 
         DashboardService $dashboardService, 
         SeanceService $seanceService, 
         ClasseService $classeService,
-        \App\Services\QcmService $qcmService
+        \App\Services\QcmService $qcmService,
+        \App\Services\PasswordResetService $passwordResetService
     )
     {
         $this->userService = $userService;
@@ -35,6 +37,7 @@ class AdminController extends Controller
         $this->seanceService = $seanceService;
         $this->classeService = $classeService;
         $this->qcmService = $qcmService;
+        $this->passwordResetService = $passwordResetService;
     }
 
     /**
@@ -52,6 +55,37 @@ class AdminController extends Controller
         $formateurs = User::where('type_profil', 'formateur')->orderBy('nom')->get();
         
         return view('admin.qcms', compact('qcms', 'search', 'statut', 'formateurId', 'formateurs'));
+    }
+
+    /**
+     * Affiche les détails d'un QCM et les tentatives des étudiants (Admin)
+     */
+    public function showQcm($id)
+    {
+        $qcm = \App\Models\QCM::with(['formateur', 'uniteApprentissage', 'classe', 'questions.options'])
+            ->withCount(['questions', 'tentatives'])
+            ->findOrFail($id);
+            
+        // Charger les tentatives avec les étudiants
+        $tentatives = \App\Models\Tentative::where('qcm_id', $id)
+            ->with('etudiant')
+            ->orderBy('date_debut', 'desc')
+            ->get();
+            
+        // Métriques pour ce QCM
+        $metrics = [
+            'moyenne' => round($tentatives->avg('score_obtenu') ?? 0, 1),
+            'max_score' => $tentatives->max('score_obtenu') ?? 0,
+            'min_score' => $tentatives->min('score_obtenu') ?? 0,
+            'nb_reussite' => $tentatives->where('score_obtenu', '>=', $qcm->score_reussite)->count(),
+            'total_tentatives' => $tentatives->count(),
+        ];
+        
+        $metrics['taux_reussite'] = $metrics['total_tentatives'] > 0
+            ? round(($metrics['nb_reussite'] / $metrics['total_tentatives']) * 100)
+            : 0;
+
+        return view('admin.qcms-show', compact('qcm', 'tentatives', 'metrics'));
     }
 
     public function searchQcms(Request $request)
@@ -74,8 +108,19 @@ class AdminController extends Controller
         $topPerformers = $this->dashboardService->getTopPerformers(3);
         $systemStatus = $this->dashboardService->getSystemStatus();
         $classes = $this->dashboardService->getAllClassesMetrics();
+        $resetRequests = \App\Models\PasswordResetRequest::where('status', 'pending')->with('user')->latest()->get();
         
-        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus', 'classes'));
+        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus', 'classes', 'resetRequests'));
+    }
+
+    /**
+     * Réinitialise le mot de passe d'un utilisateur à 123456
+     */
+    public function resolveResetRequest($id)
+    {
+        $user = $this->passwordResetService->resolveRequest($id);
+        
+        return redirect()->back()->with('success', "Le compte de {$user->nom_complet} a été réinitialisé. Le mot de passe est désormais '123456'.");
     }
     
     /**

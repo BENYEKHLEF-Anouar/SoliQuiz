@@ -207,8 +207,10 @@
                         </div>
 
                         <div class="relative z-10 flex-1">
-                            <h3 class="text-xl font-heading font-black text-slate-900 group-hover:text-primary-600 transition-colors leading-tight mb-4 uppercase"
-                                x-text="qcm.titre"></h3>
+                            <a :href="'/admin/qcms/' + qcm.id" class="block group/title">
+                                <h3 class="text-xl font-heading font-black text-slate-900 group-hover:text-primary-600 transition-colors leading-tight mb-4 uppercase hover:underline"
+                                    x-text="qcm.titre"></h3>
+                            </a>
 
                             <div class="space-y-4 mb-10">
                                 <div class="flex items-center gap-3">
@@ -343,8 +345,10 @@
                                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                                 </div>
                                 <div class="min-w-0 relative group/title">
-                                    <h4 class="text-sm font-black text-slate-800 uppercase truncate cursor-help" x-text="qcm.titre"></h4>
-                                    <div class="absolute bottom-full left-0 mb-2 hidden group-hover/title:block bg-slate-950 text-white text-[9px] font-black tracking-widest px-3 py-2 rounded-xl shadow-premium z-50 max-w-xs whitespace-normal uppercase pointer-events-none">
+                                    <a :href="'/admin/qcms/' + qcm.id" class="block">
+                                        <h4 class="text-sm font-black text-slate-800 hover:text-primary-500 uppercase truncate cursor-pointer hover:underline" x-text="qcm.titre"></h4>
+                                    </a>
+                                    <div class="absolute bottom-full left-0 mb-2 hidden group-hover/title:block bg-slate-900 text-white text-[9px] font-black tracking-widest px-3 py-2 rounded-xl shadow-premium z-50 max-w-xs whitespace-normal uppercase pointer-events-none">
                                         <span x-text="qcm.titre"></span>
                                         <div class="absolute top-full left-4 -mt-1 border-4 border-transparent border-t-slate-950"></div>
                                     </div>
@@ -382,14 +386,20 @@
                                     </span>
                                 </template>
                             </div>
-                            
-                            <!-- Questions -->
                             <div class="col-span-2 flex justify-center">
                                 <span class="text-sm font-black text-slate-600" x-text="qcm.questions_count || 0"></span>
                             </div>
                             
                             <!-- Actions -->
                             <div class="col-span-2 flex justify-end gap-2" x-data="{ menuOpen: false }">
+                                <a :href="'/admin/qcms/' + qcm.id"
+                                    class="size-9 rounded-lg bg-slate-100 text-slate-400 hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center group"
+                                    title="Voir les détails">
+                                    <svg class="size-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </a>
                                 <button type="button" @click="window.location.href = '/formateur/qcm/' + qcm.id + '/edit'"
                                     class="size-9 rounded-lg bg-slate-100 text-slate-400 hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center"
                                     title="Modifier">

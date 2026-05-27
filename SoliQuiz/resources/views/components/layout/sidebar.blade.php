@@ -1,6 +1,10 @@
 @php
     $user = Auth::user();
     $role = $user->type_profil;
+    $resetRequestsCount = 0;
+    if ($role === 'admin') {
+        $resetRequestsCount = \App\Models\PasswordResetRequest::where('status', 'pending')->count();
+    }
 @endphp
 
 <!-- Mobile Header (Outside Aside but Fixed) -->
@@ -113,6 +117,11 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="{{ $link['icon'] }}" />
                                 </svg>
                                 <span class="text-[11px] font-bold uppercase tracking-wider">{{ $link['name'] }}</span>
+                                @if($link['route'] === 'admin.dashboard' && $resetRequestsCount > 0)
+                                    <span class="ml-auto flex items-center justify-center h-5 min-w-[20px] px-1.5 bg-rose-500 text-white text-[9px] font-black rounded-full shadow-sm shadow-rose-500/10">
+                                        {{ $resetRequestsCount }}
+                                    </span>
+                                @endif
                             </a>
                         @endforeach
                     </div>

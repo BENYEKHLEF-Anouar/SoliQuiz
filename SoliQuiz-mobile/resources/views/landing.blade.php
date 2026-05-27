@@ -46,11 +46,11 @@
 
             <div class="flex flex-col gap-3">
                 <a href="{{ route('login') }}"
-                    class="w-full py-4 bg-primary-500 text-white font-black rounded-2xl text-center uppercase tracking-widest text-xs shadow-xl shadow-primary-500/30 active:scale-[0.98] transition-all">
-                    Se Connecter maintenant
+                    class="w-full py-3 bg-primary-500 text-white font-semibold rounded-xl text-center uppercase tracking-wider text-xs shadow-lg shadow-primary-500/15 active:scale-[0.98] transition-all">
+                    Se connecter maintenant
                 </a>
                 <a href="#features"
-                    class="w-full py-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-2xl text-center uppercase tracking-widest text-xs active:scale-[0.98] transition-all">
+                    class="w-full py-3 bg-white border border-slate-200/80 text-slate-600 font-semibold rounded-xl text-center uppercase tracking-wider text-xs active:scale-[0.98] transition-all">
                     Découvrir plus
                 </a>
             </div>

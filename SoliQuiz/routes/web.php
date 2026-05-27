@@ -29,9 +29,11 @@ Route::middleware(['auth'])->group(function () {
     // Group: Admin Only
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function() {
         Route::get('/dashboard', [\App\Http\Controllers\Web\AdminController::class, 'dashboard'])->name('dashboard');
+        Route::post('/password-reset-requests/{id}/resolve', [\App\Http\Controllers\Web\AdminController::class, 'resolveResetRequest'])->name('password.reset.resolve');
         Route::get('/resultats', [\App\Http\Controllers\Web\AdminController::class, 'resultats'])->name('resultats');
         Route::get('/qcms', [\App\Http\Controllers\Web\AdminController::class, 'indexQcms'])->name('qcms');
         Route::get('/qcms/search', [\App\Http\Controllers\Web\AdminController::class, 'searchQcms'])->name('qcms.search');
+        Route::get('/qcms/{id}', [\App\Http\Controllers\Web\AdminController::class, 'showQcm'])->name('qcms.show');
         
         Route::get('/utilisateurs', [\App\Http\Controllers\Web\AdminController::class, 'gestionUtilisateurs'])->name('utilisateurs');
         Route::get('/utilisateurs/search', [\App\Http\Controllers\Web\AdminController::class, 'searchUsers'])->name('utilisateurs.search');
