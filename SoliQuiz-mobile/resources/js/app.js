@@ -1,5 +1,19 @@
 import Alpine from 'alpinejs';
 import './bootstrap';
+import loginForm from './components/auth/login';
+import dashboard from './components/student/dashboard';
+import library from './components/student/library';
+import profile from './components/student/profile';
+import history from './components/student/history';
+import qcmPassation from './components/student/qcmPassation';
+import qcmResult from './components/student/qcmResult';
+import aiExplain from './components/student/aiExplain';
+import pedagogieStructure from './components/formateur/pedagogieStructure';
+import formateurResults from './components/formateur/results';
+import formateurQcms from './components/formateur/qcms';
+import qcmResults from './components/formateur/qcmResults';
+import formateurProfile from './components/formateur/profile';
+import chatbot from './components/common/chatbot';
 
 window.Alpine = Alpine;
 
@@ -35,6 +49,32 @@ Alpine.store('config', {
     setStudentProfile(profile) {
         this.studentProfile = profile;
         localStorage.setItem('soliquiz_student_profile', JSON.stringify(profile));
+    },
+
+    async fetchProfile() {
+        if (this.profile) return;
+        try {
+            const response = await this.authFetch(`${this.apiBaseUrl}/formateur/profile`);
+            if (response.ok) {
+                const data = await response.json();
+                this.setProfile(data);
+            }
+        } catch (e) {
+            console.error('Failed to load profile', e);
+        }
+    },
+
+    async fetchStudentProfile() {
+        if (this.studentProfile) return;
+        try {
+            const response = await this.authFetch(`${this.apiBaseUrl}/etudiant/profile`);
+            if (response.ok) {
+                const data = await response.json();
+                this.setStudentProfile(data);
+            }
+        } catch (e) {
+            console.error('Failed to load student profile', e);
+        }
     },
 
     getInitials() {
@@ -107,5 +147,20 @@ Alpine.store('config', {
         return response;
     }
 });
+
+Alpine.data('loginForm', loginForm);
+Alpine.data('dashboard', dashboard);
+Alpine.data('library', library);
+Alpine.data('profile', profile);
+Alpine.data('history', history);
+Alpine.data('qcmPassation', qcmPassation);
+Alpine.data('qcmResult', qcmResult);
+Alpine.data('aiExplain', aiExplain);
+Alpine.data('pedagogieStructure', pedagogieStructure);
+Alpine.data('formateurResults', formateurResults);
+Alpine.data('formateurQcms', formateurQcms);
+Alpine.data('qcmResults', qcmResults);
+Alpine.data('formateurProfile', formateurProfile);
+Alpine.data('chatbot', chatbot);
 
 Alpine.start();

@@ -130,6 +130,7 @@ class EtudiantService
                 $total = $group->count();
                 $reussis = $group->where('statut', 'reussi')->count();
                 return [
+                    'ua_id' => $ua?->id ?? 0,
                     'ua_nom' => $uaNom,
                     'session_nom' => $sessionNom,
                     'score_moyen' => round($avg, 1),
@@ -176,8 +177,8 @@ class EtudiantService
             $qcm->tentative_id = $tentative ? $tentative->id : null;
             $qcm->date_fin = $tentative ? ($tentative->date_fin ? $tentative->date_fin->format('d M Y') : null) : null;
             $qcm->unite_nom = $qcm->uniteApprentissage ? $qcm->uniteApprentissage->nom : 'Évaluation transverse';
-            $qcm->url_passation = route('student.passation', $qcm->id);
-            $qcm->url_resultats = $qcm->tentative_id ? route('student.resultats', $qcm->id) : '#';
+            $qcm->url_passation = route('etudiant.passation', $qcm->id);
+            $qcm->url_resultats = $qcm->tentative_id ? route('etudiant.resultats', $qcm->id) : '#';
             if ($tentative && $tentative->date_debut && $qcm->duree_minutes > 0) {
                 $qcm->timer_expires_at = $tentative->date_debut->addMinutes($qcm->duree_minutes)->toIso8601String();
             } else {
@@ -254,8 +255,8 @@ class EtudiantService
             $qcm->tentative_id = $tentative ? $tentative->id : null;
             $qcm->date_fin = $tentative ? ($tentative->date_fin ? $tentative->date_fin->format('d M Y') : null) : null;
             $qcm->unite_nom = $qcm->uniteApprentissage ? $qcm->uniteApprentissage->nom : 'Évaluation transverse';
-            $qcm->url_passation = route('student.passation', $qcm->id);
-            $qcm->url_resultats = $qcm->tentative_id ? route('student.resultats', $qcm->id) : '#';
+            $qcm->url_passation = route('etudiant.passation', $qcm->id);
+            $qcm->url_resultats = $qcm->tentative_id ? route('etudiant.resultats', $qcm->id) : '#';
             if ($tentative && $tentative->date_debut && $qcm->duree_minutes > 0) {
                 $qcm->timer_expires_at = $tentative->date_debut->addMinutes($qcm->duree_minutes)->toIso8601String();
             } else {

@@ -179,6 +179,10 @@
                         <h3 class="font-bold text-slate-900">Suivi des Cohortes</h3>
                         <p class="text-xs text-slate-500 mt-0.5">Taux de réussite et moyenne générale par classe</p>
                     </div>
+                    <a href="{{ route('admin.resultats') }}" class="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1 group/link">
+                        Voir tout
+                        <svg class="size-3 group-hover/link:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+                    </a>
                 </div>
                 
                 <div class="relative w-full min-h-[280px] flex items-center justify-center">
@@ -311,6 +315,134 @@
 
         <!-- Right Column - 1/3 width -->
         <div class="space-y-6">
+            @if(isset($resetRequests) && $resetRequests->count() > 0)
+                <!-- Password Reset Requests Notification Widget -->
+                <div class="bg-white rounded-3xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.02)] p-5 relative overflow-hidden" x-data="{ showAllRequests: false }">
+                    <div class="absolute top-0 right-0 size-24 bg-rose-50 rounded-full -mr-8 -mt-8 opacity-40"></div>
+                    
+                    <div class="flex items-center justify-between mb-5 relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="size-9 bg-rose-50 border border-rose-100 rounded-xl flex items-center justify-center text-rose-500">
+                                <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-slate-900 text-sm tracking-tight uppercase">Réinitialisations</h3>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Demandes en attente</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="bg-rose-500 text-white font-black text-[10px] px-2.5 py-0.5 rounded-full shadow-sm shadow-rose-500/10">{{ $resetRequests->count() }}</span>
+                            @if($resetRequests->count() > 3)
+                                <button @click="showAllRequests = true" class="text-[10px] font-black text-primary-500 hover:text-primary-600 transition-colors uppercase tracking-widest outline-none flex items-center gap-1 group/link">
+                                    Voir tout
+                                    <svg class="size-3 group-hover/link:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 relative z-10">
+                        @foreach($resetRequests->take(3) as $req)
+                            <div class="p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-4 transition-all duration-200 hover:-translate-y-0.5">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="size-9 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center font-black text-xs text-rose-600 shrink-0">
+                                        {{ substr($req->user->prenom, 0, 1) }}{{ substr($req->user->nom, 0, 1) }}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="font-black text-xs text-slate-900 truncate leading-none mb-1.5 uppercase">{{ $req->user->nom_complet }}</p>
+                                        <p class="text-[9px] font-bold text-slate-400 truncate leading-none uppercase tracking-wider mb-2">{{ $req->user->email }}</p>
+                                        <span class="inline-block px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200/50 text-[8px] font-black uppercase text-slate-500 tracking-widest leading-none">
+                                            {{ $req->user->type_profil }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <form action="{{ route('admin.password.reset.resolve', $req->id) }}" method="POST" class="m-0 shrink-0">
+                                    @csrf
+                                    <button type="submit" class="h-9 px-4 bg-slate-900 text-white rounded-xl font-black text-[9px] uppercase tracking-[0.15em] hover:bg-rose-500 active:scale-95 transition-all duration-300 whitespace-nowrap">
+                                        Initialiser
+                                    </button>
+                                </form>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Modal: Beautiful Glassmorphism Dialog -->
+                    <template x-teleport="body">
+                        <div x-show="showAllRequests" 
+                             class="fixed inset-0 z-[9999] flex items-center justify-center p-4" 
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0"
+                             x-transition:enter-end="opacity-100"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             x-cloak>
+                            
+                            <!-- Backdrop without Blur -->
+                            <div class="fixed inset-0 bg-slate-900/40 transition-opacity" @click="showAllRequests = false"></div>
+
+                            <!-- Content Container -->
+                            <div class="relative z-10 bg-white rounded-3xl border border-slate-200/80 shadow-[0_20px_50px_rgba(0,0,0,0.05)] w-full max-w-md overflow-hidden max-h-[80vh] flex flex-col"
+                                 x-transition:enter="transition ease-out duration-300 transform"
+                                 x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-200 transform"
+                                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                 x-transition:leave-end="opacity-0 scale-95 translate-y-4">
+                                
+                                <!-- Header -->
+                                <div class="px-8 pt-8 pb-5 flex items-start justify-between border-b border-slate-100 bg-slate-50/30">
+                                    <div>
+                                        <span class="text-[9px] font-black text-rose-500 uppercase tracking-[0.25em] block mb-1 leading-none">Système de Sécurité</span>
+                                        <h3 class="text-lg font-black text-slate-900 uppercase tracking-tight leading-none">Toutes les demandes</h3>
+                                    </div>
+                                    <button @click="showAllRequests = false" class="group size-10 rounded-xl bg-slate-100/50 border border-slate-200/40 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all active:scale-95 outline-none">
+                                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
+
+                                <!-- List inside slot -->
+                                <div class="flex-1 overflow-y-auto custom-scrollbar">
+                                    <div class="px-8 py-6 space-y-3">
+                                        @foreach($resetRequests as $req)
+                                            <div class="p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-4 transition-all duration-200">
+                                                <div class="flex items-center gap-3 min-w-0">
+                                                    <div class="size-9 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center font-black text-xs text-rose-600 shrink-0">
+                                                        {{ substr($req->user->prenom, 0, 1) }}{{ substr($req->user->nom, 0, 1) }}
+                                                    </div>
+                                                    <div class="min-w-0">
+                                                        <p class="font-black text-xs text-slate-900 truncate leading-none mb-1.5 uppercase">{{ $req->user->nom_complet }}</p>
+                                                        <p class="text-[9px] font-bold text-slate-400 truncate leading-none uppercase tracking-wider mb-2">{{ $req->user->email }}</p>
+                                                        <span class="inline-block px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200/50 text-[8px] font-black uppercase text-slate-500 tracking-widest leading-none">
+                                                            {{ $req->user->type_profil }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <form action="{{ route('admin.password.reset.resolve', $req->id) }}" method="POST" class="m-0 shrink-0">
+                                                    @csrf
+                                                    <button type="submit" class="h-9 px-4.5 bg-slate-900 text-white rounded-xl font-black text-[9px] uppercase tracking-[0.15em] hover:bg-rose-500 active:scale-95 transition-all duration-300 whitespace-nowrap">
+                                                        Initialiser
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="px-8 py-5 bg-slate-50/30 border-t border-slate-100 flex justify-end gap-3">
+                                    <button @click="showAllRequests = false" class="h-10 px-5 border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all outline-none">
+                                        Fermer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            @endif
+
             <!-- System Status Widget -->
             <div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-lg p-5 text-white">
                 <div class="flex items-center justify-between mb-4">

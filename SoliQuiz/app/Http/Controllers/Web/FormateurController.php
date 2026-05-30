@@ -508,21 +508,74 @@ class FormateurController extends Controller
         $classes = $data['classes'];
         $qcms = $data['qcms'];
 
-        // Liste des étudiants issus de ses classes gérées
-        $etudiantsClasses = $classes->flatMap->etudiants
-            ->map(fn($e) => $e->prenom . ' ' . $e->nom);
+        $etudiantsClasses = $classes->flatMap->etudiants;
 
-        // Liste des étudiants ayant réellement passé ses QCM (même s'ils ne sont pas dans ses classes)
-        $etudiantsTentatives = $qcms->flatMap->tentatives
-            ->map(fn($t) => $t->etudiant?->prenom . ' ' . $t->etudiant?->nom)
-            ->filter();
+        $etudiantsTentatives = $qcms->flatMap->tentatives->map->etudiant->filter();
 
         $etudiants = $etudiantsClasses->concat($etudiantsTentatives)
-            ->unique()
-            ->sort()
+            ->unique('id')
+            ->map(fn($e) => [
+                'id' => $e->id,
+                'name' => $e->prenom . ' ' . $e->nom
+            ])
+            ->sortBy('name')
             ->values();
 
         return view('formateur.resultats-cohorte', compact('classes', 'qcms', 'etudiants'));
+    }
+
+    /**
+     * Affiche la progression détaillée d'un étudiant.
+     */
+    public function studentProgress($id)
+    {
+        $student = \App\Models\User::where('type_profil', 'etudiant')
+            ->with(['classe.formateur'])
+            ->findOrFail($id);
+
+        if (!Auth::user()->isAdmin()) {
+            $isAccessible = false;
+            if ($student->classe && $student->classe->formateur_id === Auth::id()) {
+                $isAccessible = true;
+            }
+            if (!$isAccessible) {
+                $isAccessible = \App\Models\Tentative::where('etudiant_id', $student->id)
+                    ->whereHas('qcm', function($q) {
+                        $q->where('formateur_id', Auth::id());
+                    })->exists();
+            }
+            
+            if (!$isAccessible) {
+                abort(403);
+            }
+        }
+
+        $tentatives = $student->tentatives()
+            ->whereNotNull('score_obtenu')
+            ->with(['qcm.uniteApprentissage'])
+            ->orderBy('date_fin', 'asc')
+            ->get();
+
+        $totalAttempts = $tentatives->count();
+        $averageScore = $totalAttempts > 0 ? round($tentatives->avg('score_obtenu'), 2) : 0;
+        $successRate = $totalAttempts > 0 ? round(($tentatives->where('statut', 'reussi')->count() / $totalAttempts) * 100) : 0;
+
+        $chartData = $tentatives->map(function ($t) {
+            return [
+                'label' => $t->qcm->titre,
+                'score' => $t->score_obtenu,
+                'date' => $t->date_fin?->format('d M Y') ?? '-',
+            ];
+        });
+
+        $unites = $tentatives->map(fn($t) => $t->qcm->uniteApprentissage)
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        $history = $tentatives->sortByDesc('date_fin');
+
+        return view('formateur.student-progress', compact('student', 'totalAttempts', 'averageScore', 'successRate', 'chartData', 'history', 'unites'));
     }
 
     /**
@@ -532,6 +585,7 @@ class FormateurController extends Controller
     {
         $qcmId = $request->input('qcm');
         $classeName = $request->input('classe');
+        $etudiantId = $request->input('etudiant_id');
         $format = $request->input('format', 'csv');
 
         $suffix = '';
@@ -539,6 +593,13 @@ class FormateurController extends Controller
 
         if ($classeName) {
             $prefix = 'resultats_' . \Illuminate\Support\Str::slug($classeName);
+        }
+
+        if ($etudiantId) {
+            $student = \App\Models\User::find($etudiantId);
+            if ($student) {
+                $prefix = 'resultats_' . \Illuminate\Support\Str::slug($student->nom_complet);
+            }
         }
 
         $qcmName = null;
@@ -550,7 +611,8 @@ class FormateurController extends Controller
 
         $results = $this->resultatService->getCohorteResults([
             'classe' => $classeName,
-            'qcm_id' => $qcmId
+            'qcm_id' => $qcmId,
+            'etudiant_id' => $etudiantId
         ]);
 
         if ($format === 'pdf') {
@@ -835,55 +897,4 @@ class FormateurController extends Controller
             'questions.*.options.min' => "Chaque question doit avoir au moins 2 options de réponse.",
             'questions.*.options.*.texte.required' => "Le texte de l'option de réponse est obligatoire.",
         ];
-    }
-
-    public function generateWithAI(Request $request)
-    {
-        $request->validate([
-            'topic' => 'required|string|max:255',
-            'question_count' => 'required|integer|min:1|max:100',
-            'question_type' => 'required|string|in:single,multiple,both',
-        ]);
-
-        try {
-            // 1. Try production webhook first
-            $response = \Illuminate\Support\Facades\Http::timeout(120)->post('http://localhost:5678/webhook/generate-qcm', [
-                'topic' => $request->input('topic'),
-                'question_count' => $request->input('question_count'),
-                'question_type' => $request->input('question_type'),
-            ]);
-
-            // 2. If it fails or returns 404 (because workflow is not active yet), fallback to test webhook
-            if ($response->failed() || $response->status() === 404) {
-                $response = \Illuminate\Support\Facades\Http::timeout(120)->post('http://localhost:5678/webhook-test/generate-qcm', [
-                    'topic' => $request->input('topic'),
-                    'question_count' => $request->input('question_count'),
-                    'question_type' => $request->input('question_type'),
-                ]);
-            }
-
-            if ($response->successful()) {
-                return response()->json($response->json());
-            }
-
-            return response()->json(['error' => 'Error generating questions from the AI.'], 500);
-        } catch (\Exception $e) {
-            // 3. Last resort fallback in case of connection refused/timeout on production port
-            try {
-                $response = \Illuminate\Support\Facades\Http::timeout(120)->post('http://localhost:5678/webhook-test/generate-qcm', [
-                    'topic' => $request->input('topic'),
-                    'question_count' => $request->input('question_count'),
-                    'question_type' => $request->input('question_type'),
-                ]);
-
-                if ($response->successful()) {
-                    return response()->json($response->json());
-                }
-            } catch (\Exception $subEx) {
-                // Both connections failed
-            }
-
-            return response()->json(['error' => 'Could not connect to n8n. Make sure n8n is running on port 5678.'], 500);
-        }
-    }
-}
+    }}

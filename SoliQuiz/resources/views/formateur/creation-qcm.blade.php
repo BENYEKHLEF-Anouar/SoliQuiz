@@ -5,7 +5,7 @@
 @section('page-title', 'Studio de Création')
 
 @section('content')
-    <div class="fade-in pb-32" x-data="qcmBuilder({{ Js::from($unites) }}, {{ Js::from($classes) }}, {{ Js::from(old()) }})">
+    <div class="fade-in pb-32" x-data="qcmBuilder({{ Js::from($unites) }}, {{ Js::from($classes) }}, null, {{ Js::from(old()) }})">
 
         <!-- Header: Navigation -->
         <div class="mb-8 flex items-center justify-between">
@@ -59,28 +59,46 @@
             <!-- Main Column: Content (Questions) -->
             <div class="flex-1 w-full space-y-8">
                 <!-- AI Assistant Widget -->
-                <div class="bg-white rounded-2xl border border-slate-100 border-l-4 border-l-slate-900 shadow-md p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="size-12 rounded-xl bg-slate-50 text-slate-900 flex items-center justify-center shrink-0 border border-slate-100 relative">
-                            <svg class="size-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="16" height="16" x="4" y="4" rx="2" />
-                                <rect width="6" height="6" x="9" y="9" rx="1" />
-                                <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3" />
-                            </svg>
-                            <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
-                            </span>
+                <div 
+                    @click="$dispatch('open-modal', 'ai-generation')"
+                    class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6 relative overflow-hidden transition-all duration-500 cursor-pointer hover:border-primary-300 hover:shadow-md active:scale-[0.99] group/ai mb-6"
+                >
+                    <!-- Shimmering neon light glow in the corner -->
+                    <div class="absolute -right-20 -top-20 size-40 rounded-full bg-primary-400/10 blur-3xl group-hover/ai:bg-primary-400/20 transition-all duration-500"></div>
+
+                    <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                        <!-- Left: AI Core Header -->
+                        <div class="flex items-center gap-4">
+                            <div class="relative size-12 rounded-2xl bg-primary-50 border border-primary-100 flex items-center justify-center shrink-0 shadow-inner-premium group-hover/ai:border-primary-200 transition-colors">
+                                <svg class="size-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect width="16" height="16" x="4" y="4" rx="2" />
+                                    <rect width="6" height="6" x="9" y="9" rx="1" />
+                                    <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3" />
+                                </svg>
+                                <!-- AI Active Glow Ring -->
+                                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-primary-600 leading-none">Assistant SoliBot</span>
+                                <h4 class="text-sm font-black text-slate-800 tracking-tight mt-1">Générateur Pédagogique Assisté</h4>
+                                <p class="text-[11px] font-bold text-slate-400 mt-0.5 leading-none">Concevez des questions d'évaluation en quelques secondes à l'aide de l'IA.</p>
+                            </div>
                         </div>
-                        <div>
-                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-800">Générateur Pédagogique Assisté</h4>
-                            <p class="text-[11px] font-bold text-slate-400 mt-1">Concevez des questions d'évaluation en quelques secondes à l'aide de l'IA.</p>
+
+                        <!-- Right: Action Trigger -->
+                        <div class="shrink-0">
+                            <button 
+                                type="button" 
+                                class="w-full sm:w-auto px-5 h-12 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-98 flex items-center justify-center gap-2 group-hover/ai:bg-primary-600 relative z-10"
+                            >
+                                Générer avec l'IA
+                            </button>
                         </div>
                     </div>
-                    
-                    <button @click="$dispatch('open-modal', 'ai-generation')" type="button" class="px-5 py-3 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 relative z-10 active:scale-98">
-                        Générer avec l'IA
-                    </button>
+                </div>
 
                     <!-- Configuration Modal -->
                     <template x-teleport="body">
@@ -193,7 +211,6 @@
                             </div>
                         </x-ui.modal>
                     </template>
-                </div>
 
                 <!-- Main Title Box -->
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6 relative overflow-hidden">
@@ -637,304 +654,5 @@
         </x-ui.modal>
     </div>
 
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('qcmBuilder', (initialUnites, initialClasses, oldData = {}) => {
-                
-                let oldQuestions = null;
-                if (oldData.questions) {
-                    oldQuestions = (Array.isArray(oldData.questions) ? oldData.questions : Object.values(oldData.questions)).map(q => ({
-                        texte: q.texte || '',
-                        type: (q.type === 'unique' || q.type === 'choix_unique') ? 'choix_unique' : 'choix_multiple',
-                        points: q.points ? parseFloat(q.points) : 1,
-                        explication_feedback: q.explication_feedback || '',
-                        options: (q.options ? (Array.isArray(q.options) ? q.options : Object.values(q.options)) : []).map(o => ({
-                            texte: o.texte || '',
-                            est_correcte: o.est_correcte == '1' || o.est_correcte === true || o.est_correcte === 'true' || o.est_correcte === 'on',
-                            feedback_specifique: o.feedback_specifique || ''
-                        }))
-                    }));
-                }
 
-                let oldCompetences = oldData.competence_ids || [];
-                oldCompetences = Array.isArray(oldCompetences) ? oldCompetences.map(id => parseInt(id)) : [];
-
-                return {
-                    titre: oldData.titre || '',
-                    statut: oldData.statut || 'brouillon',
-                    showPointsWarning: false,
-                    allUnites: initialUnites,
-                    allClasses: initialClasses,
-                    selectedUniteId: oldData.unite_apprentissage_id || '',
-                    selectedClasseId: oldData.classe_id || '',
-                    hasTimer: oldData.duree_minutes !== undefined ? (parseInt(oldData.duree_minutes) > 0) : true,
-                    duree_minutes: oldData.duree_minutes !== undefined ? parseInt(oldData.duree_minutes) : 30,
-                    selectedCompetences: oldCompetences,
-                    scoreReussite: oldData.score_reussite !== undefined ? parseFloat(oldData.score_reussite) : 10,
-                    openAiModal: false,
-                    aiLoading: false,
-                    aiTopic: '',
-                    aiQuestionCount: 5,
-                    aiQuestionType: 'both',
-                    aiSuccessCount: 0,
-
-                init() {
-                    // Watch for question type changes to auto-normalize unique questions
-                    this.$watch('questions', (questions) => {
-                        questions.forEach((q, idx) => {
-                            // Ensure at least one correct answer for unique questions
-                            if (q.type === 'choix_unique') {
-                                const hasCorrect = q.options.some(o => o.est_correcte);
-                                if (!hasCorrect && q.options.length > 0) {
-                                    q.options[0].est_correcte = true;
-                                }
-                            }
-                        });
-                    });
-
-                    // Clear selected competences when the selected UA changes
-                    this.$watch('selectedUniteId', (value, oldValue) => {
-                        if (oldValue && value !== oldValue) {
-                            this.selectedCompetences = [];
-                        }
-                    });
-                },
-
-                get filteredCompetences() {
-                    if (!this.selectedUniteId) return [];
-                    const unite = this.allUnites.find(u => u.id == this.selectedUniteId);
-                    return unite ? unite.competences : [];
-                },
-
-                get totalPoints() {
-                    return this.questions.reduce((sum, q) => sum + (parseFloat(q.points) || 0), 0);
-                },
-
-                equalizePoints() {
-                    const n = this.questions.length;
-                    if (n === 0) return;
-                    const base = Math.floor(20 / n);
-                    const remainder = 20 - base * n;
-                    this.questions.forEach((q, i) => {
-                        q.points = base + (i === n - 1 ? remainder : 0);
-                    });
-                },
-
-                questions: oldQuestions && oldQuestions.length > 0 ? oldQuestions : [
-                    {
-                        texte: '',
-                        type: 'choix_unique',
-                        points: 20,
-                        explication_feedback: '',
-                        options: [
-                            { texte: '', est_correcte: true, feedback_specifique: '' },
-                            { texte: '', est_correcte: false, feedback_specifique: '' }
-                        ]
-                    }
-                ],
-
-                addQuestion() {
-                    this.questions.push({
-                        texte: '',
-                        type: 'choix_unique',
-                        points: 0,
-                        explication_feedback: '',
-                        options: [
-                            { texte: '', est_correcte: true, feedback_specifique: '' },
-                            { texte: '', est_correcte: false, feedback_specifique: '' }
-                        ]
-                    });
-                    this.equalizePoints();
-                },
-
-                removeQuestion(qIndex) {
-                    if (this.questions.length > 1) {
-                        this.questions.splice(qIndex, 1);
-                        this.equalizePoints();
-                    }
-                },
-
-                addOption(qIndex) {
-                    this.questions[qIndex].options.push({ texte: '', est_correcte: false, feedback_specifique: '' });
-                },
-
-                removeOption(qIndex, oIndex) {
-                    if (this.questions[qIndex].options.length > 2) {
-                        this.questions[qIndex].options.splice(oIndex, 1);
-                    }
-                },
-
-                setCorrectOption(qIndex, oIndex, isChecked) {
-                    const q = this.questions[qIndex];
-                    if (q.type === 'choix_unique') {
-                        // Radio behavior: only one correct answer allowed
-                        q.options.forEach((opt, idx) => {
-                            opt.est_correcte = (idx === oIndex);
-                        });
-                    } else {
-                        // Checkbox behavior: multiple correct answers allowed
-                        q.options[oIndex].est_correcte = isChecked;
-                    }
-                },
-
-                toggleCorrectOption(qIndex, oIndex) {
-                    const q = this.questions[qIndex];
-                    const current = q.options[oIndex].est_correcte;
-
-                    if (q.type === 'choix_unique') {
-                        // Radio behavior: set this as the only correct answer
-                        q.options.forEach((opt, idx) => {
-                            opt.est_correcte = (idx === oIndex);
-                        });
-                    } else {
-                        // Checkbox behavior: toggle this option
-                        q.options[oIndex].est_correcte = !current;
-                    }
-                },
-
-                normalizeCorrectOptions(qIndex) {
-                    const q = this.questions[qIndex];
-                    if (!q) return;
-                    if (q.type !== 'choix_unique') return;
-
-                    const firstCorrectIndex = q.options.findIndex(o => !!o.est_correcte);
-                    const keepIndex = firstCorrectIndex !== -1 ? firstCorrectIndex : 0;
-
-                    q.options.forEach((o, idx) => {
-                        o.est_correcte = idx === keepIndex;
-                    });
-                },
-
-                isSubmitting: false,
-
-                isDirty() {
-                    // Considéré comme 'sale' si le titre est saisi OU si la première question a du texte 
-                    // OU s'il y a plus d'une question.
-                    return this.titre.trim().length > 0 ||
-                        (this.questions.length > 0 && this.questions[0].texte.trim().length > 0) ||
-                        this.questions.length > 1;
-                },
-
-                handleSubmit() {
-                    if (this.totalPoints !== 20) {
-                        this.showPointsWarning = true;
-                    } else {
-                        this.isSubmitting = true;
-                        window.onbeforeunload = null;
-                        document.getElementById('qcmForm').submit();
-                    }
-                },
-
-                async generateQuestionsWithAI() {
-                    if (!this.aiTopic.trim()) {
-                        return this.$dispatch('toast', { message: 'Veuillez spécifier un thème ou une compétence.', type: 'error' });
-                    }
-                    this.aiLoading = true;
-                    
-                    try {
-                        const response = await fetch('/formateur/qcm/generate-ai', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                            },
-                            body: JSON.stringify({
-                                topic: this.aiTopic,
-                                question_count: this.aiQuestionCount,
-                                question_type: this.aiQuestionType
-                            })
-                        });
-
-                        if (!response.ok) throw new Error();
-
-                        const data = await response.json();
-                        let rawQuestions = [];
-
-                        if (Array.isArray(data)) {
-                            rawQuestions = data;
-                            if (!this.titre || this.titre.trim() === '') {
-                                this.titre = "ÉVALUATION : " + this.aiTopic.toUpperCase();
-                            }
-                        } else if (data && typeof data === 'object') {
-                            rawQuestions = data.questions || [];
-                            if (data.title) {
-                                this.titre = data.title.toUpperCase();
-                            } else if (!this.titre || this.titre.trim() === '') {
-                                this.titre = "ÉVALUATION : " + this.aiTopic.toUpperCase();
-                            }
-                        }
-
-                        const mappedQuestions = rawQuestions.map(q => ({
-                            texte: q.text || q.texte || '',
-                            type: (q.type === 'single' || q.type === 'choix_unique') ? 'choix_unique' : 'choix_multiple',
-                            points: q.points ? parseFloat(q.points) : 0,
-                            explication_feedback: q.explanation || q.explication_feedback || '',
-                            options: (q.options || []).map(o => ({
-                                texte: o.text || o.texte || '',
-                                est_correcte: !!(o.isCorrect || o.est_correcte),
-                                feedback_specifique: o.feedback || o.feedback_specifique || ''
-                            }))
-                        }));
-
-                        if (this.questions.length === 1 && this.questions[0].texte === '') {
-                            this.questions = mappedQuestions;
-                        } else {
-                            this.questions = [...this.questions, ...mappedQuestions];
-                        }
-                        this.equalizePoints();
-
-                        this.aiSuccessCount = mappedQuestions.length;
-                        this.$dispatch('close-modal', 'ai-generation');
-                        this.aiTopic = '';
-                        this.$dispatch('open-modal', 'ai-success');
-                    } catch (error) {
-                        this.$dispatch('close-modal', 'ai-generation');
-                        this.$dispatch('open-modal', 'ai-error');
-                    } finally {
-                        this.aiLoading = false;
-                    }
-                }
-            }; });
-
-            // Interception de la fermeture de l'onglet/rechargement
-            window.onbeforeunload = function (e) {
-                const builder = Alpine.evaluate(document.querySelector('[x-data^=qcmBuilder]'), 'isDirty()');
-                const isSubmitting = Alpine.evaluate(document.querySelector('[x-data^=qcmBuilder]'), 'isSubmitting');
-
-                if (builder && !isSubmitting) {
-                    e.preventDefault();
-                    return "Voulez-vous vraiment quitter ? Vos modifications ne seront pas enregistrées.";
-                }
-            };
-
-            // Interception des clics sur les liens internes pour éviter de perdre le travail
-            document.addEventListener('click', (e) => {
-                const link = e.target.closest('a');
-                if (!link) return;
-
-                // On ignore les liens qui ouvrent dans un nouvel onglet ou les ancres
-                if (link.target === '_blank' || link.getAttribute('href').startsWith('#')) return;
-
-                const builder = Alpine.evaluate(document.querySelector('[x-data^=qcmBuilder]'), 'isDirty()');
-                const isSubmitting = Alpine.evaluate(document.querySelector('[x-data^=qcmBuilder]'), 'isSubmitting');
-
-                if (builder && !isSubmitting) {
-                    e.preventDefault();
-                    window.dispatchEvent(new CustomEvent('confirm', {
-                        detail: {
-                            title: 'Attention : Travail en cours',
-                            message: 'Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?',
-                            type: 'warning',
-                            confirmText: 'Quitter sans enregistrer',
-                            cancelText: 'Rester ici',
-                            onConfirm: () => {
-                                window.onbeforeunload = null;
-                                window.location.href = link.href;
-                            }
-                        }
-                    }));
-                }
-            });
-        });
-    </script>
 @endsection

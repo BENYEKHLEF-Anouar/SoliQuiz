@@ -134,16 +134,16 @@
                         SoliQuiz transforme vos sessions d'évaluation en expériences interactives et immersives. 
                         Analyses automatiques et synchronisation fluide pour un suivi pédagogique d'excellence.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                         <a href="{{ route('login') }}"
-                            class="py-3.5 px-10 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all shadow-xl shadow-primary-500/30 text-center uppercase tracking-widest group">
+                            class="w-full sm:w-auto inline-flex items-center justify-center py-3 px-6 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/15 text-center text-xs uppercase tracking-wider group active:scale-[0.98]">
                             Commencer maintenant
-                            <svg class="inline-block ml-2 size-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <svg class="inline-block ml-3 size-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                             </svg>
                         </a>
                         <a href="#features"
-                            class="py-3.5 px-10 bg-white text-slate-700 border border-slate-200 font-bold rounded-2xl hover:bg-slate-50 transition-all text-center uppercase tracking-widest shadow-sm">
+                            class="w-full sm:w-auto inline-flex items-center justify-center py-3 px-6 bg-white text-slate-600 border border-slate-200/80 font-semibold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all text-center text-xs uppercase tracking-wider shadow-sm active:scale-[0.98]">
                             Découvrir
                         </a>
                     </div>
@@ -347,7 +347,7 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
+                            entry.target.classList.add('active');
                     }
                 });
             }, { threshold: 0.1 });
@@ -355,5 +355,123 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
     </script>
+
+    <!-- SoliBot Concierge IA Chatbot -->
+    <div x-data="chatbot()" x-init="tooltipOpen = true" class="fixed bottom-6 right-6 z-[999]">
+        <!-- Floating Chat Tooltip (UX Enhancement) -->
+        <div x-show="!open && tooltipOpen" 
+             x-data="{ tooltipOpen: true }"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-x-4"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 translate-x-4"
+             class="absolute right-20 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl shadow-premium px-5 py-3.5 flex items-center gap-3 whitespace-nowrap z-40"
+             x-cloak>
+            <div class="flex flex-col text-left">
+                <span class="text-[10px] font-black text-primary-500 uppercase tracking-wider">Assistant SoliBot</span>
+                <span class="text-xs font-bold text-slate-700 mt-0.5">Une question ? Échangez avec notre IA !</span>
+            </div>
+            <button @click.stop="tooltipOpen = false" class="text-slate-300 hover:text-slate-500 transition-colors">
+                <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <!-- Floating Chat Button -->
+        <button @click="open = !open; tooltipOpen = false" 
+                class="size-16 rounded-full bg-primary-500 text-white shadow-2xl flex items-center justify-center hover:bg-primary-600 transition-all active:scale-95 group relative z-50">
+            <!-- Pulsing Rings (Only when chatbot is closed) -->
+            <span x-show="!open" class="absolute inset-0 rounded-full bg-primary-400 opacity-75 animate-ping -z-10"></span>
+            
+            <!-- Chat Icon -->
+            <svg x-show="!open" class="size-7 transition-transform group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+            </svg>
+            
+            <!-- Close Icon -->
+            <svg x-show="open" class="size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" x-cloak>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Floating Chat Panel (Sleek Glassmorphic Design) -->
+        <div x-show="open" 
+             x-cloak
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="opacity-0 translate-y-8 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+             x-transition:leave-end="opacity-0 translate-y-8 scale-95"
+             class="absolute bottom-20 right-0 w-[400px] max-w-[calc(100vw-2rem)] h-[600px] max-h-[calc(100vh-8rem)] bg-white/90 backdrop-blur-xl border border-slate-200/80 rounded-[2.5rem] shadow-premium flex flex-col overflow-hidden z-40">
+            
+            <!-- Header Section -->
+            <div class="p-6 bg-slate-900 text-white flex items-center justify-between relative overflow-hidden shrink-0">
+                <!-- Background Blob -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-primary-500/20 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                
+                <div class="flex items-center gap-3 relative z-10">
+                    <div class="size-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 text-white font-black">
+                        SB
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black uppercase tracking-wider">SoliBot</h4>
+                        <div class="flex items-center gap-1.5 mt-1">
+                            <span class="size-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">En ligne</span>
+                        </div>
+                    </div>
+                </div>
+                <button @click="open = false" class="text-slate-400 hover:text-white transition-colors relative z-10">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Messages Container -->
+            <div x-ref="messagesContainer" id="chat-messages-container" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-slate-50/30">
+                <template x-for="msg in history" :key="msg.content + Math.random()">
+                    <div class="flex" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
+                        <div :class="msg.role === 'user' ? 'bg-primary-500 text-white rounded-t-2xl rounded-l-2xl shadow-md shadow-primary-500/10' : 'bg-white border border-slate-100 text-slate-800 rounded-t-2xl rounded-r-2xl shadow-xs'"
+                             class="max-w-[85%] px-4.5 py-3 text-xs leading-relaxed font-medium">
+                            <p class="whitespace-pre-line" x-html="msg.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')"></p>
+                        </div>
+                    </div>
+                </template>
+                
+                <!-- Typing Spinner -->
+                <div x-show="loading" class="flex justify-start animate-pulse" x-cloak>
+                    <div class="bg-white border border-slate-100 px-4.5 py-3 rounded-t-2xl rounded-r-2xl shadow-xs flex items-center gap-1">
+                        <span class="size-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                        <span class="size-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                        <span class="size-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suggestions & Footer Input -->
+            <div class="p-5 border-t border-slate-100 bg-white/50 shrink-0">
+                <!-- Quick Suggestions -->
+                <div class="flex flex-wrap gap-2 mb-4" x-show="history.length <= 2">
+                    <template x-for="s in suggestions" :key="s">
+                        <button type="button" @click="sendMessage(s)"
+                                class="px-3.5 py-2 bg-slate-50 border border-slate-200/60 rounded-xl text-[10px] font-bold text-slate-600 hover:bg-primary-50 hover:text-primary-600 hover:border-primary-200 transition-all text-left">
+                            <span x-text="s"></span>
+                        </button>
+                    </template>
+                </div>
+
+                <!-- Input Row -->
+                <form @submit.prevent="sendMessage()" class="flex items-center gap-2">
+                    <input type="text" x-model="message" placeholder="Posez votre question..."
+                           class="flex-1 h-12 bg-white border border-slate-200 rounded-xl px-4 text-xs font-bold text-slate-800 placeholder:text-slate-300 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20 transition-all shadow-xs">
+                    <button type="submit" :disabled="loading || !message.trim()"
+                            class="size-12 bg-slate-900 text-white rounded-xl flex items-center justify-center hover:bg-slate-800 transition-colors active:scale-95 disabled:opacity-40 disabled:pointer-events-none shrink-0 shadow-lg">
+                        <svg class="size-4.5 transform rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

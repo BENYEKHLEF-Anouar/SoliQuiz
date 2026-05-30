@@ -10,6 +10,7 @@
             if ($t->score_obtenu !== null) {
                 $allGlobalTentatives[] = [
                     'id' => $t->id,
+                    'etudiant_id' => $t->etudiant_id,
                     'etudiant_nom' => $t->etudiant?->nom_complet ?? 'Unknown',
                     'etudiant_classe' => $t->etudiant?->classe?->nom ?? 'Hors cohorte',
                     'qcm_titre' => $qcm->titre,
@@ -22,7 +23,13 @@
         }
     }
 @endphp
-<div class="reveal active" x-data="resultsFilter({{ Js::from($qcms->map(fn($q) => ['id' => $q->id, 'titre' => $q->titre, 'score_reussite' => $q->score_reussite])->toArray()) }}, {{ Js::from($classes->pluck('nom')->toArray()) }}, {{ Js::from($etudiants) }}, {{ Js::from($allGlobalTentatives) }})">
+<div class="reveal active" x-data="resultsFilter({
+    qcmList: {{ Js::from($qcms->map(fn($q) => ['id' => $q->id, 'titre' => $q->titre, 'score_reussite' => $q->score_reussite])->toArray()) }},
+    classeList: {{ Js::from($classes->pluck('nom')->toArray()) }},
+    studentList: {{ Js::from($etudiants) }},
+    allGlobalTentatives: {{ Js::from($allGlobalTentatives) }},
+    exportUrl: '{{ route('formateur.resultats.export') }}'
+})">
     
     <!-- Navigation -->
     <div class="mb-6">
@@ -117,10 +124,10 @@
                 
                 <div x-show="open" @click.away="open = false" x-transition class="absolute z-60 w-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden" style="display: none;">
                     <div class="max-h-60 overflow-y-auto custom-scrollbar">
-                        <template x-for="name in studentList.filter(n => !search || n.toLowerCase().includes(search.toLowerCase()))" :key="name">
-                            <button type="button" @click="search = name; open = false; applyFilters()" class="w-full px-5 py-4 text-left text-[11px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 flex items-center justify-between">
-                                <span x-text="name"></span>
-                                <span x-show="search === name" class="size-2 bg-primary-500 rounded-full"></span>
+                        <template x-for="student in studentList.filter(s => !search || s.name.toLowerCase().includes(search.toLowerCase()))" :key="student.id">
+                            <button type="button" @click="search = student.name; open = false; applyFilters()" class="w-full px-5 py-4 text-left text-[11px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 flex items-center justify-between">
+                                <span x-text="student.name"></span>
+                                <span x-show="search === student.name" class="size-2 bg-primary-500 rounded-full"></span>
                             </button>
                         </template>
                     </div>
@@ -200,6 +207,7 @@
             $allTentatives = $qcm->tentatives->map(function($t) {
                 return [
                     'id' => $t->id,
+                    'etudiant_id' => $t->etudiant_id,
                     'etudiant_nom' => $t->etudiant?->nom_complet ?? 'Unknown',
                     'etudiant_classe' => $t->etudiant?->classe?->nom ?? 'Hors cohorte',
                     'score' => $t->score_obtenu,
@@ -340,7 +348,7 @@
                                 <td class="px-8 py-5 text-right">
                                     <div class="inline-flex items-center gap-2 justify-end">
                                         <template x-if="t.score !== null">
-                                            <button @click="$dispatch('open-student-chart', { studentNom: t.etudiant_nom, attempts: allTentatives.filter(att => att.etudiant_nom === t.etudiant_nom) })"
+                                            <button @click="window.location.href = '/formateur/etudiants/' + t.etudiant_id + '/progression'"
                                                 class="inline-flex size-8 rounded-lg bg-indigo-50 text-indigo-500 items-center justify-center hover:bg-indigo-500 hover:text-white transition-all shadow-sm"
                                                 title="Graphique de progression">
                                                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
@@ -436,7 +444,7 @@
                     </div>
 
                     <!-- Action Button -->
-                    <button type="button" @click="$dispatch('open-student-chart', { studentNom: student.name, attempts: student.attempts })"
+                    <button type="button" @click="window.location.href = '/formateur/etudiants/' + student.id + '/progression'"
                         :disabled="student.completed === 0"
                         :class="student.completed > 0 ? 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-lg shadow-slate-900/10 active:scale-98' : 'bg-slate-100 text-slate-400 cursor-not-allowed'"
                         class="w-full h-12 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2">
@@ -521,43 +529,7 @@
                 </div>
             </div>
         </div>
-        <!-- Student Progress Modal -->
-        <div x-data="studentChartData()" @open-student-chart.window="openChart($event.detail)">
-            <template x-teleport="body">
-                <x-ui.modal name="student-progress-modal" maxWidth="2xl">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-                            <div>
-                                <h3 class="text-base font-black text-slate-800 uppercase tracking-tight" x-text="'Progression de ' + studentNom"></h3>
-                                <p class="text-xs text-slate-400 font-bold mt-1">Historique des notes par QCM et Unité d'Apprentissage</p>
-                            </div>
-                            <button @click="$dispatch('close-modal', 'student-progress-modal')" class="text-slate-400 hover:text-slate-600">
-                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-
-                        <div class="relative w-full h-[320px] flex items-center justify-center mb-6">
-                            <canvas id="studentProgressChart"></canvas>
-                        </div>
-
-                        <div class="overflow-y-auto max-h-40 divide-y divide-slate-50 border border-slate-100 rounded-xl bg-slate-50/50">
-                            <template x-for="attempt in studentAttempts" :key="attempt.id">
-                                <div class="p-4 flex items-center justify-between hover:bg-white transition-colors">
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-700" x-text="attempt.qcm_titre"></p>
-                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider mt-0.5" x-text="'UA: ' + attempt.ua_nom"></p>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-sm font-black text-indigo-600" x-text="attempt.score + '/20'"></span>
-                                        <p class="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-0.5" x-text="attempt.date"></p>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </x-ui.modal>
-            </template>
-        </div>
+        <!-- Removed Student Progress Modal -->
 
     </div>
 </div>
@@ -565,436 +537,6 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('alpine:init', () => {
-    Alpine.data('resultsFilter', (qcmList, classeList, studentList, allGlobalTentatives) => ({
-        search: '',
-        selectedQcmId: '',
-        selectedQcmTitle: '',
-        selectedClasse: '',
-        loading: false,
-        qcmList: qcmList,
-        classeList: classeList,
-        studentList: studentList,
-        allTentatives: allGlobalTentatives || [],
-        activeTab: 'qcm',
-        
-        gradebookChartInstance: null,
-        
-        init() {
-            const params = new URLSearchParams(window.location.search);
-            this.search = params.get('q') || '';
-            this.selectedClasse = params.get('classe') || '';
-            const qid = params.get('qcm');
-            if (qid) {
-                const found = this.qcmList.find(q => q.id == qid);
-                if (found) {
-                    this.selectedQcmId = found.id;
-                    this.selectedQcmTitle = found.titre;
-                }
-            }
-
-            this.$watch('activeTab', value => {
-                if (value === 'gradebook') {
-                    this.$nextTick(() => this.renderGradebookChart());
-                }
-            });
-        },
-        
-        get hasFilters() {
-            return this.search || this.selectedQcmId;
-        },
-
-        get studentsStats() {
-            const stats = {};
-            this.studentList.forEach(name => {
-                stats[name] = {
-                    name: name,
-                    classe: 'Hors cohorte',
-                    attempts: [],
-                    avg: 0,
-                    completed: 0,
-                    passed: 0
-                };
-            });
-
-            this.allTentatives.forEach(t => {
-                if (stats[t.etudiant_nom]) {
-                    stats[t.etudiant_nom].attempts.push(t);
-                    stats[t.etudiant_nom].classe = t.etudiant_classe;
-                    if (t.statut === 'reussi') {
-                        stats[t.etudiant_nom].passed++;
-                    }
-                }
-            });
-
-            Object.keys(stats).forEach(name => {
-                const s = stats[name];
-                const scores = s.attempts.map(t => parseFloat(t.score)).filter(score => !isNaN(score));
-                s.completed = scores.length;
-                if (scores.length > 0) {
-                    const sum = scores.reduce((a, b) => a + b, 0);
-                    s.avg = (sum / scores.length).toFixed(1);
-                } else {
-                    s.avg = '-';
-                }
-            });
-
-            return Object.values(stats).filter(s => {
-                return !this.search || s.name.toLowerCase().includes(this.search.toLowerCase());
-            }).sort((a, b) => {
-                if (a.avg === '-') return 1;
-                if (b.avg === '-') return -1;
-                return b.avg - a.avg;
-            });
-        },
-        
-        applyFilters() {
-            this.loading = true;
-            const url = new URL(window.location);
-            if (this.search) url.searchParams.set('q', this.search);
-            else url.searchParams.delete('q');
-            if (this.selectedQcmId) url.searchParams.set('qcm', this.selectedQcmId);
-            else url.searchParams.delete('qcm');
-            history.pushState({}, '', url);
-            
-            setTimeout(() => {
-                this.loading = false;
-            }, 300);
-        },
-        
-        clearFilters() {
-            this.search = '';
-            this.selectedQcmId = '';
-            this.selectedQcmTitle = '';
-            const url = new URL(window.location);
-            url.searchParams.delete('q');
-            url.searchParams.delete('qcm');
-            history.pushState({}, '', url);
-        },
- 
-        exportData(format) {
-            const baseUrl = "{{ route('formateur.resultats.export') }}";
-            const params = new URLSearchParams({
-                format: format,
-                q: this.search,
-                qcm: this.selectedQcmId,
-                classe: this.selectedClasse
-            });
-            window.location.href = `${baseUrl}?${params.toString()}`;
-        },
-
-        getAvatarBg(name) {
-            const colors = [
-                'bg-indigo-50 text-indigo-600',
-                'bg-emerald-50 text-emerald-600',
-                'bg-rose-50 text-rose-600',
-                'bg-amber-50 text-amber-600',
-                'bg-sky-50 text-sky-600',
-                'bg-purple-50 text-purple-600'
-            ];
-            const charCode = name ? name.charCodeAt(0) : 0;
-            return colors[charCode % colors.length];
-        },
-
-        get gradebookMatrix() {
-            const qcms = this.qcmList;
-            const rows = this.studentsStats.map(s => {
-                const qcmScores = {};
-                qcms.forEach(q => {
-                    const t = s.attempts.find(attempt => attempt.qcm_titre === q.titre);
-                    qcmScores[q.id] = t ? parseFloat(t.score) : null;
-                });
-                return {
-                    name: s.name,
-                    classe: s.classe,
-                    scores: qcmScores,
-                    avg: s.avg
-                };
-            });
-
-            return {
-                columns: qcms,
-                rows: rows
-            };
-        },
-
-        renderGradebookChart() {
-            const ctx = document.getElementById('gradebookProgressChart');
-            if (!ctx) return;
-
-            if (this.gradebookChartInstance) {
-                this.gradebookChartInstance.destroy();
-            }
-
-            const searchLower = this.search.trim().toLowerCase();
-            const filteredStudents = this.studentsStats;
-            const isSingleStudent = filteredStudents.length === 1 && searchLower;
-
-            const labels = this.qcmList.map(q => q.titre);
-            let datasets = [];
-
-            if (isSingleStudent) {
-                const student = filteredStudents[0];
-                const scores = this.qcmList.map(q => {
-                    const t = student.attempts.find(attempt => attempt.qcm_titre === q.titre);
-                    return t ? parseFloat(t.score) : null;
-                });
-
-                datasets = [
-                    {
-                        label: `Progression de ${student.name}`,
-                        data: scores,
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.05)',
-                        borderWidth: 3,
-                        tension: 0.3,
-                        fill: true,
-                        pointBackgroundColor: '#6366f1',
-                        pointRadius: 5
-                    }
-                ];
-            } else {
-                const averages = [];
-                const highs = [];
-                const lows = [];
-
-                this.qcmList.forEach(q => {
-                    const attempts = this.allTentatives.filter(t => {
-                        const matchesQcm = t.qcm_titre === q.titre;
-                        if (!searchLower) return matchesQcm;
-                        return matchesQcm && t.etudiant_nom.toLowerCase().includes(searchLower);
-                    });
-                    const scores = attempts.map(t => parseFloat(t.score)).filter(s => !isNaN(s));
-                    
-                    if (scores.length > 0) {
-                        const sum = scores.reduce((a, b) => a + b, 0);
-                        averages.push((sum / scores.length).toFixed(1));
-                        highs.push(Math.max(...scores).toFixed(1));
-                        lows.push(Math.min(...scores).toFixed(1));
-                    } else {
-                        averages.push(null);
-                        highs.push(null);
-                        lows.push(null);
-                    }
-                });
-
-                const datasetLabelSuffix = searchLower ? ' (filtré)' : '';
-
-                datasets = [
-                    {
-                        label: 'Moyenne générale' + datasetLabelSuffix,
-                        data: averages,
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.05)',
-                        borderWidth: 3,
-                        tension: 0.3,
-                        fill: true,
-                        pointBackgroundColor: '#6366f1',
-                        pointRadius: 5
-                    },
-                    {
-                        label: 'Note maximale' + datasetLabelSuffix,
-                        data: highs,
-                        borderColor: '#10b981',
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        tension: 0.3,
-                        fill: false,
-                        pointBackgroundColor: '#10b981',
-                        pointRadius: 4
-                    },
-                    {
-                        label: 'Note minimale' + datasetLabelSuffix,
-                        data: lows,
-                        borderColor: '#f43f5e',
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        tension: 0.3,
-                        fill: false,
-                        pointBackgroundColor: '#f43f5e',
-                        pointRadius: 4
-                    }
-                ];
-            }
-
-            this.gradebookChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    family: "'Plus Jakarta Sans', system-ui, sans-serif",
-                                    size: 10,
-                                    weight: 'bold'
-                                },
-                                color: '#64748b'
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            min: 0,
-                            max: 20,
-                            ticks: {
-                                font: {
-                                    family: "'Plus Jakarta Sans', system-ui, sans-serif",
-                                    size: 10
-                                },
-                                color: '#64748b'
-                            },
-                            grid: {
-                                color: '#f1f5f9'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                font: {
-                                    family: "'Plus Jakarta Sans', system-ui, sans-serif",
-                                    size: 10,
-                                    weight: 'bold'
-                                },
-                                color: '#64748b'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    }));
-
-    Alpine.data('studentChartData', () => ({
-        studentNom: '',
-        studentAttempts: [],
-        chartInstance: null,
-
-        openChart(detail) {
-            this.studentNom = detail.studentNom;
-            
-            // Get attempts from details
-            const rawAttempts = detail.attempts || [];
-
-            this.studentAttempts = rawAttempts.map(a => ({
-                id: a.id,
-                qcm_titre: a.qcm_titre || '',
-                ua_nom: a.ua_nom || 'Indépendant',
-                score: parseFloat(a.score),
-                date: a.date
-            })).sort((a, b) => a.id - b.id);
-
-            // Open the modal
-            this.$dispatch('open-modal', 'student-progress-modal');
-
-            // Render/Update the chart after the DOM elements are updated and visible
-            this.$nextTick(() => {
-                const ctx = document.getElementById('studentProgressChart');
-                if (!ctx) return;
-
-                if (this.chartInstance) {
-                    this.chartInstance.destroy();
-                }
-
-                const labels = this.studentAttempts.map(a => {
-                    const title = a.qcm_titre;
-                    return title.length > 15 ? title.substring(0, 15) + '...' : title;
-                });
-                const data = this.studentAttempts.map(a => a.score);
-
-                const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 320);
-                gradient.addColorStop(0, 'rgba(99, 102, 241, 0.25)');
-                gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
-
-                this.chartInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Note obtenue (/20)',
-                            data: data,
-                            borderColor: '#6366f1',
-                            backgroundColor: gradient,
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.3,
-                            pointBackgroundColor: '#6366f1',
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2,
-                            pointRadius: 6,
-                            pointHoverRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                backgroundColor: '#0f172a',
-                                titleColor: '#fff',
-                                bodyColor: '#cbd5e1',
-                                borderWidth: 1,
-                                borderColor: '#334155',
-                                padding: 10,
-                                bodyFont: {
-                                    family: "'Plus Jakarta Sans', system-ui, sans-serif",
-                                    size: 11
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    font: {
-                                        family: "'Plus Jakarta Sans', system-ui, sans-serif",
-                                        size: 9,
-                                        weight: 'bold'
-                                    },
-                                    color: '#64748b',
-                                    maxRotation: 15,
-                                    autoSkip: true,
-                                    maxTicksLimit: 6
-                                }
-                            },
-                            y: {
-                                min: 0,
-                                max: 20,
-                                ticks: {
-                                    stepSize: 2,
-                                    font: {
-                                        family: "'Plus Jakarta Sans', system-ui, sans-serif",
-                                        size: 10
-                                    },
-                                    color: '#64748b'
-                                },
-                                grid: {
-                                    color: '#f1f5f9'
-                                }
-                            }
-                        }
-                    }
-                });
-            });
-        }
-    }));
-});
-</script>
 @endpush
 
 <style>

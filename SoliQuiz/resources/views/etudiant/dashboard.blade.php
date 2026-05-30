@@ -9,8 +9,11 @@
     $allPersonalTentatives = Auth::user()->tentatives()
         ->whereNotNull('score_obtenu')
         ->with('qcm.uniteApprentissage')
-        ->orderBy('date_debut', 'asc')
+        ->orderBy('date_debut', 'desc')
+        ->limit(3)
         ->get()
+        ->reverse()
+        ->values()
         ->map(function($t) {
             return [
                 'id' => $t->id,
@@ -42,7 +45,7 @@
                     Suivez vos performances, accédez à vos QCMs et progressez à votre rythme.
                 </p>
             </div>
-            <a href="{{ route('student.bibliotheque') }}"
+            <a href="{{ route('etudiant.bibliotheque') }}"
                class="h-14 px-8 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-slate-900/20 hover:bg-primary-500 hover:-translate-y-1 transition-all flex items-center gap-3 shrink-0">
                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 Mes QCMs
@@ -151,9 +154,15 @@
         <div class="lg:col-span-2 space-y-6">
             <!-- Courbe de Progression Personnel -->
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                <div class="border-b border-slate-100 pb-4">
-                    <h3 class="font-bold text-slate-900">Courbe de Progression</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Évolution de vos notes au fil des évaluations complétées</p>
+                <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-900">Courbe de Progression</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Évolution de vos notes au fil des évaluations complétées</p>
+                    </div>
+                    <a href="{{ route('etudiant.progression') }}" class="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1">
+                        Détails
+                        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+                    </a>
                 </div>
                 
                 @if(count($allPersonalTentatives) > 0)
@@ -178,15 +187,15 @@
                 <div class="p-5 border-b border-slate-100 flex items-center justify-between">
                     <div>
                         <h3 class="font-bold text-slate-900">Activité Récente</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Vos dernières évaluations</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Vos 3 dernières évaluations</p>
                     </div>
-                    <a href="{{ route('student.bibliotheque') }}" class="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1">
-                        Voir tout
+                    <a href="{{ route('etudiant.progression') }}" class="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1">
+                        Voir l'historique
                         <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </div>
                 <div class="divide-y divide-slate-100">
-                    @forelse($historique as $tentative)
+                    @forelse($historique->take(3) as $tentative)
                         @php
                             $isSuccess = $tentative->statut === 'reussi';
                             $isEnCours = $tentative->statut === 'en_cours';
@@ -204,9 +213,9 @@
                                         @endif
                                     </svg>
                                 </div>
-                                <div>
-                                    <p class="font-bold text-slate-900 text-sm group-hover:text-primary-600 transition-colors">{{ $tentative->qcm->titre }}</p>
-                                    <p class="text-xs text-slate-500">{{ $tentative->qcm->uniteApprentissage ? $tentative->qcm->uniteApprentissage->nom : 'Évaluation transverse' }}</p>
+                                <div class="min-w-0">
+                                    <p class="font-bold text-slate-900 text-sm group-hover:text-primary-600 transition-colors truncate max-w-[220px] sm:max-w-xs">{{ $tentative->qcm->titre }}</p>
+                                    <p class="text-xs text-slate-500 truncate max-w-[220px] sm:max-w-xs">{{ $tentative->qcm->uniteApprentissage ? $tentative->qcm->uniteApprentissage->nom : 'Évaluation transverse' }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4">
@@ -218,7 +227,7 @@
                                     @endif
                                     <p class="text-[10px] text-slate-400">{{ $tentative->date_fin ? $tentative->date_fin->diffForHumans() : ($tentative->date_debut ? $tentative->date_debut->diffForHumans() : 'Récemment') }}</p>
                                 </div>
-                                <a href="{{ $isEnCours ? route('student.passation', $tentative->qcm_id) : route('student.resultats', ['id' => $tentative->qcm_id]) }}" class="size-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 group-hover:bg-primary-500 group-hover:text-white transition-all">
+                                <a href="{{ $isEnCours ? route('etudiant.passation', $tentative->qcm_id) : route('etudiant.resultats', ['id' => $tentative->qcm_id]) }}" class="size-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 group-hover:bg-primary-500 group-hover:text-white transition-all">
                                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
                                 </a>
                             </div>
@@ -229,7 +238,7 @@
                                 <svg class="size-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             </div>
                             <p class="text-sm text-slate-500">Aucune activité récente</p>
-                            <a href="{{ route('student.bibliotheque') }}" class="mt-2 text-xs font-bold text-primary-600 hover:text-primary-700">Commencer un QCM</a>
+                             <a href="{{ route('etudiant.bibliotheque') }}" class="mt-2 text-xs font-bold text-primary-600 hover:text-primary-700">Commencer un QCM</a>
                         </div>
                     @endforelse
                 </div>
@@ -237,12 +246,18 @@
 
             <!-- Progression par Objectif d'Apprentissage -->
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="p-5 border-b border-slate-100">
-                    <h3 class="font-bold text-slate-900">Progression par Objectif d'Apprentissage</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Votre score moyen par unité d'apprentissage</p>
+                <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-900">Progression par UA</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Votre score moyen par unité d'apprentissage</p>
+                    </div>
+                    <a href="{{ route('etudiant.progression') }}" class="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1">
+                        Toutes les UA
+                        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+                    </a>
                 </div>
                 <div class="p-5">
-                    @forelse($progressByUa as $data)
+                    @forelse($progressByUa->take(3) as $data)
                         <div class="mb-4 last:mb-0">
                             <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
                                 <div class="truncate max-w-[70%] flex flex-col">
@@ -284,7 +299,7 @@
                     </div>
                     <div class="space-y-3 relative z-10">
                         @foreach($activeSessions as $active)
-                            <a href="{{ route('student.passation', $active->qcm_id) }}" class="flex items-center justify-between p-3 bg-slate-50 hover:bg-primary-500 hover:text-white rounded-xl transition-all group/item">
+                            <a href="{{ route('etudiant.passation', $active->qcm_id) }}" class="flex items-center justify-between p-3 bg-slate-50 hover:bg-primary-500 hover:text-white rounded-xl transition-all group/item">
                                 <div class="min-w-0">
                                     <p class="font-bold text-xs truncate">{{ $active->qcm->titre }}</p>
                                     <p class="text-[9px] font-bold uppercase tracking-widest opacity-60">Reprendre maintenant</p>
@@ -304,7 +319,7 @@
                 </div>
                 <div class="space-y-3">
                     @forelse($upcoming as $u)
-                        <a href="{{ route('student.passation', ['id' => $u->id]) }}" class="bg-white/10 hover:bg-white/20 transition-all rounded-lg p-3 flex items-center justify-between group">
+                        <a href="{{ route('etudiant.passation', ['id' => $u->id]) }}" class="bg-white/10 hover:bg-white/20 transition-all rounded-lg p-3 flex items-center justify-between group">
                             <div>
                                 <p class="font-bold text-sm">{{ $u->titre }}</p>
                                 <p class="text-xs text-primary-200">{{ $u->uniteApprentissage ? $u->uniteApprentissage->nom : 'Évaluation' }}</p>

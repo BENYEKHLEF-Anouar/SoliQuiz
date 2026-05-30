@@ -26,11 +26,12 @@ class ResultatService
             $isCorrect = (count($correctOptions) === count($selectedOptions)) && empty(array_diff($correctOptions, $selectedOptions));
 
             return (object) [
-                'texte' => $question->texte,
-                'points' => $question->points,
+                'id'         => $question->id,
+                'texte'      => $question->texte,
+                'points'     => $question->points,
                 'explication' => $question->explication_feedback,
-                'isCorrect' => $isCorrect,
-                'options' => $question->options->map(function($opt) use ($selectedOptions) {
+                'isCorrect'  => $isCorrect,
+                'options'    => $question->options->map(function($opt) use ($selectedOptions) {
                     $opt->isSelected = in_array($opt->id, $selectedOptions);
                     return $opt;
                 })
@@ -60,6 +61,10 @@ class ResultatService
 
         if (!empty($filters['qcm_id'])) {
             $query->where('qcm_id', $filters['qcm_id']);
+        }
+
+        if (!empty($filters['etudiant_id'])) {
+            $query->where('etudiant_id', $filters['etudiant_id']);
         }
 
         return $query->latest()->get();

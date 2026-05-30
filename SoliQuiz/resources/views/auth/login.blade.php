@@ -99,7 +99,7 @@
                     <div class="flex justify-between items-center px-1">
                         <label for="password" class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] leading-none">Clé de Sécurité</label>
                         @if (Route::has('password.request'))
-                            <!-- <a class="text-[9px] font-black text-primary-500 hover:text-primary-600 transition-colors uppercase tracking-widest" href="{{ route('password.request') }}">Oublié ?</a> -->
+                            <a class="text-[9px] font-black text-primary-500 hover:text-primary-600 transition-colors uppercase tracking-widest" href="{{ route('password.request') }}">Oublié ?</a>
                         @endif
                     </div>
                     <div class="relative group">
