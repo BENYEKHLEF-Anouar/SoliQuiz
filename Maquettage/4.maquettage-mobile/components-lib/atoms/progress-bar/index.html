@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-slate-50">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SoliQuiz - Atomes: Progress Bars</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../charte-graphique/style.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            500: 'var(--color-primary-500)',
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="p-10 space-y-16 bg-slate-50 font-sans antialiased max-w-[430px]">
+
+    <!-- Linear Progress -->
+    <section>
+        <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Linear Progress (Passation)</h2>
+        <div class="space-y-6">
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Progression</span>
+                    <span class="text-[10px] font-bold text-slate-900">4 / 12</span>
+                </div>
+                <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-50 shadow-inner">
+                    <div class="h-full bg-primary-500 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.5)]" style="width: 33%"></div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[9px] font-black uppercase tracking-[0.2em] text-semantic-error">Temps Restant</span>
+                    <span class="text-[10px] font-bold text-semantic-error">02:14</span>
+                </div>
+                <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-50 shadow-inner">
+                    <div class="h-full bg-semantic-error rounded-full transition-all duration-1000" style="width: 75%"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simple Dots -->
+    <section>
+        <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Step Indicators</h2>
+        <div class="flex gap-2">
+            <div class="size-2 rounded-full bg-primary-500 shadow-lg shadow-primary-500/30"></div>
+            <div class="size-2 rounded-full bg-primary-500 opacity-30"></div>
+            <div class="size-2 rounded-full bg-primary-500 opacity-10"></div>
+        </div>
+    </section>
+
+</body>
+</html>

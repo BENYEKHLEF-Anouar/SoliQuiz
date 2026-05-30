@@ -1,0 +1,85 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+actor "Utilisateur" as U
+actor "Étudiant" as E
+actor "Formateur" as F
+actor "Administrateur" as A
+actor "Application Mobile" as M
+actor "SoliLMS" as LMS
+
+U <|-- E
+U <|-- F
+U <|-- A
+
+E -[hidden]d-> F
+F -[hidden]d-> A
+
+package "Système global SoliQuiz" {
+
+    package "Espace Étudiant" as P_ETUD {
+        usecase "Consulter historique & scores" as UC_HIST
+        usecase "Passer un QCM (Évaluation)" as UC_PLAY
+        usecase "Accéder au feedback/correction" as UC_FEED
+        usecase "voir les résultats (Scores)" as UC_SCORE
+        
+        E -- UC_HIST
+        E -- UC_PLAY
+        UC_HIST ..> UC_FEED : <<extend>>
+        UC_PLAY ..> UC_SCORE : <<include>>
+    }
+
+    package "Espace Formateur" as P_FORM {
+        usecase "Consulter les résultats & scores" as UC_RES
+        usecase "Gérer les QCM (CRUD)" as UC_CRUD
+        usecase "Lier QCM à une Session" as UC_LINK
+        usecase "Gérer les Questions & Choix" as UC_QUEST
+        
+        F -- UC_RES
+        F -- UC_CRUD
+        F -- UC_LINK
+        UC_LINK ..> UC_CRUD : <<extend>>
+        UC_CRUD ..> UC_QUEST : <<include>>
+    }
+
+    package "Accès & Sécurité (Commun)" as P_SEC {
+        usecase "S'authentifier (Web/Mobile)" as UC_LOGIN
+        usecase "Accéder à la Landing Page" as UC_PUBLIC
+        U -- UC_LOGIN
+        U -- UC_PUBLIC
+    }
+
+    package "Interface API / Mobile Integration" as P_API {
+        usecase "Consommer les données (API)" as UC_API
+        M -- UC_API
+    }
+
+    package "Espace Administrateur (Web)" as P_ADMIN {
+        usecase "Voir le tableau de bord global" as UC_DASH
+        usecase "Gérer les utilisateurs (Rôles)" as UC_ROLES
+        usecase "Configuration API SoliLMS" as UC_CONF
+        A -- UC_DASH
+        A -- UC_ROLES
+        A -- UC_CONF
+        LMS -- UC_CONF
+    }
+}
+
+P_ETUD -[hidden]d-> P_FORM
+P_FORM -[hidden]d-> P_SEC
+P_SEC -[hidden]d-> P_API
+P_API -[hidden]d-> P_ADMIN
+
+UC_API ..> UC_LOGIN : <<include>>
+UC_API ..> UC_HIST : <<include>>
+UC_API ..> UC_RES : <<include>>
+
+@enduml

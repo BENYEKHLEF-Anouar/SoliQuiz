@@ -1,0 +1,17 @@
+id,nom,prenom,email,password,type_profil
+1,BENYEKHLEF,Anouar,admin@solicode.co,password,admin
+2,EL AMRANI,Sarah,sarah.formateur@solicode.co,password,formateur
+3,BOUAZZA,Yassine,yassine.formateur@solicode.co,password,formateur
+4,KARIM,Ahmed,ahmed.formateur@solicode.co,password,formateur
+5,DAOUDI,Amine,amine.apprenant@solicode.co,password,etudiant
+6,NAJI,Laila,laila.apprenant@solicode.co,password,etudiant
+7,ZAKI,Omar,omar.apprenant@solicode.co,password,etudiant
+8,CHAKIR,Sofia,sofia.apprenant@solicode.co,password,etudiant
+9,MANSOURI,Hamza,hamza.apprenant@solicode.co,password,etudiant
+10,EL FASSI,Rim,rim.apprenant@solicode.co,password,etudiant
+11,HADDI,Youssef,youssef.apprenant@solicode.co,password,etudiant
+12,SABRI,Meryem,meryem.apprenant@solicode.co,password,etudiant
+13,TQITI,Ilyas,ilyas.apprenant@solicode.co,password,etudiant
+14,BENNANI,Kenaza,kenaza.apprenant@solicode.co,password,etudiant
+15,IDRISSI,Walid,walid.apprenant@solicode.co,password,etudiant
+16,ALAMI,Sami,sami.apprenant@solicode.co,password,etudiant

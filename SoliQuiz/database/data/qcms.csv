@@ -1,0 +1,4 @@
+id,formateur_id,unite_apprentissage_id,titre,duree_minutes,score_reussite,statut
+1,2,7,Laravel Fondamentaux : Routing et Contrôleurs,20,10,public
+2,3,5,JavaScript DOM : Interactivité et Événements,15,10,public
+3,2,8,SQL : Requêtes et Jointures de base,25,10,public

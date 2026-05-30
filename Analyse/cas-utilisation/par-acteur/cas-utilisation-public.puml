@@ -1,0 +1,22 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+actor "Public / Visiteur" as U
+
+package "Partie Publique" {
+    usecase "Consulter la landing page" as UC_LANDING
+    usecase "Interagir avec le chatbot" as UC_CHATBOT
+    usecase "S'authentifier" as UC_LOGIN
+
+    U -- UC_LANDING
+    U -- UC_CHATBOT
+    U -- UC_LOGIN
+}
+@enduml

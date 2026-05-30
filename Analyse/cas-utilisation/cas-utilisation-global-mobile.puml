@@ -1,0 +1,54 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam package {
+    BackgroundColor White
+    BorderColor #2C3E50
+}
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+' ACTORS
+actor "Formateur" as F
+actor "Étudiant" as E
+actor "Serveur Web" as W
+
+F -[hidden]down- E
+
+' SYSTEM = APK (display only)
+package "SoliQuiz APK" {
+    usecase "S'authentifier via API" as UC_LOGIN_MOBILE
+
+    package "Espace Formateur Mobile" {
+        usecase "Consulter ses QCM\net les scores de la classe" as UC_FORMATEUR_MOBILE
+    }
+
+    package "Espace Étudiant Mobile" {
+        usecase "Consulter ses scores après évaluation" as UC_ETUDIANT_MOBILE
+    }
+
+    ' API part - APK uses the API provided by web
+    usecase "Utiliser l'API fournie par le serveur web" as UC_API_MOBILE
+}
+
+' ASSOCIATIONS
+F -- UC_LOGIN_MOBILE
+E -- UC_LOGIN_MOBILE
+
+F -- UC_FORMATEUR_MOBILE
+E -- UC_ETUDIANT_MOBILE
+
+' Web server provides the API → secondary actor
+UC_API_MOBILE -- W
+
+' INCLUDES
+UC_FORMATEUR_MOBILE ..> UC_LOGIN_MOBILE : <<include>>
+UC_ETUDIANT_MOBILE ..> UC_LOGIN_MOBILE : <<include>>
+
+UC_FORMATEUR_MOBILE ..> UC_API_MOBILE : <<include>>
+UC_ETUDIANT_MOBILE ..> UC_API_MOBILE : <<include>>
+
+@enduml

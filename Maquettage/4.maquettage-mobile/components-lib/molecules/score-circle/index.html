@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-slate-50">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SoliQuiz - Molécules: Score Circle</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../charte-graphique/style.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    },
+                    colors: {
+                        primary: {
+                            500: 'var(--color-primary-500)',
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="p-10 space-y-12 bg-slate-50 font-sans antialiased max-w-[430px] mx-auto">
+
+    <section>
+        <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 px-4">Score Circle Indicator</h2>
+        <div class="flex justify-center">
+            <div class="relative size-48 flex items-center justify-center">
+                <!-- SVG Circle -->
+                <svg class="size-full -rotate-90 transform" viewBox="0 0 100 100">
+                    <circle class="text-slate-100" stroke-width="8" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50" />
+                    <circle class="text-primary-500 transition-all duration-1000 ease-out" 
+                        stroke-width="8" 
+                        stroke-dasharray="263.89" 
+                        stroke-dashoffset="39.58" 
+                        stroke-linecap="round" 
+                        stroke="currentColor" 
+                        fill="transparent" 
+                        r="42" cx="50" cy="50" />
+                </svg>
+                
+                <!-- Center Content -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-5xl font-heading font-extrabold text-slate-900 tracking-tighter">17</span>
+                        <span class="text-sm font-bold text-slate-400 uppercase italic">/20</span>
+                    </div>
+                    <span class="text-[10px] font-black text-primary-600 uppercase tracking-[0.2em] mt-1">Excellent !</span>
+                </div>
+
+                <!-- Decoration blobs -->
+                <div class="absolute -top-4 -right-4 size-12 bg-primary-500/10 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-4 -left-4 size-16 bg-primary-500/5 rounded-full blur-2xl"></div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

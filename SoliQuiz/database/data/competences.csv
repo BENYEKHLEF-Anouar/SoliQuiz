@@ -1,0 +1,9 @@
+id,unite_apprentissage_id,code,libelle,description
+1,2,C-HTML-01,Sémantique HTML,Utiliser les balises sémantiques HTML5 de manière appropriée.
+2,3,C-CSS-01,Flexbox & Grid,Maîtriser les systèmes de mise en page modernes.
+3,4,C-JS-01,Algorithmique JS,Écrire des fonctions et manipuler des structures de données.
+4,5,C-JS-02,Manipulation DOM,Interagir avec les éléments HTML via JavaScript.
+5,6,C-PHP-01,Syntaxe PHP,Maîtriser les variables et structures de contrôle PHP.
+6,7,C-LARAVEL-01,MVC & Routing,Comprendre l'architecture Laravel et le routage.
+7,7,C-LARAVEL-02,Eloquent ORM,Manipuler les données de la base via Eloquent.
+8,8,C-SQL-01,Requêtes SELECT,Écrire des requêtes complexes avec jointures.

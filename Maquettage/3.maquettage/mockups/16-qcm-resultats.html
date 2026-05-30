@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz - Résultats Évaluation</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind V4 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="../charte-graphique/app.css">
+    
+    <style>[x-cloak] { display: none !important; }</style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans antialiased text-left">
+    <div class="max-w-4xl mx-auto px-6 py-12">
+        <div class="fade-in">
+            <!-- Hero Section: Résultats -->
+            <section class="bg-white border border-slate-100 rounded-[3rem] p-10 md:p-14 mb-10 overflow-hidden relative shadow-premium">
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-12 text-left">
+                    <!-- Score Circle -->
+                    <div class="relative size-56 flex-none flex flex-col items-center justify-center">
+                        <svg class="absolute inset-0 size-full -rotate-90" viewBox="0 0 192 192">
+                            <circle cx="96" cy="96" r="88" fill="none" stroke="currentColor" stroke-width="10" class="text-emerald-500/10" />
+                            <circle cx="96" cy="96" r="88" fill="none" stroke="currentColor" stroke-width="10"
+                                class="text-emerald-500" stroke-dasharray="552.92" stroke-dashoffset="138.23"
+                                stroke-linecap="round" />
+                        </svg>
+                        <div class="relative z-10 flex flex-col items-center">
+                            <span class="text-5xl font-black font-heading text-slate-900 leading-tight italic">16<span class="text-2xl text-slate-300">/20</span></span>
+                            <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest italic mt-1">Objectif Validé</span>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 text-center md:text-left">
+                        <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-500 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100 italic">
+                            <span class="size-1.5 rounded-full bg-emerald-500"></span>
+                            Évaluation Terminée
+                        </span>
+                        <h1 class="text-3xl md:text-4xl font-heading font-black text-slate-900 mt-6 leading-tight italic uppercase tracking-tight">Architecture MVC / Laravel</h1>
+                        <p class="mt-6 text-slate-500 leading-relaxed font-bold italic">
+                            Félicitations Anouar ! Vous avez validé les fondamentaux du Backend avec succès. Votre compréhension des routes et contrôleurs est excellente.
+                        </p>
+
+                        <div class="mt-10 flex flex-wrap gap-5 justify-center md:justify-start">
+                            <div class="bg-slate-50 px-6 py-3 rounded-2xl border border-slate-100 flex flex-col">
+                                <span class="text-[9px] text-slate-400 font-black uppercase tracking-widest italic mb-1">Terminé le</span>
+                                <span class="text-sm font-black text-slate-800 italic uppercase">25 Avr 2026 à 18:45</span>
+                            </div>
+                            <div class="bg-slate-50 px-6 py-3 rounded-2xl border border-slate-100 flex flex-col">
+                                <span class="text-[9px] text-slate-400 font-black uppercase tracking-widest italic mb-1">Durée réelle</span>
+                                <span class="text-sm font-black text-slate-800 italic uppercase">12 min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Revision List -->
+            <section class="space-y-10">
+                <div class="flex items-center justify-between px-4">
+                    <h2 class="text-2xl font-heading font-black text-slate-900 tracking-tight italic uppercase">Révision des réponses</h2>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">10 Questions évaluées</span>
+                </div>
+
+                <!-- Correct Question Card -->
+                <div class="bg-white border-2 border-emerald-100 rounded-[3rem] p-10 shadow-premium relative group transition-all duration-500 hover:shadow-2xl">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-8 mb-10 text-left">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-4 mb-4">
+                                <span class="size-8 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-black text-xs italic shadow-lg shadow-emerald-500/20">01</span>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-emerald-500 italic">Succès (1.0 pt)</span>
+                            </div>
+                            <h3 class="text-xl font-black text-slate-800 leading-tight italic uppercase">Quelle commande Artisan permet de créer un nouveau contrôleur ?</h3>
+                        </div>
+                        <div class="shrink-0 size-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center shadow-sm">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-emerald-50 border-2 border-emerald-100 p-6 rounded-[2rem] shadow-sm relative overflow-hidden text-left">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-black text-slate-900 italic uppercase">php artisan make:controller</span>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-emerald-600 italic">Ma réponse</span>
+                            </div>
+                            <p class="text-[10px] font-bold text-slate-500 italic leading-snug">Correct ! C'est la commande standard pour générer un contrôleur.</p>
+                        </div>
+                        <div class="bg-slate-50/50 border-2 border-transparent p-6 rounded-[2rem] opacity-50 text-left">
+                            <span class="text-sm font-bold text-slate-600 italic uppercase">php artisan create:controller</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Incorrect Question Card -->
+                <div class="bg-white border-2 border-rose-100 rounded-[3rem] p-10 shadow-premium relative group transition-all duration-500 hover:shadow-2xl">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-8 mb-10 text-left">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-4 mb-4">
+                                <span class="size-8 bg-rose-500 text-white rounded-xl flex items-center justify-center font-black text-xs italic shadow-lg shadow-rose-500/20">02</span>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-rose-500 italic">Échec (0.0 pt)</span>
+                            </div>
+                            <h3 class="text-xl font-black text-slate-800 leading-tight italic uppercase">Où sont définies les routes web par défaut dans Laravel ?</h3>
+                        </div>
+                        <div class="shrink-0 size-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center shadow-sm">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-rose-50 border-2 border-rose-100 p-6 rounded-[2rem] shadow-sm relative overflow-hidden text-left">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-black text-slate-900 italic uppercase">routes/api.php</span>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-rose-600 italic">Ma réponse</span>
+                            </div>
+                            <p class="text-[10px] font-bold text-slate-500 italic leading-snug">Faux. api.php est réservé aux endpoints stateless.</p>
+                        </div>
+                        <div class="bg-emerald-50/50 border-2 border-dashed border-emerald-200 p-6 rounded-[2rem] text-left">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-black text-emerald-600 italic uppercase">routes/web.php</span>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-emerald-600 italic">Attendu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer CTA -->
+            <footer class="mt-16 flex flex-col md:flex-row items-center justify-center gap-6">
+                <a href="02-student-dashboard.html" class="w-full md:w-auto px-10 py-5 bg-slate-900 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-primary-600 shadow-2xl shadow-slate-900/10 transition-all active:scale-95 italic">
+                    Retour au Tableau de bord
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Formateur - SoliQuiz UI</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind V4 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: 'hsl(190, 85%, 96%)',
+                            100: 'hsl(190, 85%, 90%)',
+                            200: 'hsl(190, 85%, 80%)',
+                            300: 'hsl(190, 80%, 70%)',
+                            400: 'hsl(190, 75%, 60%)',
+                            500: 'hsl(190, 80%, 45%)',
+                            600: 'hsl(190, 85%, 35%)',
+                            700: 'hsl(190, 85%, 28%)',
+                            800: 'hsl(190, 80%, 22%)',
+                            900: 'hsl(190, 75%, 15%)',
+                        }
+                    },
+                    boxShadow: {
+                        'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="../charte-graphique/app.css">
+    
+    <style>[x-cloak] { display: none !important; }</style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-slate-50 h-screen overflow-hidden text-left uppercase">
+    <div class="flex h-screen overflow-hidden p-0 m-0" x-data="{ sidebarOpen: false }">
+        
+        <!-- Mobile Header -->
+        <div class="lg:hidden glass fixed top-0 left-0 right-0 z-50 px-6 h-16 flex justify-between items-center shadow-sm">
+            <div class="flex items-center gap-2">
+                <div class="size-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/20 text-white">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><path d="m9 15 2 2 4-4" /></svg>
+                </div>
+                <span class="font-heading font-black text-lg text-slate-900 leading-none tracking-tight italic uppercase">Soli<span class="text-primary-500">Quiz</span></span>
+            </div>
+            <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-xl bg-slate-50 text-slate-600 active:scale-95 transition-all"><svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M4 12h16m-7 6h7" /></svg></button>
+        </div>
+
+        <!-- Backdrop -->
+        <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-60 lg:hidden" x-cloak></div>
+
+        <!-- Sidebar -->
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+               class="fixed top-0 left-0 w-72 transition-transform duration-300 ease-out z-70 h-screen shrink-0">
+            <div class="h-full p-4 text-left">
+                <div class="h-full bg-white rounded-[2.5rem] border border-slate-100 shadow-premium flex flex-col overflow-hidden relative">
+                    <div class="p-8 border-b border-slate-50">
+                        <a class="flex items-center gap-3 transition-transform active:scale-95 outline-none" href="03-formateur-dashboard.html">
+                            <div class="size-10 bg-primary-500 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-500/25 text-white">
+                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><path d="m9 15 2 2 4-4" /></svg>
+                            </div>
+                            <div class="flex flex-col leading-none">
+                                <span class="text-2xl font-heading font-black text-slate-900 tracking-tighter leading-none italic uppercase">Soli<span class="text-primary-500">Quiz</span></span>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1.5 italic">Espace Formateur</span>
+                            </div>
+                        </a>
+                    </div>
+                    <nav class="flex-1 px-4 py-8 space-y-8 overflow-y-auto custom-scrollbar">
+                        <div>
+                            <p class="text-label px-5 mb-5 italic">Général</p>
+                            <div class="space-y-1">
+                                <a href="03-formateur-dashboard.html" class="group flex items-center gap-4 px-6 py-3.5 rounded-2xl transition-all italic bg-primary-500 text-white shadow-xl shadow-primary-500/20">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" /></svg>
+                                    <span class="text-xs font-black uppercase tracking-widest">Tableau de Bord</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-label px-5 mb-5 italic">Ma Pédagogie</p>
+                            <div class="space-y-1">
+                                <a href="03-formateur-bibliotheque.html" class="group flex items-center gap-4 px-6 py-3.5 rounded-2xl transition-all italic text-slate-500 hover:bg-primary-50 hover:text-primary-600">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                                    <span class="text-xs font-black uppercase tracking-widest">Mes QCMs</span>
+                                </a>
+                                <a href="20-formateur-resultats.html" class="group flex items-center gap-4 px-6 py-3.5 rounded-2xl transition-all italic text-slate-500 hover:bg-primary-50 hover:text-primary-600">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                                    <span class="text-xs font-black uppercase tracking-widest">Statistiques</span>
+                                </a>
+                                <a href="21-formateur-pedagogie.html" class="group flex items-center gap-4 px-6 py-3.5 rounded-2xl transition-all italic text-slate-500 hover:bg-primary-50 hover:text-primary-600">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                                    <span class="text-xs font-black uppercase tracking-widest">Plan de Formation</span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                    <div class="p-4 border-t border-slate-50">
+                        <div class="bg-slate-900 rounded-[2rem] p-6 text-white relative overflow-hidden group">
+                            <div class="relative z-10 text-left">
+                                <p class="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-2 italic">Session Formateur</p>
+                                <p class="text-xs font-bold leading-tight italic">Ahmed Pro</p>
+                                <a href="14-public-landing.html" class="mt-4 flex items-center gap-2 text-rose-400 hover:text-rose-300 transition-colors text-[10px] font-black uppercase tracking-widest italic">
+                                    Déconnexion
+                                    <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" /></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="flex-1 flex flex-col min-w-0 p-0 m-0 lg:ml-72">
+            <main class="flex-1 overflow-y-auto custom-scrollbar min-h-0 bg-slate-50 pt-16 lg:pt-0">
+                <div class="p-4 lg:p-10 pt-0 lg:pt-0 text-left uppercase">
+                    <div class="max-w-[1600px] mx-auto pt-10">
+                        <div class="space-y-10 fade-in pb-20">
+                            <!-- Header -->
+                            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-10 border-b border-slate-100 italic">
+                                <div>
+                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 italic">Expertise Pédagogique</p>
+                                    <h3 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight italic uppercase leading-none">Tableau de <span class="text-primary-500">Bord</span></h3>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-3 italic leading-relaxed">Pilotez vos cohortes et optimisez l'acquisition des compétences</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <a href="09-formateur-creation-qcm.html" class="btn-premium px-8 py-4 bg-slate-900 text-white shadow-xl shadow-slate-900/10 italic flex items-center gap-2">
+                                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg>
+                                        Nouveau QCM
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Real-time Banner -->
+                            <div class="bg-gradient-to-r from-primary-500/5 to-primary-600/10 border border-primary-500/20 rounded-[3rem] p-8 flex items-center justify-between shadow-sm relative overflow-hidden group">
+                                <div class="absolute right-0 top-0 size-32 bg-primary-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+                                <div class="flex items-center gap-6 relative z-10">
+                                    <div class="size-14 bg-primary-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary-500/20 animate-pulse italic">
+                                        <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div class="italic">
+                                        <p class="font-black text-slate-900 uppercase text-[10px] tracking-[0.2em] mb-1.5 italic">Passations Actives</p>
+                                        <p class="text-xs text-slate-500 font-bold italic uppercase tracking-tight">Vous avez <span class="text-primary-600 font-black">3</span> apprenants en cours d'évaluation</p>
+                                    </div>
+                                </div>
+                                <a href="20-formateur-resultats.html" class="px-8 py-4 bg-slate-900 text-white rounded-[1.5rem] font-black text-[9px] uppercase tracking-widest hover:bg-primary-500 transition-all shadow-xl shadow-slate-900/10 active:scale-95 italic relative z-10">
+                                    Monitorer le Flux
+                                </a>
+                            </div>
+
+                            <!-- KPI Grid -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 italic">
+                                <div class="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-premium flex flex-col justify-between group hover:-translate-y-1 transition-all italic">
+                                    <div class="flex items-center justify-between mb-8">
+                                        <div class="size-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-all"><svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></div>
+                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Cohortes</span>
+                                    </div>
+                                    <div><p class="text-4xl font-black text-slate-900 italic leading-none mb-2">04</p><p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Classes Assignées</p></div>
+                                </div>
+                                <div class="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-premium flex flex-col justify-between group hover:-translate-y-1 transition-all italic">
+                                    <div class="flex items-center justify-between mb-8">
+                                        <div class="size-12 bg-primary-50 text-primary-500 rounded-2xl flex items-center justify-center group-hover:bg-primary-500 group-hover:text-white transition-all italic"><svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg></div>
+                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Impact</span>
+                                    </div>
+                                    <div><p class="text-4xl font-black text-slate-900 italic leading-none mb-2">156</p><p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Apprenants Actifs</p></div>
+                                </div>
+                            </div>
+
+                            <!-- Cohortes Section -->
+                            <div class="pt-10">
+                                <div class="flex items-center justify-between mb-10 italic">
+                                    <div>
+                                        <h2 class="text-2xl font-black text-slate-900 italic uppercase tracking-tighter">Mes Cohortes <span class="text-primary-500">Actives</span></h2>
+                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-2 italic">Performance globale par groupe d'apprentissage</p>
+                                    </div>
+                                    <a href="20-formateur-resultats.html" class="text-[9px] font-black text-primary-600 hover:text-primary-700 flex items-center gap-2 uppercase tracking-widest italic transition-all group">
+                                        Exploration Analytique
+                                        <svg class="size-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+                                    </a>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 italic">
+                                    <div class="bg-white rounded-[3.5rem] border border-slate-100 shadow-premium overflow-hidden hover:shadow-2xl transition-all duration-500 group relative">
+                                        <div class="absolute -right-12 -top-12 size-40 bg-slate-50 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+                                        <div class="p-10 relative z-10 text-left">
+                                            <div class="flex items-start justify-between mb-10">
+                                                <div>
+                                                    <span class="px-4 py-1.5 rounded-lg bg-slate-900 text-white text-[8px] font-black uppercase tracking-widest italic">P-2026</span>
+                                                    <h3 class="font-black text-2xl text-slate-900 mt-4 group-hover:text-primary-600 transition-colors italic uppercase tracking-tight">DevWeb-Fullstack</h3>
+                                                </div>
+                                                <div class="size-14 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300 group-hover:bg-primary-500 group-hover:text-white transition-all shadow-sm italic"><svg class="size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+                                            </div>
+
+                                            <div class="grid grid-cols-2 gap-5 mb-10">
+                                                <div class="bg-slate-50/50 rounded-3xl p-6 border border-slate-100 group-hover:bg-white group-hover:shadow-lg transition-all italic">
+                                                    <p class="text-3xl font-black text-slate-900 italic leading-none mb-2">32</p>
+                                                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest italic">Agents</p>
+                                                </div>
+                                                <div class="bg-slate-50/50 rounded-3xl p-6 border border-slate-100 group-hover:bg-white group-hover:shadow-lg transition-all italic">
+                                                    <p class="text-3xl font-black text-emerald-600 italic leading-none mb-2">14.2</p>
+                                                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest italic">Moyenne /20</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-10">
+                                                <div class="flex items-center justify-between text-[9px] font-black uppercase tracking-[0.2em] mb-3 italic">
+                                                    <span class="text-slate-400">Taux d'Engagement</span>
+                                                    <span class="text-slate-900 font-bold">84%</span>
+                                                </div>
+                                                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden shadow-inner">
+                                                    <div class="bg-primary-500 h-full rounded-full group-hover:shadow-lg transition-all" style="width: 84%"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="flex gap-4">
+                                                <a href="20-formateur-resultats.html" class="flex-1 py-4 px-6 bg-slate-900 text-white rounded-2xl font-black text-[9px] text-center uppercase tracking-widest hover:bg-primary-500 transition-all shadow-xl shadow-slate-900/10 italic">Infiltration Résultats</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-slate-50">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SoliQuiz - Atomes: Inputs</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../charte-graphique/style.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif']
+                    },
+                    colors: {
+                        primary: {
+                            50: 'var(--color-primary-50)',
+                            100: 'var(--color-primary-100)',
+                            200: 'var(--color-primary-200)',
+                            300: 'var(--color-primary-300)',
+                            400: 'var(--color-primary-400)',
+                            500: 'var(--color-primary-500)',
+                            600: 'var(--color-primary-600)',
+                            700: 'var(--color-primary-700)',
+                            800: 'var(--color-primary-800)',
+                            900: 'var(--color-primary-900)'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="p-10 space-y-12 bg-slate-50 font-sans antialiased max-w-[430px]">
+
+    <!-- Standard Input -->
+    <section>
+        <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Standard Inputs</h2>
+        <div class="space-y-6">
+            <div>
+                <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Email Personnel</label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-5 pointer-events-none group-focus-within:text-primary-500 transition-colors">
+                        <svg class="shrink-0 size-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                    </div>
+                    <input type="email" class="h-16 px-6 ps-12 block w-full border-slate-100 bg-white shadow-sm rounded-2xl text-sm font-bold focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 transition-all outline-none" placeholder="Ex: mehdi@solicode.co">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Input -->
+    <section>
+        <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Search Bar</h2>
+        <div class="relative group">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-5 pointer-events-none group-focus-within:text-primary-500 transition-colors">
+                <svg class="shrink-0 size-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            </div>
+            <input type="text" class="h-14 px-6 ps-12 block w-full border-slate-100 bg-white shadow-sm rounded-2xl text-sm font-medium focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 transition-all outline-none" placeholder="Rechercher...">
+        </div>
+    </section>
+
+    <!-- Error State -->
+    <section>
+        <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Error States</h2>
+        <div>
+            <input type="password" value="wrongpassword" class="h-16 px-6 block w-full border-semantic-error/30 bg-white shadow-sm rounded-2xl text-sm font-bold focus:ring-4 focus:ring-semantic-error/5 transition-all outline-none text-semantic-error">
+            <p class="mt-2 text-[9px] font-bold text-semantic-error uppercase tracking-widest ml-1">Mot de passe incorrect</p>
+        </div>
+    </section>
+
+</body>
+</html>

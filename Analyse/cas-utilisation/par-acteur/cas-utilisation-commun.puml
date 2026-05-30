@@ -1,0 +1,22 @@
+@startuml
+skinparam actorStyle awesome
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+actor "Utilisateur" as U
+
+package "Accès & Sécurité (Commun)" {
+    usecase "Accéder à la landing page" as UC_LANDING
+    usecase "S'authentifier (Web/Mobile)" as UC_LOGIN
+    usecase "Gérer son profil" as UC_PROFILE
+
+    U -- UC_LANDING
+    U -- UC_LOGIN
+    U -- UC_PROFILE
+}
+@enduml

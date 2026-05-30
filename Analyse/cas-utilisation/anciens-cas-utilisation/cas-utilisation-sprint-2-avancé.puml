@@ -1,0 +1,99 @@
+@startuml
+' ==============================
+' GENERAL SETTINGS
+' ==============================
+skinparam actorStyle awesome
+left to right direction
+
+skinparam package {
+    BackgroundColor White
+    BorderColor #2C3E50
+}
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    ArrowColor #2E86C1
+}
+
+' ==============================
+' ACTORS
+' ==============================
+actor "Administrateur" as A
+actor "Formateur" as F
+actor "Étudiant" as E
+
+
+' ==============================
+' SPRINT 2 USE CASES
+' ==============================
+package "SoliQuiz - Sprint 2 (Avancé - Web & APK)" {
+
+    ' --- AUTHENTICATION ---
+    usecase "S'authentifier" as UC_LOGIN
+
+    ' --- ESPACE ADMINISTRATEUR ---
+    package "Espace Administrateur" {
+        usecase "Voir le tableau de bord global" as UC_DASH_ADMIN
+        usecase "Configuration API SoliLMS" as UC_API_CONFIG
+        usecase "Exporter les notes vers SoliLMS" as UC_EXPORT
+    }
+
+    ' --- ESPACE FORMATEUR ---
+    package "Espace Formateur" {
+        usecase "Lier QCM à Session/Objectif" as UC_LINK_QCM
+        usecase "Consulter l'historique et\ntableau de bord de progression" as UC_PROGRESS_FORM
+    }
+
+    ' --- ESPACE ÉTUDIANT ---
+    package "Espace Étudiant" {
+        usecase "Calculer score par objectif" as UC_SCORE
+        usecase "Accéder au feedback détaillé / correction" as UC_FEEDBACK
+        usecase "Consulter historique / progression" as UC_HISTORY
+        usecase "Gérer Timer et sauvegarde automatique" as UC_TIMER
+    }
+}
+
+' ==============================
+' ACTOR ASSOCIATIONS
+' ==============================
+A -- UC_LOGIN
+F -- UC_LOGIN
+E -- UC_LOGIN
+
+A -- UC_DASH_ADMIN
+A -- UC_API_CONFIG
+A -- UC_EXPORT
+
+F -- UC_LINK_QCM
+F -- UC_PROGRESS_FORM
+
+E -- UC_SCORE
+E -- UC_FEEDBACK
+E -- UC_HISTORY
+E -- UC_TIMER
+
+' ==============================
+' SECURITY / LOGIN INCLUDES
+' ==============================
+UC_DASH_ADMIN ..> UC_LOGIN : <<include>>
+UC_API_CONFIG ..> UC_LOGIN : <<include>>
+UC_EXPORT ..> UC_LOGIN : <<include>>
+UC_LINK_QCM ..> UC_LOGIN : <<include>>
+UC_PROGRESS_FORM ..> UC_LOGIN : <<include>>
+UC_SCORE ..> UC_LOGIN : <<include>>
+UC_FEEDBACK ..> UC_LOGIN : <<include>>
+UC_HISTORY ..> UC_LOGIN : <<include>>
+UC_TIMER ..> UC_LOGIN : <<include>>
+
+' ==============================
+' BUSINESS LOGIC RELATIONS
+' ==============================
+UC_TIMER ..> UC_LINK_QCM : <<extend>>
+UC_TIMER ..> UC_SCORE : <<include>>
+
+UC_HISTORY ..> UC_FEEDBACK : <<extend>>
+UC_EXPORT ..> UC_HISTORY : <<extend>>
+
+UC_PROGRESS_FORM ..> UC_FEEDBACK : <<extend>>
+UC_HISTORY ..> UC_PROGRESS_FORM : <<include>>
+@enduml

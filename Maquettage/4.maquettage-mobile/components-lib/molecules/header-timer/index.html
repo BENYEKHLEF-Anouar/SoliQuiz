@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-slate-50">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SoliQuiz - Molécules: Header Timer</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../charte-graphique/style.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    },
+                    colors: {
+                        primary: {
+                            500: 'var(--color-primary-500)',
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="p-10 space-y-12 bg-slate-50 font-sans antialiased max-w-[430px] mx-auto">
+
+    <section>
+        <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 px-4">Passation Header</h2>
+        <header class="bg-white/80 backdrop-blur-md px-5 py-4 border border-slate-100 rounded-[2rem] shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+                <button class="size-10 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 active:scale-95 transition-all">
+                    <svg class="size-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <div class="flex flex-col items-center">
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em] mb-0.5">FONDAMENTAUX PHP</span>
+                    <div class="flex items-center gap-2">
+                         <div class="size-2 bg-semantic-error rounded-full animate-pulse"></div>
+                         <span class="text-lg font-heading font-extrabold text-slate-900 tracking-tight">12:45</span>
+                    </div>
+                </div>
+                <button class="size-10 bg-semantic-error/5 text-semantic-error rounded-2xl flex items-center justify-center active:scale-95 transition-all">
+                    <svg class="size-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="px-2">
+                <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-50 shadow-inner">
+                    <div class="h-full bg-primary-500 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.5)]" style="width: 45%"></div>
+                </div>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-[8px] font-black text-slate-300 uppercase tracking-widest">PROGRÈS</span>
+                    <span class="text-[9px] font-bold text-slate-400">Question 5 <span class="text-[8px] opacity-40">/</span> 12</span>
+                </div>
+            </div>
+        </header>
+    </section>
+
+</body>
+</html>

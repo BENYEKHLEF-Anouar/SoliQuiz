@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecule: Question Card - SoliQuiz UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
+                            300: '#7dd3fc', 400: '#38bdf8', 500: '#17B0CF',
+                            600: '#0ea5e9', 700: '#0284c7', 800: '#0369a1', 900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>[x-cloak] { display: none !important; }</style>
+</head>
+<body class="bg-slate-50 p-10 font-sans flex justify-center items-start min-h-screen">
+    <div class="max-w-4xl mx-auto space-y-10 w-full">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Molecule</p>
+            <h1 class="text-3xl font-black text-slate-900">Question Card</h1>
+            <p class="text-slate-500 mt-2">Carte de question pour l'éditeur QCM</p>
+        </div>
+
+        <section class="space-y-4">
+            <div>
+                <!-- Question Card -->
+                <article class="bg-white border shadow-sm border-slate-200 rounded-2xl w-full max-w-3xl flex flex-col focus-within:ring-2 focus-within:ring-[#17B0CF] focus-within:ring-offset-2 transition-shadow">
+                    <!-- Card Header -->
+                    <header class="border-b border-slate-200 py-4 px-6 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
+                        <div class="flex items-center gap-3">
+                            <span class="inline-flex size-[28px] bg-slate-800 text-white rounded-full items-center justify-center text-xs font-bold shadow-sm">1</span>
+                            <span class="text-sm font-bold text-slate-800 uppercase tracking-wide">Configuration de la Question</span>
+                        </div>
+                        <button class="text-slate-400 hover:text-slate-600 transition-colors">
+                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m18 15-6-6-6 6" />
+                            </svg>
+                        </button>
+                    </header>
+
+                    <!-- Card Body -->
+                    <div class="p-6 space-y-6">
+                        <!-- Consigne -->
+                        <div>
+                            <label for="cons-1" class="block text-sm font-bold mb-2 text-slate-800">Énoncé de la question</label>
+                            <textarea id="cons-1" class="w-full py-3 px-4 block border border-slate-200 rounded-xl text-sm shadow-sm focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 transition-colors bg-white font-bold" rows="2">Quelle méthode HTTP est utilisée pour créer une nouvelle ressource dans une API REST ?</textarea>
+                        </div>
+
+                        <!-- Options -->
+                        <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest italic">Options de réponses</span>
+                                <div class="relative" x-data="{ open: false, selected: 'unique', options: [{value:'unique', label:'Choix Unique'},{value:'multiple', label:'Choix Multiple'}], get selectedLabel(){ return this.options.find(o=>o.value===this.selected)?.label || 'Choix Unique'; } }">
+                                    <button type="button" @click="open = !open" @click.away="open = false"
+                                        class="h-10 w-48 bg-white border-2 border-[#17B0CF] rounded-full pl-5 pr-8 text-[10px] font-black text-slate-900 outline-none focus:ring-4 focus:ring-[#17B0CF]/10 transition-all cursor-pointer uppercase italic tracking-widest shadow-sm flex items-center justify-between">
+                                        <span x-text="selectedLabel" class="truncate mr-1"></span>
+                                        <svg class="size-3 text-[#17B0CF] shrink-0 transition-transform duration-300" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
+                                    <div x-show="open"
+                                         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0 scale-100" x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                         class="absolute right-0 z-50 w-52 mt-2 bg-white border border-slate-100 rounded-[1.5rem] shadow-premium overflow-hidden p-2" x-cloak>
+                                        <template x-for="opt in options" :key="opt.value">
+                                            <button type="button" @click="selected = opt.value; open = false"
+                                                class="w-full text-left px-5 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest italic transition-all"
+                                                :class="selected === opt.value ? 'bg-[#17B0CF] text-white shadow-lg shadow-[#17B0CF]/20' : 'text-slate-600 hover:bg-primary-50 hover:text-[#17B0CF]'"
+                                                x-text="opt.label"></button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Good Answer -->
+                            <div class="flex items-center gap-4 bg-white p-2 rounded-lg border border-emerald-300 shadow-sm ring-1 ring-emerald-500/20">
+                                <div class="flex items-center justify-center p-2 rounded-md bg-emerald-50 cursor-pointer hover:bg-emerald-100 transition-colors" title="Cocher comme bonne réponse">
+                                    <input type="radio" name="correct-ans" checked class="border-emerald-500 text-emerald-600 focus:ring-emerald-500 size-4 cursor-pointer">
+                                </div>
+                                <input type="text" value="POST" class="py-2 px-3 block w-full border-transparent rounded-lg text-sm font-bold text-slate-800 focus:border-[#17B0CF] outline-none">
+                            </div>
+
+                            <!-- Wrong Answer -->
+                            <div class="flex items-center gap-4 bg-white p-2 rounded-lg border border-slate-200 shadow-sm focus-within:ring-1 focus-within:border-[#17B0CF]">
+                                <div class="flex items-center justify-center p-2 rounded-md hover:bg-slate-100 cursor-pointer transition-colors" title="Cocher comme bonne réponse">
+                                    <input type="radio" name="correct-ans" class="border-slate-300 text-[#17B0CF] focus:ring-[#17B0CF] size-4 cursor-pointer">
+                                </div>
+                                <input type="text" value="GET" class="py-2 px-3 block w-full border-transparent rounded-lg text-sm text-slate-800 outline-none">
+                            </div>
+
+                            <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-xs font-bold rounded-lg text-slate-500 hover:text-[#17B0CF] hover:bg-primary-50 transition-colors">
+                                <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                    <path d="M5 12h14" />
+                                    <path d="M12 5v14" />
+                                </svg>
+                                Ajouter une option
+                            </button>
+                        </div>
+
+                        <!-- Feedback -->
+                        <div>
+                            <label for="feed-1" class="block text-sm font-bold mb-2 text-slate-800 flex items-center gap-2">
+                                Feedback Pédagogique <span class="bg-primary-100 text-primary-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Optionnel</span>
+                            </label>
+                            <textarea id="feed-1" class="w-full py-2.5 px-3 block border border-slate-200 rounded-xl text-sm shadow-sm focus:border-[#17B0CF] focus:ring-4 focus:ring-[#17B0CF]/10 transition-colors" rows="2" placeholder="Explication affichée à l'étudiant à la fin..."></textarea>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

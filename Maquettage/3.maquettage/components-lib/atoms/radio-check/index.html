@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atom: Radio & Checkbox - SoliQuiz UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 p-10 font-sans">
+    <div class="max-w-4xl mx-auto space-y-10">
+        <div class="border-b border-slate-200 pb-4">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Atom</p>
+            <h1 class="text-3xl font-black text-slate-900">Radio & Checkbox</h1>
+            <p class="text-slate-500 mt-2">Sélection unique et multiple</p>
+        </div>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Checkbox</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-4">
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <div class="relative">
+                        <input type="checkbox" class="peer sr-only" checked>
+                        <div class="size-6 bg-slate-100 rounded-lg group-hover:bg-slate-200 peer-checked:bg-[#17B0CF] transition-colors shadow-inner"></div>
+                        <svg class="absolute inset-0 size-6 text-white scale-0 peer-checked:scale-50 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-slate-700">Session Persistante</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <div class="relative">
+                        <input type="checkbox" class="peer sr-only">
+                        <div class="size-6 bg-slate-100 rounded-lg group-hover:bg-slate-200 peer-checked:bg-[#17B0CF] transition-colors shadow-inner"></div>
+                        <svg class="absolute inset-0 size-6 text-white scale-0 peer-checked:scale-50 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-slate-700">Notifications email</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <div class="relative">
+                        <input type="checkbox" class="peer sr-only" disabled>
+                        <div class="size-6 bg-slate-100 rounded-lg cursor-not-allowed peer-checked:bg-slate-300 transition-colors shadow-inner"></div>
+                    </div>
+                    <span class="text-sm font-medium text-slate-400">Option désactivée</span>
+                </label>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">Radio Button</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-4">
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <div class="relative">
+                        <input type="radio" name="type" class="peer sr-only" checked>
+                        <div class="size-6 bg-slate-100 rounded-full group-hover:bg-slate-200 peer-checked:bg-[#17B0CF] transition-colors shadow-inner"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="size-2 bg-white rounded-full scale-0 peer-checked:scale-100 transition-transform"></div>
+                        </div>
+                    </div>
+                    <span class="text-sm font-medium text-slate-700">Choix unique</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <div class="relative">
+                        <input type="radio" name="type" class="peer sr-only">
+                        <div class="size-6 bg-slate-100 rounded-full group-hover:bg-slate-200 peer-checked:bg-[#17B0CF] transition-colors shadow-inner"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="size-2 bg-white rounded-full scale-0 peer-checked:scale-100 transition-transform"></div>
+                        </div>
+                    </div>
+                    <span class="text-sm font-medium text-slate-700">Choix multiple</span>
+                </label>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900">QCM Choice Items</h2>
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 space-y-3">
+                <!-- Radio Style (Single Choice) -->
+                <label class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border-2 border-transparent hover:border-[#17B0CF]/30 cursor-pointer transition-all group">
+                    <div class="relative">
+                        <input type="radio" name="qcm" class="peer sr-only" checked>
+                        <div class="size-5 bg-white rounded-full border-2 border-slate-300 peer-checked:border-[#17B0CF] peer-checked:bg-[#17B0CF] transition-colors"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="size-1.5 bg-white rounded-full scale-0 peer-checked:scale-100 transition-transform"></div>
+                        </div>
+                    </div>
+                    <span class="text-sm font-medium text-slate-700 group-hover:text-[#17B0CF] transition-colors">Une seule réponse possible</span>
+                </label>
+
+                <!-- Checkbox Style (Multiple Choice) -->
+                <label class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border-2 border-transparent hover:border-[#17B0CF]/30 cursor-pointer transition-all group">
+                    <div class="relative">
+                        <input type="checkbox" class="peer sr-only">
+                        <div class="size-5 bg-white rounded-lg border-2 border-slate-300 peer-checked:border-[#17B0CF] peer-checked:bg-[#17B0CF] transition-colors"></div>
+                        <svg class="absolute inset-0 size-5 text-white scale-0 peer-checked:scale-75 transition-transform p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-slate-700 group-hover:text-[#17B0CF] transition-colors">Plusieurs réponses possibles</span>
+                </label>
+
+                <!-- Selected State -->
+                <label class="flex items-center gap-4 p-4 bg-[#e0f2fe]/30 rounded-xl border-2 border-[#17B0CF] cursor-pointer transition-all">
+                    <div class="relative">
+                        <input type="checkbox" class="peer sr-only" checked>
+                        <div class="size-5 bg-[#17B0CF] rounded-lg transition-colors"></div>
+                        <svg class="absolute inset-0 size-5 text-white scale-75 transition-transform p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-bold text-[#17B0CF]">Option sélectionnée</span>
+                </label>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

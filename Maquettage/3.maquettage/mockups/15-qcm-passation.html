@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoliQuiz - Passation QCM</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind V4 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: 'hsl(190, 85%, 96%)',
+                            100: 'hsl(190, 85%, 90%)',
+                            200: 'hsl(190, 85%, 80%)',
+                            300: 'hsl(190, 80%, 70%)',
+                            400: 'hsl(190, 75%, 60%)',
+                            500: 'hsl(190, 80%, 45%)',
+                            600: 'hsl(190, 85%, 35%)',
+                            700: 'hsl(190, 85%, 28%)',
+                            800: 'hsl(190, 80%, 22%)',
+                            900: 'hsl(190, 75%, 15%)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="../charte-graphique/app.css">
+    
+    <style>[x-cloak] { display: none !important; }</style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans antialiased text-left">
+    <div x-data="{ 
+        timeRemaining: 1185, 
+        totalQuestions: 10,
+        showWarning: false,
+        answers: { 'q4': null },
+        
+        get answeredCount() {
+            return Object.keys(this.answers).filter(k => this.answers[k] !== null).length;
+        },
+        get completionPercentage() {
+            return (this.answeredCount / this.totalQuestions) * 100;
+        },
+        get formattedTime() {
+            const m = Math.floor(this.timeRemaining / 60);
+            const s = this.timeRemaining % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        },
+        init() {
+            setInterval(() => { if(this.timeRemaining > 0) this.timeRemaining--; }, 1000);
+        }
+    }" class="min-h-screen flex flex-col">
+        
+        <!-- Sticky Header -->
+        <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm">
+            <div class="max-w-3xl mx-auto px-6 py-5">
+                <div class="flex items-center justify-between gap-6">
+                    <div class="flex items-center gap-5 min-w-0 flex-1 text-left">
+                        <a href="bibliotheque.html" class="shrink-0 size-11 flex items-center justify-center rounded-2xl hover:bg-slate-50 transition-colors text-slate-400 border-2 border-transparent hover:border-slate-100">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                        </a>
+                        <div class="min-w-0">
+                            <h1 class="text-xl font-black text-slate-900 truncate italic uppercase tracking-tight">Architecture MVC / Laravel</h1>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1 italic">Unités de Backend</p>
+                        </div>
+                    </div>
+
+                    <!-- Timer -->
+                    <div class="shrink-0 flex items-center gap-3 py-3 px-5 rounded-[1.5rem] font-mono text-sm font-black transition-colors duration-500 italic"
+                         :class="timeRemaining < 60 ? 'bg-rose-500 text-white animate-pulse' : 'bg-slate-900 text-white shadow-xl shadow-slate-900/10'">
+                        <svg class="size-4" :class="timeRemaining < 60 ? '' : 'animate-pulse text-primary-400'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span x-text="formattedTime"></span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mt-6 h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-primary-500 rounded-full transition-all duration-700 shadow-[0_0_15px_rgba(20,184,166,0.5)]" 
+                         :style="`width: ${completionPercentage}%`"></div>
+                </div>
+                <p class="mt-3 text-[10px] font-black text-slate-400 text-center uppercase tracking-widest italic">
+                    <span class="text-primary-600" x-text="answeredCount"></span> / <span x-text="totalQuestions"></span> questions répondues
+                </p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 py-10 px-6">
+            <div class="max-w-3xl mx-auto space-y-10">
+                
+                <!-- Intro Card -->
+                <div class="bg-white rounded-[3rem] border border-slate-100 shadow-premium p-10 flex items-center justify-between group overflow-hidden relative">
+                    <div class="absolute -right-12 -top-12 size-48 bg-primary-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700"></div>
+                    <div class="relative z-10 text-left">
+                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-primary-50 text-primary-600 rounded-lg text-[9px] font-black uppercase tracking-widest italic mb-4">
+                            Session Active
+                        </span>
+                        <h2 class="text-3xl font-black text-slate-900 italic uppercase tracking-tighter">Prêt pour le <span class="text-primary-500">Succès</span>.</h2>
+                    </div>
+                    <div class="relative z-10 size-16 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300">
+                        <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/></svg>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="bg-white rounded-[3rem] border-2 transition-all duration-500 p-10"
+                     :class="answers['q4'] !== null ? 'border-primary-200 shadow-xl shadow-primary-500/5' : 'border-slate-100 shadow-premium'">
+                    <div class="flex items-start gap-6 mb-10 text-left">
+                        <div class="shrink-0 size-14 rounded-[1.5rem] flex items-center justify-center font-black text-xl italic transition-all duration-500 shadow-lg"
+                             :class="answers['q4'] !== null ? 'bg-primary-500 text-white shadow-primary-500/30' : 'bg-slate-900 text-white shadow-slate-900/10'">
+                            04
+                        </div>
+                        <div class="flex-1 pt-2">
+                            <h3 class="text-xl md:text-2xl font-black text-slate-900 leading-tight italic uppercase tracking-tight">Dans une architecture MVC, quel composant est responsable de la logique métier et de l'accès aux données ?</h3>
+                            <div class="flex items-center gap-4 mt-6">
+                                <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-xl bg-slate-50 text-slate-500 text-[10px] font-black uppercase tracking-widest border border-slate-100 italic">
+                                    <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/></svg>
+                                    Choix unique
+                                </span>
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic tracking-widest">Valeur: 1.0 point</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="space-y-4 pl-20">
+                        <template x-for="(option, index) in [
+                            { id: 'o1', text: 'Le Contrôleur (Controller)' },
+                            { id: 'o2', text: 'Le Modèle (Model)' },
+                            { id: 'o3', text: 'La Vue (View)' }
+                        ]" :key="option.id">
+                            <div @click="answers['q4'] = option.id" 
+                                 class="group flex items-center gap-5 p-6 rounded-[2rem] border-2 cursor-pointer transition-all duration-300"
+                                 :class="answers['q4'] === option.id ? 'border-primary-500 bg-primary-50/50 shadow-sm' : 'border-slate-50 hover:border-primary-200 hover:bg-slate-50'">
+                                <div class="shrink-0 size-7 rounded-full border-3 flex items-center justify-center transition-all duration-300"
+                                     :class="answers['q4'] === option.id ? 'border-primary-500 bg-primary-500 shadow-lg shadow-primary-500/20' : 'border-slate-200 group-hover:border-primary-400'">
+                                    <div class="size-2.5 rounded-full bg-white transition-transform duration-300"
+                                         :class="answers['q4'] === option.id ? 'scale-100' : 'scale-0'"></div>
+                                </div>
+                                <span class="flex-1 text-base font-bold transition-colors"
+                                      :class="answers['q4'] === option.id ? 'text-slate-900' : 'text-slate-600 group-hover:text-slate-900'">
+                                    <span x-text="option.text" class="italic"></span>
+                                </span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Sticky Submit Footer -->
+        <footer class="sticky bottom-0 z-40 bg-white/90 backdrop-blur-2xl border-t border-slate-100 p-8 shadow-[0_-20px_50px_rgba(0,0,0,0.05)]">
+            <div class="max-w-3xl mx-auto flex items-center justify-between gap-8">
+                <div class="hidden sm:block text-left italic">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Validation Finale</p>
+                    <p class="text-sm font-black text-slate-900 uppercase italic">
+                        <span x-text="answeredCount" class="text-primary-500"></span> / <span x-text="totalQuestions"></span> questions répondues
+                    </p>
+                </div>
+                
+                <a href="16-qcm-resultats.html" 
+                   class="flex-1 sm:flex-none h-16 px-12 bg-slate-900 text-white rounded-[2.5rem] font-black text-[11px] uppercase tracking-[0.3em] hover:bg-primary-500 shadow-3xl shadow-slate-900/15 transition-all active:scale-95 flex items-center justify-center gap-4 italic group">
+                    Soumettre le QCM
+                    <svg class="size-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
