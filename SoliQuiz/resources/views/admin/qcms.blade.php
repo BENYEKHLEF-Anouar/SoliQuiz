@@ -341,7 +341,7 @@
                         <div class="grid grid-cols-12 gap-3 px-5 py-4 border-b border-slate-50 hover:bg-slate-50/50 transition-colors items-center">
                             <!-- QCM Info -->
                             <div class="col-span-4 flex items-center gap-3">
-                                <div class="size-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">
+                                <div class="size-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
                                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12h6m-6 4h6m-2-8a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                                 </div>
                                 <div class="min-w-0 relative group/title">
@@ -359,7 +359,7 @@
                             
                             <!-- Auteur -->
                             <div class="col-span-2 flex items-center gap-2">
-                                <img class="size-6 rounded-md shadow-sm border border-white"
+                                <img class="size-6 rounded-md shadow-sm border border-white shrink-0"
                                     :src="'https://ui-avatars.com/api/?name=' + encodeURIComponent(qcm.formateur ? qcm.formateur.nom_complet : 'Unknown') + '&background=f8fafc&color=64748b&bold=true'"
                                     alt="">
                                 <span class="text-[10px] font-black text-slate-900 uppercase truncate" x-text="qcm.formateur ? qcm.formateur.nom_complet : '?'"></span>

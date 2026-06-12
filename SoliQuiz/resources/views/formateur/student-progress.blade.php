@@ -87,7 +87,7 @@
         const data = this.filteredChartData;
         const labels = data.map(d => {
             const label = d.label;
-            return label.length > 15 ? label.substring(0, 15) + '...' : label;
+            return label.length > 25 ? label.substring(0, 25) + '...' : label;
         });
         const scores = data.map(d => d.score);
         const dates = data.map(d => d.date);
@@ -141,6 +141,12 @@
                     y: {
                         min: 0,
                         max: 20,
+                        title: {
+                            display: true,
+                            text: 'Note obtenue / 20',
+                            color: '#64748b',
+                            font: { family: 'Plus Jakarta Sans, system-ui, sans-serif', size: 10, weight: 'bold' }
+                        },
                         ticks: {
                             stepSize: 2,
                             color: '#64748b',
@@ -149,6 +155,12 @@
                         grid: { color: '#f1f5f9', drawTicks: false }
                     },
                     x: {
+                        title: {
+                            display: true,
+                            text: 'Évaluations (QCM)',
+                            color: '#64748b',
+                            font: { family: 'Plus Jakarta Sans, system-ui, sans-serif', size: 10, weight: 'bold' }
+                        },
                         ticks: {
                             color: '#64748b',
                             font: { family: 'Plus Jakarta Sans, system-ui, sans-serif', size: 9, weight: 'bold' },

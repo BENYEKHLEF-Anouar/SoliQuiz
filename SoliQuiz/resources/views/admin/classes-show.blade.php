@@ -283,7 +283,7 @@
                                     </div>
 
                                     <!-- Form for bulk submission -->
-                                    <form action="{{ route('admin.classes.students.bulk-add', $classe->id) }}" method="POST">
+                                    <form action="{{ route('admin.classes.students.bulk-add', $classe->id) }}" method="POST" novalidate>
                                         @csrf
                                         <template x-for="id in selectedStudents" :key="id">
                                             <input type="hidden" name="user_ids[]" :value="id">
@@ -321,12 +321,20 @@
                                 </div>
                             </div>
 
-                            <form action="{{ route('admin.classes.students.import', $classe->id) }}" method="POST" class="space-y-4">
+                            <form action="{{ route('admin.classes.students.import', $classe->id) }}" method="POST" class="space-y-4" novalidate>
                                 @csrf
                                 <div class="space-y-2">
                                     <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none ml-1">Données des apprenants</label>
                                     <textarea name="import_data" required rows="4" placeholder="Jean;Dupont;jean.dupont@domain.com&#10;john.doe@example.com" 
                                               class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-all font-mono resize-none"></textarea>
+                                    @error('import_data')
+                                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                            <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                            </svg>
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
                                 </div>
 
                                 <button type="submit"
@@ -390,7 +398,7 @@
             <div>
                 <!-- Modal: Assigner Formateur -->
                 <x-ui.modal name="assign-formateur-modal" title="Désignation <br> Expert" maxWidth="md">
-                    <form action="{{ route('admin.classes.assign', $classe->id) }}" method="POST" class="space-y-8 pb-32">
+                    <form action="{{ route('admin.classes.assign', $classe->id) }}" method="POST" class="space-y-8 pb-32" novalidate>
                         @csrf
 
                         <div class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 flex items-center gap-4">
@@ -418,6 +426,14 @@
                             <x-ui.select name="formateur_id" required placeholder="Sélectionner un formateur..."
                                 class="!rounded-2xl !py-4 !px-5 border border-slate-200" :options="$formateurs->map(fn($f) => ['value' => $f->id, 'label' => $f->nom_complet])->toArray()"
                                 :selected="$classe->formateur_id" />
+                            @error('formateur_id')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         <button type="submit"

@@ -50,6 +50,7 @@ export default function qcmBuilder(initialUnites, initialClasses, initialQcm = n
         aiQuestionCount: 5,
         aiQuestionType: 'both',
         aiSuccessCount: 0,
+        aiTopicError: '',
         
         init() {
             this.$watch('questions', (questions) => {
@@ -252,8 +253,10 @@ export default function qcmBuilder(initialUnites, initialClasses, initialQcm = n
 
         async generateQuestionsWithAI() {
             if (!this.aiTopic.trim()) {
-                return dispatchToast('Veuillez spécifier un thème ou une compétence.', 'error');
+                this.aiTopicError = 'Veuillez spécifier un thème ou une compétence.';
+                return;
             }
+            this.aiTopicError = '';
             this.aiLoading = true;
             
             try {

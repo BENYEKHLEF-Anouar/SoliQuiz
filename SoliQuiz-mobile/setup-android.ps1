@@ -8,9 +8,9 @@
 
 $ErrorActionPreference = "Stop"
 
-$SDK_DIR = "C:\Users\Solicode\AppData\Local\Android\Sdk"
+$SDK_DIR = "$env:USERPROFILE\AppData\Local\Android\Sdk"
 $ANDROID_DIR = "$PSScriptRoot\nativephp\android"
-$BINARY_URL = "https://bin.nativephp.com/main/8.4/android/android-3.1.0-php8.4.19.zip"
+$BINARY_URL = "https://bin.nativephp.com/main/8.4/android/android-3.1.0-php8.4.22.zip"
 $ZIP_PATH = "$ANDROID_DIR\android.zip"
 $EXTRACT_PATH = "$ANDROID_DIR\app\src\main"
 $LOCAL_PROPS = "$ANDROID_DIR\local.properties"

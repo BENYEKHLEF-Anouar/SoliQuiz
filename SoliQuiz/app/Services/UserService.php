@@ -34,8 +34,9 @@ class UserService
             'password' => $data['password'], // User model casts to hashed automatically
             'type_profil' => $data['type_profil'],
             'classe_id' => $data['classe_id'] ?? null,
+            'matricule' => $data['matricule'] ?? null,
+            'code_etudiant' => $data['code_etudiant'] ?? null,
         ]);
-
         // Assigner le rôle Spatie
         $spatieRole = $data['type_profil'] === 'etudiant' ? 'etudiant' : $data['type_profil'];
         $user->assignRole($spatieRole);

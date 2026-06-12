@@ -192,6 +192,8 @@ class AdminController extends Controller
             'role' => 'required|in:Apprenant,Formateur,Administrateur',
             'password' => 'nullable|string|min:8',
             'classe_id' => 'nullable|exists:classes,id',
+            'matricule' => 'required_if:role,Formateur|nullable|string|max:255|unique:users,matricule',
+            'code_etudiant' => 'required_if:role,Apprenant|nullable|string|max:255|unique:users,code_etudiant',
         ]);
 
         $roleMapping = [
@@ -207,6 +209,8 @@ class AdminController extends Controller
             'password' => $request->password ?: 'password',
             'type_profil' => $roleMapping[$request->role],
             'classe_id' => $request->classe_id,
+            'matricule' => $request->matricule,
+            'code_etudiant' => $request->code_etudiant,
         ]);
 
         return redirect()->route('admin.utilisateurs')->with('success', 'Utilisateur créé avec succès !');
@@ -242,6 +246,8 @@ class AdminController extends Controller
             'role' => 'required|in:Apprenant,Formateur,Administrateur',
             'password' => 'nullable|string|min:8',
             'classe_id' => 'nullable|exists:classes,id',
+            'matricule' => 'required_if:role,Formateur|nullable|string|max:255|unique:users,matricule,'.$user->id,
+            'code_etudiant' => 'required_if:role,Apprenant|nullable|string|max:255|unique:users,code_etudiant,'.$user->id,
         ]);
 
         $roleMapping = [
@@ -257,6 +263,8 @@ class AdminController extends Controller
             'password' => $request->password,
             'type_profil' => $roleMapping[$request->role],
             'classe_id' => $request->classe_id,
+            'matricule' => $request->matricule,
+            'code_etudiant' => $request->code_etudiant,
         ]);
 
         return redirect()->route('admin.utilisateurs')->with('success', 'Utilisateur mis à jour avec succès !');

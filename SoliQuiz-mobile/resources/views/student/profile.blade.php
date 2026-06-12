@@ -114,6 +114,19 @@
                                 <p class="text-sm font-extrabold text-slate-900 tracking-widest">••••••••</p>
                             </div>
                         </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="size-11 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400">
+                                <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1">Code Étudiant</p>
+                                <p class="text-sm font-extrabold text-slate-900" x-text="profile.code_etudiant || 'N/A'"></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

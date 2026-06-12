@@ -1,6 +1,7 @@
 export default () => ({
     email: '',
     password: '',
+    showPassword: false,
     error: null,
     loading: false,
     showResetModal: false,

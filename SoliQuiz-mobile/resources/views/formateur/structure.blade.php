@@ -87,29 +87,27 @@
                     <div x-data="{ expanded: false }" class="bg-white border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.02)] rounded-[2rem] overflow-hidden transition-all duration-300">
                         
                         <!-- Session Header -->
-                        <div @click="expanded = !expanded" class="p-5 flex items-center justify-between cursor-pointer active:bg-slate-50/50 transition-colors">
-                            <div class="flex items-center gap-4">
-                                <div class="size-12 rounded-2xl flex items-center justify-center transition-colors shrink-0"
-                                     :class="expanded ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400'">
-                                    <svg class="size-5 transition-transform duration-300" :class="expanded ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7" /></svg>
+                        <div @click="expanded = !expanded" class="p-5 flex items-start justify-between cursor-pointer active:bg-slate-50/50 transition-colors gap-3">
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Session</span>
+                                    <span x-show="seance.date_debut" class="size-1 bg-slate-200 rounded-full"></span>
+                                    <span class="text-[8px] font-black text-primary-500 uppercase tracking-wider" x-text="seance.date_debut ? 'Du ' + formatDate(seance.date_debut) + ' au ' + formatDate(seance.date_fin) : ''"></span>
                                 </div>
-                                <div class="min-w-0">
-                                    <div class="flex items-center gap-1.5 mb-0.5">
-                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Session</span>
-                                        <span x-show="seance.date_debut" class="size-1 bg-slate-200 rounded-full"></span>
-                                        <span class="text-[8px] font-black text-primary-500 uppercase tracking-wider" x-text="seance.date_debut ? 'Du ' + formatDate(seance.date_debut) + ' au ' + formatDate(seance.date_fin) : ''"></span>
-                                    </div>
-                                    <h3 class="text-base font-heading font-extrabold text-slate-900 leading-tight truncate" x-text="seance.nom"></h3>
-                                    <div class="flex items-center gap-1.5 mt-1">
-                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest" x-text="seance.creator_name"></span>
-                                        <span class="px-1.5 py-0.5 rounded text-[7px] font-black uppercase tracking-wider"
-                                              :class="seance.creator_role === 'admin' ? 'bg-slate-900 text-white' : 'bg-primary-50 text-primary-600 border border-primary-100'"
-                                              x-text="seance.creator_role"></span>
-                                    </div>
+                                <h3 class="text-base font-heading font-extrabold text-slate-900 leading-tight" x-text="seance.nom"></h3>
+                                <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+                                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest" x-text="seance.creator_name"></span>
+                                    <span class="px-1.5 py-0.5 rounded text-[7px] font-black uppercase tracking-wider"
+                                          :class="seance.creator_role === 'admin' ? 'bg-slate-900 text-white' : 'bg-primary-50 text-primary-600 border border-primary-100'"
+                                          x-text="seance.creator_role"></span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2 shrink-0">
+                            <div class="flex items-center gap-2.5 shrink-0">
                                 <span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2.5 py-1 rounded-xl" x-text="seance.unites.length + ' UA'"></span>
+                                <div class="size-10 rounded-2xl flex items-center justify-center transition-colors"
+                                     :class="expanded ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400'">
+                                    <svg class="size-4.5 transition-transform duration-300" :class="expanded ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7" /></svg>
+                                </div>
                             </div>
                         </div>
 
@@ -119,23 +117,21 @@
                                 <template x-for="ua in seance.unites" :key="ua.id">
                                     <div x-data="{ expandedUa: false }" class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm transition-all duration-300">
                                         <!-- UA Header -->
-                                        <div @click="expandedUa = !expandedUa" class="p-4 flex items-center justify-between cursor-pointer active:bg-slate-50/50 transition-colors">
-                                            <div class="flex items-center gap-3 min-w-0">
-                                                <div class="size-8 rounded-xl flex items-center justify-center transition-colors shrink-0"
-                                                     :class="expandedUa ? 'bg-primary-500 text-white' : 'bg-slate-50 text-slate-400'">
-                                                    <svg class="size-4 transition-transform duration-300" :class="expandedUa ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7" /></svg>
+                                        <div @click="expandedUa = !expandedUa" class="p-4 flex items-start justify-between cursor-pointer active:bg-slate-50/50 transition-colors gap-3">
+                                            <div class="min-w-0 flex-1">
+                                                <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                                                    <span class="text-[8px] font-black text-primary-600 uppercase tracking-widest" x-text="ua.code"></span>
+                                                    <span x-show="ua.date_debut" class="size-1 bg-slate-200 rounded-full"></span>
+                                                    <span class="text-[7px] font-bold text-slate-400" x-text="ua.date_debut ? '(' + formatDate(ua.date_debut) + ' - ' + formatDate(ua.date_fin) + ')' : ''"></span>
                                                 </div>
-                                                <div class="min-w-0">
-                                                    <div class="flex items-center gap-1.5 mb-0.5">
-                                                        <span class="text-[8px] font-black text-primary-600 uppercase tracking-widest" x-text="ua.code"></span>
-                                                        <span x-show="ua.date_debut" class="size-1 bg-slate-200 rounded-full"></span>
-                                                        <span class="text-[7px] font-bold text-slate-400" x-text="ua.date_debut ? '(' + formatDate(ua.date_debut) + ' - ' + formatDate(ua.date_fin) + ')' : ''"></span>
-                                                    </div>
-                                                    <h4 class="text-xs font-bold text-slate-800 leading-tight truncate" x-text="ua.nom"></h4>
-                                                </div>
+                                                <h4 class="text-xs font-bold text-slate-800 leading-tight" x-text="ua.nom"></h4>
                                             </div>
-                                            <div class="shrink-0 pl-2">
-                                                <span class="bg-emerald-50 text-emerald-600 text-[8px] font-black px-2 py-0.5 rounded-lg uppercase" x-text="ua.competences.length + ' compétences'"></span>
+                                            <div class="flex items-center gap-2 shrink-0">
+                                                <span class="bg-emerald-50 text-emerald-600 text-[8px] font-black px-2 py-0.5 rounded-lg uppercase" x-text="ua.competences.length + ' comp.'"></span>
+                                                <div class="size-8 rounded-xl flex items-center justify-center transition-colors"
+                                                     :class="expandedUa ? 'bg-primary-500 text-white' : 'bg-slate-50 text-slate-400'">
+                                                    <svg class="size-3.5 transition-transform duration-300" :class="expandedUa ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7" /></svg>
+                                                </div>
                                             </div>
                                         </div>
 

@@ -22,7 +22,7 @@ Alpine.store('config', {
     apiBaseUrl: (() => {
         const hostname = window.location.hostname;
         // Android emulator special IP to access host localhost
-        if (hostname === '10.0.2.2') return 'http://10.0.2.2:8000/api';
+        if (hostname === '10.0.2.2' || window.AndroidBridge || window.AndroidPOST || /Android/i.test(navigator.userAgent)) return 'http://10.0.2.2:8000/api';
         // iOS simulator / local dev
         if (hostname === 'localhost' || hostname === '127.0.0.1') return 'http://localhost:8000/api';
         // Production / LAN testing
@@ -37,8 +37,12 @@ Alpine.store('config', {
     setAuth(token, user) {
         this.token = token;
         this.user = user;
+        this.profile = null;
+        this.studentProfile = null;
         localStorage.setItem('soliquiz_token', token);
         localStorage.setItem('soliquiz_user', JSON.stringify(user));
+        localStorage.removeItem('soliquiz_profile');
+        localStorage.removeItem('soliquiz_student_profile');
     },
 
     setProfile(profile) {

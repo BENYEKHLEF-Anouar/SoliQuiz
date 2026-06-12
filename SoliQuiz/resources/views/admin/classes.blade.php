@@ -370,13 +370,21 @@
                 <!-- Modal: Créer Classe -->
                 <x-ui.modal name="create-classe-modal" title="Architecture Cohorte" maxWidth="md">
                     <!-- pb-32 ensures the select dropdown is never clipped by the modal's overflow-y-auto -->
-                    <form action="{{ route('admin.classes.store') }}" method="POST" class="space-y-6 pb-32" x-on:submit="submitting = true">
+                    <form action="{{ route('admin.classes.store') }}" method="POST" class="space-y-6 pb-32" x-on:submit="submitting = true" novalidate>
                         @csrf
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Identifiant
                                 de Groupe</label>
                             <input type="text" name="nom" required placeholder="Ex: Développement Fullstack"
                                 class="w-full bg-slate-50 border border-transparent rounded-2xl py-3.5 px-5 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('nom')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         <div class="space-y-2">
@@ -384,6 +392,14 @@
                                 <span class="text-slate-300 normal-case">(Optionnel)</span></label>
                             <input type="text" name="promotion" placeholder="Ex: P-2024 / Elite"
                                 class="w-full bg-slate-50 border border-transparent rounded-2xl py-3.5 px-5 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('promotion')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         <div class="space-y-2">
@@ -391,6 +407,14 @@
                                 Référent <span class="text-slate-300 normal-case">(Optionnel)</span></label>
                             <x-ui.select name="formateur_id" placeholder="Assigner un formateur..."
                                 class="!rounded-2xl !py-4 !px-5" :options="$formateurs->map(fn($f) => ['value' => $f->id, 'label' => $f->nom_complet])->toArray()" />
+                            @error('formateur_id')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         <button type="submit" :disabled="submitting" class="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-500 transition-all shadow-xl shadow-slate-900/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -403,7 +427,7 @@
                 <!-- Modal: Modifier Classe -->
                 <x-ui.modal name="edit-classe-modal" title="Modifier Cohorte" maxWidth="md">
                     <form x-bind:action="`{{ url('/admin/classes') }}/${activeClasseId}`" method="POST"
-                        class="space-y-6 pb-32" x-on:submit="submitting = true">
+                        class="space-y-6 pb-32" x-on:submit="submitting = true" novalidate>
                         @csrf
                         @method('PUT')
 
@@ -412,6 +436,14 @@
                                 de Groupe</label>
                             <input type="text" name="nom" required x-model="activeClasseName"
                                 class="w-full bg-slate-50 border border-transparent rounded-2xl py-3.5 px-5 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('nom')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         <div class="space-y-2">
@@ -420,6 +452,14 @@
                             <input type="text" name="promotion" x-model="activeClassePromotion"
                                 placeholder="Ex: P-2024 / Elite"
                                 class="w-full bg-slate-50 border border-transparent rounded-2xl py-3.5 px-5 text-sm font-bold text-slate-900 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('promotion')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         <div class="space-y-2">
@@ -427,6 +467,14 @@
                                 Référent <span class="text-slate-300 normal-case">(Optionnel)</span></label>
                             <x-ui.select name="formateur_id" x-model="activeClasseFormateur" placeholder="Indépendant"
                                 class="!rounded-2xl !py-4 !px-5" :options="array_merge([['value' => '', 'label' => 'Aucun']], $formateurs->map(fn($f) => ['value' => $f->id, 'label' => $f->nom_complet])->toArray())" />
+                            @error('formateur_id')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         <button type="submit" :disabled="submitting" class="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-500 transition-all shadow-xl shadow-slate-900/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -565,7 +613,7 @@
                                     </div>
 
                                     <!-- Form for bulk submission -->
-                                    <form x-bind:action="`{{ url('/admin/classes') }}/${activeClasseId}/etudiants/bulk`" method="POST" x-on:submit="submitting = true">
+                                    <form x-bind:action="`{{ url('/admin/classes') }}/${activeClasseId}/etudiants/bulk`" method="POST" x-on:submit="submitting = true" novalidate>
                                         @csrf
                                         <template x-for="id in selectedStudents" :key="id">
                                             <input type="hidden" name="user_ids[]" :value="id">
@@ -601,12 +649,20 @@
                                 </div>
                             </div>
 
-                            <form x-bind:action="`{{ url('/admin/classes') }}/${activeClasseId}/etudiants/import`" method="POST" class="space-y-4" x-on:submit="submitting = true">
+                            <form x-bind:action="`{{ url('/admin/classes') }}/${activeClasseId}/etudiants/import`" method="POST" class="space-y-4" x-on:submit="submitting = true" novalidate>
                                 @csrf
                                 <div class="space-y-2">
                                     <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none ml-1">Données des apprenants</label>
                                     <textarea name="import_data" required rows="5" placeholder="Jean;Dupont;jean.dupont@domain.com&#10;john.doe@example.com" 
                                               class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all font-mono resize-none"></textarea>
+                                    @error('import_data')
+                                        <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                            <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                            </svg>
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
                                 </div>
 
                                 <button type="submit" :disabled="submitting"

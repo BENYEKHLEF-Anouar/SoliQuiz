@@ -64,6 +64,8 @@ class LoginController extends Controller
      */
     protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
+        $user->update(['derniere_connexion' => now()]);
+
         if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         } elseif ($user->isFormateur()) {
