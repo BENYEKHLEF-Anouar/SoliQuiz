@@ -18,9 +18,7 @@ export default () => ({
         return Alpine.store('config').studentProfile || {};
     },
     async init() {
-        if (!Alpine.store('config').studentProfile) {
-            await this.fetchProfile();
-        }
+        await this.fetchProfile();
     },
     async fetchProfile() {
         this.loading = true;

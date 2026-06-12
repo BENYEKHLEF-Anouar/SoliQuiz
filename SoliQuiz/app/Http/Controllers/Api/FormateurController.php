@@ -29,6 +29,8 @@ class FormateurController extends Controller
             'nom' => $formateur->nom,
             'prenom' => $formateur->prenom,
             'email' => $formateur->email,
+            'matricule' => $formateur->matricule,
+            'derniere_connexion' => $formateur->derniere_connexion?->toDateTimeString(),
             'avatarUrl' => null,
             'role' => 'Formateur Référent',
         ]);

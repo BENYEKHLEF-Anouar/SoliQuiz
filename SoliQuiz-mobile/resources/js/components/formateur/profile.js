@@ -18,10 +18,7 @@ export default () => ({
         return Alpine.store('config').profile || {};
     },
     async init() {
-        // Use cached profile if available, otherwise fetch
-        if (!Alpine.store('config').profile) {
-            await this.fetchProfile();
-        }
+        await this.fetchProfile();
     },
     async fetchProfile() {
         this.loading = true;

@@ -634,7 +634,7 @@
 
         const labels = rawAttempts.map(a => {
             const title = a.qcm_titre;
-            return title.length > 15 ? title.substring(0, 15) + '...' : title;
+            return title.length > 25 ? title.substring(0, 25) + '...' : title;
         });
         const data = rawAttempts.map(a => a.score);
 
@@ -683,6 +683,12 @@
                 },
                 scales: {
                     x: {
+                        title: {
+                            display: true,
+                            text: 'Évaluations (QCM)',
+                            color: '#64748b',
+                            font: { family: "'Plus Jakarta Sans', system-ui, sans-serif", size: 10, weight: 'bold' }
+                        },
                         grid: {
                             display: false
                         },
@@ -701,6 +707,12 @@
                     y: {
                         min: 0,
                         max: 20,
+                        title: {
+                            display: true,
+                            text: 'Note obtenue / 20',
+                            color: '#64748b',
+                            font: { family: "'Plus Jakarta Sans', system-ui, sans-serif", size: 10, weight: 'bold' }
+                        },
                         ticks: {
                             stepSize: 2,
                             font: {

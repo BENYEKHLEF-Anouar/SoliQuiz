@@ -7,7 +7,7 @@
         <div class="h-[44px] hidden ios:block"></div>
         <div class="flex justify-between items-center mt-2">
             <div class="flex items-center gap-3">
-                <a class="flex items-center gap-2 group outline-none" href="{{ route('student.dashboard') }}">
+                <a class="flex items-center gap-2 group outline-none" href="{{ route('student.bibliotheque') }}">
                     <div class="size-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 active:scale-95 transition-transform">
                         <svg class="text-white size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="m15 18-6-6 6-6"/>
@@ -179,69 +179,7 @@
                                         </div>
                                     </div>
                                 </template>
-                            </div>
-
-                            <!-- SoliBot AI Explainer integration -->
-                            <template x-if="!question.isCorrect">
-                                <div class="mt-6 pt-5 border-t border-slate-100">
-                                    <div x-data="aiExplain(question.id, qcmId)"
-                                         @click="explain()"
-                                         :class="explanation ? 'pointer-events-none' : 'cursor-pointer hover:border-primary-300 hover:shadow-[0_8px_20px_rgba(190,220,240,0.15)] active:scale-[0.99]'"
-                                         class="relative overflow-hidden rounded-2xl border-2 border-primary-100/60 bg-white p-4.5 transition-all duration-500 group/ai shadow-xs">
-                                        
-                                        <div class="absolute -right-20 -top-20 size-40 rounded-full bg-primary-400/5 blur-3xl group-hover/ai:bg-primary-400/10 transition-all duration-500"></div>
-                                        
-                                        <div class="relative z-10 flex flex-col gap-4">
-                                            <div class="flex items-center gap-3">
-                                                <div class="relative size-10 rounded-xl bg-primary-50 border border-primary-100/50 flex items-center justify-center shrink-0 group-hover/ai:border-primary-200 transition-colors">
-                                                    <svg class="size-5.5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                                    </svg>
-                                                    <span class="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
-                                                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary-500"></span>
-                                                    </span>
-                                                </div>
-                                                <div class="text-left">
-                                                    <span class="text-[8px] font-black uppercase tracking-widest text-primary-600 leading-none">Assistant SoliBot</span>
-                                                    <h4 class="text-xs font-black text-slate-800 tracking-tight mt-0.5">Analyse de mon erreur</h4>
-                                                </div>
-                                            </div>
-
-                                            <div x-show="!explanation" class="w-full">
-                                                <button :disabled="loading"
-                                                        class="w-full h-11 bg-slate-900 hover:bg-slate-800 text-white text-[9px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-98 flex items-center justify-center gap-1.5 group-hover/ai:bg-primary-600">
-                                                    <span x-show="loading" class="animate-spin size-3.5 border-2 border-white border-t-transparent rounded-full mr-1.5"></span>
-                                                    <span x-text="loading ? 'Analyse...' : 'Expliquer mon erreur'"></span>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <!-- Explanation Result -->
-                                        <div x-show="explanation"
-                                             x-transition:enter="transition ease-out duration-300"
-                                             x-transition:enter-start="opacity-0 -translate-y-1"
-                                             x-transition:enter-end="opacity-100 translate-y-0"
-                                             class="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-3 text-left"
-                                             style="display: none;">
-                                            <div class="rounded-xl bg-primary-50/30 border border-primary-100/30 p-4">
-                                                <p x-text="explanation" class="text-xs font-semibold text-slate-600 leading-relaxed whitespace-pre-line"></p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Error Alert -->
-                                        <div x-show="error"
-                                             x-transition
-                                             class="mt-3 rounded-xl bg-rose-50 border border-rose-100/50 p-3"
-                                             style="display: none;">
-                                            <div class="flex items-center gap-2 text-rose-700">
-                                                <svg class="size-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                                <p x-text="error" class="text-[9px] font-black uppercase tracking-wider"></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
+                         </template>
                         </div>
                         
                         <!-- Fixed Static Explanation/Décryptage if exists -->

@@ -129,12 +129,7 @@
                         <div class="border-t border-slate-50 pt-4 flex justify-between items-center">
                             <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest" x-text="'Par : ' + qcm.formateur_nom"></span>
 
-                            <template x-if="qcm.etat === 'a_faire'">
-                                <a :href="'/student/qcm/' + qcm.id" class="inline-flex items-center gap-1.5 px-5 py-2.5 bg-slate-900 text-white text-[10px] font-black uppercase tracking-wider rounded-xl hover:bg-primary-600 transition-colors">
-                                    Démarrer
-                                    <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5"><path d="m9 18 6-6-6-6"/></svg>
-                                </a>
-                            </template>
+
 
                             <template x-if="qcm.etat === 'reussi' || qcm.etat === 'echoue'">
                                 <a :href="'/student/qcm/' + qcm.id + '/result'" class="inline-flex items-center gap-1.5 px-5 py-2.5 bg-slate-50 text-slate-900 border border-slate-100 text-[10px] font-black uppercase tracking-wider rounded-xl hover:bg-slate-100 transition-colors">

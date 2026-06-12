@@ -46,22 +46,14 @@
             <section class="px-5 mt-12 space-y-6">
                 <div class="flex justify-between items-end mb-4">
                     <div class="flex flex-col">
-                        <h2 class="text-xl font-heading font-extrabold text-slate-900 tracking-tight">VOS ÉVALUATIONS</h2>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Aujourd'hui & À venir</p>
-                    </div>
-                    <div x-show="urgentCount > 0" class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-xl bg-semantic-warning/10 text-semantic-warning border border-semantic-warning/10">
-                        <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-                        <span class="text-[10px] font-black uppercase tracking-tight" x-text="urgentCount + ' Urgent'"></span>
+                        <h2 class="text-xl font-heading font-extrabold text-slate-900 tracking-tight">UNITÉS D'APPRENTISSAGE À VENIR</h2>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Prochaines UAs programmées</p>
                     </div>
                 </div>
                 
                 <div class="grid gap-5 text-left">
                     <template x-for="evaluation in evaluations" :key="evaluation.id">
                         <div class="group bg-white border border-slate-100 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] rounded-[2.5rem] p-7 relative overflow-hidden transition-all duration-300 hover:border-slate-200">
-                            
-                            <!-- Status Indicator Accent -->
-                            <div class="absolute top-0 right-12 w-16 h-1 rounded-b-full transition-all duration-500" 
-                                :class="evaluation.urgent ? 'bg-semantic-warning shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 'bg-slate-100'"></div>
                             
                             <div class="flex justify-between items-start mb-5">
                                 <div class="flex items-center gap-3">
@@ -72,12 +64,21 @@
                                 </div>
                             </div>
 
-                            <h3 class="text-2xl font-heading font-extrabold text-slate-900 leading-[1.1] tracking-tight mb-8" x-text="evaluation.title"></h3>
+                            <h3 class="text-2xl font-heading font-extrabold text-slate-900 leading-[1.1] tracking-tight mb-4" x-text="evaluation.title"></h3>
+                            
+                            <div class="flex items-center gap-2 mb-6">
+                                <div class="size-6 rounded-full bg-slate-50 flex items-center justify-center text-[9px] font-bold text-slate-500 border border-slate-100">
+                                    <svg class="size-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-xs font-semibold text-slate-500" x-text="'Créé par ' + (evaluation.formateur || 'SoliQuiz')"></span>
+                            </div>
                             
                             <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-x-2 text-[10px] font-black uppercase" :class="evaluation.urgent ? 'text-semantic-warning' : 'text-slate-300'">
+                                <div class="flex items-center gap-x-2 text-[10px] font-black uppercase text-primary-500">
                                     <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    <span class="tracking-widest" x-text="evaluation.urgent ? 'Expire aujourd\'hui' : 'À venir'"></span>
+                                    <span class="tracking-widest" x-text="'Prévue le ' + (evaluation.dueDate || '')"></span>
                                 </div>
                             </div>
                         </div>

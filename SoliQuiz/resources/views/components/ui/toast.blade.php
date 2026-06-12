@@ -13,7 +13,7 @@
     x-on:toast.window="add($event.detail.message, $event.detail.type)"
     x-init="
         @if(session('success')) add('{{ addslashes(session('success')) }}', 'success'); @endif
-        @if(!request()->routeIs('login'))
+        @if(!request()->routeIs('login', 'formateur.qcm.create', 'formateur.qcm.edit'))
             @if(session('error')) add('{{ addslashes(session('error')) }}', 'error'); @endif
             @if(session('info')) add('{{ addslashes(session('info')) }}', 'info'); @endif
             @if($errors->any()) add('{{ addslashes($errors->first()) }}', 'error'); @endif

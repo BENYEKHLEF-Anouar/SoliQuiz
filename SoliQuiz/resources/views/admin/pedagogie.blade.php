@@ -445,7 +445,7 @@
                         <h3 class="text-lg font-black text-slate-800" x-text="seanceMode === 'create' ? 'Inaugurer une Session' : 'Réviser la Session'"></h3>
                     </div>
                 </template>
-                <form x-bind:action="seanceMode === 'create' ? '{{ route('admin.pedagogie.seance.store') }}' : `{{ url('/admin/pedagogie/seance') }}/${seanceId}`" method="POST" class="space-y-4">
+                <form x-bind:action="seanceMode === 'create' ? '{{ route('admin.pedagogie.seance.store') }}' : `{{ url('/admin/pedagogie/seance') }}/${seanceId}`" method="POST" class="space-y-4" novalidate>
                     @csrf
                     <template x-if="seanceMode === 'edit'"><input type="hidden" name="_method" value="PUT"></template>
                     <div>
@@ -453,16 +453,39 @@
                         <input type="text" name="nom" x-model="seanceNom" required
                                placeholder="Ex: Session Automne 2024"
                                class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-slate-400 focus:ring-0 transition-all text-sm @error('nom') border-rose-500 @enderror">
-                        @error('nom') <p class="text-[10px] text-rose-500 mt-1 font-bold">{{ $message }}</p> @enderror
+                        @error('nom')
+                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Date Début</label>
                             <x-ui.date-picker name="date_debut" x-model="seanceDateDebut" />
+                            @error('date_debut')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                         <div>
                             <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Date Fin</label>
                             <x-ui.date-picker name="date_fin" x-model="seanceDateFin" />
+                            @error('date_fin')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                     </div>
                     
@@ -502,6 +525,14 @@
                                 </button>
                             @endforeach
                         </div>
+                        @error('user_id')
+                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <button type="submit" 
                             class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95"
@@ -527,7 +558,7 @@
                         <h3 class="text-lg font-black text-slate-800">Modifier UA</h3>
                     </div>
                 </template>
-                <form x-bind:action="uaMode === 'create' ? `{{ url('/admin/pedagogie/seance') }}/${activeSeanceId}/ua` : `{{ url('/admin/pedagogie/ua') }}/${uaId}`" method="POST" class="space-y-4">
+                <form x-bind:action="uaMode === 'create' ? `{{ url('/admin/pedagogie/seance') }}/${activeSeanceId}/ua` : `{{ url('/admin/pedagogie/ua') }}/${uaId}`" method="POST" class="space-y-4" novalidate>
                     @csrf
                     <template x-if="uaMode === 'edit'"><input type="hidden" name="_method" value="PUT"></template>
                     <div class="grid grid-cols-2 gap-3">
@@ -539,7 +570,14 @@
                             <input type="text" name="code" x-model="uaCode" @input.debounce.500ms="checkCode" required
                                    placeholder="UA-XX"
                                    class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 uppercase focus:bg-white focus:border-primary-400 focus:ring-0 transition-all text-sm @error('code') border-rose-500 @enderror">
-                            @error('code') <p class="text-[10px] text-rose-500 mt-1 font-bold">{{ $message }}</p> @enderror
+                            @error('code')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                             <div x-show="codeExists" x-transition class="absolute bottom-full left-0 mb-2 w-full bg-amber-50 border border-amber-200 rounded-lg p-2 shadow-lg z-50 flex items-start gap-2" style="display: none;">
                                 <svg class="size-4 text-amber-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                                 <p class="text-[10px] font-bold text-amber-700 leading-tight">Ce code existe déjà, mais vous pouvez continuer.</p>
@@ -550,7 +588,14 @@
                             <input type="text" name="nom" x-model="uaNom" required
                                    placeholder="Nom de l'unité"
                                    class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-primary-400 focus:ring-0 transition-all text-sm @error('nom') border-rose-500 @enderror">
-                            @error('nom') <p class="text-[10px] text-rose-500 mt-1 font-bold">{{ $message }}</p> @enderror
+                            @error('nom')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                     </div>
 
@@ -590,6 +635,14 @@
                                 </button>
                             @endforeach
                         </div>
+                        @error('user_id')
+                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <button type="submit" 
                             class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95"
@@ -615,7 +668,7 @@
                         <h3 class="text-lg font-black text-slate-800">Modifier Compétence</h3>
                     </div>
                 </template>
-                <form x-bind:action="compMode === 'create' ? `{{ url('/admin/pedagogie/ua') }}/${activeUaId}/competence` : `{{ url('/admin/pedagogie/competence') }}/${compId}`" method="POST" class="space-y-4">
+                <form x-bind:action="compMode === 'create' ? `{{ url('/admin/pedagogie/ua') }}/${activeUaId}/competence` : `{{ url('/admin/pedagogie/competence') }}/${compId}`" method="POST" class="space-y-4" novalidate>
                     @csrf
                     <template x-if="compMode === 'edit'"><input type="hidden" name="_method" value="PUT"></template>
                     <div class="grid grid-cols-2 gap-3">
@@ -627,7 +680,14 @@
                             <input type="text" name="code" x-model="compCode" @input.debounce.500ms="checkCode" required
                                    placeholder="C-XXX"
                                    class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 uppercase focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all text-sm @error('code') border-rose-500 @enderror">
-                            @error('code') <p class="text-[10px] text-rose-500 mt-1 font-bold">{{ $message }}</p> @enderror
+                            @error('code')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                             <div x-show="codeExists" x-transition class="absolute bottom-full left-0 mb-2 w-full bg-amber-50 border border-amber-200 rounded-lg p-2 shadow-lg z-50 flex items-start gap-2" style="display: none;">
                                 <svg class="size-4 text-amber-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                                 <p class="text-[10px] font-bold text-amber-700 leading-tight">Ce code existe déjà, mais vous pouvez continuer.</p>
@@ -638,7 +698,14 @@
                             <input type="text" name="libelle" x-model="compNom" required
                                    placeholder="Compétence à maîtriser"
                                    class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all text-sm @error('libelle') border-rose-500 @enderror">
-                            @error('libelle') <p class="text-[10px] text-rose-500 mt-1 font-bold">{{ $message }}</p> @enderror
+                            @error('libelle')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                     </div>
                     <div>
@@ -646,6 +713,14 @@
                         <textarea name="description" rows="2" x-model="compDesc"
                                   placeholder="Description de la compétence..."
                                   class="w-full bg-slate-50 border-2 border-transparent rounded-lg py-3 px-4 font-bold text-slate-800 focus:bg-white focus:border-emerald-400 focus:ring-0 transition-all text-sm resize-none"></textarea>
+                        @error('description')
+                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <button type="submit" 
                             class="w-full py-3 bg-emerald-500 text-white rounded-lg font-bold text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95 shadow-emerald-500/10 hover:bg-emerald-600"

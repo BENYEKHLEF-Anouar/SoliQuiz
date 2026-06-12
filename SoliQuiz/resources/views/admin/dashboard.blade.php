@@ -345,22 +345,22 @@
 
                     <div class="space-y-3 relative z-10">
                         @foreach($resetRequests->take(3) as $req)
-                            <div class="p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-4 transition-all duration-200 hover:-translate-y-0.5">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="size-9 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center font-black text-xs text-rose-600 shrink-0">
+                            <div class="p-3 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-3 transition-all duration-200 hover:-translate-y-0.5">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div class="size-8.5 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center font-black text-[10px] text-rose-600 shrink-0">
                                         {{ substr($req->user->prenom, 0, 1) }}{{ substr($req->user->nom, 0, 1) }}
                                     </div>
                                     <div class="min-w-0">
-                                        <p class="font-black text-xs text-slate-900 truncate leading-none mb-1.5 uppercase">{{ $req->user->nom_complet }}</p>
+                                        <p class="font-black text-[11px] text-slate-900 truncate leading-none mb-1.5 uppercase">{{ $req->user->nom_complet }}</p>
                                         <p class="text-[9px] font-bold text-slate-400 truncate leading-none uppercase tracking-wider mb-2">{{ $req->user->email }}</p>
-                                        <span class="inline-block px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200/50 text-[8px] font-black uppercase text-slate-500 tracking-widest leading-none">
+                                        <span class="inline-block px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200/50 text-[7px] font-black uppercase text-slate-500 tracking-wider leading-none">
                                             {{ $req->user->type_profil }}
                                         </span>
                                     </div>
                                 </div>
                                 <form action="{{ route('admin.password.reset.resolve', $req->id) }}" method="POST" class="m-0 shrink-0">
                                     @csrf
-                                    <button type="submit" class="h-9 px-4 bg-slate-900 text-white rounded-xl font-black text-[9px] uppercase tracking-[0.15em] hover:bg-rose-500 active:scale-95 transition-all duration-300 whitespace-nowrap">
+                                    <button type="submit" class="h-8 px-3.5 bg-slate-900 text-white rounded-xl font-black text-[8px] uppercase tracking-wider hover:bg-rose-500 active:scale-95 transition-all duration-300 whitespace-nowrap">
                                         Initialiser
                                     </button>
                                 </form>
@@ -407,22 +407,22 @@
                                 <div class="flex-1 overflow-y-auto custom-scrollbar">
                                     <div class="px-8 py-6 space-y-3">
                                         @foreach($resetRequests as $req)
-                                            <div class="p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-4 transition-all duration-200">
-                                                <div class="flex items-center gap-3 min-w-0">
-                                                    <div class="size-9 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center font-black text-xs text-rose-600 shrink-0">
+                                            <div class="p-3 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-3 transition-all duration-200">
+                                                <div class="flex items-center gap-2.5 min-w-0">
+                                                    <div class="size-8.5 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center font-black text-[10px] text-rose-600 shrink-0">
                                                         {{ substr($req->user->prenom, 0, 1) }}{{ substr($req->user->nom, 0, 1) }}
                                                     </div>
                                                     <div class="min-w-0">
-                                                        <p class="font-black text-xs text-slate-900 truncate leading-none mb-1.5 uppercase">{{ $req->user->nom_complet }}</p>
+                                                        <p class="font-black text-[11px] text-slate-900 truncate leading-none mb-1.5 uppercase">{{ $req->user->nom_complet }}</p>
                                                         <p class="text-[9px] font-bold text-slate-400 truncate leading-none uppercase tracking-wider mb-2">{{ $req->user->email }}</p>
-                                                        <span class="inline-block px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200/50 text-[8px] font-black uppercase text-slate-500 tracking-widest leading-none">
+                                                        <span class="inline-block px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200/50 text-[7px] font-black uppercase text-slate-500 tracking-wider leading-none">
                                                             {{ $req->user->type_profil }}
                                                         </span>
                                                     </div>
                                                 </div>
                                                 <form action="{{ route('admin.password.reset.resolve', $req->id) }}" method="POST" class="m-0 shrink-0">
                                                     @csrf
-                                                    <button type="submit" class="h-9 px-4.5 bg-slate-900 text-white rounded-xl font-black text-[9px] uppercase tracking-[0.15em] hover:bg-rose-500 active:scale-95 transition-all duration-300 whitespace-nowrap">
+                                                    <button type="submit" class="h-8 px-3.5 bg-slate-900 text-white rounded-xl font-black text-[8px] uppercase tracking-wider hover:bg-rose-500 active:scale-95 transition-all duration-300 whitespace-nowrap">
                                                         Initialiser
                                                     </button>
                                                 </form>
@@ -629,6 +629,12 @@
                 },
                 scales: {
                     x: {
+                        title: {
+                            display: true,
+                            text: 'Cohortes',
+                            color: '#64748b',
+                            font: { family: 'Inter, system-ui, sans-serif', size: 10, weight: 'bold' }
+                        },
                         grid: {
                             display: false
                         },
@@ -647,6 +653,12 @@
                         position: 'left',
                         max: 20,
                         min: 0,
+                        title: {
+                            display: true,
+                            text: 'Moyenne générale (/20)',
+                            color: '#64748b',
+                            font: { family: 'Inter, system-ui, sans-serif', size: 10, weight: 'bold' }
+                        },
                         grid: {
                             color: '#f1f5f9'
                         },
@@ -664,6 +676,12 @@
                         position: 'right',
                         max: 100,
                         min: 0,
+                        title: {
+                            display: true,
+                            text: 'Taux de réussite (%)',
+                            color: '#64748b',
+                            font: { family: 'Inter, system-ui, sans-serif', size: 10, weight: 'bold' }
+                        },
                         grid: {
                             drawOnChartArea: false
                         },

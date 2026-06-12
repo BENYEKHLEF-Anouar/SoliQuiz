@@ -34,26 +34,32 @@ export default () => ({
             const successRates = this.classes.map(c => c.taux_reussite);
 
             this.globalChartInstance = new Chart(ctxGlobal, {
-                type: 'bar',
                 data: {
                     labels: classNames,
                     datasets: [
                         {
+                            type: 'bar',
                             label: 'Moyenne (/20)',
                             data: averages,
-                            backgroundColor: 'rgba(79, 70, 229, 0.85)',
+                            backgroundColor: 'rgba(79, 70, 229, 0.15)',
                             borderColor: '#4f46e5',
-                            borderWidth: 1.5,
-                            borderRadius: 6,
+                            borderWidth: 2,
+                            borderRadius: 8,
                             yAxisID: 'y'
                         },
                         {
+                            type: 'line',
                             label: 'Taux de réussite (%)',
                             data: successRates,
-                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
                             borderColor: '#10b981',
-                            borderWidth: 1.5,
-                            borderRadius: 6,
+                            backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            tension: 0.4,
+                            fill: true,
                             yAxisID: 'y1'
                         }
                     ]

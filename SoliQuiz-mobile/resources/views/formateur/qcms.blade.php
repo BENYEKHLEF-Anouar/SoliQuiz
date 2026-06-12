@@ -175,7 +175,7 @@
         </div>
     </main>
 
-    <!-- FAB Button -->
+    <!-- FAB Button (Hidden)
     <button type="button" data-hs-overlay="#hs-create-qcm-modal"
         class="fixed bottom-28 right-6 w-16 h-16 bg-primary-500 text-white rounded-[2rem] shadow-2xl shadow-primary-500/40 flex items-center justify-center hover:bg-primary-600 active:scale-90 transition-all z-40 outline-none">
         <svg class="shrink-0 size-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -184,6 +184,7 @@
             <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
     </button>
+    -->
 
     <!-- Create Modal -->
     <div id="hs-create-qcm-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1">

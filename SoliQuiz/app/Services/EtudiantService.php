@@ -313,20 +313,33 @@ class EtudiantService
 
     public function getApiEvaluations(User $student): array
     {
-        $attemptedQcmIds = $student->tentatives()->pluck('qcm_id');
-        $pendingQcms = QCM::where('statut', 'public')
-            ->whereNotIn('id', $attemptedQcmIds)
-            ->get();
+        $query = \App\Models\Seance::with(['unitesApprentissage', 'user'])
+            ->orderBy('date_debut', 'asc');
+
+        if ($student->classe_id) {
+            $classe = \App\Models\Classe::find($student->classe_id);
+            if ($classe && $classe->formateur_id) {
+                $query->where('user_id', $classe->formateur_id);
+            }
+        }
+
+        $seances = $query->get();
+        $evaluations = [];
+
+        foreach ($seances as $seance) {
+            foreach ($seance->unitesApprentissage as $ua) {
+                $evaluations[] = [
+                    'id' => $ua->id,
+                    'title' => $ua->nom,
+                    'subject' => $ua->code,
+                    'formateur' => $seance->user ? $seance->user->nom_complet : 'SoliQuiz',
+                    'dueDate' => $seance->date_debut ? $seance->date_debut->format('d M Y') : null,
+                    'urgent' => false,
+                ];
+            }
+        }
             
-        return $pendingQcms->map(function ($qcm) {
-            return [
-                'id' => $qcm->id,
-                'title' => $qcm->titre,
-                'subject' => optional($qcm->uniteApprentissage)->nom ?? 'General',
-                'dueDate' => null,
-                'urgent' => false,
-            ];
-        })->toArray();
+        return $evaluations;
     }
 
     public function getApiHistory(User $student): array

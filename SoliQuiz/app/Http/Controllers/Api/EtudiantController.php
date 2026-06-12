@@ -29,6 +29,8 @@ class EtudiantController extends Controller
             'nom' => $student->nom,
             'prenom' => $student->prenom,
             'email' => $student->email,
+            'code_etudiant' => $student->code_etudiant,
+            'derniere_connexion' => $student->derniere_connexion?->toDateTimeString(),
             'avatarUrl' => null, // Placeholder
             'role' => 'Apprenant',
             'cohort' => $student->classe->nom ?? 'N/A',
@@ -110,6 +112,8 @@ class EtudiantController extends Controller
                 'nom' => $student->nom,
                 'prenom' => $student->prenom,
                 'email' => $student->email,
+                'code_etudiant' => $student->code_etudiant,
+                'derniere_connexion' => $student->derniere_connexion?->toDateTimeString(),
                 'avatarUrl' => null,
                 'role' => 'Apprenant',
                 'cohort' => $student->classe->nom ?? 'N/A',

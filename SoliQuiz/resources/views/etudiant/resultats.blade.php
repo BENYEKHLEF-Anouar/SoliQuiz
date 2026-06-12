@@ -13,6 +13,8 @@
                 $backUrl = route('etudiant.bibliotheque');
                 if (str_contains($referer, 'progression')) {
                     $backUrl = route('etudiant.progression');
+                } elseif (str_contains($referer, 'dashboard')) {
+                    $backUrl = route('etudiant.dashboard');
                 }
             @endphp
             <a href="{{ $backUrl }}" 
@@ -301,12 +303,12 @@
 
         <!-- CTA footer results -->
         <footer class="mt-16 flex flex-col md:flex-row items-center justify-center gap-4">
-            <a href="{{ route('etudiant.dashboard') }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-slate-100 text-slate-700 font-black rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-[0.2em] text-xs group active:scale-[0.98]">
+            <a href="{{ route('etudiant.bibliotheque') }}" class="w-full md:w-auto inline-flex items-center justify-center gap-x-2 px-8 py-4 h-16 bg-slate-100 text-slate-700 font-black rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-[0.2em] text-xs group active:scale-[0.98]">
                 <svg class="size-4 transition-transform group-hover:-translate-x-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m12 19-7-7 7-7" />
                     <path d="M19 12H5" />
                 </svg>
-                Tableau de bord
+                Bibliothèque
             </a>
 
             <!-- @if(!$isSuccess)

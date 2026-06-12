@@ -297,6 +297,12 @@ export default function resultsFilter(config) {
                             position: 'left',
                             min: 0,
                             max: 20,
+                            title: {
+                                display: true,
+                                text: 'Note (/20)',
+                                color: '#64748b',
+                                font: { family: "'Plus Jakarta Sans', system-ui, sans-serif", size: 10, weight: 'bold' }
+                            },
                             ticks: {
                                 font: {
                                     family: "'Plus Jakarta Sans', system-ui, sans-serif",
@@ -314,6 +320,12 @@ export default function resultsFilter(config) {
                             position: 'right',
                             min: 0,
                             max: 100,
+                            title: {
+                                display: true,
+                                text: 'Taux de réussite (%)',
+                                color: '#64748b',
+                                font: { family: "'Plus Jakarta Sans', system-ui, sans-serif", size: 10, weight: 'bold' }
+                            },
                             grid: {
                                 drawOnChartArea: false
                             },
@@ -326,6 +338,12 @@ export default function resultsFilter(config) {
                             }
                         },
                         x: {
+                            title: {
+                                display: true,
+                                text: 'Évaluations (QCM)',
+                                color: '#64748b',
+                                font: { family: "'Plus Jakarta Sans', system-ui, sans-serif", size: 10, weight: 'bold' }
+                            },
                             grid: {
                                 display: false
                             },

@@ -23,7 +23,7 @@
 
         <!-- Action Form -->
         <form id="qcmForm" action="{{ route('formateur.qcm.store') }}" method="POST" @submit.prevent="handleSubmit"
-            class="flex flex-col lg:flex-row gap-6 xl:gap-8 items-start">
+            class="flex flex-col lg:flex-row gap-6 xl:gap-8 items-start" novalidate>
             @csrf
 
             @if($errors->any() || session('error'))
@@ -60,7 +60,7 @@
             <div class="flex-1 w-full space-y-8">
                 <!-- AI Assistant Widget -->
                 <div 
-                    @click="$dispatch('open-modal', 'ai-generation')"
+                    @click="aiTopicError = ''; $dispatch('open-modal', 'ai-generation')"
                     class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6 relative overflow-hidden transition-all duration-500 cursor-pointer hover:border-primary-300 hover:shadow-md active:scale-[0.99] group/ai mb-6"
                 >
                     <!-- Shimmering neon light glow in the corner -->
@@ -106,7 +106,13 @@
                             <div class="space-y-6">
                                 <div class="space-y-3">
                                     <label class="text-label ml-1">Thème ou Compétence Ciblée</label>
-                                    <input x-model="aiTopic" type="text" placeholder="Ex: Héritage en PHP, Flexbox CSS..." class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 text-xs font-bold text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-slate-900 transition-all outline-none uppercase">
+                                    <input x-model="aiTopic" @input="aiTopicError = ''" type="text" placeholder="Ex: Héritage en PHP, Flexbox CSS..." :class="aiTopicError ? 'border-rose-500 bg-white' : 'border-transparent bg-slate-50/50'" class="w-full border-2 rounded-2xl py-3 px-4 text-xs font-bold text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-slate-900 transition-all outline-none uppercase">
+                                    <p x-show="aiTopicError" class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center" x-cloak>
+                                        <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
+                                        <span x-text="aiTopicError"></span>
+                                    </p>
                                 </div>
                                 
                                 <div class="space-y-3">
@@ -137,7 +143,7 @@
                             </div>
 
                             <x-slot:footer>
-                                <button @click="$dispatch('close-modal', 'ai-generation')" type="button" class="px-5 py-3 border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-50 transition-all">
+                                <button @click="aiTopicError = ''; $dispatch('close-modal', 'ai-generation')" type="button" class="px-5 py-3 border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-50 transition-all">
                                     Annuler
                                 </button>
                                 <button @click="generateQuestionsWithAI()" :disabled="aiLoading" type="button" class="px-6 py-3 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 disabled:opacity-50 flex items-center justify-center min-w-[120px] active:scale-98 transition-all">
@@ -226,6 +232,14 @@
                         <input type="text" name="titre" required x-model="titre"
                             class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 text-xl font-black text-slate-900 placeholder:text-slate-200 focus:bg-white focus:border-primary-500 transition-all outline-none uppercase"
                             placeholder="Saisir le titre du QCM...">
+                        @error('titre')
+                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                 </div>
 
@@ -482,6 +496,14 @@
             ['value' => 'public', 'label' => 'Public'],
             ['value' => 'termine', 'label' => 'Terminé'],
         ]" />
+                                @error('statut')
+                                    <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                        <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                @enderror
                             </div>
 
                             <div class="space-y-3">
@@ -489,6 +511,14 @@
                                 <x-ui.select name="unite_apprentissage_id" x-model="selectedUniteId" required
                                     placeholder="Choisir l'UA" jsOptions="allUnites.map(u => ({value: u.id, label: u.nom}))"
                                     class="!bg-slate-50/50 !border-transparent !rounded-2xl !py-3 !px-5 w-full" />
+                                @error('unite_apprentissage_id')
+                                    <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                        <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                @enderror
                             </div>
 
                             <div class="space-y-3">
@@ -497,6 +527,14 @@
                                     placeholder="Choisir une classe"
                                     jsOptions="allClasses.map(c => ({value: c.id, label: c.nom}))"
                                     class="!bg-slate-50/50 !border-transparent !rounded-2xl !py-3 !px-5 w-full" />
+                                @error('classe_id')
+                                    <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                        <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
+                                        {{ $message }}
+                                    </p>
+                                @enderror
                             </div>
 
                             <div class="space-y-4">
@@ -524,11 +562,27 @@
                                         <input type="hidden" name="duree_minutes" :value="hasTimer ? duree_minutes : 0">
                                         <input type="number" x-model="duree_minutes" :disabled="!hasTimer"
                                             class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 disabled:opacity-50 transition-all outline-none">
+                                        @error('duree_minutes')
+                                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                                </svg>
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
                                     </div>
                                     <div class="space-y-3">
                                         <label class="text-label ml-1">Réussite (pts)</label>
                                         <input type="number" name="score_reussite" x-model="scoreReussite" required step="0.5"
                                             class="w-full bg-slate-50/50 border-2 border-transparent rounded-2xl py-3 px-4 font-black text-slate-900 text-center text-lg focus:bg-white focus:border-primary-500 transition-all outline-none">
+                                        @error('score_reussite')
+                                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                                </svg>
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>

@@ -70,7 +70,7 @@
                 <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Espace d'Authentification Sécurisé</p>
             </div>
 
-            <form method="POST" action="{{ route('login') }}" class="space-y-8">
+            <form method="POST" action="{{ route('login') }}" class="space-y-8" novalidate>
                 @csrf
                 
                 <div class="space-y-3">

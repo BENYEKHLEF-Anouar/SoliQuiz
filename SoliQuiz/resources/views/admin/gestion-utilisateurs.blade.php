@@ -200,6 +200,7 @@
                         <th class="ps-6 pe-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Profil Utilisateur</th>
                         <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Autorisation</th>
                         <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Cohorte / Classe</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Dernière Connexion</th>
                         <th class="ps-4 pe-6 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Controle</th>
                     </tr>
                 </thead>
@@ -221,6 +222,12 @@
                                     <div class="flex flex-col min-w-0">
                                         <span class="text-xs font-black text-slate-900 group-hover:text-primary-600 transition-colors truncate" x-text="user.prenom + ' ' + user.nom"></span>
                                         <span class="text-[10px] font-bold text-slate-400 font-mono truncate" x-text="user.email"></span>
+                                        <template x-if="user.type_profil === 'etudiant' && user.code_etudiant">
+                                            <span class="text-[9px] font-black text-primary-500 uppercase tracking-widest mt-0.5" x-text="'Code: ' + user.code_etudiant"></span>
+                                        </template>
+                                        <template x-if="user.type_profil === 'formateur' && user.matricule">
+                                            <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest mt-0.5" x-text="'Matricule: ' + user.matricule"></span>
+                                        </template>
                                     </div>
                                 </div>
                             </td>
@@ -265,6 +272,9 @@
                                 <template x-if="user.type_profil === 'admin'">
                                     <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Superviseur Global</span>
                                 </template>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs font-semibold text-slate-500" x-text="user.derniere_connexion ? new Date(user.derniere_connexion).toLocaleString('fr-FR', {dateStyle: 'short', timeStyle: 'short'}) : 'Jamais'"></span>
                             </td>
                             <td class="ps-4 pe-6 py-3 text-right">
                                 <div class="flex justify-end items-center gap-2" x-data="{ options: false }">
@@ -352,18 +362,34 @@
         <div>
             <!-- Modal: Add User -->
             <x-ui.modal name="add-user-modal" title="Nouvel Agent">
-                <form action="{{ route('admin.utilisateurs.store') }}" method="POST" class="space-y-6 pb-32" x-data="{ role: 'Apprenant' }" x-on:submit="submitting = true">
+                <form action="{{ route('admin.utilisateurs.store') }}" method="POST" class="space-y-6 pb-32" x-data="{ role: 'Apprenant' }" x-on:submit="submitting = true" novalidate>
                     @csrf
                     <div class="grid grid-cols-2 gap-5">
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Prénom</label>
                             <input type="text" name="prenom" required placeholder="Prénom"
                                    class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('prenom')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Nom de famille</label>
                             <input type="text" name="nom" required placeholder="Nom"
                                    class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('nom')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                     </div>
 
@@ -371,6 +397,14 @@
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Courriel Institutionnel</label>
                         <input type="email" name="email" required placeholder="adresse@soliquiz.fr"
                                class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                        @error('email')
+                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
 
                     <div class="space-y-2" x-data="{ showPw: false }">
@@ -387,6 +421,14 @@
                                 </svg>
                             </button>
                         </div>
+                        @error('password')
+                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
 
                     <div class="grid grid-cols-2 gap-5">
@@ -403,6 +445,14 @@
                                     ['value' => 'Administrateur', 'label' => 'Administrateur'],
                                 ]"
                             />
+                            @error('role')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                         
                         <div class="space-y-2" x-show="role === 'Apprenant' || role === 'Formateur'" x-transition>
@@ -412,6 +462,43 @@
                                 placeholder="Indépendant"
                                 :options="array_merge([['value' => '', 'label' => 'Indépendant']], \App\Models\Classe::all()->map(fn($c) => ['value' => $c->id, 'label' => $c->nom])->toArray())"
                             />
+                            @error('classe_id')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-5" x-show="role === 'Apprenant' || role === 'Formateur'" x-transition>
+                        <div class="space-y-2" x-show="role === 'Formateur'" x-transition>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Matricule</label>
+                            <input type="text" name="matricule" placeholder="F-2026-001" :required="role === 'Formateur'"
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('matricule')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                        <div class="space-y-2" x-show="role === 'Apprenant'" x-transition>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Code Étudiant</label>
+                            <input type="text" name="code_etudiant" placeholder="E-2026-999" :required="role === 'Apprenant'"
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('code_etudiant')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                     </div>
 
@@ -424,7 +511,7 @@
 
             <!-- Modal: Edit User -->
             <x-ui.modal name="edit-user-modal" title="Mutation Profil">
-                <form x-bind:action="`{{ url('/admin/utilisateurs') }}/${editUser.id}`" method="POST" class="space-y-6 pb-32" x-data="{ submitting: false }" x-on:submit="submitting = true">
+                <form x-bind:action="`{{ url('/admin/utilisateurs') }}/${editUser.id}`" method="POST" class="space-y-6 pb-32" x-data="{ submitting: false }" x-on:submit="submitting = true" novalidate>
                     @csrf
                     @method('PUT')
                     
@@ -433,11 +520,27 @@
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Prénom</label>
                             <input type="text" name="prenom" x-model="editUser.prenom" required
                                    class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('prenom')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Nom</label>
                             <input type="text" name="nom" x-model="editUser.nom" required
                                    class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('nom')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                     </div>
 
@@ -445,6 +548,14 @@
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Identifiant Mail</label>
                         <input type="email" name="email" x-model="editUser.email" required
                                class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                        @error('email')
+                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
 
                     <div class="space-y-2" x-data="{ showPw: false }">
@@ -461,6 +572,14 @@
                                 </svg>
                             </button>
                         </div>
+                        @error('password')
+                            <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
 
                     <div class="grid grid-cols-2 gap-5">
@@ -476,6 +595,14 @@
                                     ['value' => 'Administrateur', 'label' => 'Administrateur'],
                                 ]"
                             />
+                            @error('role')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                         <div class="space-y-2" x-show="editUserRole === 'Apprenant' || editUserRole === 'Formateur'" x-transition>
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Mutation Cohorte</label>
@@ -485,6 +612,43 @@
                                 placeholder="Indépendant"
                                 :options="array_merge([['value' => '', 'label' => 'Indépendant']], \App\Models\Classe::all()->map(fn($c) => ['value' => $c->id, 'label' => $c->nom])->toArray())"
                             />
+                            @error('classe_id')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-5" x-show="editUserRole === 'Apprenant' || editUserRole === 'Formateur'" x-transition>
+                        <div class="space-y-2" x-show="editUserRole === 'Formateur'" x-transition>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Matricule</label>
+                            <input type="text" name="matricule" x-model="editUser.matricule" placeholder="F-2026-001" :required="editUserRole === 'Formateur'"
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('matricule')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                        <div class="space-y-2" x-show="editUserRole === 'Apprenant'" x-transition>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Code Étudiant</label>
+                            <input type="text" name="code_etudiant" x-model="editUser.code_etudiant" placeholder="E-2026-999" :required="editUserRole === 'Apprenant'"
+                                   class="w-full bg-slate-50 border-transparent rounded-3xl py-4 px-6 font-bold text-slate-900 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                            @error('code_etudiant')
+                                <p class="text-[9px] font-black text-rose-500 mt-2 ml-2 uppercase tracking-widest flex items-center">
+                                    <svg class="size-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                     </div>
 

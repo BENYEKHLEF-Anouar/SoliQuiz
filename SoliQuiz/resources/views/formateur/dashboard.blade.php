@@ -344,6 +344,12 @@
                 },
                 scales: {
                     x: {
+                        title: {
+                            display: true,
+                            text: 'Cohortes',
+                            color: '#64748b',
+                            font: { family: 'Inter, system-ui, sans-serif', size: 10, weight: 'bold' }
+                        },
                         grid: {
                             display: false
                         },
@@ -362,6 +368,12 @@
                         position: 'left',
                         max: 20,
                         min: 0,
+                        title: {
+                            display: true,
+                            text: 'Moyenne générale (/20)',
+                            color: '#64748b',
+                            font: { family: 'Inter, system-ui, sans-serif', size: 10, weight: 'bold' }
+                        },
                         grid: {
                             color: '#f1f5f9'
                         },
@@ -379,6 +391,12 @@
                         position: 'right',
                         max: 100,
                         min: 0,
+                        title: {
+                            display: true,
+                            text: 'Taux de réussite (%)',
+                            color: '#64748b',
+                            font: { family: 'Inter, system-ui, sans-serif', size: 10, weight: 'bold' }
+                        },
                         grid: {
                             drawOnChartArea: false
                         },

@@ -21,6 +21,8 @@ class AuthService
             ]);
         }
 
+        $user->update(['derniere_connexion' => now()]);
+
         $token = $user->createToken($deviceName)->plainTextToken;
 
         return [
