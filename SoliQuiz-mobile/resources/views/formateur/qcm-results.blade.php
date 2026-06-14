@@ -68,8 +68,8 @@
                         </svg>
                     </button>
                     <!-- Dropdown Menu -->
-                    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
-                        class="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl p-2 z-50">
+                    <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
+                        class="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl p-2 z-50" style="display: none;">
                         <button @click="scoreFilter = 'all'; open = false; applyFilters()"
                             class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors"
                             :class="scoreFilter === 'all' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'">
@@ -106,8 +106,8 @@
                         </svg>
                     </button>
                     <!-- Dropdown Menu -->
-                    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
-                        class="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl p-2 z-50">
+                    <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
+                        class="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl p-2 z-50" style="display: none;">
                         <button @click="sortBy = 'score'; open = false; applyFilters()"
                             class="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-bold transition-colors"
                             :class="sortBy === 'score' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'">
@@ -187,13 +187,10 @@
 
                     <!-- Score Badge -->
                     <div class="text-right ml-3">
-                        <div class="px-3 py-1.5 rounded-xl text-sm font-black tracking-tight border shadow-sm"
+                        <div class="px-3 py-1.5 rounded-xl text-sm font-black tracking-tight border shadow-sm whitespace-nowrap"
                             :class="getScoreBadgeClass(res)">
-                            <span x-text="getPercentage(res)"></span>%
-                        </div>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tight mt-1">
                             <span x-text="res.score ?? 0"></span>/<span x-text="res.maxScore || (res.totalQuestions * 2) || 20"></span>
-                        </p>
+                        </div>
                     </div>
                 </div>
             </template>
