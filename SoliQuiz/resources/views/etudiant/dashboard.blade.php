@@ -400,13 +400,13 @@
                 {{-- Header --}}
                 <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50/50">
                     <div class="flex items-center gap-2">
-                        <div class="size-7 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
+                        <a href="{{ route('etudiant.leaderboard') }}" class="size-7 bg-amber-100 rounded-lg flex items-center justify-center shrink-0 hover:bg-amber-200 transition-colors" title="Accéder au classement complet">
                             <svg class="size-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path d="M8 21h8m-4-4v4M5 3h14l-1.5 9a5 5 0 01-4.97 4H11.47A5 5 0 016.5 12L5 3z"/>
                             </svg>
-                        </div>
+                        </a>
                         <div class="min-w-0">
-                            <span class="text-xs font-black uppercase tracking-widest text-slate-900 block">Classement</span>
+                            <a href="{{ route('etudiant.leaderboard') }}" class="text-xs font-black uppercase tracking-widest text-slate-900 block hover:text-primary-600 transition-colors">Classement ↗</a>
                             <p class="text-[11px] text-slate-400 font-bold truncate max-w-[140px] mt-0.5" x-text="item.titre"></p>
                         </div>
                     </div>
@@ -431,8 +431,8 @@
                     <template x-if="item.my_position !== null">
                         <div class="flex flex-col items-center">
                             <div class="inline-flex items-center justify-center size-12 bg-indigo-50 text-indigo-600 rounded-full mb-3 shadow-sm border border-indigo-100/50">
-                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"/>
                                 </svg>
                             </div>
                             <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Votre Rang</span>
@@ -601,6 +601,19 @@
                                         Aucun résultat disponible pour ce QCM.
                                     </div>
                                 </template>
+                            </div>
+
+                            {{-- Footer with link to full leaderboard --}}
+                            <div class="px-8 py-5 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+                                <a :href="'{{ route('etudiant.leaderboard') }}?qcm_id=' + item.qcm_id" class="text-xs font-black uppercase tracking-wider text-primary-600 hover:text-primary-700 flex items-center gap-1.5 transition-colors">
+                                    Classement Complet
+                                    <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <path d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                                <button @click="open = false" class="h-10 px-5 border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all outline-none">
+                                    Fermer
+                                </button>
                             </div>
                         </div>
                     </div>

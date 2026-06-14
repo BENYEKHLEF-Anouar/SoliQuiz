@@ -58,6 +58,11 @@
                         placeholder="Rechercher une évaluation, un module ou un auteur..."
                         class="w-full h-[52px] pl-11 pr-11 bg-white border-2 border-slate-100 rounded-2xl font-bold text-slate-900 text-sm placeholder:text-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all shadow-sm group-hover:shadow-md outline-none">
                     
+                    <!-- Clear Button -->
+                    <button type="button" x-show="search && !loading" @click="search = ''; applyFilters()" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors" style="display: none;">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+
                     <!-- Live Search Loader -->
                     <div x-show="loading" 
                          class="absolute right-4 top-1/2 -translate-y-1/2"
@@ -141,6 +146,13 @@
                         </template>
                     </div>
                 </div>
+
+                <!-- Clear Filters Button -->
+                <button type="button" x-show="search || statut || formateurId" @click="search = ''; statut = ''; formateurId = ''; applyFilters()" 
+                        class="h-[52px] px-5 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center hover:bg-rose-100 transition-all shadow-sm shrink-0"
+                        style="display: none;">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
 
             <!-- View Mode Switcher -->
@@ -324,7 +336,7 @@
             </div>
 
             <!-- Table View Mode -->
-            <div x-show="viewMode === 'table'" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-visible" x-cloak
+            <div x-show="viewMode === 'table' && qcms.length > 0" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-visible" x-cloak
                 :class="loading ? 'opacity-50 pointer-events-none transition-opacity duration-300' : 'transition-opacity duration-300'">
                 <!-- Table Header -->
                 <div class="grid grid-cols-12 gap-3 px-5 py-3 bg-slate-50 rounded-t-2xl border-b border-slate-100 text-[8px] font-black text-slate-400 uppercase tracking-widest">

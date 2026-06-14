@@ -21,11 +21,40 @@ export default function qcmForm(timeRemainingSeconds, initialAnswers = {}, confi
             });
 
             // Warn only if saving is in progress
-            window.addEventListener('beforeunload', (e) => {
+            window.onbeforeunload = (e) => {
                 if (this.isSaving) {
                     e.preventDefault();
-                    e.returnValue = '';
+                    return '';
                 }
+            };
+
+            // Anti-copy measures
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('copy', e => e.preventDefault());
+            document.addEventListener('cut', e => e.preventDefault());
+            document.addEventListener('keydown', (e) => {
+                if (
+                    (e.ctrlKey && ['c', 'x', 'u'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')
+                ) {
+                    e.preventDefault();
+                }
+            });
+
+            // Prevent PrintScreen key capture & clear clipboard
+            document.addEventListener('keyup', (e) => {
+                if (e.key === 'PrintScreen') {
+                    navigator.clipboard.writeText('');
+                }
+            });
+
+            // Blur page content when losing focus
+            window.addEventListener('blur', () => {
+                document.body.classList.add('blur-md', 'select-none');
+            });
+            window.addEventListener('focus', () => {
+                document.body.classList.remove('blur-md');
             });
         },
 
@@ -136,9 +165,27 @@ export default function qcmForm(timeRemainingSeconds, initialAnswers = {}, confi
 
         submitForm() {
             if (this.answeredCount < this.totalQuestions) {
-                this.$dispatch('open-modal', 'incomplete-warning');
+                this.$dispatch('confirm', {
+                    title: 'Évaluation incomplète',
+                    message: 'Vous n\'avez pas répondu à toutes les questions. Soumettre quand même ?',
+                    confirmText: 'Terminer',
+                    cancelText: 'Continuer',
+                    type: 'danger',
+                    onConfirm: () => {
+                        this.finalSubmit();
+                    }
+                });
             } else {
-                this.finalSubmit();
+                this.$dispatch('confirm', {
+                    title: 'Soumettre le QCM ?',
+                    message: 'Êtes-vous sûr de vouloir soumettre vos réponses et terminer cette évaluation ?',
+                    confirmText: 'Terminer',
+                    cancelText: 'Annuler',
+                    type: 'warning',
+                    onConfirm: () => {
+                        this.finalSubmit();
+                    }
+                });
             }
         },
 

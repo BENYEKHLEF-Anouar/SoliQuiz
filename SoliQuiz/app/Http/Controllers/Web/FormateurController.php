@@ -23,6 +23,7 @@ class FormateurController extends Controller
     private \App\Services\DashboardService $dashboardService;
     private ResultatService $resultatService;
     private SeanceService $seanceService;
+    private \App\Services\LeaderboardService $leaderboardService;
 
     private function requireClasseForFormateur(?int $classeId): void
     {
@@ -72,13 +73,15 @@ class FormateurController extends Controller
         ClasseService $classeService,
         \App\Services\DashboardService $dashboardService,
         ResultatService $resultatService,
-        SeanceService $seanceService
+        SeanceService $seanceService,
+        \App\Services\LeaderboardService $leaderboardService
     ) {
         $this->qcmService = $qcmService;
         $this->classeService = $classeService;
         $this->dashboardService = $dashboardService;
         $this->resultatService = $resultatService;
         $this->seanceService = $seanceService;
+        $this->leaderboardService = $leaderboardService;
     }
 
     /**
@@ -90,16 +93,29 @@ class FormateurController extends Controller
         $classes = $this->dashboardService->getTrainerClassesMetrics($formateur);
         $metrics = $this->dashboardService->getTrainerKpis($formateur);
 
-        return view('formateur.dashboard', compact('metrics', 'classes'));
+        // Récupérer les podiums pour les QCMs du formateur
+        $qcmList = QCM::where('formateur_id', $formateur->id)
+            ->where('statut', 'public')
+            ->latest()
+            ->limit(5)
+            ->get();
+        $cohortPodiums = $this->leaderboardService->getPodiumsForQcms($qcmList);
+
+        return view('formateur.dashboard', compact('metrics', 'classes', 'cohortPodiums'));
     }
+
 
     /**
      * Gestion Pédagogique (Sessions, UA, Compétences)
      */
-    public function pedagogie()
+    public function pedagogie(Request $request)
     {
-        $seances = $this->seanceService->getSeancesWithRelations(Auth::user()->isAdmin() ? null : Auth::id());
-        return view('formateur.pedagogie', compact('seances'));
+        $search = $request->input('search');
+        $seances = $this->seanceService->getSeancesWithRelations(
+            Auth::user()->isAdmin() ? null : Auth::id(),
+            $search
+        );
+        return view('formateur.pedagogie', compact('seances', 'search'));
     }
 
     public function storeSeance(Request $request)

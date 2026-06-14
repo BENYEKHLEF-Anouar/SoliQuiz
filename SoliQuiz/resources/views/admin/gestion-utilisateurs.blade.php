@@ -123,6 +123,11 @@
                    class="w-full bg-white border border-slate-100 rounded-2xl py-3 ps-14 pe-14 font-bold text-sm text-slate-900 placeholder:text-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 outline-none transition-all shadow-sm group-hover:shadow-md h-[52px]"
                    type="text" placeholder="Rechercher par nom, email...">
 
+            <!-- Clear Button -->
+            <button type="button" x-show="search && !loading" @click="search = ''; performSearch()" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors" style="display: none;">
+                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
             <!-- Live Search Loader -->
             <div x-show="loading" 
                  class="absolute right-5 top-1/2 -translate-y-1/2"
@@ -170,6 +175,13 @@
                 </button>
             </div>
         </div>
+
+        <!-- Clear Filters Button -->
+        <button type="button" x-show="search || role" @click="search = ''; role = ''; performSearch()" 
+                class="h-[52px] px-5 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center hover:bg-rose-100 transition-all shadow-sm shrink-0"
+                style="display: none;">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
     </div>
 
     <!-- Users List Wrapper -->

@@ -106,23 +106,38 @@
                    placeholder="Rechercher une évaluation..."
                    class="w-full h-14 bg-white border-2 border-slate-100 rounded-2xl pl-12 pr-14 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all shadow-xs group-hover:shadow-sm">
             
+            <!-- Clear Button -->
+            <button type="button" x-show="search && !loading" @click="search = ''; applyFilters()" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors" style="display: none;">
+                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
             <div x-show="loading" class="absolute right-5 top-1/2 -translate-y-1/2" style="display: none;">
                 <div class="size-4 border-2 border-primary-200 border-t-primary-500 rounded-full animate-spin"></div>
             </div>
         </div>
 
         <!-- UA Filter -->
-        <div x-data="{ open: false }" class="relative w-full md:w-64">
-            <button @click="open = !open" @click.away="open = false"
+        <div x-data="{ open: false, searchUa: '' }" class="relative w-full md:w-64" @click.away="open = false">
+            <button @click="open = !open"
                     class="w-full h-14 px-5 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-between text-sm font-bold text-slate-600 hover:border-primary-300 transition-all">
                 <span class="truncate pr-2" x-text="uaLabel"></span>
                 <svg class="size-4 text-slate-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
             </button>
-            <div x-show="open" style="display: none;" class="absolute top-full left-0 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 p-2 max-h-60 overflow-y-auto">
-                <button @click="uaId = ''; uaLabel = 'Toutes les unités'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-500 hover:bg-slate-50 rounded-lg">Toutes les unités</button>
-                @foreach($unites as $unite)
-                    <button @click="uaId = '{{ $unite->id }}'; uaLabel = '{{ $unite->nom }}'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-900 hover:bg-primary-50 hover:text-primary-600 rounded-lg">{{ $unite->nom }}</button>
-                @endforeach
+            <div x-show="open" style="display: none;" class="absolute top-full left-0 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 overflow-hidden">
+                <div class="p-2 border-b border-slate-100">
+                    <input type="text" x-model="searchUa" placeholder="Rechercher une UA..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-800 placeholder:text-slate-300 focus:bg-white focus:border-slate-400 focus:ring-0 outline-none transition-all">
+                </div>
+                <div class="p-2 max-h-60 overflow-y-auto">
+                    <button @click="uaId = ''; uaLabel = 'Toutes les unités'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-500 hover:bg-slate-50 rounded-lg">Toutes les unités</button>
+                    @foreach($unites as $unite)
+                        <button x-show="!searchUa || '{{ strtolower(addslashes($unite->nom)) }}'.includes(searchUa.toLowerCase())"
+                                @click="uaId = '{{ $unite->id }}'; uaLabel = '{{ addslashes($unite->nom) }}'; open = false; applyFilters()" 
+                                class="w-full px-4 py-2 text-left text-xs font-bold text-slate-900 hover:bg-primary-50 hover:text-primary-600 rounded-lg">
+                            {{ $unite->nom }}
+                        </button>
+                    @endforeach
+                </div>
             </div>
         </div>
 
@@ -140,6 +155,13 @@
                 <button @click="statut = 'a_faire'; statutLabel = 'À faire'; open = false; applyFilters()" class="w-full px-4 py-2 text-left text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg">À faire</button>
             </div>
         </div>
+
+        <!-- Clear Filters -->
+        <button type="button" x-show="search || uaId || statut" @click="search = ''; uaId = ''; uaLabel = 'Toutes les unités'; statut = ''; statutLabel = 'Tous les scores'; applyFilters()" 
+                class="h-14 px-5 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center hover:bg-rose-100 transition-all shadow-xs shrink-0"
+                style="display: none;">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
     </div>
 
     <!-- Dynamic List -->

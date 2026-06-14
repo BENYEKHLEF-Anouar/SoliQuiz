@@ -24,18 +24,42 @@
     <style>
         [x-cloak] { display: none !important; }
         .alpine-loading [x-show] { display: none !important; }
+        #global-preloader { display: none !important; }
+        .app-first-load #global-preloader { display: flex !important; }
     </style>
     <script>
+        if (!sessionStorage.getItem('app-loaded')) {
+            document.documentElement.classList.add('app-first-load');
+            sessionStorage.setItem('app-loaded', 'true');
+        }
         document.addEventListener('alpine:initialized', () => {
             document.documentElement.classList.remove('alpine-loading');
+            const preloader = document.getElementById('global-preloader');
+            if (preloader) {
+                preloader.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => preloader.remove(), 500);
+            }
         });
         setTimeout(() => {
             document.documentElement.classList.remove('alpine-loading');
+            const preloader = document.getElementById('global-preloader');
+            if (preloader) {
+                preloader.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => preloader.remove(), 500);
+            }
         }, 1500);
     </script>
 </head>
 
 <body class="@yield('body-class', 'font-sans antialiased text-slate-800 bg-slate-50 min-h-screen')">
+    <!-- Global Preloader -->
+    <div id="global-preloader" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-50 transition-opacity duration-500">
+        <div class="flex flex-col items-center gap-4">
+            <div class="size-12 border-4 border-slate-200 border-t-primary-500 rounded-full animate-spin shadow-sm"></div>
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] animate-pulse">SoliQuiz</p>
+        </div>
+    </div>
+
     @yield('body')
 
     <!-- Global UI Components -->

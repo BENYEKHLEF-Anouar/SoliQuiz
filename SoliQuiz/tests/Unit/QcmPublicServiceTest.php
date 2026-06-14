@@ -37,7 +37,7 @@ class QcmPublicServiceTest extends TestCase
         $qcm = QCM::where('statut', 'public')->first();
 
         // Récupérer le QCM masquer pour l'examen
-        $result = $this->service->getQcmPourPassation($qcm->id);
+        $result = $this->service->getQcmPourPassation($qcm->id, $qcm->classe_id);
 
         $this->assertEquals($qcm->id, $result->id);
         $this->assertNotNull($result->questions);

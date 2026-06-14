@@ -352,8 +352,8 @@
                 <input type="text" x-model="search" placeholder="Rechercher un QCM..."
                        class="w-full h-14 bg-white border-2 border-slate-100 rounded-2xl pl-12 pr-14 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-primary-500 outline-none transition-all shadow-xs group-hover:shadow-sm">
                 
-                <button x-show="search" @click="search = ''" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500">
-                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                <button type="button" x-show="search && !loading" @click="search = ''" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors" style="display: none;">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
         </div>

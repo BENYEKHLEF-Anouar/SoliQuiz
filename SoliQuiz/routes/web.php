@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     // Group: Admin Only
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function() {
         Route::get('/dashboard', [\App\Http\Controllers\Web\AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/leaderboard', [\App\Http\Controllers\Web\LeaderboardController::class, 'show'])->name('leaderboard');
         Route::post('/password-reset-requests/{id}/resolve', [\App\Http\Controllers\Web\AdminController::class, 'resolveResetRequest'])->name('password.reset.resolve');
         Route::get('/resultats', [\App\Http\Controllers\Web\AdminController::class, 'resultats'])->name('resultats');
         Route::get('/qcms', [\App\Http\Controllers\Web\AdminController::class, 'indexQcms'])->name('qcms');
@@ -70,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
     // Group: Formateur and Admin
     Route::middleware(['role:formateur,admin'])->prefix('formateur')->name('formateur.')->group(function() {
         Route::get('/dashboard', [\App\Http\Controllers\Web\FormateurController::class, 'dashboard'])->name('dashboard');
+        Route::get('/leaderboard', [\App\Http\Controllers\Web\LeaderboardController::class, 'show'])->name('leaderboard');
         Route::get('/bibliotheque', [\App\Http\Controllers\Web\FormateurController::class, 'bibliotheque'])->name('bibliotheque');
         Route::get('/bibliotheque/search', [\App\Http\Controllers\Web\FormateurController::class, 'searchBibliotheque'])->name('bibliotheque.search');
         Route::get('/qcm/create', [\App\Http\Controllers\Web\FormateurController::class, 'createQcm'])->name('qcm.create');
@@ -104,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
     // Group: Student Only
     Route::middleware(['role:etudiant'])->prefix('etudiant')->name('etudiant.')->group(function() {
         Route::get('/dashboard', [\App\Http\Controllers\Web\EtudiantController::class, 'dashboard'])->name('dashboard');
+        Route::get('/leaderboard', [\App\Http\Controllers\Web\LeaderboardController::class, 'show'])->name('leaderboard');
         Route::get('/progression', [\App\Http\Controllers\Web\EtudiantController::class, 'progression'])->name('progression');
         Route::get('/bibliotheque', [\App\Http\Controllers\Web\EtudiantController::class, 'bibliotheque'])->name('bibliotheque');
         Route::get('/bibliotheque/search', [\App\Http\Controllers\Web\EtudiantController::class, 'bibliothequeSearch'])->name('bibliotheque.search');

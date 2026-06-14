@@ -4,13 +4,23 @@
 
 @section('body-class', 'bg-slate-50 min-h-screen font-sans antialiased')
 
+@push('styles')
+<style>
+    @media print {
+        body {
+            display: none !important;
+        }
+    }
+</style>
+@endpush
+
 @section('body')
 
 <div x-data="qcmForm({{ $tempsRestant }}, {{ json_encode($initialAnswers) }}, {
     totalQuestions: {{ count($qcm->questions) }},
     saveUrl: '{{ route('etudiant.qcm.save', $qcm->id) }}',
     csrfToken: '{{ csrf_token() }}'
-})" class="min-h-screen flex flex-col">
+})" class="min-h-screen flex flex-col select-none">
     
     <!-- Sticky Header -->
     <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
@@ -212,26 +222,6 @@
             <button type="button" @click="finalSubmit()" class="w-full h-14 rounded-2xl bg-slate-900 text-white font-black text-xs uppercase tracking-widest hover:bg-primary-500 transition-all">
                 Voir mes résultats
             </button>
-        </div>
-    </x-ui.modal>
-
-    <!-- Incomplete Warning Modal -->
-    <x-ui.modal name="incomplete-warning" title="Attention" maxWidth="md">
-        <div class="text-center py-4">
-            <div class="size-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg class="size-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
-            </div>
-            <p class="text-slate-500 mb-8 font-medium">Vous n'avez pas répondu à toutes les questions.<br>Soumettre quand même ?</p>
-            <div class="flex gap-3">
-                <button type="button" @click="$dispatch('close-modal', 'incomplete-warning')" class="flex-1 h-14 rounded-2xl border-2 border-slate-100 font-bold text-slate-700 hover:bg-slate-50 transition-colors text-[10px] uppercase tracking-widest">
-                    Continuer
-                </button>
-                <button type="button" @click="finalSubmit()" class="flex-1 h-14 rounded-2xl bg-slate-900 text-white font-bold hover:bg-primary-500 transition-colors text-[10px] uppercase tracking-widest shadow-lg shadow-slate-900/10">
-                    Terminer
-                </button>
-            </div>
         </div>
     </x-ui.modal>
 </div>

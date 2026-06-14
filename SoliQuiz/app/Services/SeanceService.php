@@ -115,10 +115,24 @@ class SeanceService
     /**
      * Récupère les séances d'apprentissage avec leurs relations (UA, compétences, auteur).
      */
-    public function getSeancesWithRelations(?int $creatorFilter = null): Collection
+    public function getSeancesWithRelations(?int $creatorFilter = null, ?string $search = null): Collection
     {
         return Seance::with(['unitesApprentissage.competences', 'user'])
             ->when($creatorFilter, fn($q) => $q->where('user_id', $creatorFilter))
+            ->when($search, function($q) use ($search) {
+                $q->where(function($sub) use ($search) {
+                    $sub->where('nom', 'like', "%{$search}%")
+                        ->orWhereHas('unitesApprentissage', function($subUa) use ($search) {
+                            $subUa->where('nom', 'like', "%{$search}%")
+                                  ->orWhere('code', 'like', "%{$search}%")
+                                  ->orWhereHas('competences', function($subComp) use ($search) {
+                                      $subComp->where('code', 'like', "%{$search}%")
+                                              ->orWhere('libelle', 'like', "%{$search}%")
+                                              ->orWhere('description', 'like', "%{$search}%");
+                                  });
+                        });
+                });
+            })
             ->orderBy('date_debut', 'desc')
             ->get();
     }

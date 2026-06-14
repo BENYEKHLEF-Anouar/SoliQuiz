@@ -92,6 +92,11 @@
                     class="w-full bg-white border border-slate-100 rounded-2xl py-3 ps-14 pe-14 font-bold text-sm text-slate-900 placeholder:text-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 outline-none transition-all shadow-sm group-hover:shadow-md h-[52px]"
                     type="text" placeholder="Filtrer le répertoire des cohortes...">
 
+                <!-- Clear Button -->
+                <button type="button" x-show="search && !loading" @click="search = ''; performSearch()" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors" style="display: none;">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+
                 <!-- Live Search Loader -->
                 <div x-show="loading" 
                      class="absolute right-5 top-1/2 -translate-y-1/2"
@@ -254,7 +259,7 @@
             </div>
 
             <!-- Table View Mode -->
-            <div x-show="viewMode === 'table'" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-visible" x-cloak
+            <div x-show="viewMode === 'table' && classes.length > 0" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-visible" x-cloak
                 :class="loading ? 'opacity-50 pointer-events-none transition-opacity duration-300' : 'transition-opacity duration-300'">
                 <!-- Table Header -->
                 <div class="grid grid-cols-12 gap-3 px-8 py-4 bg-slate-50 rounded-t-2xl border-b border-slate-100 text-[8px] font-black text-slate-400 uppercase tracking-widest">

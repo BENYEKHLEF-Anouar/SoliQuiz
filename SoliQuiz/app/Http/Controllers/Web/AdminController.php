@@ -22,6 +22,7 @@ class AdminController extends Controller
     private ClasseService $classeService;
     private \App\Services\QcmService $qcmService;
     private \App\Services\PasswordResetService $passwordResetService;
+    private \App\Services\LeaderboardService $leaderboardService;
 
     public function __construct(
         UserService $userService, 
@@ -29,7 +30,8 @@ class AdminController extends Controller
         SeanceService $seanceService, 
         ClasseService $classeService,
         \App\Services\QcmService $qcmService,
-        \App\Services\PasswordResetService $passwordResetService
+        \App\Services\PasswordResetService $passwordResetService,
+        \App\Services\LeaderboardService $leaderboardService
     )
     {
         $this->userService = $userService;
@@ -38,6 +40,7 @@ class AdminController extends Controller
         $this->classeService = $classeService;
         $this->qcmService = $qcmService;
         $this->passwordResetService = $passwordResetService;
+        $this->leaderboardService = $leaderboardService;
     }
 
     /**
@@ -109,8 +112,15 @@ class AdminController extends Controller
         $systemStatus = $this->dashboardService->getSystemStatus();
         $classes = $this->dashboardService->getAllClassesMetrics();
         $resetRequests = \App\Models\PasswordResetRequest::where('status', 'pending')->with('user')->latest()->get();
+
+        // Récupérer les podiums pour les QCMs publics (limité à 5)
+        $qcmList = \App\Models\QCM::where('statut', 'public')
+            ->latest()
+            ->limit(5)
+            ->get();
+        $cohortPodiums = $this->leaderboardService->getPodiumsForQcms($qcmList);
         
-        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus', 'classes', 'resetRequests'));
+        return view('admin.dashboard', compact('kpis', 'topQcms', 'recentTentatives', 'topPerformers', 'systemStatus', 'classes', 'resetRequests', 'cohortPodiums'));
     }
 
     /**
@@ -277,8 +287,12 @@ class AdminController extends Controller
     public function pedagogie(Request $request)
     {
         $creatorFilter = $request->input('creator');
+        $search = $request->input('search');
 
-        $seances = $this->seanceService->getSeancesWithRelations($creatorFilter ? (int)$creatorFilter : null);
+        $seances = $this->seanceService->getSeancesWithRelations(
+            $creatorFilter ? (int)$creatorFilter : null,
+            $search
+        );
 
         $creatorIds = Seance::whereNotNull('user_id')->distinct()->pluck('user_id');
         $creators = User::whereIn('id', $creatorIds)->orderBy('nom')->get();
@@ -286,7 +300,7 @@ class AdminController extends Controller
         // Liste de tous les formateurs pour l'assignation
         $formateurs = User::where('type_profil', 'formateur')->orderBy('nom')->get();
 
-        return view('admin.pedagogie', compact('seances', 'creators', 'creatorFilter', 'formateurs'));
+        return view('admin.pedagogie', compact('seances', 'creators', 'creatorFilter', 'formateurs', 'search'));
     }
 
     public function storeSeance(Request $request)
